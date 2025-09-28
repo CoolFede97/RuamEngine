@@ -24,7 +24,7 @@ namespace RuamEngine
         IndexBufferPtr m_indexBuffer = std::make_shared<IndexBuffer>(maxIndexCount, GL_DYNAMIC_DRAW);
 
         void SubmitBatchData();
-        bool AddBatchData(const std::vector<Vertex> vertices, unsigned int vertexDataSize, const std::vector<unsigned int> indices, unsigned int indexDataSize);
+        bool AddBatchData(const std::vector<float> vertices, unsigned int vertexDataSize, const std::vector<unsigned int> indices, unsigned int indexDataSize);
         void Flush();
     private:
     };

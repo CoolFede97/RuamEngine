@@ -15,7 +15,7 @@ namespace RuamEngine
 		}
 	}
 
-	bool RenderUnit::AddBatchData(const std::vector<Vertex> vertices, unsigned int vertexDataSize, const std::vector<unsigned int> indices, unsigned int indexDataSize)
+	bool RenderUnit::AddBatchData(const std::vector<float> vertices, unsigned int vertexDataSize, const std::vector<unsigned int> indices, unsigned int indexDataSize)
 	{
 		bool fullBatch = false;
 		ASSERT(indexDataSize <= m_indexBuffer->GetMaxSize());

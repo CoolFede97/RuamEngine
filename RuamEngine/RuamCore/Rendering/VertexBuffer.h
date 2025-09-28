@@ -13,13 +13,13 @@ namespace RuamEngine
 		unsigned int m_currentSize = 0;
 		unsigned int m_usage = GL_STATIC_DRAW;
 	public:
-		std::vector<Vertex> m_vertexData = {};
+		std::vector<float> m_vertexData = {};
 
 		VertexBuffer(unsigned int maxSize, unsigned int usage);
 		~VertexBuffer();
 
 		// Should be used for buffers from the renderer batch
-		void AddBatchData(const std::vector<Vertex> data, unsigned int size);
+		void AddBatchData(const std::vector<float> data, unsigned int size);
 
 		// Shouldn't be used when using batch rendering
 		void SetSubData(const void* data, unsigned int offset, unsigned int size);

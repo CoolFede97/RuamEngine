@@ -17,7 +17,7 @@ namespace RuamEngine
     }
 
     // Después hacer que si la data supera la capacidad del Buffer (por más que esté vacío), se actualice el buffer y que tire advertencia
-    void VertexBuffer::AddBatchData(const std::vector<Vertex> data, unsigned int size)
+    void VertexBuffer::AddBatchData(const std::vector<float> data, unsigned int size)
     {
         m_vertexData.insert(m_vertexData.end(), data.begin(), data.end());
         m_currentSize += size;
@@ -44,15 +44,12 @@ namespace RuamEngine
 
         Bind();
         
-        GLCall(glBufferData(GL_ARRAY_BUFFER, m_vertexData.size() * sizeof(Vertex), m_vertexData.data(), m_usage));
+        GLCall(glBufferData(GL_ARRAY_BUFFER, m_vertexData.size() * sizeof(float), m_vertexData.data(), m_usage));
 	
     }
 
     void VertexBuffer::Flush()
     {
-	    // CHECK IF THIS IS CORRECT
-    
-   
         m_vertexData.clear();
         m_currentSize = 0;
         Bind();

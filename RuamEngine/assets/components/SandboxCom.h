@@ -11,7 +11,7 @@ class SandboxCom : public BaseRenderer
 {
 	using BaseRenderer::BaseRenderer;
 	
-	int gridSide = 50; // k*k grid
+	int gridSide = 1; // k*k grid
 	float padding = 0.01f;
 	float screenX = 2.0f;
 	float screenY = 2.0f;
@@ -19,7 +19,7 @@ class SandboxCom : public BaseRenderer
 	float quadWidth = screenX / gridSide - padding / 2;
 	float quadHeight = screenY / gridSide - padding / 2;
 
-	std::vector<Vertex> vertices;
+	std::vector<float> vertices;
 	std::vector<unsigned int> indices;
 
 	unsigned int indexCount = 0;
@@ -35,21 +35,19 @@ class SandboxCom : public BaseRenderer
 
 
 		genericUnit.m_shader->Bind();
-		glm::mat4 model = glm::mat4(1.0f);
-		genericUnit.m_shader->SetUniformMat4f("u_model", model);
-		genericUnit.m_shader->SetUniformMat4f("u_view", model);
-		genericUnit.m_shader->SetUniformMat4f("u_projection", model);
+		
 
 		for (int row = 0; row < gridSide; row++)
 		{
 			for (int col = 0; col < gridSide; col++)
 			{				
-				auto newQuad = Vertex::CreateQuad
+				std::vector<float> newQuad = VertexWithTex::FlattenVertices(VertexWithTex::CreateQuad
 				(
 					quadWidth,
 					col * (screenX / gridSide - 0.5f * padding) + col * padding + quadWidth / 2 - screenX / 2,
-					row * (screenY / gridSide - 0.5f * padding) + row * padding + quadHeight / 2 - screenY / 2
-				);
+					row * (screenY / gridSide - 0.5f * padding) + row * padding + quadHeight / 2 - screenY / 2,
+					1
+				));
 				vertices.insert(vertices.end(), newQuad.begin(), newQuad.end());
 				
 				std::vector<unsigned int> newIndices =
@@ -61,12 +59,12 @@ class SandboxCom : public BaseRenderer
 
 				indexCount += 4;
 
-				if (sizeof(Vertex) * indexCount + sizeof(Vertex) * 4 >= genericUnit.m_vertexBuffer->GetMaxSize() - genericUnit.m_vertexBuffer->GetCurrentSize()
+				if (sizeof(float) * VertexWithTex::attributesFloatCount * indexCount + sizeof(float) * VertexWithTex::attributesFloatCount * 4 >= genericUnit.m_vertexBuffer->GetMaxSize() - genericUnit.m_vertexBuffer->GetCurrentSize()
 					||
 					sizeof(unsigned int) * indices.size() + sizeof(unsigned int) * 6 >= genericUnit.m_indexBuffer->GetMaxSize() - genericUnit.m_indexBuffer->GetCurrentSize()
 					)
 				{
-					if (genericUnit.AddBatchData(vertices, vertices.size() * sizeof(Vertex), indices, indices.size() * sizeof(unsigned int)))
+					if (genericUnit.AddBatchData(vertices, vertices.size() * sizeof(float), indices, indices.size() * sizeof(unsigned int)))
 					{
 						vertices.clear();
 						indices.clear();
@@ -77,7 +75,10 @@ class SandboxCom : public BaseRenderer
 		}
 		if (indices.size() > 0)
 		{
-			genericUnit.AddBatchData(vertices, vertices.size() * sizeof(Vertex), indices, indices.size() * sizeof(unsigned int));
+			genericUnit.AddBatchData(vertices, vertices.size() * sizeof(float), indices, indices.size() * sizeof(unsigned int));
+			vertices.clear();
+			indices.clear();
+			indexCount = 0;
 		}
 	};
 	void update() 

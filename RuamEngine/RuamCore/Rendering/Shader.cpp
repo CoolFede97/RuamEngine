@@ -94,18 +94,26 @@ namespace RuamEngine
 		GLCall(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &matrix[0][0]));
 	}
 
-	void Shader::LoadMaterial(const Material& material)
+	void Shader::LoadMaterial(const Material& material, const Texture& texture)
 	{
+		Bind();
+
 		SetUniform4f("u_albedoColor", material.albedoColor.x, material.albedoColor.y, material.albedoColor.z, material.albedoColor.w);
 		SetUniform1f("u_metallic", material.metallic);
 		SetUniform1f("u_roughness", material.roughness);
 		SetUniform1f("u_ambientOcclusion", material.ambientOcclusion);
 		SetUniform1f("u_emissiveStrength", material.emissiveStrength);
 
-		for (int i = 1 ; i < material.textures.size(); i++)
+		glm::mat4 model = glm::mat4(1.0f);
+		SetUniformMat4f("u_model", model);
+		SetUniformMat4f("u_view", model);
+		SetUniformMat4f("u_projection", model);
+		ASSERT(*material.textures[0].m_LocalBuffer == *texture.m_LocalBuffer);
+		for (int i = 0 ; i < material.textures.size(); i++)
 		{
 			material.textures[i].Bind(i);
 		}
+		//material.textures[0].Bind(0);
 	}	
 
 	int Shader::GetUniformLocation(const std::string& name)

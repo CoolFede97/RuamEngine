@@ -25,6 +25,7 @@ int main()
 
 		int frameCount = 0;
 
+
 		while (!glfwWindowShouldClose(Renderer::GetWindow()))
 		{
 			//std::cout << "Frame: " << frameCount++ << "---------------------------------------------------------\n";

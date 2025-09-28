@@ -2,7 +2,8 @@
 
 out vec4 final_color;
 
-in vec4 frag_vertexColor;
+in vec2 frag_texCoords;
+in float frag_texId;
 
 uniform vec4  u_albedoColor;
 uniform float u_metallic;
@@ -10,7 +11,7 @@ uniform float u_roughness;
 uniform float u_ambientOcclusion;
 uniform float u_emissiveStrength;
 
-//uniform sampler2D u_albedoMap;
+uniform sampler2D u_albedoMap;
 //uniform sampler2D u_normalMap;
 //uniform sampler2D u_metallicMap;
 //uniform sampler2D u_roughnessMap;
@@ -19,5 +20,5 @@ uniform float u_emissiveStrength;
 
 void main()
 {
-    final_color = frag_vertexColor * u_albedoColor;
+    final_color = texture(u_albedoMap, frag_texCoords);
 }

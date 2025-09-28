@@ -69,6 +69,8 @@ namespace RuamEngine
 
     void IndexBuffer::Flush()
     {
+
+
 	    m_indexData.clear();
         m_currentSize = 0;
         Bind();

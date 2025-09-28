@@ -6,6 +6,7 @@ namespace RuamEngine
 	VertexArray::VertexArray()
 	{
 		GLCall(glGenVertexArrays(1, &m_RendererID));
+		Bind();
 	}
 
 	VertexArray::~VertexArray()

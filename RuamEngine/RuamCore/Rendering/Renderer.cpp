@@ -138,10 +138,11 @@ namespace RuamEngine
             for (auto& renderUnit : drawingData.second.m_renderUnits)
             {
                 drawingData.second.m_shader->Bind();
-                Texture texture = Texture("assets/sprites/albedoColor.png");
-                drawingData.second.m_shader->LoadMaterial(*renderUnit.second.m_material, texture);
+                //Texture texture = Texture("assets/sprites/albedoColor.png");
+                drawingData.second.m_shader->LoadMaterial(*renderUnit.second.m_material);
                 renderUnit.second.m_vertexArray->Bind();
                 renderUnit.second.m_indexBuffer->Bind();
+                renderUnit.second.m_material->textures[0].Bind(0);
                 GLCall(glDrawElements(GL_TRIANGLES, renderUnit.second.m_indexBuffer->GetIndexCount(), GL_UNSIGNED_INT, nullptr));
             }
         }
@@ -151,12 +152,8 @@ namespace RuamEngine
     {
         renderUnit.m_vertexArray->Bind();
         renderUnit.m_shader->Bind();
-        /*Texture texture = Texture("assets/sprites/albedoColor.png");
-        Texture textureB = Texture("assets/sprites/albedoColor.png");
-        ASSERT(*texture.m_LocalBuffer == *textureB.m_LocalBuffer);
-		*/
-        Texture texture = Texture("assets/sprites/albedoColor.png");
-        renderUnit.m_shader->LoadMaterial(*renderUnit.m_material, texture);
+        
+        renderUnit.m_shader->LoadMaterial(*renderUnit.m_material);
         renderUnit.m_indexBuffer->Bind();
         GLCall(glDrawElements(GL_TRIANGLES, renderUnit.m_indexBuffer->GetIndexCount(), GL_UNSIGNED_INT, nullptr));   
     }

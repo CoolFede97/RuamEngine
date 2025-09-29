@@ -94,7 +94,7 @@ namespace RuamEngine
 		GLCall(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &matrix[0][0]));
 	}
 
-	void Shader::LoadMaterial(const Material& material, const Texture& texture)
+	void Shader::LoadMaterial(const Material& material)
 	{
 		Bind();
 
@@ -117,8 +117,7 @@ namespace RuamEngine
 			material.textures[i].Bind(i);
 		}
 
-		ASSERT(texture.GetID() == material.textures[0].GetID());
-		ASSERT(*texture.m_LocalBuffer == *material.textures[0].m_LocalBuffer);
+		/*ASSERT(*texture.m_LocalBuffer == *material.textures[0].m_LocalBuffer);*/
 		//material.textures[0].Bind(0);
 	}	
 
@@ -130,7 +129,7 @@ namespace RuamEngine
 		int location;
 		GLCall(location = glGetUniformLocation(m_RendererID, name.c_str()));
 		if (location == -1)
-			std::cout << "Warning: uniform '" << name << "' does not exist!" << "/n";
+			std::cout << "Warning: uniform " << name << " does not exist!\n";
 	
 		m_UniformLocationCache[name] = location;
 	

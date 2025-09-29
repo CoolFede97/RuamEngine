@@ -1,20 +1,11 @@
 #pragma once
 
 #include <list>
-#include <vector>
-#include <memory>
-#include <iterator>
-
 #include <string>
-#include <iostream>
-
 #include "Object.hpp"
 
 class Scene {
 public:
-    using ObjectPtr = std::unique_ptr<Object>;
-    using ObjectPtrList = std::list<ObjectPtr>;
-    
     Scene() : m_id(s_id_count++), m_name(s_default_name) {}
 
     Scene(const int id) : m_id(id), m_name(s_default_name) {}
@@ -23,7 +14,10 @@ public:
 
     Scene(const int id, const std::string& name) : m_id(id), m_name(name) {}
 
-	unsigned int id() const;
+	unsigned int id() const {
+	    return m_id;
+    }
+
 	const std::string& name() const;
 
     Object* newObject(); //Maybe should need a name?

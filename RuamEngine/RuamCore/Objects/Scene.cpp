@@ -1,6 +1,5 @@
 #include "Scene.hpp"
 #include <fstream>
-#include "RuamUtils.h"
 
 unsigned int Scene::s_id_count = 0;
 const std::string Scene::s_default_name = "Sample Scene";
@@ -39,7 +38,9 @@ Object* Scene::getObjectById(unsigned int id) const {
 }
 
 void Scene::deleteObjectByIdx(unsigned int idx) {
-    m_objects.erase(std::next(m_objects.cbegin(), idx));
+    auto obj = *std::next(m_objects.begin(), idx);
+    delete obj;
+    m_objects.erase(std::next(m_objects.begin(), idx));
 }
 
 void Scene::start() {

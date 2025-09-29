@@ -12,6 +12,11 @@ void SceneManager::SetActiveScene(const unsigned int id) {
 }
 
 Scene* SceneManager::ActiveScene() {
+	if (s_active_scene == nullptr) {
+		Scene *s = new Scene();
+		AddScene(s);
+		s_active_scene = s;
+	}
 	return s_active_scene;
 }
 

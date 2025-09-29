@@ -37,7 +37,7 @@ public:
 
 	virtual void render() = 0;
 
-	void start() {};
+	void start() {}
 
 	void update() {
 		render();

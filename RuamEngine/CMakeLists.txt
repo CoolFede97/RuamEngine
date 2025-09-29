@@ -212,7 +212,7 @@ target_compile_definitions(Vendor INTERFACE STB_IMAGE_IMPLEMENTATION)
 target_compile_definitions(Vendor INTERFACE BUILD_WITH_EASY_PROFILER)
 
 target_link_libraries(Vendor INTERFACE
-        glfw glew_s glm ImGui OpenGL::GL OpenAL::OpenAL nlohmann_json::nlohmann_json dr_libs easy_profiler
+        glfw glew_s glm ImGui OpenGL::GL OpenAL::OpenAL nlohmann_json::nlohmann_json dr_libs
 )
 if (__LINUX__)
     target_link_libraries(Vendor INTERFACE easy_profiler)

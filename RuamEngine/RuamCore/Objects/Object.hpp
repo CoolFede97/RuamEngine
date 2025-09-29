@@ -79,7 +79,7 @@ public:
 
 	std::vector<Component*> getComponents() const {
 		std::vector<Component*> comps;
-		for (auto i : m_components) {
+		for (auto& i : m_components) {
 			auto c = i.second.front().get();
 			comps.push_back(c);
 		}

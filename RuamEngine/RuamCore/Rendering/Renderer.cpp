@@ -40,8 +40,8 @@ namespace RuamEngine
             basicDrawingData.m_shader->Bind();
 			genericUnit.m_material = std::make_shared<Material>(Material::MaterialType::Generic);
 			genericUnit.m_material->albedoColor = Vec4(1.0f, 1.0f, 1.0f, 1.0f);
-            Texture trash("assets/sprites/Nacho.jpg");
-            genericUnit.m_material->textures.push_back(Texture("assets/sprites/Nacho.jpg"));
+            Texture trash("assets/sprites/albedoColor.png");
+            genericUnit.m_material->textures.push_back(Texture("assets/sprites/albedoColor.png"));
             genericUnit.m_shader->SetUniform1i("u_albedoMap", 0);
             VertexBufferLayout& genericLayout = *genericUnit.m_layout;
             genericLayout.Reset();
@@ -138,7 +138,7 @@ namespace RuamEngine
             for (auto& renderUnit : drawingData.second.m_renderUnits)
             {
                 drawingData.second.m_shader->Bind();
-                Texture texture = Texture("assets/sprites/Nacho.jpg");
+                Texture texture = Texture("assets/sprites/albedoColor.png");
                 drawingData.second.m_shader->LoadMaterial(*renderUnit.second.m_material, texture);
                 renderUnit.second.m_vertexArray->Bind();
                 renderUnit.second.m_indexBuffer->Bind();
@@ -151,8 +151,12 @@ namespace RuamEngine
     {
         renderUnit.m_vertexArray->Bind();
         renderUnit.m_shader->Bind();
-        Texture texture = Texture("assets/sprites/Nacho.jpg");
-		renderUnit.m_shader->LoadMaterial(*renderUnit.m_material, texture);
+        /*Texture texture = Texture("assets/sprites/albedoColor.png");
+        Texture textureB = Texture("assets/sprites/albedoColor.png");
+        ASSERT(*texture.m_LocalBuffer == *textureB.m_LocalBuffer);
+		*/
+        Texture texture = Texture("assets/sprites/albedoColor.png");
+        renderUnit.m_shader->LoadMaterial(*renderUnit.m_material, texture);
         renderUnit.m_indexBuffer->Bind();
         GLCall(glDrawElements(GL_TRIANGLES, renderUnit.m_indexBuffer->GetIndexCount(), GL_UNSIGNED_INT, nullptr));   
     }

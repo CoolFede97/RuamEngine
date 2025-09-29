@@ -108,11 +108,17 @@ namespace RuamEngine
 		SetUniformMat4f("u_model", model);
 		SetUniformMat4f("u_view", model);
 		SetUniformMat4f("u_projection", model);
+		/*ASSERT(material.textures[0].m_LocalBuffer);
+		ASSERT(texture.m_LocalBuffer);
 		ASSERT(*material.textures[0].m_LocalBuffer == *texture.m_LocalBuffer);
+		*/
 		for (int i = 0 ; i < material.textures.size(); i++)
 		{
 			material.textures[i].Bind(i);
 		}
+
+		ASSERT(texture.GetID() == material.textures[0].GetID());
+		ASSERT(*texture.m_LocalBuffer == *material.textures[0].m_LocalBuffer);
 		//material.textures[0].Bind(0);
 	}	
 

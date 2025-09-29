@@ -6,6 +6,7 @@ namespace RuamEngine
 	Texture::Texture(const std::string& relativePath)
 		: m_FilePath(relativePath), m_LocalBuffer(nullptr)
 	{
+
 		// Turns around the texture, so that it is up-side down
 		// We do this because OpenGL expects textures (0,0) position to be at the bottom-left corner,
 		// not at the top-left corner.
@@ -40,8 +41,8 @@ namespace RuamEngine
 	void Texture::Bind(unsigned int slot /*= 0*/) const
 	{
 		// OpenGL has slots for textures. "Put this texture into slot 3 please"
-		GLCall(glActiveTexture(GL_TEXTURE0 + slot));
 		GLCall(glBindTexture(GL_TEXTURE_2D, m_RendererID));
+		GLCall(glActiveTexture(GL_TEXTURE0 + slot));
 	}
 
 	void Texture::Unbind()

@@ -39,8 +39,8 @@ public:
 
     std::string name() { return m_name; }
 
-	void start() const;
-	void update() const;
+	void start();
+	void update();
 
 private:
     std::list<Object*> m_objects;

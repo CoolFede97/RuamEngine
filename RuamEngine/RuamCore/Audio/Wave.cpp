@@ -1,6 +1,6 @@
 #include "Wave.hpp"
 #include <stdexcept>
-#include "easy/profiler.h"
+#include "RuamUtils.h"
 
 Wave::Wave(const char* filename, bool to_mono) {
 	EASY_FUNCTION("WaveConstructor");

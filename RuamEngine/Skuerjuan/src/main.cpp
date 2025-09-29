@@ -14,7 +14,7 @@ void main_serial() {
 	Object* o2 = scene->newObject();
 	name = "Hola";
 	o2->setName(name);
-	auto c = o->addComponent<TestComponent>().get();
+	auto c = o->addComponent<TestComponent>();
 	c->setSecret(42);
 	Serial::serialise(scene);
 }

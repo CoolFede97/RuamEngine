@@ -39,6 +39,7 @@
 
 #include "Input.h"
 
+#include "RuamUtils.h"
 #include "AudioSystem.hpp"
 
 // TODO: Reference additional headers your program requires here.

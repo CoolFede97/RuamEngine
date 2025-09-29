@@ -17,10 +17,6 @@ void Object::setName(std::string& name) {
 	m_name = name;
 }
 
-const Object::ComponentList& Object::getComponents() const {
-	return m_components;
-}
-
 void Object::start() {
 	for (auto& it : m_components) {
 		for (auto& cmp : it.second) {
@@ -40,7 +36,6 @@ void Object::update() {
 void Object::destroy() {
 	for (auto& comp_v : m_components) {
 		for (auto& comp : comp_v.second) {
-			delete &(*comp);
 			comp.reset();
 		}
 		comp_v.second.clear();

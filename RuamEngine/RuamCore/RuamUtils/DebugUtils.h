@@ -22,3 +22,14 @@ inline std::ostream& operator<<(std::ostream& os, const glm::vec3& vec) {
 inline std::ostream& operator<<(std::ostream& os, const glm::vec4& vec) {
 	return os << '(' << vec.x << ", " << vec.y << ", " << vec.z << ", " << vec.w << ')';
 }
+
+#ifdef linux
+#include "easy/profiler.h"
+#define EASY_PROFILER_DUMP() profiler::dumpBlocksToFile("log.perf");
+#else
+#define EASY_BLOCK(...)
+#define EASY_FUNCTION(...)
+#define EASY_END_BLOCK
+#define EASY_PROFILER_DUMP()
+#define EASY_PROFILER_ENABLE
+#endif

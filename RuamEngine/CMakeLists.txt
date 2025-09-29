@@ -17,8 +17,6 @@ project ("RuamEngine")
 # Add source to this project's executable.
 add_executable (RuamEngine "RuamEngine.cpp" "RuamEngine.h")
 
-add_compile_options(-O2 -gdwarf-3)
-
 include(FetchContent)
 include(FindOpenGL)
 
@@ -52,7 +50,7 @@ set(VENDOR_PATH "${CMAKE_SOURCE_DIR}/vendor")
 FetchContent_Declare(
   json
   GIT_REPOSITORY https://github.com/nlohmann/json.git
-  GIT_TAG v3.11.2
+  GIT_TAG v3.12.0
 )
 FetchContent_MakeAvailable(json)
 
@@ -174,20 +172,22 @@ FetchContent_MakeAvailable(openal-soft)
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
 
-# easy_profiler
-FetchContent_Declare(
-    easy_profiler
-    GIT_REPOSITORY https://github.com/yse/easy_profiler.git
-    GIT_TAG v2.1.0
-)
+if(__LINUX__)
+    # easy_profiler
+    FetchContent_Declare(
+            easy_profiler
+            GIT_REPOSITORY https://github.com/yse/easy_profiler.git
+            GIT_TAG v2.1.0
+    )
 
-set(PREV_MIN_VERSION ${CMAKE_POLICY_VERSION_MINIMUM})
+    set(PREV_MIN_VERSION ${CMAKE_POLICY_VERSION_MINIMUM})
 
-set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
+    set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
 
-FetchContent_MakeAvailable(easy_profiler)
+    FetchContent_MakeAvailable(easy_profiler)
 
-set(CMAKE_POLICY_VERSION_MINIMUM ${PREV_MIN_VERSION})
+    set(CMAKE_POLICY_VERSION_MINIMUM ${PREV_MIN_VERSION})
+endif ()
 
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -214,6 +214,9 @@ target_compile_definitions(Vendor INTERFACE BUILD_WITH_EASY_PROFILER)
 target_link_libraries(Vendor INTERFACE
         glfw glew_s glm ImGui OpenGL::GL OpenAL::OpenAL nlohmann_json::nlohmann_json dr_libs easy_profiler
 )
+if (__LINUX__)
+    target_link_libraries(Vendor INTERFACE easy_profiler)
+endif ()
 
 target_include_directories(Vendor INTERFACE 
     ${VENDOR_PATH}/stb_image
@@ -267,14 +270,6 @@ add_library(Time STATIC ${TIME_SRC})
 target_link_libraries(Time PUBLIC glfw)
 target_include_directories(Time INTERFACE ${CMAKE_SOURCE_DIR}/RuamCore/Time)
 
-# ///////////////////////////////////////////////////////////////////////////////////////////////
-
-# Objects
-
-file (GLOB OBJECTS_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Objects/*.cpp")
-add_library(Objects STATIC ${OBJECTS_SRC})
-target_include_directories(Objects INTERFACE ${CMAKE_SOURCE_DIR}/RuamCore/Objects)
-target_link_libraries(Objects PUBLIC Vendor)
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -310,7 +305,7 @@ target_include_directories(RuamUtils INTERFACE ${CMAKE_SOURCE_DIR}/RuamCore/Ruam
 
 file (GLOB AUDIO_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Audio/*.cpp")
 add_library(Audio STATIC ${AUDIO_SRC})
-target_include_directories(Audio INTERFACE ${CMAKE_SOURCE_DIR}/RuamCore/Audio)
+target_include_directories(Audio PUBLIC "${CMAKE_SOURCE_DIR}/RuamCore/Audio")
 target_link_libraries(Audio PUBLIC glm dr_libs Vendor RuamUtils)
 
 
@@ -321,8 +316,8 @@ target_link_libraries(Audio PUBLIC glm dr_libs Vendor RuamUtils)
 file (GLOB OBJECTS_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Objects/*.cpp")
 file (GLOB COMPONENTS_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Components/*.cpp")
 add_library(Objects STATIC ${OBJECTS_SRC} ${COMPONENTS_SRC})
-target_include_directories(Objects PUBLIC ${CMAKE_SOURCE_DIR}/RuamCore/Objects ${CMAKE_SOURCE_DIR}/RuamCore/Components)
-target_link_libraries(Objects PUBLIC Audio)
+target_include_directories(Objects PUBLIC "${CMAKE_SOURCE_DIR}/RuamCore/Objects" "${CMAKE_SOURCE_DIR}/RuamCore/Components")
+target_link_libraries(Objects PUBLIC Audio RuamUtils)
 
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -338,9 +333,6 @@ target_include_directories(EventSystem INTERFACE ${CMAKE_SOURCE_DIR}/RuamCore/Ev
 # ///////////////////////////////////////////////////////////////////////////////////////////////
 
 # Linking
-
-target_compile_options(Audio PUBLIC -O2)
-target_compile_options(Objects PUBLIC -O2)
 
 target_link_libraries(RuamCore INTERFACE
     Rendering Maths Time Files Input Objects RuamUtils Audio EventSystem

@@ -26,9 +26,9 @@ Scene* SceneManager::CreateScene(const unsigned int id, const std::string& name)
 	return s;
 }
 
-void SceneManager::RemoveScene(const int id) {
-	s_scenes.erase(s_scenes.begin() + id);
-}
+// void SceneManager::RemoveScene(const int id) {
+// 	s_scenes.erase(s_scenes.begin() + id);
+// }
 
 SceneManager::ScenePtr SceneManager::EmptyScene() {
 	return std::move(std::make_unique<Scene>());

@@ -21,8 +21,7 @@ void to_json(json& j, Object* o) {
 
 	json serialisedComponents = json::array();
 
-    for(auto p : o->getComponents()) {
-        auto c = p.second.front().get();
+    for(auto c : o->getComponents()) {
         nlohmann::json comp = *c;
         serialisedComponents.push_back(comp);
     }

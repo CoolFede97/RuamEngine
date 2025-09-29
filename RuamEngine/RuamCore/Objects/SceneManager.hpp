@@ -19,7 +19,7 @@ public:
 
 	static Scene* CreateScene(unsigned int id, const std::string& name);
 
-	static void RemoveScene(int id);
+	// static void RemoveScene(int id);
 
 	static ScenePtr EmptyScene();
 

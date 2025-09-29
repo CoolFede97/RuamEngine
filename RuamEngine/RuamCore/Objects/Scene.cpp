@@ -1,17 +1,9 @@
 #include "Scene.hpp"
 #include <fstream>
-#include "easy/profiler.h"
+#include "RuamUtils.h"
 
 unsigned int Scene::s_id_count = 0;
 const std::string Scene::s_default_name = "Sample Scene";
-
-Scene::Scene() : m_id(s_id_count++), m_name(s_default_name) {}
-
-Scene::Scene(const char* name) : m_id(s_id_count++), m_name(name) {}
-
-const unsigned int Scene::id() const {
-	return m_id;
-}
 
 const std::string& Scene::name() const {
 	return m_name;

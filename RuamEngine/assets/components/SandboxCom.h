@@ -27,7 +27,7 @@ class SandboxCom : public BaseRenderer
 	// It's called in update
 	void render()
 	{
-		RenderUnit& genericUnit = Renderer::m_drawingDataMap[Shader::PipelineType::Generic].m_renderUnits[Material::MaterialType::Generic];
+		RenderUnit& genericUnit = Renderer::m_drawingDataMap[Shader::PipelineType::Generic]->m_renderUnits[Material::MaterialType::Generic];
 		genericUnit.m_vertexArray->Bind();
 
 		vertices.reserve(gridSide * gridSide * 4);

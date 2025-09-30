@@ -12,7 +12,7 @@ namespace RuamEngine
 
 	Shader::~Shader()
 	{
-
+		std::cout << "Shader Destroyed!\n";
 	}
 
 
@@ -114,7 +114,7 @@ namespace RuamEngine
 		*/
 		for (int i = 0 ; i < material.textures.size(); i++)
 		{
-			material.textures[i].Bind(i);
+			material.textures[i]->Bind(i);
 		}
 
 		/*ASSERT(*texture.m_LocalBuffer == *material.textures[0].m_LocalBuffer);*/

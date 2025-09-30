@@ -35,6 +35,7 @@ namespace RuamEngine
 
 	Texture::~Texture()
 	{
+		std::cout << "Texture Destroyed!\n";
 		GLCall(glDeleteTextures(1, &m_RendererID));
 	}
 

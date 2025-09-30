@@ -19,7 +19,7 @@ namespace RuamEngine
         float ambientOcclusion = 1.0f;
         float emissiveStrength = 0.0f;
 
-        std::vector<Texture> textures;
+        std::vector<std::unique_ptr<Texture>> textures;
 
         bool useAlbedoMap = false;
         bool useNormalMap = false;
@@ -32,6 +32,6 @@ namespace RuamEngine
     private:
         MaterialType m_type;
     };
-    using MaterialPtr = std::shared_ptr<Material>;
+    using MaterialPtr = std::unique_ptr<Material>;
 
 }

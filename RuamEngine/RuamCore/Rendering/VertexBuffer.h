@@ -40,6 +40,6 @@ namespace RuamEngine
 
 	};
 
-	using VertexBufferPtr = std::shared_ptr<VertexBuffer>;
+	using VertexBufferPtr = std::unique_ptr<VertexBuffer>;
 }
 

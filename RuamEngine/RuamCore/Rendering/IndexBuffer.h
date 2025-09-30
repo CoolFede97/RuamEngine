@@ -32,5 +32,5 @@ namespace RuamEngine
 		unsigned int GetMaxSize() const { return m_maxSize; }
 	};
 
-	using IndexBufferPtr = std::shared_ptr<IndexBuffer>;
+	using IndexBufferPtr = std::unique_ptr<IndexBuffer>;
 }

@@ -46,6 +46,10 @@ namespace RuamEngine
 	DrawingData::DrawingData()
 	{
 	}
+	DrawingData::~DrawingData()
+	{
+		std::cout << "Drawing Data Destroyed!\n";
+	}
 
 }
 

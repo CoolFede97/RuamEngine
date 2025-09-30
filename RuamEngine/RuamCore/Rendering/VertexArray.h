@@ -21,6 +21,6 @@ namespace RuamEngine
 		void Unbind() const;
 	};
 
-	using VertexArrayPtr = std::shared_ptr<VertexArray>;
+	using VertexArrayPtr = std::unique_ptr<VertexArray>;
 }
 

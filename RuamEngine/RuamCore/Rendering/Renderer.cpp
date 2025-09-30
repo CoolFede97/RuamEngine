@@ -5,7 +5,7 @@ namespace RuamEngine
 {
     RendererConfig Renderer::m_config;
 	GLFWwindow* Renderer::m_window = nullptr;
-    std::unordered_map<Shader::PipelineType, DrawingData> Renderer::m_drawingDataMap;
+    std::unordered_map<Shader::PipelineType, std::unique_ptr<DrawingData>> Renderer::m_drawingDataMap;
     void Renderer::Init()
     {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -32,16 +32,15 @@ namespace RuamEngine
 
 
         {
-			m_drawingDataMap.emplace(Shader::PipelineType::Generic, DrawingData(Shader::PipelineType::Generic));
-			DrawingData& basicDrawingData = m_drawingDataMap.at(Shader::PipelineType::Generic);
-            basicDrawingData.m_shader = std::make_shared<Shader>("assets/shaders/GeneralVertexShader.glsl", "assets/shaders/GeneralFragmentShader.glsl");
+			m_drawingDataMap.emplace(Shader::PipelineType::Generic, std::make_unique<DrawingData>(Shader::PipelineType::Generic));
+			DrawingData& basicDrawingData = *m_drawingDataMap.at(Shader::PipelineType::Generic);
+            basicDrawingData.m_shader = std::make_unique<Shader>("assets/shaders/GeneralVertexShader.glsl", "assets/shaders/GeneralFragmentShader.glsl");
 			basicDrawingData.m_renderUnits.emplace(Material::MaterialType::Generic, RenderUnit(basicDrawingData.m_shader));
             RenderUnit& genericUnit = basicDrawingData.m_renderUnits.at(Material::MaterialType::Generic);
             basicDrawingData.m_shader->Bind();
-			genericUnit.m_material = std::make_shared<Material>(Material::MaterialType::Generic);
+			genericUnit.m_material = std::make_unique<Material>(Material::MaterialType::Generic);
 			genericUnit.m_material->albedoColor = Vec4(1.0f, 1.0f, 1.0f, 1.0f);
-            Texture trash("assets/sprites/albedoColor.png");
-            genericUnit.m_material->textures.push_back(Texture("assets/sprites/albedoColor.png"));
+            genericUnit.m_material->textures.push_back(std::make_unique<Texture>("assets/sprites/albedoColor.png"));
             genericUnit.m_shader->SetUniform1i("u_albedoMap", 0);
             VertexBufferLayout& genericLayout = *genericUnit.m_layout;
             genericLayout.Reset();
@@ -68,7 +67,7 @@ namespace RuamEngine
     {
         for (auto& pair : m_drawingDataMap)
         {
-            pair.second.SubmitBatchData();
+            pair.second->SubmitBatchData();
         }
     }
     void Renderer::EndBatch(RenderUnit& renderUnit)
@@ -79,7 +78,7 @@ namespace RuamEngine
     {
         for (auto& pair : m_drawingDataMap)
         {
-            pair.second.Flush();
+            pair.second->Flush();
         }
     }
 
@@ -135,14 +134,12 @@ namespace RuamEngine
     {
         for (auto& drawingData : m_drawingDataMap)
         {
-            for (auto& renderUnit : drawingData.second.m_renderUnits)
+            for (auto& renderUnit : drawingData.second->m_renderUnits)
             {
-                drawingData.second.m_shader->Bind();
-                //Texture texture = Texture("assets/sprites/albedoColor.png");
-                drawingData.second.m_shader->LoadMaterial(*renderUnit.second.m_material);
+                drawingData.second->m_shader->Bind();
+                drawingData.second->m_shader->LoadMaterial(*renderUnit.second.m_material);
                 renderUnit.second.m_vertexArray->Bind();
                 renderUnit.second.m_indexBuffer->Bind();
-                renderUnit.second.m_material->textures[0].Bind(0);
                 GLCall(glDrawElements(GL_TRIANGLES, renderUnit.second.m_indexBuffer->GetIndexCount(), GL_UNSIGNED_INT, nullptr));
             }
         }
@@ -152,7 +149,6 @@ namespace RuamEngine
     {
         renderUnit.m_vertexArray->Bind();
         renderUnit.m_shader->Bind();
-        
         renderUnit.m_shader->LoadMaterial(*renderUnit.m_material);
         renderUnit.m_indexBuffer->Bind();
         GLCall(glDrawElements(GL_TRIANGLES, renderUnit.m_indexBuffer->GetIndexCount(), GL_UNSIGNED_INT, nullptr));   

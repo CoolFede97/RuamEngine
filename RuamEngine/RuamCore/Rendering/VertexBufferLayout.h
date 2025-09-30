@@ -95,6 +95,6 @@ namespace RuamEngine
 		inline unsigned int GetStride() const { return m_Stride; }
 	};
 
-	using VertexBufferLayoutPtr = std::shared_ptr<VertexBufferLayout>;
+	using VertexBufferLayoutPtr = std::unique_ptr<VertexBufferLayout>;
 }
 

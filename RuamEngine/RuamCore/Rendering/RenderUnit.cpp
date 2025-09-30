@@ -38,8 +38,8 @@ namespace RuamEngine
 		m_indexBuffer->Flush();
 	}
 
-	RenderUnit::RenderUnit(ShaderPtr shader)
-		: m_shader(shader)
+	RenderUnit::RenderUnit(ShaderPtr& shader)
+		: m_shader(*shader)
 	{
 
 	}

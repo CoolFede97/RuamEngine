@@ -16,7 +16,7 @@ class SandboxCom2 : public BaseRenderer
 	void render()
 	{
 		std::cout << "Render from component called\n";
-		RenderUnit& genericUnit = Renderer::m_drawingDataMap[Shader::PipelineType::Generic].m_renderUnits[Material::MaterialType::Generic];
+		RenderUnit& genericUnit = Renderer::m_drawingDataMap[Shader::PipelineType::Generic]->m_renderUnits[Material::MaterialType::Generic];
 		genericUnit.m_vertexArray->Bind();
 
 		int gridSide = 2; // k*k grid

@@ -79,7 +79,7 @@ namespace RuamEngine
         static void Draw(RenderUnit& renderUnit);
 		static void DrawQuads();
 
-        static std::unordered_map<Shader::PipelineType, DrawingData> m_drawingDataMap;
+        static std::unordered_map<Shader::PipelineType, std::unique_ptr<DrawingData>> m_drawingDataMap;
     private:
         static RendererConfig m_config;
         static GLFWwindow* m_window;

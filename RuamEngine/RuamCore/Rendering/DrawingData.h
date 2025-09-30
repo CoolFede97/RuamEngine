@@ -15,7 +15,7 @@ namespace RuamEngine
     public:
         DrawingData(Shader::PipelineType pipelineType);
         DrawingData();
-
+        ~DrawingData();
         ShaderPtr m_shader = nullptr;
         std::unordered_map<Material::MaterialType, RenderUnit> m_renderUnits = {};
 

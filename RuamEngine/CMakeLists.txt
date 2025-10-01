@@ -341,4 +341,6 @@ endif()
 
 target_link_libraries(RuamEngine PUBLIC RuamCore)
 
+add_subdirectory(Editor)
+
 # TODO: Add tests and install targets if needed.

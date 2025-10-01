@@ -38,7 +38,7 @@ int main()
 		SceneManager::SetActiveScene(menuScene);
 		const unsigned int sandboxScene = SceneManager::AddScene(1, CreateSandboxScene);
 
-		while (!glfwWindowShouldClose(Renderer::GetWindow()))
+		while (!Renderer::WindowShouldClose())
 		{
 			// ImGUI
 			ImGui_ImplOpenGL3_NewFrame();

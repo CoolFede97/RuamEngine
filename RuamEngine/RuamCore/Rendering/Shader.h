@@ -47,7 +47,7 @@ namespace RuamEngine
 		std::string m_fFilePath;
 	};
 
-	using ShaderPtr = std::unique_ptr<Shader>;
+	using ShaderPtr = std::shared_ptr<Shader>;
 }
 
 

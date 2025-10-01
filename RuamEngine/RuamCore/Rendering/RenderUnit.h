@@ -16,7 +16,7 @@ namespace RuamEngine
         RenderUnit();
 
 	    // This shader must be the same as the drawingData that contains this renderUnit
-	    Shader& m_shader;
+	    ShaderPtr m_shader;
         MaterialPtr m_material = nullptr;
         VertexArrayPtr m_vertexArray = std::make_unique<VertexArray>();
         VertexBufferPtr m_vertexBuffer = std::make_unique<VertexBuffer>(maxVertexSize * maxVertexCount, GL_DYNAMIC_DRAW);

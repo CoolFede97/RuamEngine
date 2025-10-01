@@ -39,7 +39,7 @@ namespace RuamEngine
 	}
 
 	RenderUnit::RenderUnit(ShaderPtr& shader)
-		: m_shader(*shader)
+		: m_shader(shader)
 	{
 
 	}

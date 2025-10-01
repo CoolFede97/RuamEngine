@@ -40,7 +40,7 @@ namespace RuamEngine
             basicDrawingData.m_shader->Bind();
 			genericUnit.m_material = std::make_unique<Material>(Material::MaterialType::Generic);
 			genericUnit.m_material->albedoColor = Vec4(1.0f, 1.0f, 1.0f, 1.0f);
-            genericUnit.m_material->textures.push_back(std::make_unique<Texture>("assets/sprites/albedoColor.png"));
+            genericUnit.m_material->textures.push_back(std::make_unique<Texture>("assets/sprites/bigBrain.png"));
             genericUnit.m_shader->SetUniform1i("u_albedoMap", 0);
             VertexBufferLayout& genericLayout = *genericUnit.m_layout;
             genericLayout.Reset();

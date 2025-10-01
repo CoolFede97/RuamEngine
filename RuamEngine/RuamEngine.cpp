@@ -22,6 +22,7 @@ int main()
 
 	{
 		Input::SetWindow(Renderer::GetWindow());
+		Input::SetUp(Renderer::GetWindow());
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();

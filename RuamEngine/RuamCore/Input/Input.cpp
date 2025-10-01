@@ -134,12 +134,6 @@ void Input::SetUp(GLFWwindow* window) {
     // Set the window pointer
     m_window = window;
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GLFW_TRUE);
-}
-
-void Input::UpdateInput() {
-    if (NullWindow()) {
-        return;
-    }
 
     glfwSetKeyCallback(m_window, KeyEvent);
     glfwSetCharCallback(m_window, CharEvent);
@@ -147,6 +141,13 @@ void Input::UpdateInput() {
     glfwSetMouseButtonCallback(m_window, MouseButtonEvent);
     glfwSetScrollCallback(m_window, ScrollEvent);
     glfwSetCursorEnterCallback(m_window, CursorEnterEvent);
+
+}
+
+void Input::UpdateInput() {
+    if (NullWindow()) {
+        return;
+    }
 
     // Update mouse position
     m_lastMousePosPix = GetCursorPosPix();

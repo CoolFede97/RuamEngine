@@ -21,24 +21,28 @@ int main()
 	EASY_END_BLOCK;
 
 	{
-		EASY_BLOCK("Imgui init");
 		Input::SetWindow(Renderer::GetWindow());
+		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
-		ImGui_ImplGlfwGL3_Init(Renderer::GetWindow(), true);
-		ImGui::StyleColorsDark();
-		EASY_END_BLOCK;
+		ImGuiIO& io = ImGui::GetIO();
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
-		EASY_BLOCK("Scene adding");
+		ImGui_ImplGlfw_InitForOpenGL(Renderer::GetWindow(), true);
+		ImGui_ImplOpenGL3_Init();
+
+		ImGui::StyleColorsDark();
+
 		const unsigned int menuScene = SceneManager::AddScene(0, CreateMenuScene);
 		SceneManager::SetActiveScene(menuScene);
 		const unsigned int sandboxScene = SceneManager::AddScene(1, CreateSandboxScene);
-		EASY_END_BLOCK;
 
-		EASY_BLOCK("Loop");
 		while (!glfwWindowShouldClose(Renderer::GetWindow()))
 		{
 			// ImGUI
-			ImGui_ImplGlfwGL3_NewFrame();
+			ImGui_ImplOpenGL3_NewFrame();
+			ImGui_ImplGlfw_NewFrame();
+			ImGui::NewFrame();
 
 			// OpenGL
 			GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
@@ -64,16 +68,16 @@ int main()
 			}
 			EASY_END_BLOCK;
 			ImGui::Render();
-			ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
+			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 			Renderer::EndDraw();
 
 			glfwPollEvents();
 		}
-		EASY_END_BLOCK;
 	}
 	// Cleanup
-	ImGui_ImplGlfwGL3_Shutdown();
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
 	Renderer::Shutdown();
 	AudioSystem::shutdown();

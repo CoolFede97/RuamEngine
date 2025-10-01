@@ -18,8 +18,17 @@ int main(void)
 		/* Create a windowed mode window and its OpenGL context */
 		window = glfwCreateWindow(640, 480, "Cool Game", NULL, NULL);
 		Input::SetWindow(window);
+
 		ImGui::CreateContext();
-		ImGui_ImplGlfwGL3_Init(window, true);
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+		ImGuiIO& io = ImGui::GetIO();
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
+		ImGui_ImplGlfw_InitForOpenGL(window, true);
+		ImGui_ImplOpenGL3_Init();
+
 		ImGui::StyleColorsDark();
 
 		if (!window)
@@ -57,7 +66,9 @@ int main(void)
 		while (!glfwWindowShouldClose(window))
 		{
 			// ImGUI
-			ImGui_ImplGlfwGL3_NewFrame();
+			ImGui_ImplOpenGL3_NewFrame();
+			ImGui_ImplGlfw_NewFrame();
+			ImGui::NewFrame();
 
 			// Input
 			Input::UpdateInput();
@@ -83,7 +94,7 @@ int main(void)
 			}*/
 
 			ImGui::Render();
-			ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
+			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 			glfwSwapBuffers(window);
 
@@ -96,7 +107,8 @@ int main(void)
 
 	}
 	// Cleanup
-	ImGui_ImplGlfwGL3_Shutdown();
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
 	glfwTerminate();
 	return 0;

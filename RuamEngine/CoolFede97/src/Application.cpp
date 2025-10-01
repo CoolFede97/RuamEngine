@@ -19,7 +19,6 @@
 #include "Vec3.h"
 
 #include "imgui.h"
-#include "imgui_impl_glfw_gl3.h"
 
 #include "Input.h"
 
@@ -27,6 +26,9 @@
 #include "tests/TestClearColor.h"
 #include "tests/TestMovement.h"
 #include "tests/Sandbox.h"
+
+#include "backends/imgui_impl_opengl3.h"
+#include "backends/imgui_impl_glfw.h"
 
 using namespace RuamEngine;
 
@@ -37,7 +39,14 @@ int main(void)
 	{
 		Input::SetWindow(Renderer::GetWindow());
 		ImGui::CreateContext();
-		ImGui_ImplGlfwGL3_Init(Renderer::GetWindow(), true);
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+		ImGuiIO& io = ImGui::GetIO();
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
+		ImGui_ImplGlfw_InitForOpenGL(Renderer::GetWindow(), true);
+		ImGui_ImplOpenGL3_Init();
 		ImGui::StyleColorsDark();
 
 		test::Test* currentTest = nullptr;
@@ -51,7 +60,9 @@ int main(void)
 		while (!glfwWindowShouldClose(Renderer::GetWindow()))
 		{
 			// ImGUI
-			ImGui_ImplGlfwGL3_NewFrame();
+			ImGui_ImplOpenGL3_NewFrame();
+			ImGui_ImplGlfw_NewFrame();
+			ImGui::NewFrame();
 
 			// Input
 			Input::UpdateInput();
@@ -76,7 +87,8 @@ int main(void)
 			}
 
 			ImGui::Render();
-			ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
+			ImGui::Render();
+			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 			Renderer::EndDraw();
 
@@ -89,7 +101,9 @@ int main(void)
 
 	}
 	// Cleanup
-	ImGui_ImplGlfwGL3_Shutdown();
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 	ImGui::DestroyContext();
 	Renderer::Shutdown();
 	return 0;

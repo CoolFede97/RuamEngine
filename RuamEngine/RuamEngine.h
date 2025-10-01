@@ -14,7 +14,8 @@
 #include "Input.h"
 #include "RuamTime.h"
 #include "imgui.h"
-#include "imgui_impl_glfw_gl3.h"
+#include "backends/imgui_impl_glfw.h"
+#include "backends/imgui_impl_opengl3.h"
 
 #include <iostream>
 #include <assert.h>
@@ -34,8 +35,6 @@
 #include <filesystem>
 
 #include "Vec3.h"
-
-#include "imgui.h"
 
 #include "Input.h"
 

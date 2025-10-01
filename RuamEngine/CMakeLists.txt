@@ -210,7 +210,6 @@ target_link_libraries(Vendor INTERFACE
 
 target_include_directories(Vendor INTERFACE 
     ${VENDOR_PATH}/stb_image
-    ${VENDOR_PATH}/IMGUI
 )
 
 target_compile_definitions(Vendor INTERFACE GLEW_STATIC)

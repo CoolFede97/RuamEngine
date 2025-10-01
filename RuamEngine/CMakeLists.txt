@@ -54,7 +54,7 @@ add_library(Vendor INTERFACE)
 target_include_directories(Vendor INTERFACE 
 	${CMAKE_SOURCE_DIR}/vendor/GLM
 	${CMAKE_SOURCE_DIR}/vendor/stb_image
-	${CMAKE_SOURCE_DIR}/vendor/IMGUI
+#   ${CMAKE_SOURCE_DIR}/vendor/IMGUI
 )
 
 target_compile_definitions(Vendor INTERFACE STB_IMAGE_IMPLEMENTATION)
@@ -129,16 +129,23 @@ add_library(dr_libs::dr_libs ALIAS dr_libs)
 
 # IMGUI
 
+FetchContent_Declare(
+    imgui
+    GIT_REPOSOTORY  https://github.com/ocornut/imgui.git
+    GIT_TAG         V1.92.3-docking
+)
+FetchContent_MakeAvailable(imgui)
+
+message("${imgui_SOURCE_DIR}")
+
 # In order to use a library which has cpp and h files, you need to create a library (add_library) and
 # give it a source path (with the cpp files). 
-file (GLOB IMGUI_SRC "${VENDOR_PATH}/IMGUI/*.cpp")
+file (GLOB IMGUI_SRC "${imgui_SOURCE_DIR}/*.cpp" "${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp" "${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp")
 add_library(ImGui STATIC ${IMGUI_SRC})
 # In this case, the library has #include <AnotherLibrary> in its cpp files, like GLFW or GLEW, so 
 # we need to indicate where those glfw.h and glew.h files are.
-target_include_directories(ImGui PRIVATE
-    "${glfw_SOURCE_DIR}/include/GLFW"
-)
 target_link_libraries(ImGui PUBLIC glfw glew_s)
+target_include_directories(ImGui PUBLIC "${imgui_SOURCE_DIR}")
 # Lastly, add this new library to the function target_link_directories and also provice the path to 
 # the h files to the target_include_directories function
 

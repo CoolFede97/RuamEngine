@@ -1,21 +1,18 @@
 #pragma once
 
-#include "RendererCore.h"
-#include "VertexBuffer.h"
-#include "VertexArray.h"
-#include "IndexBuffer.h"
-#include "VertexBufferLayout.h"
+#include "RenderingCore.h"
+#include "RenderingElements.h"
+#include "RenderingConstants.h"
 
-#include "Shader.h"
+#include "DrawingData.h"
+#include "RenderUnit.h"
+#include "Material.h"
 
-class VertexBuffer;
-class VertexArray;
-class IndexBuffer;
-class Shader;
-class VertexBufferLayout;
+#include <unordered_map>
 
 namespace RuamEngine
 {
+	class DrawingData;
 
     // General data 
     struct RendererConfig
@@ -41,41 +38,19 @@ namespace RuamEngine
         
     };
 
-	static const size_t maxVertexAtribs = (3 + 4 + 2 + 1); // Position, Color, TexCoords, TexID
-	static const size_t maxVertexSize = sizeof(float) * maxVertexAtribs; // 3 position, 4 color, 2 tex coords, 1 tex id
-    static const size_t maxQuadCount = 1000;
-    static const size_t maxVertexCount = maxQuadCount * 4;
-    static const size_t maxIndexCount = maxQuadCount * 6;
-    static const size_t maxTextureSlots = 32; // Note for CoolFede97: Remember to change this according to the machine you are using!
-
-    // Data for current drawing
-    struct RendererState
-    {
-        // Primitives data
-
-        GLenum primitiveType = GL_TRIANGLES;
-
-        ShaderPtr m_shader = nullptr;
-        VertexArrayPtr m_vertexArray = nullptr;
-        VertexBufferPtr m_vertexBuffer = nullptr;
-        VertexBufferLayoutPtr m_layout = nullptr;
-		IndexBufferPtr m_indexBuffer = nullptr;
-
-        std::array<uint32_t, maxTextureSlots> textureSlots = {};
-        
-        // Which texture slot we can insert our new texture into
-        uint32_t textureSlotIndex = 1;
-    };
-
     class Renderer
     {
     public:
+        
         static void Init();
         static void Shutdown();
-        static void BeginDraw();
         static void EndDraw();
-        static void Clear();
-
+        static void BeginBatch();
+        static void EndBatch();
+		static void EndBatch(RenderUnit& renderUnit);
+        static void ClearScreen();
+        static void Flush();
+        
 		// Setters for RendererConfig
         static void SetWindowSize(int width, int height);
         static void SetWindowTitle(const char* title);
@@ -101,8 +76,10 @@ namespace RuamEngine
 		static GLFWwindow* GetWindow() { return m_window; }
 
         static void Draw();
+        static void Draw(RenderUnit& renderUnit);
+		static void DrawQuads();
 
-        static RendererState m_state;
+        static std::unordered_map<Shader::PipelineType, std::unique_ptr<DrawingData>> m_drawingDataMap;
     private:
         static RendererConfig m_config;
         static GLFWwindow* m_window;

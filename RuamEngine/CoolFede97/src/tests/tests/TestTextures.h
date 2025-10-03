@@ -13,7 +13,7 @@
 
 namespace test
 {
-	class TestTextures : public Test
+	/*class TestTextures : public Test
 	{
 	public:
 		TestTextures();
@@ -31,5 +31,5 @@ namespace test
 		VertexBufferLayout* m_Layout;
 		Shader* m_Shader;
 		Texture* m_Texture;
-	};
+	};*/
 }

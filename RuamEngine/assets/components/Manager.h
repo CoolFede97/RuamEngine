@@ -12,6 +12,9 @@ public:
 	using BaseRenderer::BaseRenderer;
 	Manager(unsigned int obj_id) : BaseRenderer(obj_id) {};
 	void render() {
+
+		ImGuiIO& io = ImGui::GetIO();
+		ImGui::Text("FPS: %.1f", io.Framerate);
 		int i = 0;
 		for (const auto& scene : SceneManager::sceneList()) 
 		{

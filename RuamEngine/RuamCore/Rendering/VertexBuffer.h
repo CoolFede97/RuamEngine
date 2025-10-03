@@ -1,22 +1,45 @@
 #pragma once
 
-#include "RendererCore.h"
+#include "RenderingCore.h"
+#include "Vertex.h"
 
-class VertexBuffer
-{
-private:
-	unsigned int m_RendererID;
-public:
+namespace RuamEngine
+{	
+	class VertexBuffer
+	{
+	private:
+		unsigned int m_RendererID;
+		unsigned int m_maxSize = 0;
+		unsigned int m_currentSize = 0;
+		unsigned int m_usage = GL_STATIC_DRAW;
+	public:
+		std::vector<float> m_vertexData = {};
 
-	VertexBuffer(const void* data, unsigned int size);
-	~VertexBuffer();
+		VertexBuffer(unsigned int maxSize, unsigned int usage);
+		~VertexBuffer();
 
-	void SetSubData(unsigned int offset, unsigned int size, const void* data);
-	void SetData(const void* data, unsigned int size, GLenum usage);
+		// Should be used for buffers from the renderer batch
+		void AddBatchData(const std::vector<float> data, unsigned int size);
 
-	void Bind() const; 
-	void Unbind() const;
-	unsigned int GetID() const { return m_RendererID; }
-};
+		// Shouldn't be used when using batch rendering
+		void SetSubData(const void* data, unsigned int offset, unsigned int size);
+	
+		// Shouldn't be used when using batch rendering
+		void SetData(const void* data);
+	
+		// Puts the data from m_vertexData into the actual buffer
+		void SubmitData();
 
-using VertexBufferPtr = std::shared_ptr<VertexBuffer>;
+		void Flush();
+
+		void Bind() const; 
+		void Unbind() const;
+		unsigned int GetID() const { return m_RendererID; }
+		unsigned int GetCurrentSize() const { return m_currentSize; }
+		unsigned int GetMaxSize() const { return m_maxSize; }
+
+	};
+
+	using VertexBufferPtr = std::unique_ptr<VertexBuffer>;
+}
+

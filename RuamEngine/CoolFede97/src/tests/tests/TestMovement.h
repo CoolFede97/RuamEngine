@@ -13,7 +13,7 @@
 
 namespace test
 {
-	class TestMovement : public Test
+	/*class TestMovement : public Test
 	{
 	public:
 		TestMovement();
@@ -35,5 +35,5 @@ namespace test
 		Camera* m_Camera;
 		float m_CubeGlobalPositionsCount;
 		float m_CameraSpeed;
-	};
+	};*/
 }

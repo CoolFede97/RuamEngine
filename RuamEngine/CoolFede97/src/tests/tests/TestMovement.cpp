@@ -145,7 +145,7 @@ namespace test
 	//	m_CubeGlobalPositionsCount = 20;
 
 	//	m_VAO = new VertexArray();
-	//	m_VBO = new VertexBuffer(vertices, 5 * 36 * sizeof(float));
+	//	m_VBO = new Buffer(vertices, 5 * 36 * sizeof(float));
 	//	m_Layout = new VertexBufferLayout();
 	//	m_Layout->Push<float>(3); // Position
 	//	m_Layout->Push<float>(2); // Texture Coordinates

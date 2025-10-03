@@ -6,20 +6,20 @@ namespace RuamEngine
     IndexBuffer::IndexBuffer(unsigned int maxCount, unsigned int usage)
     {
         ASSERT(sizeof(unsigned int) == sizeof(GLuint));
-        GLCall(glGenBuffers(1, &m_RendererID));
-	    m_maxSize = maxCount * sizeof(unsigned int);
+        GLCall(glCreateBuffers(1, &m_id));
+	    m_maxBytes = maxCount * sizeof(unsigned int);
+        SetData(nullptr);
 	    m_usage = usage;
-	    SetData(0);
     }
 
     IndexBuffer::~IndexBuffer()
     {
-        GLCall(glDeleteBuffers(1, &m_RendererID));
+        GLCall(glDeleteBuffers(1, &m_id));
     }
 
     void IndexBuffer::Bind() const
     {
-        GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID));
+        GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_id));
     }
 
     void IndexBuffer::Unbind() const
@@ -31,10 +31,10 @@ namespace RuamEngine
     // y todavía no se puso la información en el Buffer, se va a intentar dibujar con la posible información
     // faltante
 
-    void IndexBuffer::AddBatchData(const std::vector<unsigned int> data, unsigned int size)
+    void IndexBuffer::AddBatchData(const std::vector<unsigned int> data)
     {
         m_indexData.insert(m_indexData.end(), data.begin(), data.end());
-        m_currentSize += size;
+        m_currentBytes += data.size() * sizeof(unsigned int);
     }
 
 
@@ -54,7 +54,7 @@ namespace RuamEngine
     void IndexBuffer::SetData(const unsigned int* data)
     {
         Bind();
-        GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indexData.size() * sizeof(unsigned int), data, m_usage));
+        GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_maxBytes, data, m_usage));
     }
 
     // Puts the data from m_indexData into the actual buffer
@@ -62,18 +62,17 @@ namespace RuamEngine
     {
         Bind();
 	    //std::cout << "INDEX Vector size: " << m_indexData.size() * sizeof(m_indexData[0]) << "\n";
-	    //std::cout << "INDEX Buffer size: " << m_currentSize << "\n";
+	    //std::cout << "INDEX Buffer size: " << m_currentBytes << "\n";
      //   std::cout << "Indices number: " << m_indexData.size() << "\n";
         GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indexData.size() * sizeof(unsigned int), m_indexData.data(), m_usage));
     }
 
     void IndexBuffer::Flush()
     {
-
-
 	    m_indexData.clear();
-        m_currentSize = 0;
+        m_currentBytes = 0;
         Bind();
-        GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 0, nullptr, m_usage));
+        std::vector<unsigned int> zeros(m_maxBytes / sizeof(unsigned int), 0);
+        GLCall(glNamedBufferSubData(m_id, 0, m_maxBytes, zeros.data()));
     }
 }

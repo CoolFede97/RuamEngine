@@ -26,7 +26,7 @@ namespace test
 	//void TestTextures::Start()
 	//{
 	//	m_VAO = new VertexArray();
-	//	m_VBO = new VertexBuffer(m_Vertices, 5 * 36 * sizeof(float));
+	//	m_VBO = new Buffer(m_Vertices, 5 * 36 * sizeof(float));
 	//	m_Layout = new VertexBufferLayout();
 	//	m_Layout->Push<float>(3); // Position
 	//	m_Layout->Push<float>(2); // Texture Coordinates

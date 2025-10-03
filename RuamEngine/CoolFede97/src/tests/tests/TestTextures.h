@@ -27,7 +27,7 @@ namespace test
 		float* m_Vertices;
 
 		VertexArray* m_VAO;
-		VertexBuffer* m_VBO;
+		Buffer* m_VBO;
 		VertexBufferLayout* m_Layout;
 		Shader* m_Shader;
 		Texture* m_Texture;

@@ -163,16 +163,16 @@ protected:
 	VertexArray()
 	~VertexArray()
 
-	void AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout)
+	void AddBuffer(const Buffer& vb, const VertexBufferLayout& layout)
 	void Bind() const
 	void Unbind() const
 ```
 
-- /VertexBuffer -> class VertexArray:
+- /Buffer -> class VertexArray:
 
 ```cpp
-	VertexBuffer(const void* data, unsigned int size)
-	~VertexBuffer()
+	Buffer(const void* data, unsigned int size)
+	~Buffer()
 
 	void Bind() const
 	void Unbind() const

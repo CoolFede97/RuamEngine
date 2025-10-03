@@ -20,7 +20,7 @@ namespace test
 		void ImGuiRender() override;
 	private:
 		/*VertexArray* m_VAO;
-		VertexBuffer* m_VBO;
+		Buffer* m_VBO;
 		IndexBuffer* m_IBO;
 		VertexBufferLayout* m_Layout;
 		Shader* m_Shader;

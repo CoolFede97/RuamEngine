@@ -8,9 +8,9 @@ namespace RuamEngine
 	class VertexBuffer
 	{
 	private:
-		unsigned int m_RendererID;
-		unsigned int m_maxSize = 0;
-		unsigned int m_currentSize = 0;
+		unsigned int m_id;
+		unsigned int m_maxBytes = 0;
+		unsigned int m_currentBytes = 0;
 		unsigned int m_usage = GL_STATIC_DRAW;
 	public:
 		std::vector<float> m_vertexData = {};
@@ -34,9 +34,9 @@ namespace RuamEngine
 
 		void Bind() const; 
 		void Unbind() const;
-		unsigned int GetID() const { return m_RendererID; }
-		unsigned int GetCurrentSize() const { return m_currentSize; }
-		unsigned int GetMaxSize() const { return m_maxSize; }
+		unsigned int GetID() const { return m_id; }
+		unsigned int GetCurrentSize() const { return m_currentBytes; }
+		unsigned int GetMaxSize() const { return m_maxBytes; }
 
 	};
 

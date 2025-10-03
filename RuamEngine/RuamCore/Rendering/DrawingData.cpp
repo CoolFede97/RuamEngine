@@ -7,27 +7,13 @@ namespace RuamEngine
 	{
 		for (auto& pair : m_renderUnits)
 		{
-			if (pair.second.m_vertexBuffer->GetCurrentSize() > 0)
-			{
-				pair.second.m_vertexBuffer->SubmitData();
-			}
-			if (pair.second.m_indexBuffer->GetCurrentSize() > 0)
-			{
-				pair.second.m_indexBuffer->SubmitData();
-			}
+			pair.second.SubmitBatchData();
 		}
 	}
 
 	void DrawingData::SubmitBatchData(RenderUnit& renderUnit)
 	{
-		if (renderUnit.m_vertexBuffer->GetCurrentSize() > 0)
-		{
-			renderUnit.m_vertexBuffer->SubmitData();
-		}
-		if (renderUnit.m_indexBuffer->GetCurrentSize() > 0)
-		{
-			renderUnit.m_indexBuffer->SubmitData();
-		}	
+		renderUnit.SubmitBatchData();
 	}
 
 	void DrawingData::Flush()

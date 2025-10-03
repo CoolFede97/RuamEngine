@@ -29,7 +29,7 @@ namespace test
 		glm::vec3* m_CubeGlobalPositions;
 
 		VertexArray* m_VAO;
-		VertexBuffer* m_VBO;
+		Buffer* m_VBO;
 		VertexBufferLayout* m_Layout;
 		Shader* m_Shader;
 		Camera* m_Camera;

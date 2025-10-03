@@ -1,7 +1,7 @@
 #pragma once
 
 #include "RenderingCore.h"
-#include "VertexBuffer.h"
+#include "Buffer.h"
 #include "VertexBufferLayout.h"
 
 namespace RuamEngine
@@ -9,14 +9,14 @@ namespace RuamEngine
 	class VertexArray
 	{
 	private:
-		unsigned int m_RendererID;
+		unsigned int m_id;
 	public:
 
 	
 		VertexArray();
 		~VertexArray();
 
-		void AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout);
+		//void AddBuffer(const SSBO<Vertex>& vb, const VertexBufferLayout& layout);
 		void Bind() const;
 		void Unbind() const;
 	};

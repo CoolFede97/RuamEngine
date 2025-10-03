@@ -14,6 +14,14 @@ namespace RuamEngine
 {
 	class DrawingData;
 
+    enum SSBOType
+    {
+        vertices = 0,
+        indices = 1,
+        modelMatrices = 2,
+        textures = 3
+    };
+
     // General data 
     struct RendererConfig
     {
@@ -75,12 +83,17 @@ namespace RuamEngine
 
 		static GLFWwindow* GetWindow() { return m_window; }
 
+
         static void Draw();
         static void Draw(RenderUnit& renderUnit);
-		static void DrawQuads();
 
         static std::unordered_map<Shader::PipelineType, std::unique_ptr<DrawingData>> m_drawingDataMap;
+        static std::vector<TexturePtr> m_textures;
+        static std::vector<GLuint64> m_textureHandles;
     private:
+        static void CreateTexture(const std::string& texturePath);
+        static void UploadTextures();
+        static GLuint m_textureBuffer;
         static RendererConfig m_config;
         static GLFWwindow* m_window;
     };

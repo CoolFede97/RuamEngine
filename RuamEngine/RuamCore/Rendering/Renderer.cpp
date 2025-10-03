@@ -173,20 +173,18 @@ namespace RuamEngine
             {
                 drawingData.second->m_shader->Bind();
                 drawingData.second->m_shader->LoadMaterial(*renderUnit.second.m_material);
-                renderUnit.second.m_vertexArray->Bind();
                 renderUnit.second.m_indexBuffer->Bind();
-                GLCall(glDrawElements(GL_TRIANGLES, renderUnit.second.m_indexBuffer->GetIndexCount(), GL_UNSIGNED_INT, nullptr));
+                GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, numIndices, instanceCount));
             }
         }
     }
 
     void Renderer::Draw(RenderUnit& renderUnit)
     {
-        renderUnit.m_vertexArray->Bind();
         renderUnit.m_shader->Bind();
         renderUnit.m_shader->LoadMaterial(*renderUnit.m_material);
         renderUnit.m_indexBuffer->Bind();
-        GLCall(glDrawElementsInstanced(GL_TRIANGLES, renderUnit.m_indexBuffer->GetIndexCount(), GL_UNSIGNED_INT, nullptr, renderUnit.m_modelMatricesBuffer->GetCurrentSize()/4));
+        GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, numIndices, instanceCount));
     }
 
 }

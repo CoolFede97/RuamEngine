@@ -157,10 +157,10 @@ namespace RuamEngine
 		ASSERT(texture.m_LocalBuffer);
 		ASSERT(*material.textures[0].m_LocalBuffer == *texture.m_LocalBuffer);
 		*/
-		for (int i = 0 ; i < material.textures.size(); i++)
+		/*for (int i = 0 ; i < material.textures.size(); i++)
 		{
 			material.textures[i]->Bind(i);
-		}
+		}*/
 
 		/*ASSERT(*texture.m_LocalBuffer == *material.textures[0].m_LocalBuffer);*/
 		//material.textures[0].Bind(0);

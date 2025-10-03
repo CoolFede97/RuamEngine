@@ -22,7 +22,7 @@ namespace RuamEngine
 		}
 	}
 
-	bool RenderUnit::AddBatchData(const std::vector<Vertex> vertices, unsigned int vertexDataSize, const std::vector<unsigned int> indices, unsigned int indexDataSize)
+	/*bool RenderUnit::AddBatchData(const std::vector<Vertex> vertices, unsigned int vertexDataSize, const std::vector<unsigned int> indices, unsigned int indexDataSize)
 	{
 		bool fullBatch = false;
 		ASSERT(indexDataSize <= m_indexBuffer->GetMaxSize());
@@ -37,7 +37,7 @@ namespace RuamEngine
 		m_vertices->AddBatchData(vertices);
 		m_indices->AddBatchData(indices);
 		return fullBatch;
-	}
+	}*/
 
 	bool RenderUnit::AddBatchData(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::vector<glm::mat4>& modelMatrices)
 	{

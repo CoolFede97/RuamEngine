@@ -35,6 +35,10 @@ namespace RuamEngine
 
 
         {
+            //GLuint dummyVAO;
+            //glCreateVertexArrays(1, &dummyVAO);   // DSA
+            //glBindVertexArray(dummyVAO);
+
             GLCall(glCreateBuffers(1, &m_textureBuffer));
             CreateTexture("assets/sprites/bigBrain.png");
             m_drawingDataMap.emplace(Shader::PipelineType::Generic, std::make_unique<DrawingData>(Shader::PipelineType::Generic));
@@ -174,7 +178,7 @@ namespace RuamEngine
                 drawingData.second->m_shader->Bind();
                 drawingData.second->m_shader->LoadMaterial(*renderUnit.second.m_material);
                 renderUnit.second.m_indexBuffer->Bind();
-                GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, numIndices, instanceCount));
+                GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit.second.m_vertices->m_data.size()*2, renderUnit.second.m_modelMatricesBuffer->m_data.size()*2));
             }
         }
     }
@@ -184,7 +188,7 @@ namespace RuamEngine
         renderUnit.m_shader->Bind();
         renderUnit.m_shader->LoadMaterial(*renderUnit.m_material);
         renderUnit.m_indexBuffer->Bind();
-        GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, numIndices, instanceCount));
+        GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit.m_vertices->m_data.size()*2, renderUnit.m_modelMatricesBuffer->m_data.size()*2));
     }
 
 }

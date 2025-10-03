@@ -47,7 +47,7 @@ namespace RuamEngine
 
 		bool fullBatch = false;
 
-		if (m_vertices->GetCurrentSize() + vertices.size() * sizeof(float) > m_vertices->GetMaxSize())
+		if (m_vertices->GetCurrentSize() + vertices.size() * sizeof(Vertex) > m_vertices->GetMaxSize())
 		{
 			SubmitBatchData();
 			Renderer::Draw(*this);

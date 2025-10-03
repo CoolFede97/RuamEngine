@@ -14,7 +14,6 @@ flat in int frag_instance;
 
 out vec4 final_color;
 
-in vec2 frag_texCoords;
 flat in int frag_texID;
 
 uniform vec4  u_albedoColor;

@@ -1,6 +1,7 @@
 #version 450 core
 
-#extension GL_ARB_bindless_texture : require
+#extension GL_ARB_bindless_texture : require    
+#extension GL_ARB_gpu_shader_int64 : enable
 
 const int SSBOType_vertices = 0;
 const int SSBOType_indices = 1;

@@ -11,6 +11,7 @@ namespace RuamEngine
 		float m_texId = 0;
 	 
 		static std::vector<Vertex> CreateQuad(float size, float x, float y, float texId=0);
+		static std::vector<Vertex> CreateCube(float texId = 0);
 		operator std::vector<float>() const
 		{
 			return

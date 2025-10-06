@@ -1,4 +1,4 @@
-#include "Buffer.h"
+#include "SSBO.h"
 #include "VertexBuffer.h"
 #include "VertexArray.h"
 #include "IndexBuffer.h"

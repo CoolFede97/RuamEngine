@@ -3,7 +3,7 @@
 #include <Component.hpp>
 #include "Renderer.h"
 #include "Vertex.h"
-#include "Buffer.h"
+#include "SSBO.h"
 
 using namespace RuamEngine;
 
@@ -25,9 +25,9 @@ class SandboxCom : public BaseRenderer
 	void render()
 	{
 		RenderUnit& genericUnit = Renderer::m_drawingDataMap[Shader::PipelineType::Generic]->m_renderUnits[Material::MaterialType::Generic];
-		genericUnit.m_vertexArray->Bind();
+		//genericUnit.m_vertexArray->Bind();
 
-		genericUnit.m_shader->Bind();
+		//genericUnit.m_shader->Bind();
 		
 
 		for (int row = 0; row < gridSide; row++)
@@ -39,7 +39,7 @@ class SandboxCom : public BaseRenderer
 					quadWidth,
 					col * (screenX / gridSide - 0.5f * padding) + col * padding + quadWidth / 2 - screenX / 2,
 					row * (screenY / gridSide - 0.5f * padding) + row * padding + quadHeight / 2 - screenY / 2,
-					0
+					1.0f
 				);
 				
 				std::vector<unsigned int> newIndices =

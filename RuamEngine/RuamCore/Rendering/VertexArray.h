@@ -1,7 +1,7 @@
 #pragma once
 
 #include "RenderingCore.h"
-#include "Buffer.h"
+#include "SSBO.h"
 #include "VertexBufferLayout.h"
 
 namespace RuamEngine

@@ -8,7 +8,7 @@ namespace RuamEngine
     std::unordered_map<Shader::PipelineType, std::unique_ptr<DrawingData>> Renderer::m_drawingDataMap;
     GLuint Renderer::m_textureBuffer = 0;
     std::vector<TexturePtr> Renderer::m_textures;
-    std::vector<GLuint64> Renderer::m_textureHandles;
+    std::vector<uint32_t> Renderer::m_textureHandles;
     void Renderer::Init()
     {
         ASSERT(glfwInit());
@@ -40,15 +40,16 @@ namespace RuamEngine
             //glBindVertexArray(dummyVAO);
 
             GLCall(glCreateBuffers(1, &m_textureBuffer));
+			CreateTexture("assets/sprites/defaultSprite.png");
             CreateTexture("assets/sprites/bigBrain.png");
+
             m_drawingDataMap.emplace(Shader::PipelineType::Generic, std::make_unique<DrawingData>(Shader::PipelineType::Generic));
             DrawingData& basicDrawingData = *m_drawingDataMap.at(Shader::PipelineType::Generic);
-            basicDrawingData.m_shader = std::make_unique<Shader>("assets/shaders/GeneralVertexShader.glsl", "assets/shaders/GeneralFragmentShader.glsl");
+            basicDrawingData.m_shader = std::make_shared<Shader>("assets/shaders/GeneralVertexShader.glsl", "assets/shaders/GeneralFragmentShader.glsl");
             basicDrawingData.m_renderUnits.emplace(Material::MaterialType::Generic, RenderUnit(basicDrawingData.m_shader));
             RenderUnit& genericUnit = basicDrawingData.m_renderUnits.at(Material::MaterialType::Generic);
             basicDrawingData.m_shader->Bind();
             genericUnit.m_material = std::make_unique<Material>(Material::MaterialType::Generic);
-            genericUnit.m_material->albedoColor = Vec4(1.0f, 1.0f, 1.0f, 1.0f);
             VertexBufferLayout& genericLayout = *genericUnit.m_layout;
             //genericLayout.Reset();
             //genericLayout.Push<float>(3);
@@ -141,11 +142,19 @@ namespace RuamEngine
 
     void Renderer::CreateTexture(const std::string& texturePath)
     {
-        TexturePtr newTex = std::make_unique<Texture>(texturePath);
+        TexturePtr newTex = std::make_shared<Texture>(texturePath);
         GLuint64 newHandle; 
         GLCall(newHandle = glGetTextureHandleARB(newTex->GetID()));
         ASSERT(newHandle != 0);
-        m_textureHandles.push_back(newHandle);
+
+        uint32_t lo = static_cast<uint32_t>(newHandle & 0xFFFFFFFFull);
+        uint32_t hi = static_cast<uint32_t>(newHandle >> 32);
+
+        GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, SSBOType::textures, m_textureBuffer));
+        GLCall(glMakeTextureHandleResidentARB(newHandle));
+
+        m_textureHandles.push_back(lo);
+        m_textureHandles.push_back(hi);
         m_textures.push_back(newTex);
     }
 
@@ -157,16 +166,13 @@ namespace RuamEngine
             glNamedBufferStorage
             (
                 m_textureBuffer,
-                sizeof(GLuint64) * m_textureHandles.size(),
+                sizeof(uint32_t) * m_textureHandles.size(),
                 (const void*)m_textureHandles.data(),
                 GL_DYNAMIC_STORAGE_BIT
             )
         );
-        for (GLuint64 handle : m_textureHandles)
-        {
-            glMakeTextureHandleResidentARB(handle);
-        }
-        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, SSBOType::textures, m_textureBuffer);
+        GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, SSBOType::textures, m_textureBuffer));
+
     }
 
     void Renderer::Draw()
@@ -178,7 +184,7 @@ namespace RuamEngine
                 drawingData.second->m_shader->Bind();
                 drawingData.second->m_shader->LoadMaterial(*renderUnit.second.m_material);
                 renderUnit.second.m_indexBuffer->Bind();
-                GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit.second.m_vertices->m_data.size()*2, renderUnit.second.m_modelMatricesBuffer->m_data.size()*2));
+                GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, 6, renderUnit.second.m_modelMatricesBuffer->m_data.size()));
             }
         }
     }
@@ -188,7 +194,7 @@ namespace RuamEngine
         renderUnit.m_shader->Bind();
         renderUnit.m_shader->LoadMaterial(*renderUnit.m_material);
         renderUnit.m_indexBuffer->Bind();
-        GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit.m_vertices->m_data.size()*2, renderUnit.m_modelMatricesBuffer->m_data.size()*2));
+        GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, 6, renderUnit.m_modelMatricesBuffer->m_data.size()));
     }
 
 }

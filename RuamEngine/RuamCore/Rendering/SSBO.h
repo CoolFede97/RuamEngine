@@ -46,7 +46,6 @@ namespace RuamEngine
 		void SubmitData()
 		{
 			ASSERT(m_data.size() * sizeof(T) <= m_maxBytes);
-
 			GLCall(glNamedBufferSubData(m_id, 0, m_data.size()*sizeof(T), m_data.data()));
 		}
 	

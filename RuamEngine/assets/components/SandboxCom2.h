@@ -3,7 +3,7 @@
 #include <Component.hpp>
 #include "Renderer.h"
 #include "Vertex.h"
-#include "Buffer.h"
+#include "SSBO.h"
 
 
 using namespace RuamEngine;

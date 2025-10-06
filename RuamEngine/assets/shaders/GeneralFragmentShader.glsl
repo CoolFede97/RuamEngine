@@ -32,26 +32,6 @@ uniform float u_emissiveStrength;
 
 void main()
 {
-
-    //sampler2D tex = textures[frag_texID];
-    //final_color = texture(tex, frag_uv);
-    if (frag_texID == 0)
-        final_color = vec4(1,0,0,1); // rojo
-    else if (frag_texID == 1)
-        final_color = vec4(0,1,0,1); // verde
-    else if (frag_texID == 2)
-        final_color = vec4(0,0,1,1); // azul
-    else if (frag_texID == 3)
-        final_color = vec4(1,1,1,1);
-    else
-        final_color = vec4(1,0,1,1); // magenta (índice inesperado)
-
-    return;
-    if (frag_texID < 0 || frag_texID >= int(textures.length())) 
-    {
-            final_color = vec4(1,0,1,1);
-            return;
-    }
-
-
+    sampler2D tex = textures[frag_texID];
+    final_color = texture(tex, frag_uv);   
 }

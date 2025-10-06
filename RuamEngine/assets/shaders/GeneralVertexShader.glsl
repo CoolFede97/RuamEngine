@@ -11,7 +11,7 @@ struct VertexData
 {
 	float position[3];
 	float uv[2];
-    int texID;
+    float texID;
 };
 
 layout(binding = SSBOType_vertices, std430) readonly buffer ssbo0
@@ -64,5 +64,5 @@ void main()
 	gl_Position = vp * modelTransforms[gl_InstanceID] * position;
     frag_uv = GetUV(realIndex);
     frag_instance = gl_InstanceID;
-    frag_texID = data[realIndex].texID;
+    frag_texID = int(data[realIndex].texID);
 };

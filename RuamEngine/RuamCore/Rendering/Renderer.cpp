@@ -147,12 +147,9 @@ namespace RuamEngine
         GLCall(newHandle = glGetTextureHandleARB(newTex->GetID()));
         ASSERT(newHandle != 0);
 
-        GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, SSBOType::textures, m_textureBuffer));
-
-        m_textureHandles.push_back(newHandle);
-
         GLCall(glMakeTextureHandleResidentARB(newHandle));
 
+        m_textureHandles.push_back(newHandle);
         m_textures.push_back(newTex);
     }
 
@@ -176,8 +173,7 @@ namespace RuamEngine
             {
                 drawingData.second->m_shader->Bind();
                 drawingData.second->m_shader->LoadMaterial(*renderUnit.second.m_material);
-                renderUnit.second.m_indexBuffer->Bind();
-                GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, 6, renderUnit.second.m_modelMatricesBuffer->m_data.size()));
+                GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit.second.m_indices->GetCurrentSize()/sizeof(unsigned int), renderUnit.second.m_modelMatricesBuffer->m_data.size()));
             }
         }
     }
@@ -186,8 +182,7 @@ namespace RuamEngine
     {
         renderUnit.m_shader->Bind();
         renderUnit.m_shader->LoadMaterial(*renderUnit.m_material);
-        renderUnit.m_indexBuffer->Bind();
-        GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, 6, renderUnit.m_modelMatricesBuffer->m_data.size()));
+        GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit.m_indices->GetCurrentSize() / sizeof(unsigned int), renderUnit.m_modelMatricesBuffer->m_data.size()));
     }
 
 }

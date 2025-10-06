@@ -89,7 +89,7 @@ namespace RuamEngine
 
         static std::unordered_map<Shader::PipelineType, std::unique_ptr<DrawingData>> m_drawingDataMap;
         static std::vector<TexturePtr> m_textures;
-        static std::vector<uint32_t> m_textureHandles;
+        static std::vector<glm::uvec2> m_textureHandles;
         //static std::vector<uvec2>
     private:
         static void CreateTexture(const std::string& texturePath);

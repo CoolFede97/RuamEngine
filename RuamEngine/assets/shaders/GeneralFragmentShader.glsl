@@ -71,4 +71,9 @@ void main()
         uvec2 h = textures[frag_texID];
         sampler2D tex = sampler2D(h); // constructor acepta uvec2
         final_color = texture(tex, frag_uv);
+
+
+        // ------------
+        //sampler2D tex = textures[frag_texID];
+        //final_color = texture(tex, frag_uv);
 }

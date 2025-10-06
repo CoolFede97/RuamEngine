@@ -8,7 +8,7 @@ namespace RuamEngine
     std::unordered_map<Shader::PipelineType, std::unique_ptr<DrawingData>> Renderer::m_drawingDataMap;
     GLuint Renderer::m_textureBuffer = 0;
     std::vector<TexturePtr> Renderer::m_textures;
-    std::vector<uint32_t> Renderer::m_textureHandles;
+    std::vector<glm::uvec2> Renderer::m_textureHandles;
     void Renderer::Init()
     {
         ASSERT(glfwInit());
@@ -40,8 +40,8 @@ namespace RuamEngine
             //glBindVertexArray(dummyVAO);
 
             GLCall(glCreateBuffers(1, &m_textureBuffer));
-			CreateTexture("assets/sprites/defaultSprite.png");
             CreateTexture("assets/sprites/bigBrain.png");
+			CreateTexture("assets/sprites/defaultSprite.png");
 
             m_drawingDataMap.emplace(Shader::PipelineType::Generic, std::make_unique<DrawingData>(Shader::PipelineType::Generic));
             DrawingData& basicDrawingData = *m_drawingDataMap.at(Shader::PipelineType::Generic);
@@ -147,14 +147,12 @@ namespace RuamEngine
         GLCall(newHandle = glGetTextureHandleARB(newTex->GetID()));
         ASSERT(newHandle != 0);
 
-        uint32_t lo = static_cast<uint32_t>(newHandle & 0xFFFFFFFFull);
-        uint32_t hi = static_cast<uint32_t>(newHandle >> 32);
-
         GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, SSBOType::textures, m_textureBuffer));
         GLCall(glMakeTextureHandleResidentARB(newHandle));
 
-        m_textureHandles.push_back(lo);
-        m_textureHandles.push_back(hi);
+        m_textureHandles.push_back(glm::uvec2(
+            static_cast<uint32_t>(newHandle & 0xFFFFFFFFull),
+            static_cast<uint32_t>(newHandle >> 32)));
         m_textures.push_back(newTex);
     }
 
@@ -166,13 +164,18 @@ namespace RuamEngine
             glNamedBufferStorage
             (
                 m_textureBuffer,
-                sizeof(uint32_t) * m_textureHandles.size(),
+                sizeof(glm::uvec2) * m_textureHandles.size(),
                 (const void*)m_textureHandles.data(),
                 GL_DYNAMIC_STORAGE_BIT
             )
         );
         GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, SSBOType::textures, m_textureBuffer));
-
+        for (int i = 0; i < m_textureHandles.size(); ++i)
+        {
+            std::cout << "Tex[" << i << "] = lo=0x"
+                << std::hex << m_textureHandles[i].x
+                << " hi=0x" << m_textureHandles[i].y << std::dec << std::endl;
+        }
     }
 
     void Renderer::Draw()

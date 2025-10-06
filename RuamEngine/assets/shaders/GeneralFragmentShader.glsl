@@ -7,7 +7,7 @@ const int SSBOType_textures = 3;
 
 layout(binding = SSBOType_textures, std430) readonly buffer ssbo3
 {
-    uvec2 textures[];
+    sampler2D textures[];
 };
 
 smooth in vec2 frag_uv;
@@ -32,48 +32,26 @@ uniform float u_emissiveStrength;
 
 void main()
 {
-//    uvec2 handle = textures[frag_texID];
-//    sampler2D tex = sampler2D(handle);
-//    final_color = vec4(texture(tex, frag_uv).rgb, 1.0);
 
-//    uvec2 h0 = textures[0];
-//    sampler2D s0 = sampler2D(h0);
-//    vec4 c0 = texture(s0, frag_uv);
-//
-//    uvec2 h1 = textures[1];
-//    sampler2D s1 = sampler2D(h1);
-//    vec4 c1 = texture(s1, frag_uv);
-//
-//    // Para debug: si frag_texID==0 devuelve c0, si ==1 devuelve c1
-//    if (frag_texID == 0) final_color = c0;
-//    else if (frag_texID == 1) final_color = c1;
-//    else final_color = vec4(1,0,1,1); // magenta para ver indexes inválidos
+    //sampler2D tex = textures[frag_texID];
+    //final_color = texture(tex, frag_uv);
+    if (frag_texID == 0)
+        final_color = vec4(1,0,0,1); // rojo
+    else if (frag_texID == 1)
+        final_color = vec4(0,1,0,1); // verde
+    else if (frag_texID == 2)
+        final_color = vec4(0,0,1,1); // azul
+    else if (frag_texID == 3)
+        final_color = vec4(1,1,1,1);
+    else
+        final_color = vec4(1,0,1,1); // magenta (índice inesperado)
 
-
-// ---------
-//    if (frag_texID < 0 || frag_texID >= textures.length()) 
-//    {
-//        final_color = vec4(1,0,1,1); // magenta por debug
-//        return;
-//    }
-//    else
-//    {
-//        final_color = vec4(1,1,0,1);
-//    }
-
-// --------
-
-    if (frag_texID < 0 || frag_texID >= int(textures.length())) {
+    return;
+    if (frag_texID < 0 || frag_texID >= int(textures.length())) 
+    {
             final_color = vec4(1,0,1,1);
             return;
-        }
-
-        uvec2 h = textures[frag_texID];
-        sampler2D tex = sampler2D(h); // constructor acepta uvec2
-        final_color = texture(tex, frag_uv);
+    }
 
 
-        // ------------
-        //sampler2D tex = textures[frag_texID];
-        //final_color = texture(tex, frag_uv);
 }

@@ -29,7 +29,7 @@ class SandboxCom : public BaseRenderer
 
 		//genericUnit.m_shader->Bind();
 		
-
+		indexCount = 0;
 		for (int row = 0; row < gridSide; row++)
 		{
 			for (int col = 0; col < gridSide; col++)
@@ -46,7 +46,7 @@ class SandboxCom : public BaseRenderer
 				{
 					indexCount + 0, indexCount + 1, indexCount + 2,indexCount + 2, indexCount + 3, indexCount + 0
 				};
-
+				indexCount += 4;
 				if (genericUnit.AddBatchData(newQuad, newIndices, { glm::mat4(1.0f) }))
 				{
 					indexCount = 0;

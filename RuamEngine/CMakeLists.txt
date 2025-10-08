@@ -179,7 +179,7 @@ FetchContent_MakeAvailable(openal-soft)
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
 
-if(__LINUX__)
+if(LINUX)
     # easy_profiler
     FetchContent_Declare(
             easy_profiler
@@ -221,7 +221,7 @@ target_compile_definitions(Vendor INTERFACE BUILD_WITH_EASY_PROFILER)
 target_link_libraries(Vendor INTERFACE
         glfw glew_s glm ImGui OpenGL::GL OpenAL::OpenAL nlohmann_json::nlohmann_json dr_libs
 )
-if (__LINUX__)
+if (LINUX)
     target_link_libraries(Vendor INTERFACE easy_profiler)
 endif ()
 

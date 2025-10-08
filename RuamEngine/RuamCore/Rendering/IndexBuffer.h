@@ -1,8 +1,8 @@
 #pragma once
 
-#include "RendererCore.h"
+#include "RenderingCore.h"
 
-class IndexBuffer
+namespace RuamEngine
 {
 	class IndexBuffer
 	{
@@ -13,12 +13,9 @@ class IndexBuffer
 		unsigned int m_usage = GL_STATIC_DRAW;
 		std::vector<unsigned int> m_indexData = {};
 
-	void Bind() const;
-	void Unbind() const;
-	void SetData(unsigned int size, unsigned int* data, GLenum usage);
-	void SetSubData(unsigned int offset, unsigned int size, unsigned int* data);
-	//unsigned int GetCount() const { return m_count; }
-};
+	public:
+		IndexBuffer(unsigned int maxCount, unsigned int usage);
+		~IndexBuffer();
 
 		void Bind() const;
 		void Unbind() const;

@@ -143,8 +143,8 @@ add_library(dr_libs::dr_libs ALIAS dr_libs)
 
 FetchContent_Declare(
     imgui
-    GIT_REPOSOTORY  https://github.com/ocornut/imgui.git
-    GIT_TAG         V1.92.3-docking
+    GIT_REPOSITORY  https://github.com/ocornut/imgui.git
+    GIT_TAG         v1.92.3-docking
 )
 FetchContent_MakeAvailable(imgui)
 
@@ -247,7 +247,7 @@ add_library(RuamCore INTERFACE)
 file (GLOB RENDERING_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Rendering/*.cpp")
 add_library(Rendering STATIC ${RENDERING_SRC})
 target_link_libraries(Rendering PUBLIC Vendor Files Maths RuamUtils)
-target_include_directories(Rendering INTERFACE ${CMAKE_SOURCE_DIR}/RuamCore/Rendering)
+target_include_directories(Rendering PUBLIC ${CMAKE_SOURCE_DIR}/RuamCore/Rendering)
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
 

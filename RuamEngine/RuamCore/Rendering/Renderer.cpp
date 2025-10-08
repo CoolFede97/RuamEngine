@@ -1,23 +1,6 @@
 #include "Renderer.h"
 
-void GLClearError()
-{
-    while (glGetError() != GL_NO_ERROR);
-}
 
-bool GLLogCall(const char* function, const char* file, int line)
-{
-    while (GLenum error = glGetError())
-    {
-        std::cout << "[OpenGL Error] (" << error << "): " << "\n" <<
-            "in file: " << file << "\n" <<
-            "in line: " << line << "\n" <<
-            "in function: " << function << "\n";
-
-        return false;
-    }
-    return true;    
-}
 namespace RuamEngine
 {
     RendererConfig Renderer::m_config;
@@ -39,7 +22,7 @@ namespace RuamEngine
 
         glfwMakeContextCurrent(m_window);
 
-        glfwSwapInterval(1);
+        glfwSwapInterval(0);
 
         ASSERT(glewInit() == GLEW_OK);
 
@@ -82,16 +65,34 @@ namespace RuamEngine
     {
         glfwTerminate();
     }
-    void Renderer::BeginDraw()
-    {
-        Clear();
-
-    }
     void Renderer::EndDraw()
     {
         glfwSwapBuffers(m_window);
     }
-    void Renderer::Clear()
+    void Renderer::BeginBatch()
+    {
+        Flush();
+    }
+    void Renderer::EndBatch()
+    {
+        for (auto& pair : m_drawingDataMap)
+        {
+            pair.second->SubmitBatchData();
+        }
+    }
+    void Renderer::EndBatch(RenderUnit& renderUnit)
+    {
+        renderUnit.SubmitBatchData();
+    }
+    void Renderer::Flush()
+    {
+        for (auto& pair : m_drawingDataMap)
+        {
+            pair.second->Flush();
+        }
+    }
+
+    void Renderer::ClearScreen()
     {
         if (m_config.useClearColor) GLCall(glClear(GL_COLOR_BUFFER_BIT));
         if (m_config.depthTest) GLCall(glClear(GL_DEPTH_BUFFER_BIT));

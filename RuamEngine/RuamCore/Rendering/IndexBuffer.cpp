@@ -1,9 +1,7 @@
 #include "Renderer.h"
 #include "IndexBuffer.h"
 
-using namespace RuamEngine;
-
-IndexBuffer::IndexBuffer(const unsigned int* data, unsigned int count)
+namespace RuamEngine
 {
     IndexBuffer::IndexBuffer(unsigned int maxCount, unsigned int usage)
     {
@@ -24,15 +22,14 @@ IndexBuffer::IndexBuffer(const unsigned int* data, unsigned int count)
         GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_id));
     }
 
-void IndexBuffer::Bind() const
-{
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID));
-}
+    void IndexBuffer::Unbind() const
+    {
+        GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+    }
 
-void IndexBuffer::Unbind() const
-{
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
-}
+    // Problema que arreglar. Si se llama a EndBatch cuando se llega al límite del espacio del IndexBuffer
+    // y todavía no se puso la información en el Buffer, se va a intentar dibujar con la posible información
+    // faltante
 
     void IndexBuffer::AddBatchData(const std::vector<unsigned int> data)
     {
@@ -40,14 +37,14 @@ void IndexBuffer::Unbind() const
         m_currentBytes += data.size() * sizeof(unsigned int);
     }
 
-void IndexBuffer::SetSubData(unsigned int offset, unsigned int size, unsigned int* data)
-{
-    ASSERT(offset + size <= maxIndexCount * sizeof(unsigned int));
 
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID));
+    // This function does not change the m_indexCount or m_size variables!
+    // You probably want to avoid using this function directly
+    void IndexBuffer::SetSubData(const unsigned int* data, unsigned int offset, unsigned int size)
+    {
+        ASSERT(offset + size <= maxIndexCount * sizeof(unsigned int));
 
-    GLCall(glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, size, data));
-}
+        Bind();
 
 	    GLCall(glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, size, data));
     }

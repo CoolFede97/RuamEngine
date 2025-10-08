@@ -1,5 +1,5 @@
 #include "AudioSource.h"
-#include "easy/profiler.h"
+#include "RuamUtils.h"
 
 AudioSource::AudioSource(const unsigned int object_id, const std::string& audio) 
 	: m_audio_path(audio), Component(object_id) {

@@ -1,52 +1,46 @@
 #include "Scene.hpp"
-#include "easy/profiler.h"
+#include <fstream>
 
 unsigned int Scene::s_id_count = 0;
 const std::string Scene::s_default_name = "Sample Scene";
-
-Scene::Scene() : m_id(s_id_count++), m_name(s_default_name) {}
-
-Scene::Scene(const char* name) : m_id(s_id_count++), m_name(name) {}
-
-const unsigned int Scene::id() const {
-	return m_id;
-}
 
 const std::string& Scene::name() const {
 	return m_name;
 }
 
-Object& Scene::newObject() {
-    std::shared_ptr<Object> obj = std::make_shared<Object>();
+Object* Scene::newObject() {
+    Object *obj = new Object();
     m_objects.push_back(obj);
-    return *obj.get();
+    return obj;
 }
 
-Object& Scene::newObject(unsigned int idx) {
+Object* Scene::newObject(unsigned int idx) {
     // Going to have to check this
     //assert(idx < m_objects.size());
-    std::shared_ptr<Object> obj = std::make_shared<Object>();
+    Object *obj = new Object();
     auto index = m_objects.cbegin();
     std::advance(index, idx);
     m_objects.insert(index, obj);
-    return *obj.get();
+    return obj;
 }
 
-Object& Scene::getObjectByIdx(unsigned int idx) const {
+Object* Scene::getObjectByIdx(const unsigned int idx) const {
     auto iter = m_objects.begin();
-    return *std::next(iter, idx)->get();
+    return *std::next(iter, idx);
 }
 
-Object& Scene::getObjectById(unsigned int id) const {
+Object* Scene::getObjectById(unsigned int id) const {
     auto obj = m_objects.begin();
-    while (obj->get()->id() != id) {
+    while ((*obj)->id() != id) {
         std::advance(obj, 1);
     }
-    return *obj->get();
+    return *obj;
 }
 
 void Scene::deleteObjectByIdx(unsigned int idx) {
-    m_objects.erase(std::next(m_objects.cbegin(), idx));
+    auto obj = *std::next(m_objects.begin(), idx);
+    delete obj;
+    m_objects.erase(std::next(m_objects.begin(), idx));
 }
 
 void Scene::start() {

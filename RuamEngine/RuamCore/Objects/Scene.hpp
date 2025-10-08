@@ -1,29 +1,32 @@
 #pragma once
 
 #include <list>
-#include <vector>
-#include <memory>
-#include <iterator>
-
 #include <string>
-
 #include "Object.hpp"
 
 class Scene {
 public:
-    using SceneList = std::vector<Scene>;
+    Scene() : m_id(s_id_count++), m_name(s_default_name) {}
 
-    Scene();
-    Scene(const char* name);
+    Scene(const int id) : m_id(id), m_name(s_default_name) {}
 
-	const unsigned int id() const;
+    Scene(const std::string& name) : m_id(s_id_count++), m_name(name) {}
+
+    Scene(const int id, const std::string& name) : m_id(id), m_name(name) {}
+
+	unsigned int id() const {
+	    return m_id;
+    }
+
 	const std::string& name() const;
 
-    Object& newObject();
-    Object& newObject(unsigned int idx);
+    Object* newObject(); //Maybe should need a name?
+    Object* newObject(unsigned int idx);
 
-    Object& getObjectByIdx(unsigned int idx) const;
-    Object& getObjectById(unsigned int id) const;
+    Object* getObjectByIdx(unsigned int idx) const;
+    Object* getObjectById(unsigned int id) const;
+
+	std::list<Object*> getObjects() const { return m_objects; }
 
     void deleteObjectByIdx(unsigned int idx);
     void deleteObjectById(unsigned int idx);
@@ -32,8 +35,9 @@ public:
 
 	void start();
 	void update();
+
 private:
-    std::list<std::shared_ptr<Object>> m_objects;
+    std::list<Object*> m_objects;
 	const std::string m_name;
     const unsigned int m_id;
     static unsigned int s_id_count;

@@ -10,7 +10,7 @@
 #include "Component.hpp"
 #include "Transform.h"
 
-#include "easy/profiler.h"
+#include "RuamUtils.h"
 
 class Object {
 public:
@@ -21,7 +21,7 @@ public:
 	using ComponentList = std::map<std::type_index, ComponentVector>;
 
 	template<class Comp>
-	Comp& addComponent() {
+	Comp* addComponent() {
 		EASY_FUNCTION("Add Component");
 		std::unique_ptr<Comp> comp = std::make_unique<Comp>(m_id);
 		const std::type_index tidx = typeid(Comp);
@@ -31,7 +31,7 @@ public:
 			m_components.insert({tidx, ComponentVector()});
 			m_components[tidx].push_back(std::move(comp));
 		}
-		return *dynamic_cast<Comp*>(m_components[tidx].back().get());
+		return dynamic_cast<Comp*>(m_components[tidx].back().get());
 	}
 
 	template<class Comp, typename... Args>
@@ -61,7 +61,7 @@ public:
 		if (pair->second.size() == 0) {
 			return nullptr;
 		}
-		return dynamic_cast<Comp*>(pair->second[0].get());
+		return dynamic_cast<Comp*>(pair->second.front().get());
 	}
 
 	template<class Comp>
@@ -75,8 +75,16 @@ public:
 
 	unsigned int id() const;
 	const std::string& name() const;
-	void setName(std::string& newstr); const ComponentList& getComponents();
+	void setName(std::string& newstr);
 
+	std::vector<Component*> getComponents() const {
+		std::vector<Component*> comps;
+		for (auto& i : m_components) {
+			auto c = i.second.front().get();
+			comps.push_back(c);
+		}
+		return comps;
+	}
 	bool operator==(const Object& obj) {
 		return this->m_id == obj.m_id;
 	}

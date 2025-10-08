@@ -20,5 +20,8 @@ void main_serial() {
 }
 
 int main() {
-	main_serial();
+	auto s = Serial::deserialise("SceneA.json");
+	auto n = s->getObjectByIdx(0)->name();
+	std::cout << n << std::endl;
+	return 0;
 }

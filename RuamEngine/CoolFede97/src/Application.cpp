@@ -3,7 +3,7 @@
 
 #include "Renderer.h"
 
-#include "VertexBuffer.h"
+#include "SSBO.h"
 #include "VertexBufferLayout.h"
 #include "IndexBuffer.h" 
 #include "VertexArray.h"

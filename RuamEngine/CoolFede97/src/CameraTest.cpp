@@ -5,7 +5,7 @@
 
 #include "Renderer.h"
 
-#include "VertexBuffer.h"
+#include "Buffer.h"
 #include "VertexBufferLayout.h"
 #include "IndexBuffer.h" 
 #include "VertexArray.h"
@@ -134,7 +134,7 @@ int main(void)
 		};
 
 		VertexArray va;
-		VertexBuffer vb(vertices, 5 * 36 * sizeof(float));
+		Buffer vb(vertices, 5 * 36 * sizeof(float));
 		VertexBufferLayout layout;
 		layout.Push<float>(3);
 		layout.Push<float>(2);

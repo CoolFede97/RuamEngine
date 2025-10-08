@@ -1,5 +1,0 @@
-#include "VertexBuffer.h"
-#include "VertexArray.h"
-#include "IndexBuffer.h"
-#include "VertexBufferLayout.h"
-#include "Shader.h"

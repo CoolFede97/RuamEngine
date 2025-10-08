@@ -1,11 +1,28 @@
 #include "Renderer.h"
 
+void GLClearError()
+{
+    while (glGetError() != GL_NO_ERROR);
+}
 
+bool GLLogCall(const char* function, const char* file, int line)
+{
+    while (GLenum error = glGetError())
+    {
+        std::cout << "[OpenGL Error] (" << error << "): " << "\n" <<
+            "in file: " << file << "\n" <<
+            "in line: " << line << "\n" <<
+            "in function: " << function << "\n";
+
+        return false;
+    }
+    return true;    
+}
 namespace RuamEngine
 {
     RendererConfig Renderer::m_config;
+    RendererState Renderer::m_state;
 	GLFWwindow* Renderer::m_window = nullptr;
-    std::unordered_map<Shader::PipelineType, std::unique_ptr<DrawingData>> Renderer::m_drawingDataMap;
     void Renderer::Init()
     {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -19,7 +36,7 @@ namespace RuamEngine
 
         glfwMakeContextCurrent(m_window);
 
-        glfwSwapInterval(0);
+        glfwSwapInterval(1);
 
         ASSERT(glewInit() == GLEW_OK);
 
@@ -32,22 +49,11 @@ namespace RuamEngine
 
 
         {
-			m_drawingDataMap.emplace(Shader::PipelineType::Generic, std::make_unique<DrawingData>(Shader::PipelineType::Generic));
-			DrawingData& basicDrawingData = *m_drawingDataMap.at(Shader::PipelineType::Generic);
-            basicDrawingData.m_shader = std::make_unique<Shader>("assets/shaders/GeneralVertexShader.glsl", "assets/shaders/GeneralFragmentShader.glsl");
-			basicDrawingData.m_renderUnits.emplace(Material::MaterialType::Generic, RenderUnit(basicDrawingData.m_shader));
-            RenderUnit& genericUnit = basicDrawingData.m_renderUnits.at(Material::MaterialType::Generic);
-            basicDrawingData.m_shader->Bind();
-			genericUnit.m_material = std::make_unique<Material>(Material::MaterialType::Generic);
-			genericUnit.m_material->albedoColor = Vec4(1.0f, 1.0f, 1.0f, 1.0f);
-            genericUnit.m_material->textures.push_back(std::make_unique<Texture>("assets/sprites/bigBrain.png"));
-            genericUnit.m_shader->SetUniform1i("u_albedoMap", 0);
-            VertexBufferLayout& genericLayout = *genericUnit.m_layout;
-            genericLayout.Reset();
-            genericLayout.Push<float>(3);
-            genericLayout.Push<float>(2);
-            genericLayout.Push<float>(1);
-            genericUnit.m_vertexArray->AddBuffer(*genericUnit.m_vertexBuffer, *genericUnit.m_layout);
+			m_state.m_vertexArray = std::make_shared<VertexArray>();
+			m_state.m_vertexBuffer = std::make_shared<VertexBuffer>(nullptr, maxVertexSize * maxVertexCount);
+			m_state.m_layout = std::make_shared<VertexBufferLayout>();
+			m_state.m_indexBuffer = std::make_shared<IndexBuffer>(nullptr, maxIndexCount);
+            m_state.m_shader = std::make_shared<Shader>("assets/shaders/GeneralVertexShader.glsl", "assets/shaders/GeneralFragmentShader.glsl");
         }
 
     }
@@ -55,34 +61,16 @@ namespace RuamEngine
     {
         glfwTerminate();
     }
+    void Renderer::BeginDraw()
+    {
+        Clear();
+
+    }
     void Renderer::EndDraw()
     {
         glfwSwapBuffers(m_window);
     }
-    void Renderer::BeginBatch()
-    {
-        Flush();
-    }
-    void Renderer::EndBatch()
-    {
-        for (auto& pair : m_drawingDataMap)
-        {
-            pair.second->SubmitBatchData();
-        }
-    }
-    void Renderer::EndBatch(RenderUnit& renderUnit)
-    {
-        renderUnit.SubmitBatchData();
-    }
-    void Renderer::Flush()
-    {
-        for (auto& pair : m_drawingDataMap)
-        {
-            pair.second->Flush();
-        }
-    }
-
-    void Renderer::ClearScreen()
+    void Renderer::Clear()
     {
         if (m_config.useClearColor) GLCall(glClear(GL_COLOR_BUFFER_BIT));
 		if (m_config.depthTest) GLCall(glClear(GL_DEPTH_BUFFER_BIT));
@@ -132,30 +120,11 @@ namespace RuamEngine
 
     void Renderer::Draw()
     {
-        for (auto& drawingData : m_drawingDataMap)
-        {
-            for (auto& renderUnit : drawingData.second->m_renderUnits)
-            {
-                drawingData.second->m_shader->Bind();
-                drawingData.second->m_shader->LoadMaterial(*renderUnit.second.m_material);
-                renderUnit.second.m_vertexArray->Bind();
-                renderUnit.second.m_indexBuffer->Bind();
-                GLCall(glDrawElements(GL_TRIANGLES, renderUnit.second.m_indexBuffer->GetIndexCount(), GL_UNSIGNED_INT, nullptr));
-            }
-        }
-    }
+        m_state.m_vertexArray->Bind();
+        m_state.m_shader->Bind();
+        m_state.m_indexBuffer->Bind();
 
-    void Renderer::Draw(RenderUnit& renderUnit)
-    {
-        renderUnit.m_vertexArray->Bind();
-        renderUnit.m_shader->Bind();
-        renderUnit.m_shader->LoadMaterial(*renderUnit.m_material);
-        renderUnit.m_indexBuffer->Bind();
-        GLCall(glDrawElements(GL_TRIANGLES, renderUnit.m_indexBuffer->GetIndexCount(), GL_UNSIGNED_INT, nullptr));   
-    }
-
-    void Renderer::DrawQuads()
-    {
-        
+        // PREGUNTAR CHONA
+        GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
     }
 }

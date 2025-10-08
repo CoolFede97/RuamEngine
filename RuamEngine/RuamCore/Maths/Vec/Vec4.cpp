@@ -58,7 +58,7 @@ Vec4 Vec4::Zero() { return Vec4(0, 0, 0, 0); }
 Vec4 Vec4::One() { return Vec4(1, 1, 1, 1); }
 
 // Compound assignment operators
-Vec4& Vec4::operator=(const Vec4& other) {
+Vec4& Vec4::operator=(Vec4 other) {
     x = other.x;
     y = other.y;
     z = other.z;

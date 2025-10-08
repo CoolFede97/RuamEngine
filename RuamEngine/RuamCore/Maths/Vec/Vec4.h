@@ -41,7 +41,7 @@ struct Vec4
     static Vec4 One();       // (1, 1, 1, 1)
 
     // Compound assignment operators
-    Vec4& operator=(const Vec4& other);
+    Vec4& operator=(Vec4 other);
     Vec4& operator+=(Vec4 other);
     Vec4& operator-=(Vec4 other);
     Vec4& operator*=(Vec4 other);

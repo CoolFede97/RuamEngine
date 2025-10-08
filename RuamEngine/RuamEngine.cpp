@@ -3,7 +3,7 @@
 #include "RuamEngine.h"
 
 #include "assets/scenes/MenuScene.cpp"
-#include "assets/scenes/SandboxScenes.cpp"
+#include "assets/scenes/SandboxScene.cpp"
 #include "assets/components/Manager.h"
 #include "easy/profiler.h"
 
@@ -37,14 +37,9 @@ int main()
 		const unsigned int menuScene = SceneManager::AddScene(0, CreateMenuScene);
 		SceneManager::SetActiveScene(menuScene);
 		const unsigned int sandboxScene = SceneManager::AddScene(1, CreateSandboxScene);
-		const unsigned int sandboxScene2 = SceneManager::AddScene(2, CreateSandboxScene2);
-
-		int frameCount = 0;
-
 
 		while (!glfwWindowShouldClose(Renderer::GetWindow()))
 		{
-			//std::cout << "Frame: " << frameCount++ << "---------------------------------------------------------\n";
 			// ImGUI
 			ImGui_ImplOpenGL3_NewFrame();
 			ImGui_ImplGlfw_NewFrame();
@@ -61,8 +56,7 @@ int main()
 			// Time
 			ruamTime::Time::Update();
 
-			Renderer::ClearScreen();
-			Renderer::BeginBatch();
+			Renderer::BeginDraw();
 
 			EASY_BLOCK("EventManager");
 			EventManager::HandleEvents();
@@ -74,14 +68,11 @@ int main()
 				SceneManager::ActiveScene()->update();
 			}
 			EASY_END_BLOCK;
-
-			Renderer::EndBatch();
-			Renderer::Draw();
-			
 			ImGui::Render();
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 			Renderer::EndDraw();
+
 			glfwPollEvents();
 		}
 	}

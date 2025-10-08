@@ -1,8 +1,8 @@
 #pragma once
 
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 #include "Vec2.h"
-#include "RenderingCore.h"
-#include "Camera.h"
 #include "Vec3.h"
 #include "Renderer.h"
 #include "../EventSystem/EventManager.h"

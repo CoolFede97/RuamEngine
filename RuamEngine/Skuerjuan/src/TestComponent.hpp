@@ -5,7 +5,7 @@ class TestComponent : public Component {
 public:
     using Component::Component;
 
-    TestComponent(const nlohmann::json& j) : Component(j["id"]) {
+    TestComponent(unsigned int id, const nlohmann::json& j) : Component(j["id"]) {
         secret = j["secret"];
     }
 

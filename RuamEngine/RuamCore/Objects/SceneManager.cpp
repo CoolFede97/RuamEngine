@@ -21,12 +21,12 @@ Scene* SceneManager::ActiveScene() {
 }
 
 unsigned int SceneManager::AddScene(Scene* scene) {
-		s_scenes.push_back(scene);
+	s_scenes.push_back(scene);
 	return s_scenes.size()-1;
 }
 
-Scene* SceneManager::CreateScene(const unsigned int id, const std::string& name) {
-	Scene *s = new Scene(id, name);
+Scene* SceneManager::CreateScene(const std::string& name) {
+	auto s = new Scene(name);
 	AddScene(s);
 	return s;
 }

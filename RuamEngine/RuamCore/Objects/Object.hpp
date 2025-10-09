@@ -37,7 +37,7 @@ public:
 	template<class Comp, typename... Args>
 	Comp& addComponent(Args&&... args) {
 		EASY_FUNCTION("Add Component args")
-		std::unique_ptr<Comp> comp = std::make_unique<Comp>(m_id, std::forward<Args>(args...)...);
+		std::unique_ptr<Comp> comp = std::make_unique<Comp>(m_id, std::forward<Args>(args...)...); //TODO: fix compulsory m_id
 		const std::type_index tidx = typeid(Comp);
 		if (m_components.count(tidx) > 0) {
 			m_components[tidx].push_back(std::move(comp));

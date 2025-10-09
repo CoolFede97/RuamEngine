@@ -3,7 +3,7 @@
 
 unsigned int Component::s_id_count = 0;
 
-std::map<std::string, std::function<std::unique_ptr<Component>(const nlohmann::json&)>> Component::componentRegistry;
+std::map<std::string, std::function<std::unique_ptr<Component>(const nlohmann::json&, Object*)>> Component::componentRegistry;
 
 bool Component::operator==(const Component& other) const {
 	return this->m_id == other.m_id;

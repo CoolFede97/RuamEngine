@@ -25,7 +25,7 @@ int main() {
 		main_serial();
 		s = Serial::deserialise("SceneA");
 	}
-	auto n = s->getObjectByIdx(0)->name();
-	std::cout << n << std::endl;
+	auto c = s->getObjectByIdx(1)->getComponent<TestComponent>()->getSecret();
+	std::cout << c << std::endl;
 	return 0;
 }

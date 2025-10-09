@@ -66,7 +66,7 @@ Scene* Serial::deserialise(const std::string &scene_name) {
                 std::string type = comp["type"];
                 if (Component::componentRegistry.count(type) == 0) {
                     std::cerr << "Component type " << type << " not registered!" << std::endl;
-                    continue;
+                    return nullptr;
                 }
                 std::unique_ptr<Component> c = Component::componentRegistry[type](comp, o);
             }

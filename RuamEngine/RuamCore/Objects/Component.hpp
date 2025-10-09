@@ -1,5 +1,22 @@
 #pragma once
 #include "nlohmann/json.hpp"
+#include <map>
+#include <string>
+#define REGISTER_COMPONENT(ComponentClass) \
+namespace { \
+struct ComponentClass##Registrar { \
+ComponentClass##Registrar() { \
+Component::componentRegistry.insert(std::make_pair( \
+#ComponentClass, [](const nlohmann::json &j, Object *o) -> std::unique_ptr<Component> { \
+return std::make_unique<ComponentClass>(o->addComponent<ComponentClass>(j)); \
+} \
+)); \
+std::cout << "Registered " #ComponentClass << std::endl; \
+} \
+}; \
+static ComponentClass##Registrar global_##ComponentClass##_registrar; \
+}
+
 
 class Object;
 class Component {

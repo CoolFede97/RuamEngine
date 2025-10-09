@@ -5,15 +5,12 @@
 #include "assets/scenes/MenuScene.cpp"
 #include "assets/scenes/SandboxScene.cpp"
 #include "assets/components/Manager.h"
-#include "easy/profiler.h"
 
 using namespace RuamEngine;
 
 int main()
 {
 	EASY_PROFILER_ENABLE;
-
-	profiler::startListen();
 
 	EASY_BLOCK("System init");
 	Renderer::Init();
@@ -56,7 +53,8 @@ int main()
 			// Time
 			ruamTime::Time::Update();
 
-			Renderer::BeginDraw();
+			Renderer::ClearScreen();
+			Renderer::BeginBatch();
 
 			EASY_BLOCK("EventManager");
 			EventManager::HandleEvents();
@@ -67,6 +65,10 @@ int main()
 			{
 				SceneManager::ActiveScene()->update();
 			}
+
+			Renderer::EndBatch();
+			Renderer::Draw();
+
 			EASY_END_BLOCK;
 			ImGui::Render();
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -83,6 +85,7 @@ int main()
 	Renderer::Shutdown();
 	AudioSystem::shutdown();
 
-	profiler::dumpBlocksToFile("log.perf");
+	EASY_PROFILER_DUMP();
+
 	return 0;
 }

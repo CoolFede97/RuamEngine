@@ -23,17 +23,17 @@ namespace test
 		delete m_Texture;
 	}
 
-	void TestTextures::Start()
-	{
-		m_VAO = new VertexArray();
-		m_VBO = new VertexBuffer(m_Vertices, 5 * 36 * sizeof(float));
-		m_Layout = new VertexBufferLayout();
-		m_Layout->Push<float>(3); // Position
-		m_Layout->Push<float>(2); // Texture Coordinates
-		m_VAO->AddBuffer(*m_VBO, *m_Layout);
-	
-		m_Shader = new Shader("CoolFede97/res/shaders/BasicVertex.glsl", "CoolFede97/res/shaders/BasicFragment.glsl");
-		m_Shader->Bind();
+	//void TestTextures::Start()
+	//{
+	//	m_VAO = new VertexArray();
+	//	m_VBO = new Buffer(m_Vertices, 5 * 36 * sizeof(float));
+	//	m_Layout = new VertexBufferLayout();
+	//	m_Layout->Push<float>(3); // Position
+	//	m_Layout->Push<float>(2); // Texture Coordinates
+	//	m_VAO->AddBuffer(*m_VBO, *m_Layout);
+	//
+	//	m_Shader = new Shader("CoolFede97/res/shaders/BasicVertex.glsl", "CoolFede97/res/shaders/BasicFragment.glsl");
+	//	m_Shader->Bind();
 
 		m_Texture = new Texture("CoolFede97/res/textures/francoKO.jpg");
 		m_Texture->Bind();

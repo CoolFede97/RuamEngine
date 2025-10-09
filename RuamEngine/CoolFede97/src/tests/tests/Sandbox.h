@@ -19,8 +19,8 @@ namespace test
 		void Render() override;
 		void ImGuiRender() override;
 	private:
-		VertexArray* m_VAO;
-		VertexBuffer* m_VBO;
+		/*VertexArray* m_VAO;
+		Buffer* m_VBO;
 		IndexBuffer* m_IBO;
 		VertexBufferLayout* m_Layout;
 		Shader* m_Shader;

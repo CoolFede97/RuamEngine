@@ -144,15 +144,15 @@ namespace test
 		};
 		m_CubeGlobalPositionsCount = 20;
 
-		m_VAO = new VertexArray();
-		m_VBO = new VertexBuffer(vertices, 5 * 36 * sizeof(float));
-		m_Layout = new VertexBufferLayout();
-		m_Layout->Push<float>(3); // Position
-		m_Layout->Push<float>(2); // Texture Coordinates
-		m_VAO->AddBuffer(*m_VBO, *m_Layout);
-	
-		m_Shader = new Shader("CoolFede97/res/shaders/camera/CameraVertex.txt", "CoolFede97/res/shaders/camera/CameraFragment.txt");
-		m_Shader->Bind();
+	//	m_VAO = new VertexArray();
+	//	m_VBO = new Buffer(vertices, 5 * 36 * sizeof(float));
+	//	m_Layout = new VertexBufferLayout();
+	//	m_Layout->Push<float>(3); // Position
+	//	m_Layout->Push<float>(2); // Texture Coordinates
+	//	m_VAO->AddBuffer(*m_VBO, *m_Layout);
+	//
+	//	m_Shader = new Shader("CoolFede97/res/shaders/camera/CameraVertex.txt", "CoolFede97/res/shaders/camera/CameraFragment.txt");
+	//	m_Shader->Bind();
 
 		m_Shader->Unbind();
 		m_Camera = new Camera();

@@ -1,26 +1,40 @@
 #include "SceneManager.hpp"
 
 SceneManager::SceneList SceneManager::s_scenes;
-SceneManager::ScenePtr SceneManager::s_active_scene = nullptr;
+Scene* SceneManager::s_active_scene = nullptr;
 
 const SceneManager::SceneList& SceneManager::sceneList() {
 	return s_scenes;
 }
 
-void SceneManager::SetActiveScene(unsigned int id) {
-	s_active_scene = s_scenes[id]();
-	s_active_scene->start();
+void SceneManager::SetActiveScene(const unsigned int id) {
+	s_active_scene = s_scenes[id];
 }
 
-SceneManager::ScenePtr SceneManager::ActiveScene() {
+Scene* SceneManager::ActiveScene() {
+	if (s_active_scene == nullptr) {
+		Scene *s = new Scene();
+		AddScene(s);
+		s_active_scene = s;
+	}
 	return s_active_scene;
 }
 
-unsigned int SceneManager::AddScene(unsigned int id, SceneCreator scene) {
-	s_scenes.insert({id, scene});
-	return id;
+unsigned int SceneManager::AddScene(Scene* scene) {
+		s_scenes.push_back(scene);
+	return s_scenes.size()-1;
 }
 
+Scene* SceneManager::CreateScene(const unsigned int id, const std::string& name) {
+	Scene *s = new Scene(id, name);
+	AddScene(s);
+	return s;
+}
+
+// void SceneManager::RemoveScene(const int id) {
+// 	s_scenes.erase(s_scenes.begin() + id);
+// }
+
 SceneManager::ScenePtr SceneManager::EmptyScene() {
-	return std::make_shared<Scene>();
+	return std::move(std::make_unique<Scene>());
 }

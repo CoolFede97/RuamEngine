@@ -23,14 +23,14 @@ namespace test
 
 		auto quad = VertexWithTex::CreateQuad(0.0f, 0.0f);
 
-		m_VAO = new VertexArray();
-		m_VBO = new VertexBuffer(&quad, sizeof(float) * quad.size() * 6);
-		
-		m_Layout = new VertexBufferLayout();
-		m_Layout->Push<float>(3); // Position
-		m_Layout->Push<float>(2); // Texture Coordinates
-		m_Layout->Push<float>(1); // Texture ID
-		m_VAO->AddBuffer(*m_VBO, *m_Layout);
+	//	m_VAO = new VertexArray();
+	//	m_VBO = new Buffer(&quad, sizeof(float) * quad.size() * 6);
+	//	
+	//	m_Layout = new VertexBufferLayout();
+	//	m_Layout->Push<float>(3); // Position
+	//	m_Layout->Push<float>(2); // Texture Coordinates
+	//	m_Layout->Push<float>(1); // Texture ID
+	//	m_VAO->AddBuffer(*m_VBO, *m_Layout);
 
 		unsigned int indices[] =
 		{

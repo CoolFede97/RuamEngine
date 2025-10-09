@@ -53,7 +53,8 @@ int main()
 			// Time
 			ruamTime::Time::Update();
 
-			Renderer::BeginDraw();
+			Renderer::ClearScreen();
+			Renderer::BeginBatch();
 
 			EASY_BLOCK("EventManager");
 			EventManager::HandleEvents();
@@ -64,6 +65,10 @@ int main()
 			{
 				SceneManager::ActiveScene()->update();
 			}
+
+			Renderer::EndBatch();
+			Renderer::Draw();
+
 			EASY_END_BLOCK;
 			ImGui::Render();
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

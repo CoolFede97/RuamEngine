@@ -12,6 +12,7 @@ return std::make_unique<ComponentClass>(o->addComponent<ComponentClass>(j)); \
 } \
 )); \
 std::cout << "Registered " #ComponentClass << std::endl; \
+Component::componentRegistry.empty();	\
 } \
 }; \
 static ComponentClass##Registrar global_##ComponentClass##_registrar; \
@@ -33,7 +34,7 @@ public:
 	unsigned int id() const;
 	Object* object() const;
 
-	static std::map<std::string, componentFactory> componentRegistry;
+	inline static std::map<std::string, componentFactory> componentRegistry;
 
 	virtual operator nlohmann::json() const {
 		return nlohmann::json{

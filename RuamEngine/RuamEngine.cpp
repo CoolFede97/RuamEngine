@@ -31,9 +31,13 @@ int main()
 
 		ImGui::StyleColorsDark();
 
-		const unsigned int menuScene = SceneManager::AddScene(0, CreateMenuScene);
-		SceneManager::SetActiveScene(menuScene);
-		const unsigned int sandboxScene = SceneManager::AddScene(1, CreateSandboxScene);
+		Scene* menuScene = SceneManager::CreateScene(0, "MenuScene");
+		SceneManager::AddScene(menuScene);
+		
+		SceneManager::SetActiveScene(0);
+		
+		Scene* sandboxScene = SceneManager::CreateScene(1, "SandboxScene");
+		SceneManager::AddScene(sandboxScene);
 
 		while (!glfwWindowShouldClose(Renderer::GetWindow()))
 		{

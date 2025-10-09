@@ -9,10 +9,10 @@
 
 SceneManager::ScenePtr CreateSandboxScene()
 {
-	SceneManager::ScenePtr testScene = std::make_shared<Scene>("Sandbox Scene");
-	Object& manager = testScene->newObject();
-	manager.addComponent<SandboxCom>();
-	manager.addComponent<Manager>();
-	manager.addComponent<AudioSource>("/home/tomy/programming/ce/masmas/RuamEngine/RuamEngine/1 Crumbling Castle.wav");
+	SceneManager::ScenePtr testScene = std::make_unique<Scene>("Sandbox Scene");
+	Object* manager = testScene->newObject();
+	manager->addComponent<SandboxCom>();
+	manager->addComponent<Manager>();
+	manager->addComponent<AudioSource>("/home/tomy/programming/ce/masmas/RuamEngine/RuamEngine/1 Crumbling Castle.wav");
 	return testScene;
 }

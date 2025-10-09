@@ -20,10 +20,10 @@ void main_serial() {
 }
 
 int main() {
-	auto s = Serial::deserialise("SceneA.json");
+	auto s = Serial::deserialise("SceneA");
 	if (!s) {
 		main_serial();
-		s = Serial::deserialise("SceneA.json");
+		s = Serial::deserialise("SceneA");
 	}
 	auto n = s->getObjectByIdx(0)->name();
 	std::cout << n << std::endl;

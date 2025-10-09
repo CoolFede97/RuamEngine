@@ -1,5 +1,6 @@
 #include "Serial.hpp"
 #include <fstream>
+#include <filesystem>
 
 void to_json(json& j, Scene* s) {
     std::cout << "Serialising scene " << s->name() << std::endl;
@@ -42,7 +43,8 @@ void Serial::serialise(Scene* s) {
     file.close();
 }
 
-Scene* Serial::deserialise(const std::string &filename) {
+Scene* Serial::deserialise(const std::string &scene_name) {
+    std::string filename = scene_name + ".json";
     std::cout << "Deserialising from " << filename << std::endl;
     if (!std::filesystem::exists(filename)) {
         std::cout << "File " << filename << " does not exist!" << std::endl;

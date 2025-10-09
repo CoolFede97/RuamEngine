@@ -48,6 +48,19 @@ public:
 		return *dynamic_cast<Comp*>(m_components[tidx].back().get());
 	}
 
+	template<class Comp>
+	Comp& addComponent(const nlohmann::json& j) {
+		EASY_FUNCTION("Add Component args")
+		std::unique_ptr<Comp> comp = std::make_unique<Comp>(j);
+		const std::type_index tidx = typeid(Comp);
+		if (m_components.count(tidx) > 0) {
+			m_components[tidx].push_back(std::move(comp));
+		} else {
+			m_components.insert({tidx, ComponentVector()});
+			m_components[tidx].push_back(std::move(comp));
+		}
+		return *dynamic_cast<Comp*>(m_components[tidx].back().get());
+	}
 	// Returns ptr because a ref can't be null
 	// Returned pointer is non-owning
 	// TODO: Find if there's a better way

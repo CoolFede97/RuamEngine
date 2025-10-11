@@ -6,17 +6,19 @@
 #include <Component.hpp>
 #include "Renderer.h"
 #include "Vertex.h"
-#include "Buffer.h"
+#include "RuamTime.h"
 
 using namespace RuamEngine;
 
 class CubeRenderer : public BaseRenderer
 {
-	GLuint& textureId;
+	using BaseRenderer::BaseRenderer;
+
+	GLuint textureId = 0;
 
 	void render()
 	{
-		RenderUnit& genericUnit = Renderer::m_drawingDataMap[Shader::PipelineType::Generic]->m_renderUnits[Material::MaterialType::Generic];
+		/*RenderUnit& genericUnit = Renderer::m_drawingDataMap[Shader::PipelineType::Generic]->m_renderUnits[Material::MaterialType::Generic];
 		std::vector<Vertex> newCube = Vertex::CreateCube(0);
 		std::vector<unsigned int> newIndices =
 		{
@@ -28,14 +30,22 @@ class CubeRenderer : public BaseRenderer
 			3,0,4, 4,7,3
 		};
 
-		if (genericUnit.AddBatchData(newCube, newIndices, { glm::mat4(1.0f) }))
-		{
-			//indexCount = 0;
-		}
+		glm::mat4 modelMatrix(1.0f);
+		modelMatrix = glm::translate(modelMatrix, position);
+		modelMatrix = glm::scale(modelMatrix, scale);
+		modelMatrix = glm::rotate(modelMatrix, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+		modelMatrix = glm::rotate(modelMatrix, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+		modelMatrix = glm::rotate(modelMatrix, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+
+		if (genericUnit.AddBatchData(newCube, newIndices, { modelMatrix }))*/
 	};
 
 	void update()
 	{
 		render();
+		/*
+		Object* obj = getOwner(); 
+		Transform* transform = obj->getComponent<Transform>();
+		transform->setPosition(transform->position() + glm::vec3(0.0,0.0,1.0f*ruamTime::Time::DeltaTime()));*/
 	};	
 };

@@ -31,16 +31,16 @@ int main()
 
 		ImGui::StyleColorsDark();
 
-		Scene* menuScene = SceneManager::CreateScene(0, "MenuScene");
-		SceneManager::AddScene(menuScene);
+		Scene* menuScene = CreateMenuScene();
 		
 		SceneManager::SetActiveScene(0);
 		
-		Scene* sandboxScene = SceneManager::CreateScene(1, "SandboxScene");
-		SceneManager::AddScene(sandboxScene);
+		Scene* cfSandboxScene = CreateCFSandboxScene();
+	
 
 		while (!glfwWindowShouldClose(Renderer::GetWindow()))
 		{
+
 			// ImGUI
 			ImGui_ImplOpenGL3_NewFrame();
 			ImGui_ImplGlfw_NewFrame();

@@ -22,4 +22,8 @@ public:
 			i++;
 		}
 	};
+	void update()
+	{
+		render();
+	}
 };

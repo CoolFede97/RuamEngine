@@ -169,6 +169,13 @@ namespace RuamEngine
 		//material.textures[0].Bind(0);
 	}	
 
+	void Shader::UpdateCameraMatrices()
+	{
+		Bind();
+		SetUniformMat4f("u_view", Camera::GetMainCamera()->GetViewMatrix());
+		SetUniformMat4f("u_projection", Camera::GetMainCamera()->GetProjectionMatrix());
+	}
+
 	int Shader::GetUniformLocation(const std::string& name)
 	{
 		if (m_UniformLocationCache.find(name) != m_UniformLocationCache.end())

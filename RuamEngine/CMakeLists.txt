@@ -250,7 +250,7 @@ add_library(RuamCore INTERFACE)
 file (GLOB RENDERING_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Rendering/*.cpp")
 add_library(Rendering STATIC ${RENDERING_SRC}
         RuamCore/Rendering/VertexBufferLayout.cpp)
-target_link_libraries(Rendering PUBLIC Vendor Files Maths RuamUtils)
+target_link_libraries(Rendering PUBLIC Vendor Files Maths RuamUtils Objects)
 target_include_directories(Rendering PUBLIC ${CMAKE_SOURCE_DIR}/RuamCore/Rendering)
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////

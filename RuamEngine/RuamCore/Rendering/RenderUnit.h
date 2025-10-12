@@ -6,6 +6,7 @@
 
 namespace RuamEngine
 {
+    class Shader;
     class RenderUnit
     {
     public:

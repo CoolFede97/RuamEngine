@@ -9,6 +9,7 @@
 
 #include "RenderingCore.h"
 #include "Material.h"
+#include "Camera.h"
 
 namespace RuamEngine
 {
@@ -35,7 +36,7 @@ namespace RuamEngine
 		void SetUniformMat4f(const std::string& name, glm::mat4 matrix);
 		void SetUniformTextureSlots(const std::string& name);
 		void LoadMaterial(const Material& material);
-		
+		void UpdateCameraMatrices();
 		unsigned int GetMaxTexturesCapacity() { return  maxTextureSlots; }
 
 	private:

@@ -6,6 +6,8 @@
 #include <Component.hpp>
 #include "Renderer.h"
 #include "Vertex.h"
+#include "RuamEngine.h"
+
 #include "RuamTime.h"
 
 using namespace RuamEngine;
@@ -18,34 +20,42 @@ class CubeRenderer : public BaseRenderer
 
 	void render()
 	{
-		/*RenderUnit& genericUnit = Renderer::m_drawingDataMap[Shader::PipelineType::Generic]->m_renderUnits[Material::MaterialType::Generic];
-		std::vector<Vertex> newCube = Vertex::CreateCube(0);
-		std::vector<unsigned int> newIndices =
+		RenderUnit& genericUnit = Renderer::m_drawingDataMap[Shader::PipelineType::Generic]->m_renderUnits[Material::MaterialType::Generic];
+		std::vector<Vertex> newCube = Vertex::CreateCube(1);
+		std::vector<unsigned int> newIndices = 
 		{
-			0,1,2, 2,3,0,
-			4,5,6, 6,7,4,
-			0,1,5, 5,4,0,
-			2,3,7, 7,6,2,
-			1,2,6, 6,5,1,
-			3,0,4, 4,7,3
+			0, 1, 2, 2, 3, 0,       // Cara frontal
+			4, 5, 6, 6, 7, 4,       // Cara trasera
+			8, 9,10,10,11, 8,       // Cara izquierda
+		   12,13,14,14,15,12,       // Cara derecha
+		   16,17,18,18,19,16,       // Cara inferior
+		   20,21,22,22,23,20        // Cara superior
 		};
 
-		glm::mat4 modelMatrix(1.0f);
-		modelMatrix = glm::translate(modelMatrix, position);
-		modelMatrix = glm::scale(modelMatrix, scale);
-		modelMatrix = glm::rotate(modelMatrix, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-		modelMatrix = glm::rotate(modelMatrix, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-		modelMatrix = glm::rotate(modelMatrix, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
 
-		if (genericUnit.AddBatchData(newCube, newIndices, { modelMatrix }))*/
+		glm::mat4 modelMatrix(1.0f);
+		modelMatrix = glm::translate(modelMatrix, object()->transform().position());
+		modelMatrix = glm::rotate(modelMatrix, glm::radians(object()->transform().rotation().x), glm::vec3(1.0f, 0.0f, 0.0f));
+		modelMatrix = glm::rotate(modelMatrix, glm::radians(object()->transform().rotation().y), glm::vec3(0.0f, 1.0f, 0.0f));
+		modelMatrix = glm::rotate(modelMatrix, glm::radians(object()->transform().rotation().z), glm::vec3(0.0f, 0.0f, 1.0f));
+		modelMatrix = glm::scale(modelMatrix, object()->transform().scale());
+
+		genericUnit.AddBatchData(newCube, newIndices, { modelMatrix });
 	};
+	
+	float speed = 0;
+	
+	void start()
+	{
+	}
 
 	void update()
 	{
 		render();
-		/*
-		Object* obj = getOwner(); 
-		Transform* transform = obj->getComponent<Transform>();
-		transform->setPosition(transform->position() + glm::vec3(0.0,0.0,1.0f*ruamTime::Time::DeltaTime()));*/
+		object()->transform().rotation() += glm::vec3(45 * RuamEngine::Time::DeltaTime(), 45*RuamEngine::Time::DeltaTime(), 45 * RuamEngine::Time::DeltaTime());
+		//object()->transform().scale() += glm::vec3(0.2f * RuamEngine::Time::DeltaTime(), 0.4f * RuamEngine::Time::DeltaTime(), 0.1f * RuamEngine::Time::DeltaTime());
+		//object()->transform().position()+= glm::vec3(0.0f,0.0f,1.5f*Time::DeltaTime());
+		//speed += 1000* RuamEngine::Time::DeltaTime();
+		//std::cout << "Speed: " << speed << "\n";
 	};	
 };

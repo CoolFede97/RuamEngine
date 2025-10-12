@@ -12,7 +12,7 @@
 #include "Object.hpp"
 
 #include "Input.h"
-#include "RuamTime.h"
+#include "RuamEngine.h"
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
@@ -29,7 +29,7 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "Camera.h"
-#include "RuamTime.h"
+#include "RuamEngine.h"
 
 #include "RendererCore.h"
 #include <filesystem>

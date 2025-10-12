@@ -74,7 +74,7 @@ int main(void)
 			Input::UpdateInput();
 
 			// Time
-			ruamTime::Time::Update();
+			RuamEngine::Time::Update();
 
 			// OpenGL
 			GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));

@@ -55,7 +55,7 @@ int main()
 			Input::UpdateInput();
 
 			// Time
-			ruamTime::Time::Update();
+			RuamEngine::Time::Update();
 
 			Renderer::ClearScreen();
 			Renderer::BeginBatch();

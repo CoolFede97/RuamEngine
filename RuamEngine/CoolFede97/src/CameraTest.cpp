@@ -12,7 +12,7 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "Camera.h"
-#include "RuamTime.h"
+#include "RuamEngine.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -154,7 +154,7 @@ int main(void)
 		shader.Unbind();
 
 		Camera camera;
-		ruamTime::Time time;
+		RuamEngine::Time time;
 		while (!glfwWindowShouldClose(window))
 		{	
 			Input::UpdateInput();

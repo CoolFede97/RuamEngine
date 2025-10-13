@@ -23,28 +23,40 @@ static ComponentClass##Registrar global_##ComponentClass##_registrar; \
 class ComponentClass : public Component { \
 public: \
 	using Component::Component; \
-	ComponentClass(const nlohmann::json& j, unsigned int obj_id) : Component(obj_id) { \
+	ComponentClass(const nlohmann::json& j, unsigned int obj_id) : Component(obj_id) \
 		deserialiseCode \
-	} \
-	void onStart() {startCode} \
-	void onUpdate() {updateCode} \
-	void start() override {onStart();} \
-	void update() override {onUpdate();}
+	void start() override startCode \
+	void update() override updateCode
 
-#define END_COMPONENT(ComponentClass, ...) \
+#define END_COMPONENT_ARGS(ComponentClass, ...) \
 	public: \
 	operator nlohmann::json() const override { \
-		return nlohmann::json{__VA_ARGS__}; \
+		return nlohmann::json{__VA_ARGS__, \
+			{"type", #ComponentClass}, \
+			{"id", m_id} \
+}; \
 	} \
 }; \
 REGISTER_COMPONENT(ComponentClass)
 
-#define FIELD(type, name, capitalisedName) \
+
+#define END_COMPONENT_NOARGS(ComponentClass) \
+public: \
+	operator nlohmann::json() const override { \
+		return nlohmann::json{ \
+			{"type", #ComponentClass}, \
+			{"id", m_id} \
+		}; \
+	} \
+}; \
+REGISTER_COMPONENT(ComponentClass)
+
+#define FIELD(type, name, capitalisedName, default_value) \
 	public: \
 	type get##capitalisedName() const {return name;} \
 	void set##capitalisedName(const type value) {name = value;} \
 	private: \
-		type name;
+		type name = default_value;
 
 
 
@@ -54,7 +66,6 @@ public:
 	using componentFactory = std::function<Component*(const nlohmann::json&, unsigned int)>;
 	virtual ~Component() = default;
     explicit Component(const unsigned int obj_id) : m_object_id(obj_id), m_id(s_id_count++) {
-	    std::cout << "Created Component with id " << m_id << " for Object " << m_object_id << std::endl;
     };
 
 	virtual void start() = 0;

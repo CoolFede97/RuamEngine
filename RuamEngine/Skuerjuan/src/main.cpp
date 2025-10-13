@@ -16,6 +16,7 @@ void main_serial() {
 	o2->setName(name);
 	auto c = o->addComponent<TestComponent>();
 	c->setSecret(42);
+	c->setName("The Answer");
 	Serial::serialise(scene);
 }
 
@@ -33,7 +34,8 @@ int main() {
 			std::cout << " - Component " << comp->id() << std::endl;
 		}
 	}
-	auto x = s->getObjectById(0)->getComponent<TestComponent>()->getSecret();
+	auto x = s->getObjectByIdx(0)->getComponent<TestComponent>()->getSecret();
 	std::cout << "Secret is " << x << std::endl;
+	s->start();
 	return 0;
 }

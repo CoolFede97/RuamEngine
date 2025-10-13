@@ -6,9 +6,12 @@ void to_json(json& j, Scene* s) {
     std::cout << "Serialising scene " << s->name() << std::endl;
     json serialisedObjects = json::array();
     json o;
+    int i = 0;
     for (Object* obj : s->getObjects()) {
         o = obj;
+        o.push_back({"idx", i});
 		serialisedObjects.push_back(o);
+        i++;
     }
 
     j = json{
@@ -27,7 +30,6 @@ void to_json(json& j, Object* o) {
     }
 
     j = json{
-        {"id", o->id()},
         {"name", o->name()},
 		{"components", serialisedComponents}
 	};
@@ -45,7 +47,6 @@ void Serial::serialise(Scene* s) {
 
 Scene* Serial::deserialise(const std::string &scene_name) {
     std::string filename = scene_name + ".json";
-    std::cout << "Deserialising from " << filename << std::endl;
     if (!std::filesystem::exists(filename)) {
         std::cout << "File " << filename << " does not exist!" << std::endl;
         return nullptr;
@@ -58,24 +59,21 @@ Scene* Serial::deserialise(const std::string &scene_name) {
     sm::SetActiveScene(s->id());
 
     for (const auto& obj : j["objects"]) {
-        Object *o = s->newObject(obj["id"]);
+        Object *o = s->newObject(obj["idx"]);
         std::string objName = obj["name"];
         o->setName(objName);
         if (!obj["components"].is_null()) {
             for (const auto& comp : obj["components"]) {
-                std::cout << "Deserialising component of type " << comp["type"] << " for object " << o->name() << std::endl;
                 std::string type = comp["type"];
                 if (!Component::componentRegistry.contains(type)) {
                     std::cerr << "Component type " << type << " not registered!" << std::endl;
                     return nullptr;
                 }
                 auto constructor = Component::componentRegistry[type];
-                std::cout << "Found constructor for type " << type << std::endl;
                 constructor(comp, o->id());
             }
         }
     }
     std::cout << "Deserialised scene " << s->name() << std::endl;
-    std::cout << "Returning active scene " << sm::ActiveScene()->name() << std::endl;
     return sm::ActiveScene();
 }

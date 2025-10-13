@@ -4,7 +4,6 @@
 #include "Scene.hpp"
 #include "Object.hpp"
 #include <Component.hpp>
-#include "Renderer.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -27,28 +26,10 @@ namespace RuamEngine
 		float m_fov = 45.0f; 
 		float m_aspect_ratio = 800.0f/600.0f;
 
-		glm::mat4 GetProjectionMatrix() const { return glm::perspective(glm::radians(m_fov), m_aspect_ratio, m_near_plane, m_far_plane); }
-		glm::mat4 GetViewMatrix() const
-		{
-			glm::vec3 pos = object()->transform().position();
-			glm::vec3 eulerRadians = glm::radians(object()->transform().rotation());
-			glm::vec3 direction;
+		glm::mat4 GetProjectionMatrix();
+		glm::mat4 GetViewMatrix();
 
-			float pitch = eulerRadians.x;
-			float yaw = eulerRadians.y;
-
-			direction.x = cos(pitch) * sin(yaw);
-			direction.y = sin(pitch);
-			direction.z = cos(pitch) * cos(yaw);
-
-			direction = glm::normalize(direction);
-			return glm::lookAt(pos, pos + direction, m_up);
-		};
-
-		void SetAsMainCamera()
-		{
-			s_mainCamera = shared_from_this();
-		}
-		static CameraPtr& GetMainCamera() { return s_mainCamera; }
+		void SetAsMainCamera();
+		static CameraPtr& GetMainCamera();
 	};
 }

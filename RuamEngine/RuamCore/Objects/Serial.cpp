@@ -63,12 +63,15 @@ Scene* Serial::deserialise(const std::string &scene_name) {
         o->setName(objName);
         if (!obj["components"].is_null()) {
             for (const auto& comp : obj["components"]) {
+                std::cout << "Deserialising component of type " << comp["type"] << " for object " << o->name() << std::endl;
                 std::string type = comp["type"];
-                if (Component::componentRegistry.count(type) == 0) {
+                if (!Component::componentRegistry.contains(type)) {
                     std::cerr << "Component type " << type << " not registered!" << std::endl;
                     return nullptr;
                 }
-                std::unique_ptr<Component> c = Component::componentRegistry[type](comp, o);
+                auto constructor = Component::componentRegistry[type];
+                std::cout << "Found constructor for type " << type << std::endl;
+                constructor(comp, o->id());
             }
         }
     }

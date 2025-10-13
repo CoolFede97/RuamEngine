@@ -1,30 +1,41 @@
 #pragma once
+#include <iostream>
 #include "nlohmann/json.hpp"
 #include <map>
 #include <string>
 #define REGISTER_COMPONENT(ComponentClass) \
 namespace { \
 struct ComponentClass##Registrar { \
-ComponentClass##Registrar() { \
-Component::componentRegistry.insert(std::make_pair( \
-#ComponentClass, [](const nlohmann::json &j, Object *o) -> std::unique_ptr<Component> { \
-return std::make_unique<ComponentClass>(o->addComponent<ComponentClass>(j)); \
-} \
-)); \
-std::cout << "Registered " #ComponentClass << std::endl; \
-Component::componentRegistry.empty();	\
-} \
+	ComponentClass##Registrar() { \
+		Component::componentRegistry.insert(std::make_pair( \
+			#ComponentClass, [](const nlohmann::json &j, unsigned int id) -> Component* { \
+				Object* o = SceneManager::ActiveScene()->getObjectById(id); \
+				return o->addComponentPtr<ComponentClass>(j); \
+			} \
+		)); \
+		std::cout << "Registered " #ComponentClass << std::endl; \
+	} \
 }; \
 static ComponentClass##Registrar global_##ComponentClass##_registrar; \
 }
+
+#define CREATE_COMPONENT(ComponentClass) \
+class ComponentClass : public Component { \
+public: \
+	using Component::Component; \
+// WIP
+#define FIELD(type, name) \
+// WIP
 
 
 class Object;
 class Component {
 public:
-	using componentFactory = std::function<std::unique_ptr<Component>(const nlohmann::json&, Object*)>;
+	using componentFactory = std::function<Component*(const nlohmann::json&, unsigned int)>;
 	virtual ~Component() = default;
-    explicit Component(const unsigned int obj_id) : m_object_id(obj_id), m_id(s_id_count++) {};
+    explicit Component(const unsigned int obj_id) : m_object_id(obj_id), m_id(s_id_count++) {
+	    std::cout << "Created Component with id " << m_id << " for Object " << m_object_id << std::endl;
+    };
 
 	virtual void start() = 0;
 	virtual void update() = 0;
@@ -38,8 +49,7 @@ public:
 
 	virtual operator nlohmann::json() const {
 		return nlohmann::json{
-							{"type", "Conpoent"},
-							{"id", m_id}
+							{"type", "Component"}
 		};
 	}
 

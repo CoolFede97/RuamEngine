@@ -4,7 +4,7 @@ using sm = SceneManager;
 
 void main_serial() {
 	Scene s("SceneA");
-	int id = SceneManager::AddScene(&s);
+	const unsigned int id = SceneManager::AddScene(&s);
 	SceneManager::SetActiveScene(id);
 
 	Scene* scene = sm::ActiveScene();
@@ -25,7 +25,13 @@ int main() {
 		main_serial();
 		s = Serial::deserialise("SceneA");
 	}
-	auto c = s->getObjectByIdx(1)->getComponent<TestComponent>()->getSecret();
-	std::cout << c << std::endl;
+	for (auto obj : s->getObjects()) {
+		std::cout << "Object " << obj->id() << " named " << obj->name() << std::endl;
+		for (auto comp : obj->getComponents()) {
+			std::cout << " - Component " << comp << std::endl;
+		}
+	}
+	auto x = s->getObjectById(0)->getComponent<TestComponent>()->getSecret();
+	std::cout << "Secret is " << x << std::endl;
 	return 0;
 }

@@ -19,13 +19,33 @@ struct ComponentClass##Registrar { \
 static ComponentClass##Registrar global_##ComponentClass##_registrar; \
 }
 
-#define CREATE_COMPONENT(ComponentClass) \
+#define CREATE_COMPONENT(ComponentClass, deserialiseCode, startCode, updateCode) \
 class ComponentClass : public Component { \
 public: \
 	using Component::Component; \
-// WIP
-#define FIELD(type, name) \
-// WIP
+	ComponentClass(const nlohmann::json& j, unsigned int obj_id) : Component(obj_id) { \
+		deserialiseCode \
+	} \
+	void onStart() {startCode} \
+	void onUpdate() {updateCode} \
+	void start() override {onStart();} \
+	void update() override {onUpdate();}
+
+#define END_COMPONENT(ComponentClass, ...) \
+	public: \
+	operator nlohmann::json() const override { \
+		return nlohmann::json{__VA_ARGS__}; \
+	} \
+}; \
+REGISTER_COMPONENT(ComponentClass)
+
+#define FIELD(type, name, capitalisedName) \
+	public: \
+	type get##capitalisedName() const {return name;} \
+	void set##capitalisedName(const type value) {name = value;} \
+	private: \
+		type name;
+
 
 
 class Object;

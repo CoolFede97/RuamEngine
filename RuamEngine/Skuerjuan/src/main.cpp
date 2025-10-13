@@ -26,9 +26,11 @@ int main() {
 		s = Serial::deserialise("SceneA");
 	}
 	for (auto obj : s->getObjects()) {
+		auto t = obj->transform();
 		std::cout << "Object " << obj->id() << " named " << obj->name() << std::endl;
+		std::cout << " - Position: " << t.position().x << ", " << t.position().y << ", " << t.position().z << std::endl;
 		for (auto comp : obj->getComponents()) {
-			std::cout << " - Component " << comp << std::endl;
+			std::cout << " - Component " << comp->id() << std::endl;
 		}
 	}
 	auto x = s->getObjectById(0)->getComponent<TestComponent>()->getSecret();

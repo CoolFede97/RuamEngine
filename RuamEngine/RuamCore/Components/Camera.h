@@ -11,12 +11,11 @@
 
 namespace RuamEngine
 {
-	class Camera : public Component, public std::enable_shared_from_this<Camera>
+	class Camera : public Component
 	{
-		using CameraPtr = std::shared_ptr<Camera>;
 		using Component::Component;
 
-		static CameraPtr s_mainCamera;
+		static Camera* s_mainCamera;
 
 		const glm::vec3 m_up = glm::vec3(0.0, 1.0, 0.0);
 
@@ -30,6 +29,9 @@ namespace RuamEngine
 		glm::mat4 GetViewMatrix();
 
 		void SetAsMainCamera();
-		static CameraPtr& GetMainCamera();
+		static Camera* GetMainCamera();
+
+		void update() {};
+		void start() { SetAsMainCamera(); };
 	};
 }

@@ -2,7 +2,7 @@
 
 namespace RuamEngine
 {
-	Camera::CameraPtr Camera::s_mainCamera = nullptr;
+	Camera* Camera::s_mainCamera = nullptr;
 
 	glm::mat4 Camera::GetProjectionMatrix()
 	{
@@ -26,9 +26,9 @@ namespace RuamEngine
 	};
 	void Camera::SetAsMainCamera()
 	{
-		s_mainCamera = shared_from_this();
+		s_mainCamera = this;
 	}
-	Camera::CameraPtr& Camera::GetMainCamera() 
+	Camera* Camera::GetMainCamera() 
 	{
 		return s_mainCamera; 
 	}

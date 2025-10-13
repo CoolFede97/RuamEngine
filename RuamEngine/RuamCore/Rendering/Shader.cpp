@@ -171,6 +171,11 @@ namespace RuamEngine
 
 	void Shader::UpdateCameraMatrices()
 	{
+		if (Camera::GetMainCamera() == nullptr)
+		{
+			std::cout << "Not camera set!\n";
+			return;
+		}
 		Bind();
 		SetUniformMat4f("u_view", Camera::GetMainCamera()->GetViewMatrix());
 		SetUniformMat4f("u_projection", Camera::GetMainCamera()->GetProjectionMatrix());

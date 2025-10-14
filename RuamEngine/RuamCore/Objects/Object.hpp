@@ -14,7 +14,7 @@
 
 class Object {
 public:
-	Object(const std::string& name) : m_id(s_id_count), m_name(name), m_transform(m_id) {}
+	Object(const std::string& name) : m_id(s_id_count++), m_name(name), m_transform(m_id) {}
 	Object() : Object(s_default_name) {}
 
 	using ComponentVector = std::vector<std::unique_ptr<Component>>;

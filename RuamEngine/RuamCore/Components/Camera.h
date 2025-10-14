@@ -31,7 +31,7 @@ namespace RuamEngine
 		void SetAsMainCamera();
 		static Camera* GetMainCamera();
 
-		void update() {};
+		void update() { Component::update(); };
 		void start() { SetAsMainCamera(); };
 	};
 }

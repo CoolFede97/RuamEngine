@@ -30,7 +30,7 @@ Object* Scene::getObjectByIdx(const unsigned int idx) const {
 }
 
 Object* Scene::getObjectById(unsigned int id) const {
-    auto obj = std::find_if(m_objects.begin(), m_objects.end(), [id](const Object* o) {std::cout << "ID OBJ: " << o->id() << '\n'; return o->id() == id; });
+    auto obj = std::find_if(m_objects.begin(), m_objects.end(), [id](const Object* o) { return o->id() == id; });
     if (obj == m_objects.end()) {
         return nullptr;
     }

@@ -1,5 +1,4 @@
 #include "Camera.h"
-
 namespace RuamEngine
 {
 	Camera* Camera::s_mainCamera = nullptr;

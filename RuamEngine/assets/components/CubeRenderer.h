@@ -43,7 +43,6 @@ class CubeRenderer : public BaseRenderer
 		genericUnit.AddBatchData(newCube, newIndices, { modelMatrix });
 	};
 	
-	float speed = 0;
 	
 	void start()
 	{
@@ -53,9 +52,6 @@ class CubeRenderer : public BaseRenderer
 	{
 		render();
 		object()->transform().rotation() += glm::vec3(45 * RuamEngine::Time::DeltaTime(), 45*RuamEngine::Time::DeltaTime(), 45 * RuamEngine::Time::DeltaTime());
-		//object()->transform().scale() += glm::vec3(0.2f * RuamEngine::Time::DeltaTime(), 0.4f * RuamEngine::Time::DeltaTime(), 0.1f * RuamEngine::Time::DeltaTime());
-		//object()->transform().position()+= glm::vec3(0.0f,0.0f,1.5f*Time::DeltaTime());
-		//speed += 1000* RuamEngine::Time::DeltaTime();
-		//std::cout << "Speed: " << speed << "\n";
+		object()->transform().position() += glm::vec3(0, 0, 5 * RuamEngine::Time::DeltaTime());
 	};	
 };

@@ -5,19 +5,18 @@
 class SceneManager {
 public:
 	using ScenePtr = std::unique_ptr<Scene>;
-    using SceneList = std::vector<Scene*>;
+	using SceneCreator = std::function<ScenePtr()>;
+    using SceneList = std::map<unsigned int, SceneCreator>;
 
 	SceneManager() = delete;
 
 	static const SceneList& sceneList();
 
 	static void SetActiveScene(unsigned int id);
-	static Scene* ActiveScene();
+	static ScenePtr ActiveScene();
 
 	/* Returns idx */
-	static unsigned int AddScene(Scene* scene);
-
-	static Scene* CreateScene(const std::string& name);
+	static void AddScene(unsigned int id, SceneCreator scene);
 
 	// static void RemoveScene(int id);
 
@@ -25,5 +24,5 @@ public:
 
 private:
 	static SceneList s_scenes;
-	static Scene* s_active_scene;
+	static ScenePtr s_active_scene;
 };

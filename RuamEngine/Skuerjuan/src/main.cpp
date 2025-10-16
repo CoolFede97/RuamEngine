@@ -2,28 +2,20 @@
 
 using sm = SceneManager;
 
-void main_serial() {
+sm::ScenePtr SceneA() {
 	Scene s("SceneA");
-	const unsigned int id = SceneManager::AddScene(&s);
-	SceneManager::SetActiveScene(id);
-
-	Scene* scene = sm::ActiveScene();
-	Object* o = scene->newObject();
-	std::string name = "My Object";
+	auto o = s.newObject();
+	std::string name = "ObjectA";
 	o->setName(name);
-	Object* o2 = scene->newObject();
-	name = "Hola";
-	o2->setName(name);
-	auto c = o->addComponent<TestComponent>();
-	c->setSecret(42);
-	c->setName("The Answer");
-	Serial::serialise(scene);
+	o->transform().setPosition({1.0f, 2.0f, 3.0f});
+	o->addComponent<TestComponent>()->setSecret(7);
+	return std::make_unique<Scene>(s);
 }
 
-int main() {
+int main_deserial() {
 	auto s = Serial::deserialise("SceneA");
 	if (!s) {
-		main_serial();
+		// main_serial();
 		s = Serial::deserialise("SceneA");
 	}
 	for (auto obj : s->getObjects()) {
@@ -38,4 +30,11 @@ int main() {
 	std::cout << "Secret is " << x << std::endl;
 	s->start();
 	return 0;
+}
+
+int main() {
+	sm::AddScene(0, SceneA);
+	sm::SetActiveScene(0);
+	auto s = sm::ActiveScene();
+	std::cout << s->getObjectByIdx(0)->getComponent<TestComponent>()->getSecret() << std::endl;
 }

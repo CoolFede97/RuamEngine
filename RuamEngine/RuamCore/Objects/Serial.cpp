@@ -46,34 +46,34 @@ void Serial::serialise(Scene* s) {
 }
 
 Scene* Serial::deserialise(const std::string &scene_name) {
-    std::string filename = scene_name + ".json";
-    if (!std::filesystem::exists(filename)) {
-        std::cout << "File " << filename << " does not exist!" << std::endl;
-        return nullptr;
-    }
-    std::ifstream file(filename);
-    json j;
-    file >> j;
-    const std::string name = j["name"];
-    Scene *s = sm::CreateScene(name);
-    sm::SetActiveScene(s->id());
-
-    for (const auto& obj : j["objects"]) {
-        Object *o = s->newObject(obj["idx"]);
-        std::string objName = obj["name"];
-        o->setName(objName);
-        if (!obj["components"].is_null()) {
-            for (const auto& comp : obj["components"]) {
-                std::string type = comp["type"];
-                if (!Component::componentRegistry.contains(type)) {
-                    std::cerr << "Component type " << type << " not registered!" << std::endl;
-                    return nullptr;
-                }
-                auto constructor = Component::componentRegistry[type];
-                constructor(comp, o->id());
-            }
-        }
-    }
-    std::cout << "Deserialised scene " << s->name() << std::endl;
-    return sm::ActiveScene();
+    // std::string filename = scene_name + ".json";
+    // if (!std::filesystem::exists(filename)) {
+    //     std::cout << "File " << filename << " does not exist!" << std::endl;
+    //     return nullptr;
+    // }
+    // std::ifstream file(filename);
+    // json j;
+    // file >> j;
+    // const std::string name = j["name"];
+    // Scene s = sm::CreateScene(name);
+    // sm::SetActiveScene(s->id());
+    //
+    // for (const auto& obj : j["objects"]) {
+    //     Object *o = s->newObject(obj["idx"]);
+    //     std::string objName = obj["name"];
+    //     o->setName(objName);
+    //     if (!obj["components"].is_null()) {
+    //         for (const auto& comp : obj["components"]) {
+    //             std::string type = comp["type"];
+    //             if (!Component::componentRegistry.contains(type)) {
+    //                 std::cerr << "Component type " << type << " not registered!" << std::endl;
+    //                 return nullptr;
+    //             }
+    //             auto constructor = Component::componentRegistry[type];
+    //             constructor(comp, o->id());
+    //         }
+    //     }
+    // }
+    // std::cout << "Deserialised scene " << s->name() << std::endl;
+    // return sm::ActiveScene();
 }

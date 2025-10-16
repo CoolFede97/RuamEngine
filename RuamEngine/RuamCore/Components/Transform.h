@@ -14,6 +14,8 @@ public:
 
 	void setPosition(glm::vec3 new_pos);
 	void setPosition(float x, float y, float z);
+	void setRotation(glm::vec3 new_rot);
+	void setRotation(float x, float y, float z);
 
 	void setScale(glm::vec3 new_pos);
 	void setScale(float x, float y, float z);

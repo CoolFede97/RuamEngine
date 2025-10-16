@@ -29,6 +29,7 @@ namespace RuamEngine
 		glm::mat4 GetViewMatrix();
 
 		void SetAsMainCamera();
+		static void EmptyMainCamera();
 		static Camera* GetMainCamera();
 
 		void update() { Component::update(); };

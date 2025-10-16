@@ -5,7 +5,7 @@
 #include "../components/Manager.h"
 #include "../components/Counter.h"
 #include "../components/SandboxCom.h"
-#include "../components/CubeRenderer.h"
+#include "CubeRenderer.h"
 #include "../components/CameraController.h"
 #include "AudioSource.h"
 
@@ -16,6 +16,7 @@ Scene* CreateCFSandboxScene()
 	//manager->addComponent<SandboxCom>();
 	Object* cube = testScene->newObject();
 	cube->transform().setPosition(glm::vec3(0.0f, 0.0f, 5.5f));
+	cube->transform().setRotation(glm::vec3(45.0f, 5.0f, 45.0f));
 	cube->addComponent<CubeRenderer>();
 	manager->addComponent<Camera>();
 	//manager->addComponent<CameraController>();

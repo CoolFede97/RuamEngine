@@ -15,6 +15,14 @@ void Transform::setPosition(float x, float y, float z) {
 	m_position = glm::vec3(x, y, z);
 }
 
+void Transform::setRotation(glm::vec3 new_rot) {
+	m_rotation = new_rot;
+}
+
+void Transform::setRotation(float x, float y, float z) {
+	m_rotation = glm::vec3(x, y, z);
+}
+
 glm::vec3& Transform::position() {
 	return m_position;
 }

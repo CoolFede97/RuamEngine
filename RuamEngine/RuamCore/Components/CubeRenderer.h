@@ -6,8 +6,6 @@
 #include <Component.hpp>
 #include "Renderer.h"
 #include "Vertex.h"
-#include "RuamEngine.h"
-
 #include "RuamTime.h"
 
 using namespace RuamEngine;
@@ -51,7 +49,5 @@ class CubeRenderer : public BaseRenderer
 	void update()
 	{
 		render();
-		object()->transform().rotation() += glm::vec3(45 * RuamEngine::Time::DeltaTime(), 45*RuamEngine::Time::DeltaTime(), 45 * RuamEngine::Time::DeltaTime());
-		object()->transform().position() += glm::vec3(0, 0, 5 * RuamEngine::Time::DeltaTime());
 	};	
 };

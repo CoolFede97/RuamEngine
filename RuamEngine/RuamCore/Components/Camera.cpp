@@ -27,6 +27,12 @@ namespace RuamEngine
 	{
 		s_mainCamera = this;
 	}
+	
+	void Camera::EmptyMainCamera()
+	{
+		s_mainCamera = nullptr;
+	}
+
 	Camera* Camera::GetMainCamera() 
 	{
 		return s_mainCamera; 

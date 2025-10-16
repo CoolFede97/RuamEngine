@@ -309,6 +309,14 @@ add_library(RuamUtils INTERFACE)
 target_include_directories(RuamUtils INTERFACE ${CMAKE_SOURCE_DIR}/RuamCore/RuamUtils)
 
 
+# ///////////////////////////////////////////////////////////////////////////////////////////////
+# Scenes
+
+file(GLOB SCENES_SRC "${CMAKE_SOURCE_DIR}/assets/scenes/*.cpp")
+add_library(Scenes STATIC ${SCENES_SRC})
+target_include_directories(Scenes PUBLIC "${CMAKE_SOURCE_DIR}/assets/scenes")
+target_link_libraries(Scenes PUBLIC Vendor Maths Rendering Objects)
+
 # /////////////////////////////////////////////////////////////////////////////////////////////// 
 
 # Audio
@@ -327,7 +335,7 @@ file (GLOB OBJECTS_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Objects/*.cpp")
 file (GLOB COMPONENTS_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Components/*.cpp")
 add_library(Objects STATIC ${OBJECTS_SRC} ${COMPONENTS_SRC})
 target_include_directories(Objects PUBLIC "${CMAKE_SOURCE_DIR}/RuamCore/Objects" "${CMAKE_SOURCE_DIR}/RuamCore/Components")
-target_link_libraries(Objects PUBLIC Audio RuamUtils)
+target_link_libraries(Objects PUBLIC Audio RuamUtils Time Scenes)
 
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -345,7 +353,7 @@ target_include_directories(EventSystem INTERFACE ${CMAKE_SOURCE_DIR}/RuamCore/Ev
 # Linking
 
 target_link_libraries(RuamCore INTERFACE
-    Rendering Maths Time Files Input Objects RuamUtils Audio EventSystem
+    Rendering Maths Time Files Input Objects RuamUtils Scenes Audio EventSystem
 )
 
 # -----------------------------------------------------------------------------------------------------

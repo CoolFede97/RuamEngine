@@ -2,8 +2,8 @@
 
 #include "RuamEngine.h"
 
-#include "assets/scenes/MenuScene.cpp"
-#include "assets/scenes/SandboxScene.cpp"
+#include "MenuScene.cpp"
+#include "SandboxScene.cpp"
 #include "assets/components/Manager.h"
 
 using namespace RuamEngine;
@@ -32,11 +32,12 @@ int main()
 		ImGui::StyleColorsDark();
 
 		Scene* menuScene = CreateMenuScene();
-		
+
 		SceneManager::SetActiveScene(0);
 		
 		Scene* cfSandboxScene = CreateCFSandboxScene();
 	
+
 
 		while (!glfwWindowShouldClose(Renderer::GetWindow()))
 		{

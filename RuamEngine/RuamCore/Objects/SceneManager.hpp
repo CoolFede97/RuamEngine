@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Scene.hpp"
-
+#include "Camera.h"
 class SceneManager {
 public:
 	using ScenePtr = std::unique_ptr<Scene>;

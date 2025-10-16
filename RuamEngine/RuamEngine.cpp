@@ -5,6 +5,7 @@
 #include "MenuScene.cpp"
 #include "SandboxScene.cpp"
 #include "assets/components/Manager.h"
+#include "assets/scenes/CollisionSandboxScene.cpp"
 
 using namespace RuamEngine;
 
@@ -36,7 +37,8 @@ int main()
 		SceneManager::SetActiveScene(0);
 		
 		Scene* cfSandboxScene = CreateCFSandboxScene();
-	
+		// Scene* collisionSandboxScene = CreateCollisionSandboxScene();
+
 
 
 		while (!glfwWindowShouldClose(Renderer::GetWindow()))

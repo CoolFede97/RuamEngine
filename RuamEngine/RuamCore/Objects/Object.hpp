@@ -15,7 +15,8 @@
 class Object {
 public:
 	Object(const std::string& name) : m_id(s_id_count++), m_name(name), m_transform(m_id) {}
-	Object() : Object(s_default_name) {}
+	Object() : Object(s_default_name) {
+	}
 
 	using ComponentVector = std::vector<std::unique_ptr<Component>>;
 	using ComponentList = std::map<std::type_index, ComponentVector>;
@@ -104,7 +105,7 @@ public:
 
 	unsigned int id() const;
 	const std::string& name() const;
-	void setName(std::string& newstr);
+	void setName(const std::string& name);
 
 	std::vector<Component*> getComponents() const {
 		std::vector<Component*> comps;

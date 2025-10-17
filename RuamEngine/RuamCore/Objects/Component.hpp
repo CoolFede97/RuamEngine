@@ -8,12 +8,10 @@ namespace { \
 struct ComponentClass##Registrar { \
 	ComponentClass##Registrar() { \
 		Component::componentRegistry.insert(std::make_pair( \
-			#ComponentClass, [](const nlohmann::json &j, unsigned int id) -> Component* { \
-				Object* o = SceneManager::ActiveScene()->getObjectById(id); \
+			#ComponentClass, [](const nlohmann::json &j, Object *o) -> Component* { \
 				return o->addComponentPtr<ComponentClass>(j); \
 			} \
 		)); \
-		std::cout << "Registered " #ComponentClass << std::endl; \
 	} \
 }; \
 static ComponentClass##Registrar global_##ComponentClass##_registrar; \
@@ -63,10 +61,10 @@ REGISTER_COMPONENT(ComponentClass)
 class Object;
 class Component {
 public:
-	using componentFactory = std::function<Component*(const nlohmann::json&, unsigned int)>;
+	using componentFactory = std::function<Component*(const nlohmann::json&, Object*)>;
 	virtual ~Component() = default;
     explicit Component(const unsigned int obj_id) : m_object_id(obj_id), m_id(s_id_count++) {
-    };
+    }
 
 	virtual void start() = 0;
 	virtual void update() = 0;

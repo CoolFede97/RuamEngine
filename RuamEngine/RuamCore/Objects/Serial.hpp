@@ -16,5 +16,5 @@ void to_json(json& j, Object* o);
 class Serial {
 	public:
 		static void serialise(Scene* s);
-		static Scene* deserialise(const std::string& filename);
+		static Scene* deserialise(const std::string& scene_name);
 };

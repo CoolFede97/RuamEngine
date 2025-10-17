@@ -38,13 +38,21 @@ int main()
 		Scene* cfSandboxScene = CreateCFSandboxScene();
 	
 
+		bool a = true;
 		while (!Renderer::WindowShouldClose())
 		{
-
 			// ImGUI
 			ImGui_ImplOpenGL3_NewFrame();
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
+
+			if (a) {
+				if (SceneManager::ActiveScene() == nullptr) {
+					std::cout << "HHOHOHAO";
+				}
+				SceneManager::ActiveScene()->start();
+				a = false;
+			}
 
 			// OpenGL
 			GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));

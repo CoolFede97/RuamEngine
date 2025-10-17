@@ -15,10 +15,11 @@ public:
 	using Component::Component;
 	void start() {
 		m_audio = object()->getComponent<AudioSource>();
-		ASSERT(m_audio != nullptr);
-		std::cout << "Inicio: volumen=" << m_audio->volume() << "\n";
-		m_audio->setVolume(2);
-		std::cout << "Inicio: volumen=" << m_audio->volume() << "\n";
+		if (m_audio != nullptr) {
+			std::cout << "Inicio: volumen=" << m_audio->volume() << "\n";
+			m_audio->setVolume(2);
+			std::cout << "Inicio: volumen=" << m_audio->volume() << "\n";
+		}
 	}
 
 	void update() {

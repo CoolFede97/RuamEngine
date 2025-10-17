@@ -17,7 +17,7 @@ public:
 		int i = 0;
 		for (const auto& scene : SceneManager::sceneList()) 
 		{
-			if (ImGui::Button(scene->name().c_str()))
+			if (ImGui::Button(scene.second()->name().c_str()))
 			{
 				SceneManager::SetActiveScene(i);
 			}

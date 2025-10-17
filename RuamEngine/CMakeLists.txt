@@ -146,8 +146,13 @@ add_library(dr_libs::dr_libs ALIAS dr_libs)
 FetchContent_Declare(
     assimp
     GIT_REPOSITORY https://github.com/assimp/assimp.git
-    GIT_TAG v5.3.1
+    GIT_TAG v6.0.2
 )
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 13)
+    add_compile_options(-Wno-error=dangling-reference)
+endif()
+
 FetchContent_MakeAvailable(assimp)
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////

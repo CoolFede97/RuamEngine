@@ -32,11 +32,11 @@ int main()
 
 		ImGui::StyleColorsDark();
 
-		Scene* menuScene = CreateMenuScene();
+		CreateMenuScene();
 
 		SceneManager::SetActiveScene(0);
 		
-		Scene* cfSandboxScene = CreateCFSandboxScene();
+		CreateCFSandboxScene();
 		// Scene* collisionSandboxScene = CreateCollisionSandboxScene();
 
 
@@ -66,7 +66,7 @@ int main()
 			Input::UpdateInput();
 
 			// Time
-			RuamEngine::Time::Update();
+			Time::Update();
 
 			Renderer::ClearScreen();
 			Renderer::BeginBatch();

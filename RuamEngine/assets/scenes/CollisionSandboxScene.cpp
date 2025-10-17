@@ -8,17 +8,19 @@
 #include "../components/CubeRenderer.h"
 #include "AudioSource.h"
 #include "Camera.h"
+#include "Serial.hpp"
 
-Scene* CreateCollisionSandboxScene()
+void CreateCollisionSandboxScene()
 {
-    Scene* testScene = SceneManager::CreateScene(2, "CollisionSandboxScene");
-    Object* manager = testScene->newObject();
-    Object* cube = testScene->newObject();
-    Object* camera = testScene->newObject();
+    SceneManager::CreateScene(2, "CollisionSandboxScene");
+    auto collisionSandboxScene = SceneManager::ActiveScene();
+    Object* manager = collisionSandboxScene->newObject();
+    Object* cube = collisionSandboxScene->newObject();
+    Object* camera = collisionSandboxScene->newObject();
     cube->addComponent<CubeRenderer>();
     manager->addComponent<Manager>();
-    camera->addComponent<RuamEngine::Camera>();
+    camera->addComponent<Camera>();
     cube->transform().setPosition(glm::vec3(0.0f, 0.0f, 5.5f));
 
-    return testScene;
+    Serial::serialise(collisionSandboxScene);
 }

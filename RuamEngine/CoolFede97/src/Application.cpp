@@ -10,7 +10,7 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "Camera.h"
-#include "RuamTime.h"
+#include "RuamEngine.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -68,7 +68,7 @@ int main(void)
 			Input::UpdateInput();
 			
 			// Time
-			ruamTime::Time::Update();
+			RuamEngine::Time::Update();
 
 			Renderer::BeginDraw();
 			

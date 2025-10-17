@@ -150,9 +150,12 @@ namespace RuamEngine
 		SetUniform1f("u_ambientOcclusion", material.ambientOcclusion);
 		SetUniform1f("u_emissiveStrength", material.emissiveStrength);
 
-		glm::mat4 model = glm::mat4(1.0f);
-		SetUniformMat4f("u_view", model);
-		SetUniformMat4f("u_projection", model);
+		glm::mat4 projectionMatrix = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+		SetUniformMat4f("u_projection", projectionMatrix);
+		
+		glm::mat4 viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f) + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		SetUniformMat4f("u_view", viewMatrix);
+		SetUniformMat4f("u_projection", projectionMatrix);
 		/*ASSERT(material.textures[0].m_LocalBuffer);
 		ASSERT(texture.m_LocalBuffer);
 		ASSERT(*material.textures[0].m_LocalBuffer == *texture.m_LocalBuffer);

@@ -47,5 +47,4 @@ bool SceneManager::SceneChange() {
 
 void SceneManager::SetSceneChange(bool state) {
 	s_scene_change = state;
-	return state;
 }

@@ -25,7 +25,7 @@ public:
 
 	static bool SceneChange();
 
-	static bool SetSceneChange(bool state);
+	static void SetSceneChange(bool state);
 
 private:
 	static SceneList s_scenes;

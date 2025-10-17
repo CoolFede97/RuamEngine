@@ -173,7 +173,7 @@ namespace RuamEngine
 	{
 		if (Camera::GetMainCamera() == nullptr)
 		{
-			std::cout << "Not camera set!\n";
+			//std::cout << "Not camera set!\n";
 			SetUniformMat4f("u_view", glm::mat4(0.0f));
 			SetUniformMat4f("u_projection", glm::mat4(0.0f));
 			return;

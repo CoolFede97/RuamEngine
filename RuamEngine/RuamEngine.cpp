@@ -41,7 +41,7 @@ int main()
 
 
 
-		bool a = true;
+		//bool a = true;
 		while (!Renderer::WindowShouldClose())
 		{
 			// ImGUI
@@ -49,13 +49,13 @@ int main()
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
 
-			if (a) {
+			/*if (a) {
 				if (SceneManager::ActiveScene() == nullptr) {
 					std::cout << "HHOHOHAO";
 				}
 				SceneManager::ActiveScene()->start();
 				a = false;
-			}
+			}*/
 
 			// OpenGL
 			GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
@@ -78,6 +78,7 @@ int main()
 			EASY_BLOCK("UpdateScene");
 			if (SceneManager::ActiveScene() != nullptr)
 			{
+				SceneManager::SetSceneChange(false);
 				SceneManager::ActiveScene()->update();
 			}
 

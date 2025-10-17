@@ -48,6 +48,6 @@ class CubeRenderer : public BaseRenderer
 
 	void update()
 	{
-		render();
+		BaseRenderer::update();
 	};	
 };

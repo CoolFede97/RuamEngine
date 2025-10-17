@@ -26,6 +26,6 @@ public:
 	};
 	void update()
 	{
-		render();
+		BaseRenderer::update();
 	}
 };

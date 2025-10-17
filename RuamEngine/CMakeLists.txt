@@ -140,6 +140,17 @@ add_library(dr_libs::dr_libs ALIAS dr_libs)
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
 
+# Assimp
+
+FetchContent_Declare(
+    assimp
+    GIT_REPOSITORY https://github.com/assimp/assimp.git
+    GIT_TAG v5.3.1
+)
+FetchContent_MakeAvailable(assimp)
+
+# ///////////////////////////////////////////////////////////////////////////////////////////////
+
 # IMGUI
 
 FetchContent_Declare(
@@ -220,7 +231,7 @@ target_compile_definitions(Vendor INTERFACE STB_IMAGE_IMPLEMENTATION)
 target_compile_definitions(Vendor INTERFACE BUILD_WITH_EASY_PROFILER)
 
 target_link_libraries(Vendor INTERFACE
-        glfw glew_s glm ImGui OpenGL::GL nlohmann_json::nlohmann_json dr_libs
+        glfw glew_s glm ImGui OpenGL::GL nlohmann_json::nlohmann_json dr_libs assimp 
 )
 if (LINUX)
     target_link_libraries(Vendor INTERFACE easy_profiler OpenAL::OpenAL)
@@ -250,7 +261,7 @@ add_library(RuamCore INTERFACE)
 file (GLOB RENDERING_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Rendering/*.cpp")
 add_library(Rendering STATIC ${RENDERING_SRC}
         RuamCore/Rendering/VertexBufferLayout.cpp)
-target_link_libraries(Rendering PUBLIC Vendor Files Maths RuamUtils Objects)
+target_link_libraries(Rendering PUBLIC Vendor Files Maths RuamUtils Objects assimp)
 target_include_directories(Rendering PUBLIC ${CMAKE_SOURCE_DIR}/RuamCore/Rendering)
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////

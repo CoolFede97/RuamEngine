@@ -1,4 +1,5 @@
 #include "Object.hpp"
+#include "SceneManager.hpp"
 
 unsigned int Object::s_id_count = 0;
 const std::string Object::s_default_name = "Object";
@@ -16,16 +17,16 @@ void Object::setName(std::string &name) {
 }
 
 void Object::start() {
-    for (auto &it: m_components) {
-        for (auto &&cmp: it.second) {
-            cmp->start();
-        }
+    for (auto &cmp: getComponents()) {
+		if (SceneManager::SceneChange()) continue;
+		cmp->start();
     }
 }
 
 void Object::update() {
-    for (auto &it: getComponents()) {
-        it->update();
+	for (auto &cmp: getComponents()) {
+		if (SceneManager::SceneChange()) continue;
+        cmp->update();
     }
 }
 

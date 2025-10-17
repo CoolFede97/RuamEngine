@@ -23,7 +23,12 @@ public:
 
 	static ScenePtr EmptyScene();
 
+	static bool SceneChange();
+
+	static bool SetSceneChange(bool state);
+
 private:
 	static SceneList s_scenes;
 	static Scene* s_active_scene;
+	static bool s_scene_change;
 };

@@ -1,4 +1,5 @@
 #include "Scene.hpp"
+#include "SceneManager.hpp"
 #include <fstream>
 
 unsigned int Scene::s_id_count = 0;
@@ -44,9 +45,10 @@ void Scene::deleteObjectByIdx(unsigned int idx) {
 }
 
 void Scene::start() {
+	SceneManager::SetSceneChange(false);
 	for (auto& obj : m_objects) {
 		obj->start();
-	}
+	};
 }
 
 void Scene::update() {

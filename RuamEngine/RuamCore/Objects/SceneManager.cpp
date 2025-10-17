@@ -2,6 +2,7 @@
 
 SceneManager::SceneList SceneManager::s_scenes;
 Scene* SceneManager::s_active_scene = nullptr;
+bool SceneManager::s_scene_change = false;
 
 const SceneManager::SceneList& SceneManager::sceneList() {
 	return s_scenes;
@@ -9,6 +10,7 @@ const SceneManager::SceneList& SceneManager::sceneList() {
 
 void SceneManager::SetActiveScene(const unsigned int id) {
 	s_active_scene = s_scenes[id];
+	s_scene_change = true;
 }
 
 Scene* SceneManager::ActiveScene() {
@@ -37,4 +39,12 @@ Scene* SceneManager::CreateScene(const unsigned int id, const std::string& name)
 
 SceneManager::ScenePtr SceneManager::EmptyScene() {
 	return std::move(std::make_unique<Scene>());
+}
+
+bool SceneManager::SceneChange() {
+	return s_scene_change;
+}
+
+bool SceneManager::SetSceneChange(bool state) {
+	s_scene_change = state;
 }

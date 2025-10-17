@@ -1,5 +1,4 @@
 #include "SceneManager.hpp"
-
 SceneManager::SceneList SceneManager::s_scenes;
 Scene* SceneManager::s_active_scene = nullptr;
 bool SceneManager::s_scene_change = false;
@@ -9,6 +8,7 @@ const SceneManager::SceneList& SceneManager::sceneList() {
 }
 
 void SceneManager::SetActiveScene(const unsigned int id) {
+	RuamEngine::Camera::EmptyMainCamera();
 	s_active_scene = s_scenes[id];
 	s_scene_change = true;
 }

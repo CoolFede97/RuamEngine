@@ -1,10 +1,10 @@
 #include <Scene.hpp>
 
-Scene* CreateMainScene()
-{
-	Scene* scene = new Scene();
-
-	Object& manager = scene->newObject();
-
-
-}
+//Scene* CreateMainScene()
+//{
+//	/*Scene* scene = new Scene();
+//
+//	Object& manager = scene->newObject();*/
+//
+//
+//}

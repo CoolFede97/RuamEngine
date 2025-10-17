@@ -2,9 +2,10 @@
 
 #include "RuamEngine.h"
 
-#include "assets/scenes/MenuScene.cpp"
-#include "assets/scenes/SandboxScene.cpp"
+#include "MenuScene.cpp"
+#include "SandboxScene.cpp"
 #include "assets/components/Manager.h"
+#include "assets/scenes/CollisionSandboxScene.cpp"
 
 using namespace RuamEngine;
 
@@ -32,11 +33,13 @@ int main()
 		ImGui::StyleColorsDark();
 
 		Scene* menuScene = CreateMenuScene();
-		
+
 		SceneManager::SetActiveScene(0);
 		
 		Scene* cfSandboxScene = CreateCFSandboxScene();
-	
+		// Scene* collisionSandboxScene = CreateCollisionSandboxScene();
+
+
 
 		bool a = true;
 		while (!Renderer::WindowShouldClose())

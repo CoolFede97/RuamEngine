@@ -3,13 +3,16 @@
 
 SceneManager::SceneList SceneManager::s_scenes;
 SceneManager::ScenePtr SceneManager::s_active_scene = nullptr;
+bool SceneManager::s_scene_change = false;
 
 const SceneManager::SceneList& SceneManager::sceneList() {
 	return s_scenes;
 }
 
 void SceneManager::SetActiveScene(const unsigned int id) {
+	RuamEngine::Camera::EmptyMainCamera();
 	s_active_scene.reset(s_scenes[id]());
+	s_scene_change = true;
 }
 
 Scene* SceneManager::ActiveScene() {
@@ -51,4 +54,11 @@ bool SceneManager::StartScene(const unsigned int id, const std::string& name) {
 	}
 	delete s;
 	return ret;
+}
+bool SceneManager::SceneChange() {
+	return s_scene_change;
+}
+
+void SceneManager::SetSceneChange(bool state) {
+	s_scene_change = state;
 }

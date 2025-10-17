@@ -2,7 +2,7 @@
 
 #include "GLFW/glfw3.h"
 
-namespace ruamTime
+namespace RuamEngine
 {
 	class Time
 	{

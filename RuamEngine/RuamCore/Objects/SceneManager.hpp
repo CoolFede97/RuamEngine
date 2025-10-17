@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Scene.hpp"
-
+#include "Camera.h"
 class SceneManager {
 public:
 	using ScenePtr = std::unique_ptr<Scene>;
@@ -24,7 +24,12 @@ public:
 	static void CreateScene(unsigned int id, const std::string &name);
 	static bool StartScene(unsigned int id, const std::string& name);
 
+	static bool SceneChange();
+
+	static void SetSceneChange(bool state);
+
 private:
 	static SceneList s_scenes;
 	static ScenePtr s_active_scene;
+	static bool s_scene_change;
 };

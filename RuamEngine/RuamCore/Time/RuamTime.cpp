@@ -1,6 +1,6 @@
 #include "RuamTime.h"
 
-namespace ruamTime
+namespace RuamEngine
 {
 
 	float Time::m_currentFrame = 0.0f;

@@ -2,7 +2,6 @@
 
 #include "Component.hpp"
 #include "glm/glm.hpp"
-
 class Transform : public Component {
 public:
 	using Component::Component;
@@ -15,6 +14,8 @@ public:
 
 	void setPosition(glm::vec3 new_pos);
 	void setPosition(float x, float y, float z);
+	void setRotation(glm::vec3 new_rot);
+	void setRotation(float x, float y, float z);
 
 	void setScale(glm::vec3 new_pos);
 	void setScale(float x, float y, float z);
@@ -25,6 +26,6 @@ public:
 
 protected:
 	glm::vec3 m_position;
-	glm::vec3 m_scale;
-	glm::vec3 m_rotation;
+	glm::vec3 m_scale = glm::vec3(1.0f, 1.0f, 1.0f);
+	glm::vec3 m_rotation = glm::vec3(0.0f,0.0f,0.0f);
 };

@@ -2,9 +2,10 @@
 
 #include "RuamEngine.h"
 
-#include "assets/scenes/MenuScene.cpp"
-#include "assets/scenes/SandboxScene.cpp"
+#include "MenuScene.cpp"
+#include "SandboxScene.cpp"
 #include "assets/components/Manager.h"
+#include "assets/scenes/CollisionSandboxScene.cpp"
 
 using namespace RuamEngine;
 
@@ -31,16 +32,30 @@ int main()
 
 		ImGui::StyleColorsDark();
 
-		const unsigned int menuScene = SceneManager::AddScene(0, CreateMenuScene);
-		SceneManager::SetActiveScene(menuScene);
-		const unsigned int sandboxScene = SceneManager::AddScene(1, CreateSandboxScene);
+		Scene* menuScene = CreateMenuScene();
 
-		while (!glfwWindowShouldClose(Renderer::GetWindow()))
+		SceneManager::SetActiveScene(0);
+		
+		Scene* cfSandboxScene = CreateCFSandboxScene();
+		// Scene* collisionSandboxScene = CreateCollisionSandboxScene();
+
+
+
+		//bool a = true;
+		while (!Renderer::WindowShouldClose())
 		{
 			// ImGUI
 			ImGui_ImplOpenGL3_NewFrame();
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
+
+			/*if (a) {
+				if (SceneManager::ActiveScene() == nullptr) {
+					std::cout << "HHOHOHAO";
+				}
+				SceneManager::ActiveScene()->start();
+				a = false;
+			}*/
 
 			// OpenGL
 			GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
@@ -51,9 +66,10 @@ int main()
 			Input::UpdateInput();
 
 			// Time
-			ruamTime::Time::Update();
+			RuamEngine::Time::Update();
 
-			Renderer::BeginDraw();
+			Renderer::ClearScreen();
+			Renderer::BeginBatch();
 
 			EASY_BLOCK("EventManager");
 			EventManager::HandleEvents();
@@ -62,8 +78,13 @@ int main()
 			EASY_BLOCK("UpdateScene");
 			if (SceneManager::ActiveScene() != nullptr)
 			{
+				SceneManager::SetSceneChange(false);
 				SceneManager::ActiveScene()->update();
 			}
+
+			Renderer::EndBatch();
+			Renderer::Draw();
+
 			EASY_END_BLOCK;
 			ImGui::Render();
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

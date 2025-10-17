@@ -10,6 +10,7 @@ namespace RuamEngine
 {
     class Material;
     class RenderUnit;
+    class Shader;
     class DrawingData
     {
     public:

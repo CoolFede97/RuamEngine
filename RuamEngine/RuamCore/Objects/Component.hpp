@@ -67,7 +67,14 @@ public:
     }
 
 	virtual void start() = 0;
-	virtual void update() = 0;
+	virtual void update()
+	{
+		if (!m_started)
+		{
+			start();
+			m_started = true;
+		}
+	}
 
 	bool operator==(const Component& other) const;
 
@@ -86,6 +93,7 @@ protected:
 	const unsigned int m_object_id;
 	const unsigned int m_id;
 	static unsigned int s_id_count;
+	bool m_started = false;
 };
 
 class BaseRenderer : public Component {
@@ -97,6 +105,7 @@ public:
 	void start() {}
 
 	void update() {
+		Component::update();
 		render();
 	}
 };

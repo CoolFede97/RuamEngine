@@ -6,7 +6,7 @@
 #include "Camera.h"
 #include "Renderer.h"
 #include "Input.h"
-#include "RuamTime.h"
+#include "RuamEngine.h"
 namespace test
 {
 	TestMovement::TestMovement()
@@ -211,7 +211,7 @@ namespace test
 		{
 			direction -= camera_dir;
 		}
-		m_Camera->m_position += direction * m_CameraSpeed * ruamTime::Time::DeltaTime();
+		m_Camera->m_position += direction * m_CameraSpeed * RuamEngine::Time::DeltaTime();
 	}
 
 }

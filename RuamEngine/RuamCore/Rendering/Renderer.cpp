@@ -22,7 +22,7 @@ namespace RuamEngine
 
         glfwMakeContextCurrent(m_window);
 
-        glfwSwapInterval(0);
+        glfwSwapInterval(1);
 
         ASSERT(glewInit() == GLEW_OK);
 
@@ -173,6 +173,7 @@ namespace RuamEngine
             {
                 drawingData.second->m_shader->Bind();
                 drawingData.second->m_shader->LoadMaterial(*renderUnit.second.m_material);
+				drawingData.second->m_shader->UpdateCameraMatrices();
                 GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit.second.m_indices->GetCurrentSize()/sizeof(unsigned int), renderUnit.second.m_modelMatricesBuffer->m_data.size()));
             }
         }
@@ -182,6 +183,7 @@ namespace RuamEngine
     {
         renderUnit.m_shader->Bind();
         renderUnit.m_shader->LoadMaterial(*renderUnit.m_material);
+        renderUnit.m_shader->UpdateCameraMatrices();
         GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit.m_indices->GetCurrentSize() / sizeof(unsigned int), renderUnit.m_modelMatricesBuffer->m_data.size()));
     }
 

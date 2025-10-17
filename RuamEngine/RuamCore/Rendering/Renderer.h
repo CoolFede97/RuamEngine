@@ -83,6 +83,7 @@ namespace RuamEngine
 
 
 		static GLFWwindow* GetWindow() { return m_window; }
+		static int WindowShouldClose() { return glfwWindowShouldClose(m_window); }
 
 
         static void Draw();

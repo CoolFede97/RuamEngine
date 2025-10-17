@@ -16,6 +16,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 project ("RuamEngine")
 
 # Add source to this project's executable.
+
 add_executable (RuamEngine "RuamEngine.cpp" "RuamEngine.h")
 
 include(FetchContent)
@@ -140,6 +141,17 @@ add_library(dr_libs::dr_libs ALIAS dr_libs)
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
 
+# Assimp
+
+FetchContent_Declare(
+    assimp
+    GIT_REPOSITORY https://github.com/assimp/assimp.git
+    GIT_TAG v5.3.1
+)
+FetchContent_MakeAvailable(assimp)
+
+# ///////////////////////////////////////////////////////////////////////////////////////////////
+
 # IMGUI
 
 FetchContent_Declare(
@@ -220,10 +232,12 @@ target_compile_definitions(Vendor INTERFACE STB_IMAGE_IMPLEMENTATION)
 target_compile_definitions(Vendor INTERFACE BUILD_WITH_EASY_PROFILER)
 
 target_link_libraries(Vendor INTERFACE
-        glfw glew_s glm ImGui OpenGL::GL OpenAL::OpenAL nlohmann_json::nlohmann_json dr_libs
+        glfw glew_s glm ImGui OpenGL::GL nlohmann_json::nlohmann_json dr_libs assimp 
 )
 if (LINUX)
-    target_link_libraries(Vendor INTERFACE easy_profiler)
+    target_link_libraries(Vendor INTERFACE easy_profiler OpenAL::OpenAL)
+else()
+    target_link_libraries(Vendor INTERFACE OpenAL::OpenAL)
 endif ()
 
 target_include_directories(Vendor INTERFACE 
@@ -248,7 +262,7 @@ add_library(RuamCore INTERFACE)
 file (GLOB RENDERING_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Rendering/*.cpp")
 add_library(Rendering STATIC ${RENDERING_SRC}
         RuamCore/Rendering/VertexBufferLayout.cpp)
-target_link_libraries(Rendering PUBLIC Vendor Files Maths RuamUtils)
+target_link_libraries(Rendering PUBLIC Vendor Files Maths RuamUtils Objects assimp)
 target_include_directories(Rendering PUBLIC ${CMAKE_SOURCE_DIR}/RuamCore/Rendering)
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -307,6 +321,14 @@ add_library(RuamUtils INTERFACE)
 target_include_directories(RuamUtils INTERFACE ${CMAKE_SOURCE_DIR}/RuamCore/RuamUtils)
 
 
+# ///////////////////////////////////////////////////////////////////////////////////////////////
+# Scenes
+
+file(GLOB SCENES_SRC "${CMAKE_SOURCE_DIR}/assets/scenes/*.cpp")
+add_library(Scenes STATIC ${SCENES_SRC})
+target_include_directories(Scenes PUBLIC "${CMAKE_SOURCE_DIR}/assets/scenes")
+target_link_libraries(Scenes PUBLIC Vendor Maths Rendering Objects)
+
 # /////////////////////////////////////////////////////////////////////////////////////////////// 
 
 # Audio
@@ -325,7 +347,7 @@ file (GLOB OBJECTS_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Objects/*.cpp")
 file (GLOB COMPONENTS_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Components/*.cpp")
 add_library(Objects STATIC ${OBJECTS_SRC} ${COMPONENTS_SRC})
 target_include_directories(Objects PUBLIC "${CMAKE_SOURCE_DIR}/RuamCore/Objects" "${CMAKE_SOURCE_DIR}/RuamCore/Components")
-target_link_libraries(Objects PUBLIC Audio RuamUtils)
+target_link_libraries(Objects PUBLIC Audio RuamUtils Time Scenes)
 
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -343,7 +365,7 @@ target_include_directories(EventSystem INTERFACE ${CMAKE_SOURCE_DIR}/RuamCore/Ev
 # Linking
 
 target_link_libraries(RuamCore INTERFACE
-    Rendering Maths Time Files Input Objects RuamUtils Audio EventSystem
+    Rendering Maths Time Files Input Objects RuamUtils Scenes Audio EventSystem
 )
 
 # -----------------------------------------------------------------------------------------------------
@@ -356,5 +378,7 @@ if (CMAKE_VERSION VERSION_GREATER 3.12)
 endif()
 
 target_link_libraries(RuamEngine PUBLIC RuamCore)
+
+add_subdirectory(Editor)
 
 # TODO: Add tests and install targets if needed.

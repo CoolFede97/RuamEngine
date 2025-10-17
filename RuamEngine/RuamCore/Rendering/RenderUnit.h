@@ -1,21 +1,22 @@
 #pragma once
 
 #include "Material.h"
+#include "Shader.h"
 #include "RenderingElements.h"
 #include "RenderingConstants.h"
 
 namespace RuamEngine
 {
+    class Shader;
     class RenderUnit
     {
     public:
-
 
 	    RenderUnit(ShaderPtr& shader);
         RenderUnit();
 
 	    // This shader must be the same as the drawingData that contains this renderUnit
-	    ShaderPtr m_shader;
+	    ShaderPtr m_shader = nullptr;
         MaterialPtr m_material = nullptr;
         VertexArrayPtr m_vertexArray = std::make_unique<VertexArray>();
         SSBOPointer<Vertex> m_vertices = std::make_unique<SSBO<Vertex>>(maxVertexCount, GL_DYNAMIC_STORAGE_BIT);

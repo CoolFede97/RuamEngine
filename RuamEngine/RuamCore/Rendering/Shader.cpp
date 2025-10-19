@@ -6,13 +6,13 @@ namespace RuamEngine
 {
 
 	GLint Shader::maxTextureSlots= 0;
-
+	unsigned int Shader::s_idInstanceCount = 0;
 
 
 	Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
-		: m_vFilePath(GlobalizePath(vertexPath)), m_fFilePath(GlobalizePath(fragmentPath)), m_id(0)
+		: m_vFilePath(GlobalizePath(vertexPath)), m_fFilePath(GlobalizePath(fragmentPath)), m_instanceId(s_idInstanceCount++), m_rendererId(0)
 	{
-		m_id = CreateShader(vertexPath, fragmentPath);
+		m_rendererId = CreateShader(vertexPath, fragmentPath);
 		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureSlots);
 		SetUniformTextureSlots("u_albedoMap");
 	}

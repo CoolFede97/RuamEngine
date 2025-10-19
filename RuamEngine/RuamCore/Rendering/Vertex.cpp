@@ -8,18 +8,22 @@ namespace RuamEngine
 		Vertex v0;
 		v0.m_position = { x - half, y - half, 0.0f };
 		v0.m_uv = {0.0f, 0.0f};
+		v0.m_normal = { 0.0f, 0.0f, 1.0f };
 		v0.m_texId = texId;
 		Vertex v1;
 		v1.m_position = { x + half, y - half, 0.0f };
 		v1.m_uv = {1.0f,0.0f};
+		v1.m_normal = { 0.0f, 0.0f, 1.0f };
 		v1.m_texId = texId;
 		Vertex v2;
 		v2.m_position = { x + half, y + half, 0.0f };
 		v2.m_uv = {1.0f,1.0f};
+		v2.m_normal = { 0.0f, 0.0f, 1.0f };
 		v2.m_texId = texId;
 		Vertex v3;
 		v3.m_position = { x - half, y + half, 0.0f };
 		v3.m_uv = {0.0f, 1.0f};
+		v3.m_normal = { 0.0f, 0.0f, 1.0f };
 		v3.m_texId = texId;
 		return { v0, v1, v2, v3 };
 	}
@@ -28,41 +32,41 @@ namespace RuamEngine
 	{
 		std::vector<Vertex> cube;
 
-		// Cara frontal (Z-)
-		cube.push_back({ {-1.0f, -1.0f, -1.0f}, {0.0f, 0.0f}, texId });
-		cube.push_back({ { 1.0f, -1.0f, -1.0f}, {1.0f, 0.0f}, texId });
-		cube.push_back({ { 1.0f,  1.0f, -1.0f}, {1.0f, 1.0f}, texId });
-		cube.push_back({ {-1.0f,  1.0f, -1.0f}, {0.0f, 1.0f}, texId });
+		// Face front (Z-)
+		cube.push_back({ {-1.0f, -1.0f, -1.0f}, {0.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, texId });
+		cube.push_back({ { 1.0f, -1.0f, -1.0f}, {1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, texId });
+		cube.push_back({ { 1.0f,  1.0f, -1.0f}, {1.0f, 1.0f}, {0.0f, 0.0f, -1.0f}, texId });
+		cube.push_back({ {-1.0f,  1.0f, -1.0f}, {0.0f, 1.0f}, {0.0f, 0.0f, -1.0f}, texId });
 
-		// Cara trasera (Z+)
-		cube.push_back({ {-1.0f, -1.0f,  1.0f}, {0.0f, 0.0f}, texId });
-		cube.push_back({ { 1.0f, -1.0f,  1.0f}, {1.0f, 0.0f}, texId });
-		cube.push_back({ { 1.0f,  1.0f,  1.0f}, {1.0f, 1.0f}, texId });
-		cube.push_back({ {-1.0f,  1.0f,  1.0f}, {0.0f, 1.0f}, texId });
+		// Face back (Z+)
+		cube.push_back({ {-1.0f, -1.0f,  1.0f}, {0.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, texId });
+		cube.push_back({ { 1.0f, -1.0f,  1.0f}, {1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, texId });
+		cube.push_back({ { 1.0f,  1.0f,  1.0f}, {1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, texId });
+		cube.push_back({ {-1.0f,  1.0f,  1.0f}, {0.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, texId });
 
-		// Cara izquierda (X-)
-		cube.push_back({ {-1.0f, -1.0f,  1.0f}, {0.0f, 0.0f}, texId });
-		cube.push_back({ {-1.0f, -1.0f, -1.0f}, {1.0f, 0.0f}, texId });
-		cube.push_back({ {-1.0f,  1.0f, -1.0f}, {1.0f, 1.0f}, texId });
-		cube.push_back({ {-1.0f,  1.0f,  1.0f}, {0.0f, 1.0f}, texId });
+		// Face left (X-)
+		cube.push_back({ {-1.0f, -1.0f,  1.0f}, {0.0f, 0.0f}, {-1.0f, 0.0f, 0.0f}, texId });
+		cube.push_back({ {-1.0f, -1.0f, -1.0f}, {1.0f, 0.0f}, {-1.0f, 0.0f, 0.0f}, texId });
+		cube.push_back({ {-1.0f,  1.0f, -1.0f}, {1.0f, 1.0f}, {-1.0f, 0.0f, 0.0f}, texId });
+		cube.push_back({ {-1.0f,  1.0f,  1.0f}, {0.0f, 1.0f}, {-1.0f, 0.0f, 0.0f}, texId });
 
-		// Cara derecha (X+)
-		cube.push_back({ { 1.0f, -1.0f, -1.0f}, {0.0f, 0.0f}, texId });
-		cube.push_back({ { 1.0f, -1.0f,  1.0f}, {1.0f, 0.0f}, texId });
-		cube.push_back({ { 1.0f,  1.0f,  1.0f}, {1.0f, 1.0f}, texId });
-		cube.push_back({ { 1.0f,  1.0f, -1.0f}, {0.0f, 1.0f}, texId });
+		// Face right (X+)
+		cube.push_back({ { 1.0f, -1.0f, -1.0f}, {0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, texId });
+		cube.push_back({ { 1.0f, -1.0f,  1.0f}, {1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, texId });
+		cube.push_back({ { 1.0f,  1.0f,  1.0f}, {1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}, texId });
+		cube.push_back({ { 1.0f,  1.0f, -1.0f}, {0.0f, 1.0f}, {1.0f, 0.0f, 0.0f}, texId });
 
-		// Cara inferior (Y-)
-		cube.push_back({ {-1.0f, -1.0f,  1.0f}, {0.0f, 0.0f}, texId });
-		cube.push_back({ { 1.0f, -1.0f,  1.0f}, {1.0f, 0.0f}, texId });
-		cube.push_back({ { 1.0f, -1.0f, -1.0f}, {1.0f, 1.0f}, texId });
-		cube.push_back({ {-1.0f, -1.0f, -1.0f}, {0.0f, 1.0f}, texId });
+		// Face bottom (Y-)
+		cube.push_back({ {-1.0f, -1.0f,  1.0f}, {0.0f, 0.0f}, {0.0f, -1.0f, 0.0f}, texId });
+		cube.push_back({ { 1.0f, -1.0f,  1.0f}, {1.0f, 0.0f}, {0.0f, -1.0f, 0.0f}, texId });
+		cube.push_back({ { 1.0f, -1.0f, -1.0f}, {1.0f, 1.0f}, {0.0f, -1.0f, 0.0f}, texId });
+		cube.push_back({ {-1.0f, -1.0f, -1.0f}, {0.0f, 1.0f}, {0.0f, -1.0f, 0.0f}, texId });
 
-		// Cara superior (Y+)
-		cube.push_back({ {-1.0f,  1.0f, -1.0f}, {0.0f, 0.0f}, texId });
-		cube.push_back({ { 1.0f,  1.0f, -1.0f}, {1.0f, 0.0f}, texId });
-		cube.push_back({ { 1.0f,  1.0f,  1.0f}, {1.0f, 1.0f}, texId });
-		cube.push_back({ {-1.0f,  1.0f,  1.0f}, {0.0f, 1.0f}, texId });
+		// Face top (Y+)
+		cube.push_back({ {-1.0f,  1.0f, -1.0f}, {0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, texId });
+		cube.push_back({ { 1.0f,  1.0f, -1.0f}, {1.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, texId });
+		cube.push_back({ { 1.0f,  1.0f,  1.0f}, {1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, texId });
+		cube.push_back({ {-1.0f,  1.0f,  1.0f}, {0.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, texId });
 
 		return cube;
 
@@ -71,7 +75,7 @@ namespace RuamEngine
 	std::vector<float> Vertex::FlattenVertices(const std::vector<Vertex>& vertices)
 	{
 		std::vector<float> result;
-		result.reserve(vertices.size() * (3 + 2 + 1));  // pos + uv + texId
+		result.reserve(vertices.size() * (3 + 2 + 3 + 1));  // pos + uv + normal + texId
 
 		for (const auto& vertex : vertices)
 		{
@@ -81,4 +85,3 @@ namespace RuamEngine
 		return result;
 	}
 }
-

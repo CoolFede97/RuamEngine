@@ -24,7 +24,7 @@ class SandboxCom : public BaseRenderer
 	// It's called in update
 	void render()
 	{
-		RenderUnit& genericUnit = Renderer::m_drawingDataMap[Shader::PipelineType::Generic]->m_renderUnits[Material::MaterialType::Generic];
+		RenderUnit& genericUnit = Renderer::m_drawingDataMap[0]->m_renderUnits[0];
 		//genericUnit.m_vertexArray->Bind();
 
 		//genericUnit.m_shader->Bind();

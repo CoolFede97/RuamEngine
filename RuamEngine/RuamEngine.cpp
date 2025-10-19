@@ -39,7 +39,6 @@ int main()
 		CreateCFSandboxScene();
 		// Scene* collisionSandboxScene = CreateCollisionSandboxScene();
 
-
 		while (!Renderer::WindowShouldClose())
 		{
 			// ImGUI

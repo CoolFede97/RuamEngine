@@ -2,9 +2,9 @@
 
 namespace RuamEngine
 {
-	Material::Material(MaterialType materialType)
-		: m_type(materialType)
+	Material::Material()
+		: m_id(s_idCount++)
 	{
-		textures.push_back(std::make_unique<Texture>("assets/sprites/defaultSprite.png"));
+		
 	}
 }

@@ -10,5 +10,6 @@ namespace RuamEngine
 	static const unsigned int maxTextureSlots = 32; // Note for CoolFede97: Remember to change this according to the machine you are using!
 	static const unsigned int mat4Size = sizeof(glm::mat4); // Dou, idk how but this know what glm::mat4 is xd
 	static const unsigned int maxMat4Size = maxVertexCount * mat4Size;
+	static const unsigned int maxTextureCount = 3000;
 }
 

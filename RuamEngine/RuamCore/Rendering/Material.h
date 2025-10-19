@@ -7,19 +7,14 @@ namespace RuamEngine
     class Material
     {
     public:
-        enum MaterialType
-        {
-		    Generic = 0
-	    };
 
-        Material(MaterialType materalType);
+        Material();
         Vec4 albedoColor = Vec4(1.0f, 1.0f, 1.0f, 1.0f); // blanco por defecto
-        float metallic = 0.0f;
-        float roughness = 1.0f;
-        float ambientOcclusion = 1.0f;
-        float emissiveStrength = 0.0f;
-
-        std::vector<std::unique_ptr<Texture>> textures;
+        float m_diffuseHandle = 0.0f;
+        float m_metallicHandle = 0.0f;
+        float m_roughnessHandle = 1.0f;
+        float m_ambientOcclusionHandle = 1.0f;
+        float m_emissiveStrengthHandle = 0.0f;
 
         bool useAlbedoMap = false;
         bool useNormalMap = false;
@@ -28,10 +23,11 @@ namespace RuamEngine
         bool useAOMap = false;
         bool useEmissiveMap = false;
 
-	    unsigned int GetID() const { return m_type; }
+	    unsigned int GetId() const { return m_id; }
     private:
-        MaterialType m_type;
+        unsigned int m_id;
+		static unsigned int s_idCount;
     };
-    using MaterialPtr = std::unique_ptr<Material>;
+    using MaterialPtr = std::shared_ptr<Material>;
 
 }

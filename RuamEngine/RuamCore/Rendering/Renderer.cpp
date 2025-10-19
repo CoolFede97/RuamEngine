@@ -5,10 +5,12 @@ namespace RuamEngine
 {
     RendererConfig Renderer::m_config;
     GLFWwindow* Renderer::m_window = nullptr;
-    std::unordered_map<Shader::PipelineType, std::unique_ptr<DrawingData>> Renderer::m_drawingDataMap;
+    std::unordered_map<unsigned int, std::unique_ptr<DrawingData>> Renderer::m_drawingDataMap;
     GLuint Renderer::m_textureBuffer = 0;
+	std::vector<MaterialPtr> Renderer::m_materials;
     std::vector<TexturePtr> Renderer::m_textures;
     std::vector<GLuint64> Renderer::m_textureHandles;
+	bool Renderer::texturesUploaded = false;
     void Renderer::Init()
     {
         ASSERT(glfwInit());
@@ -35,21 +37,20 @@ namespace RuamEngine
 
 
         {
-            //GLuint dummyVAO;
-            //glCreateVertexArrays(1, &dummyVAO);   // DSA
-            //glBindVertexArray(dummyVAO);
-
             GLCall(glCreateBuffers(1, &m_textureBuffer));
 			CreateTexture("assets/sprites/defaultSprite.png");
             CreateTexture("assets/sprites/bigBrain.png");
 
-            m_drawingDataMap.emplace(Shader::PipelineType::Generic, std::make_unique<DrawingData>(Shader::PipelineType::Generic));
-            DrawingData& basicDrawingData = *m_drawingDataMap.at(Shader::PipelineType::Generic);
-            basicDrawingData.m_shader = std::make_shared<Shader>("assets/shaders/GeneralVertexShader.glsl", "assets/shaders/GeneralFragmentShader.glsl");
-            basicDrawingData.m_renderUnits.emplace(Material::MaterialType::Generic, RenderUnit(basicDrawingData.m_shader));
-            RenderUnit& genericUnit = basicDrawingData.m_renderUnits.at(Material::MaterialType::Generic);
+			ShaderPtr genericShader = std::make_shared<Shader>("assets/shaders/GeneralVertexShader.glsl", "assets/shaders/GeneralFragmentShader.glsl");
+            m_drawingDataMap.emplace(genericShader->GetInstanceID(), std::make_unique<DrawingData>(genericShader->GetInstanceID()));
+            DrawingData& basicDrawingData = *m_drawingDataMap.at(genericShader->GetInstanceID());
+            basicDrawingData.m_shader = genericShader;
+			MaterialPtr genericMaterial = std::make_shared<Material>();
+			m_materials.push_back(genericMaterial);
+            basicDrawingData.m_renderUnits.emplace(genericMaterial->GetId(), RenderUnit(basicDrawingData.m_shader));
+            RenderUnit& genericUnit = basicDrawingData.m_renderUnits.at(genericMaterial->GetId());
             basicDrawingData.m_shader->Bind();
-            genericUnit.m_material = std::make_unique<Material>(Material::MaterialType::Generic);
+            genericUnit.m_material = genericMaterial;
             VertexBufferLayout& genericLayout = *genericUnit.m_layout;
             //genericLayout.Reset();
             //genericLayout.Push<float>(3);
@@ -140,30 +141,46 @@ namespace RuamEngine
         }
     }
 
-    void Renderer::CreateTexture(const std::string& texturePath)
+    GLuint64 Renderer::CreateTexture(const std::string& texturePath)
     {
         TexturePtr newTex = std::make_shared<Texture>(texturePath);
         GLuint64 newHandle; 
-        GLCall(newHandle = glGetTextureHandleARB(newTex->GetID()));
+        GLCall(newHandle = glGetTextureHandleARB(newTex->GetId()));
         ASSERT(newHandle != 0);
 
         GLCall(glMakeTextureHandleResidentARB(newHandle));
 
         m_textureHandles.push_back(newHandle);
         m_textures.push_back(newTex);
+        return newHandle;
     }
 
     // Should be called only once when finished all the textures
     void Renderer::UploadTextures()
     {
+        ASSERT(m_textureHandles.size() < maxTextureCount);
+		ASSERT(!texturesUploaded);
         GLCall(glNamedBufferStorage(
             m_textureBuffer,
-            sizeof(GLuint64) * m_textureHandles.size(),
+            sizeof(GLuint64) * maxTextureCount,
             (const void*)m_textureHandles.data(),
             GL_DYNAMIC_STORAGE_BIT
         ));
         GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, SSBOType::textures, m_textureBuffer));
+		texturesUploaded = true;
     }
+
+    // Should be used after calling UploadTextures()
+    void Renderer::UpdateTextures()
+    {
+        ASSERT(m_textureHandles.size() < maxTextureCount);
+        GLCall(glNamedBufferSubData(
+            m_textureBuffer,
+            0,
+            sizeof(GLuint64) * m_textureHandles.size(),
+            (const void*)m_textureHandles.data()
+        ));
+	}
 
     void Renderer::Draw()
     {

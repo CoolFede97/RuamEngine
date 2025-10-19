@@ -14,16 +14,16 @@ namespace RuamEngine
     class DrawingData
     {
     public:
-        DrawingData(Shader::PipelineType pipelineType);
         DrawingData();
         ~DrawingData();
         ShaderPtr m_shader = nullptr;
-        std::unordered_map<Material::MaterialType, RenderUnit> m_renderUnits = {};
+        std::unordered_map<unsigned int, RenderUnit> m_renderUnits = {};
 
         void SubmitBatchData();
         void SubmitBatchData(RenderUnit& renderUnit);
 		void Flush();
     private:
-		Shader::PipelineType m_pipelineType;
+		unsigned int m_instanceId;
+		static unsigned int s_instanceIdCount;
     };
 }

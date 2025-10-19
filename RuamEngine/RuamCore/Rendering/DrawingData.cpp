@@ -3,6 +3,8 @@
 namespace RuamEngine
 {
 
+	unsigned int DrawingData::s_instanceIdCount = 0;
+
 	void DrawingData::SubmitBatchData()
 	{
 		for (auto& pair : m_renderUnits)
@@ -24,12 +26,8 @@ namespace RuamEngine
 		}
 	}
 
-	DrawingData::DrawingData(Shader::PipelineType pipelineType)
-		: m_pipelineType(pipelineType)
-	{
-	}
-
 	DrawingData::DrawingData()
+		: m_instanceId(s_instanceIdCount++)
 	{
 	}
 	DrawingData::~DrawingData()

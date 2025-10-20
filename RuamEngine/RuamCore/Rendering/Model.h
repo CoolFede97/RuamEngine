@@ -14,9 +14,10 @@ namespace RuamEngine
 {
 	class Model 
 	{
+	public:
 		Model(std::string path);
-
 		std::vector<Mesh> m_meshes;
+	private:
 		std::string m_path;
 		unsigned int m_id;
 		static unsigned int s_idCount;

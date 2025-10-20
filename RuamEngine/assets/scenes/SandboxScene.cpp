@@ -9,6 +9,7 @@
 #include "../components/CameraController.h"
 #include "AudioSource.h"
 #include "Serial.hpp"
+#include "MeshRenderer.h"
 
 void CreateCFSandboxScene()
 {
@@ -16,10 +17,11 @@ void CreateCFSandboxScene()
 	auto sandboxScene = SceneManager::ActiveScene();
 	Object* manager = sandboxScene->newObject();
 	//manager->addComponent<SandboxCom>();
-	Object* cube = sandboxScene->newObject();
-	cube->transform().setPosition(glm::vec3(0.0f, 0.0f, 5.5f));
-	cube->transform().setRotation(glm::vec3(45.0f, 5.0f, 45.0f));
-	cube->addComponent<CubeRenderer>();
+	Object* bag = sandboxScene->newObject();
+	bag->transform().setPosition(glm::vec3(0.0f, 0.0f, 5.5f));
+	bag->transform().setRotation(glm::vec3(45.0f, 5.0f, 45.0f));
+	bag->addComponent<MeshRenderer>();
+	bag->getComponent<MeshRenderer>()->m_meshPath = "assets/meshes/backpack/backpack.obj";
 	manager->addComponent<Camera>();
 	//manager->addComponent<CameraController>();
 	manager->addComponent<Manager>();

@@ -18,7 +18,7 @@ class CubeRenderer : public BaseRenderer
 
 	void render()
 	{
-		RenderUnit& genericUnit = Renderer::m_drawingDataMap[Shader::PipelineType::Generic]->m_renderUnits[Material::MaterialType::Generic];
+		RenderUnit& genericUnit = Renderer::m_drawingDataMap[0]->m_renderUnits[0];
 		std::vector<Vertex> newCube = Vertex::CreateCube(1);
 		std::vector<unsigned int> newIndices = 
 		{

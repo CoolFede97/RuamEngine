@@ -3,6 +3,7 @@
 namespace RuamEngine
 {
 	unsigned int Model::s_idCount = 0;
+
 	Model::Model(std::string path)
 		: m_path(path), m_id(s_idCount++)
 	{

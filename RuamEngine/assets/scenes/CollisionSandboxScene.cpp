@@ -5,7 +5,7 @@
 #include "../components/Manager.h"
 #include "../components/Counter.h"
 #include "../components/SandboxCom.h"
-#include "../components/CubeRenderer.h"
+#include "CubeRenderer.h"
 #include "AudioSource.h"
 #include "Camera.h"
 #include "Serial.hpp"

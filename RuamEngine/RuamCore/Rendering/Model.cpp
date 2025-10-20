@@ -1,5 +1,5 @@
 #include "Model.h"
-
+#include "Vec3.h"
 namespace RuamEngine
 {
 	unsigned int Model::s_idCount = 0;
@@ -14,7 +14,7 @@ namespace RuamEngine
 		const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
 		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 		{
-			cout << "ERROR::ASSIMP::" << import.GetErrorString() << endl;
+			std::cout << "ERROR::ASSIMP::" << importer.GetErrorString() << "\n";
 			return;
 		}
 		ProcessNode(scene->mRootNode, scene);
@@ -66,24 +66,29 @@ namespace RuamEngine
 			vertices.push_back(vertex);
 		}
 
-		for (unsigned int i = 0, i < mesh->mNumFaces; i++)
+		for (unsigned int i = 0; i < mesh->mNumFaces; i++)
 		{
 			aiFace face = mesh->mFaces[i];
-			for (unsigned int j = 0; j < face.mNumIndices; j++)
-				indices.push_back(face.mIndices[j]);
+			for (unsigned int j = 0; j < face.mNumIndices; j++) indices.push_back(face.mIndices[j]);
 		}
 
+		MaterialPtr newMaterial = Renderer::CreateMaterial();
+		
 		if (mesh->mMaterialIndex >= 0)
 		{
 			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-			MaterialPtr newMaterial = std::make_shared<Material>();
 			aiString path;
+
 			material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
-            GLuint64 diffuseHandle = Renderer::CreateTexture(std::string(PROJECT_ROOT_DIR) + "/" + m_path + "/" + std::string(path.C_Str()));
-			newMaterial->m_diffuseHandle = diffuseHandle;
+            unsigned int diffuseHandle = Renderer::CreateTexture(std::string(PROJECT_ROOT_DIR) + "/" + m_path + "/" + std::string(path.C_Str()));
+			newMaterial->m_diffuseIndex = diffuseHandle;
+			
+			material->GetTexture(aiTextureType_SPECULAR, 0, &path);
+			unsigned int specularIndex = Renderer::CreateTexture(std::string(PROJECT_ROOT_DIR) + "/" + m_path + "/" + std::string(path.C_Str()));
+			newMaterial->m_specularIndex = specularIndex;
 		}
 
-		return Mesh(vertices, indices);
+		return Mesh(vertices, indices, newMaterial);
 	}
 	std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
 	{

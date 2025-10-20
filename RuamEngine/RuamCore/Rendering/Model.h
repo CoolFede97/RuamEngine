@@ -6,6 +6,7 @@
 #include "Texture.h"
 #include "Material.h"
 #include "Renderer.h"
+#include "Vec3.h"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>

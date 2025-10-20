@@ -18,17 +18,8 @@ out vec4 final_color;
 flat in int frag_texID;
 
 uniform vec4  u_albedoColor;
-uniform float u_metallic;
-uniform float u_roughness;
-uniform float u_ambientOcclusion;
-uniform float u_emissiveStrength;
-    
-//uniform sampler2D u_albedoMap[32];
-//uniform sampler2D u_normalMap;
-//uniform sampler2D u_metallicMap;
-//uniform sampler2D u_roughnessMap;
-//uniform sampler2D u_AOMap;
-//uniform sampler2D u_emissiveMap;
+uniform float u_diffuse;
+uniform float u_specular;
 
 void main()
 {

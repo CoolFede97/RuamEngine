@@ -141,7 +141,8 @@ namespace RuamEngine
         }
     }
 
-    GLuint64 Renderer::CreateTexture(const std::string& texturePath)
+    // Returns index in the vector of handles
+    unsigned int Renderer::CreateTexture(const std::string& texturePath)
     {
         TexturePtr newTex = std::make_shared<Texture>(texturePath);
         GLuint64 newHandle; 
@@ -152,7 +153,7 @@ namespace RuamEngine
 
         m_textureHandles.push_back(newHandle);
         m_textures.push_back(newTex);
-        return newHandle;
+        return m_textureHandles.size()-1;
     }
 
     // Should be called only once when finished all the textures
@@ -181,6 +182,13 @@ namespace RuamEngine
             (const void*)m_textureHandles.data()
         ));
 	}
+
+    MaterialPtr Renderer::CreateMaterial()
+    {
+		MaterialPtr newMaterial = std::make_shared<Material>();
+		m_materials.push_back(newMaterial);
+		return newMaterial;
+    }
 
     void Renderer::Draw()
     {

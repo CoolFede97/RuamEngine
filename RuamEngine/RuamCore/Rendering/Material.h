@@ -10,19 +10,10 @@ namespace RuamEngine
 
         Material();
         Vec4 albedoColor = Vec4(1.0f, 1.0f, 1.0f, 1.0f); // blanco por defecto
-        float m_diffuseHandle = 0.0f;
-        float m_metallicHandle = 0.0f;
-        float m_roughnessHandle = 1.0f;
-        float m_ambientOcclusionHandle = 1.0f;
-        float m_emissiveStrengthHandle = 0.0f;
-
-        bool useAlbedoMap = false;
-        bool useNormalMap = false;
-        bool useMetallicMap = false;
-        bool useRoughnessMap = false;
-        bool useAOMap = false;
-        bool useEmissiveMap = false;
-
+        float m_mainTexture = 0.0f;
+        float m_diffuseIndex = 0.0f;
+        float m_specularIndex = 0.0f;
+        
 	    unsigned int GetId() const { return m_id; }
     private:
         unsigned int m_id;

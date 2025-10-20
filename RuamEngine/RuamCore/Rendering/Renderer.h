@@ -85,8 +85,9 @@ namespace RuamEngine
 		static GLFWwindow* GetWindow() { return m_window; }
 		static int WindowShouldClose() { return glfwWindowShouldClose(m_window); }
 
-        static GLuint64 CreateTexture(const std::string& texturePath);
+        static unsigned int CreateTexture(const std::string& texturePath);
         static void UpdateTextures();
+		static MaterialPtr CreateMaterial();
 
         static void Draw();
         static void Draw(RenderUnit& renderUnit);

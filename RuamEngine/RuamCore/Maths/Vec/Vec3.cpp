@@ -2,6 +2,7 @@
 #include <cmath> // Para std::sqrt
 
 Vec3::Vec3(float xP, float yP, float zP) : x(xP), y(yP), z(zP) {}
+Vec3::Vec3(const glm::vec3& v) : Vec3(v.x, v.y, v.z) {}
 
 Vec3 Vec3::operator+(Vec3 other) const {
     return Vec3(x + other.x, y + other.y, z + other.z);
@@ -40,6 +41,31 @@ float Vec3::DotProduct(Vec3 other) const {
     Vec3 a = Normalized();
     Vec3 b = other.Normalized();
     return static_cast<float>(a.x * b.x + a.y * b.y + a.z * b.z);
+}
+
+Vec3 Vec3::CrossProduct(Vec3 other) const
+{
+    Vec3 a = Normalized();
+    Vec3 b = other.Normalized();
+
+    Vec3 cross;
+    cross.x = a.y * b.z - a.z * b.y;
+    cross.y = a.z * b.x - a.x * b.z;
+    cross.z = a.x * b.y - a.y * b.x;
+    return cross;
+}
+
+Vec3 Vec3::GetDirectionFromEuler(Vec3 eulerAngles)
+{
+    float pitch = eulerAngles.x;
+    float yaw = eulerAngles.y;
+
+    Vec3 direction;
+    direction.x = cos(pitch) * cos(yaw);
+    direction.y = sin(pitch);
+    direction.z = cos(pitch) * sin(yaw);
+
+	return direction.Normalized();
 }
 
 Vec3 Vec3::Right() { return Vec3(1, 0, 0); }

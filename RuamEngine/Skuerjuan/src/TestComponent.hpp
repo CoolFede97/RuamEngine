@@ -2,18 +2,33 @@
 #include "Serial.hpp"
 #include "Component.hpp"
 
-CREATE_COMPONENT(TestComponent,
-    {
-        secret = j["secret"];
-        name = j["name"];
-    },
-    {
-        std::cout << "TestComponent with name: " << name << " started on object " << std::endl;
-    },
-    {
-        std::cout << "TestComponent updated on object " << std::endl;
-    }
-)
-FIELD(int, secret, Secret, 0)
-FIELD(std::string, name, Name, "")
-END_COMPONENT_ARGS(TestComponent, {"secret", secret}, {"name", name})
+class TestComponent : public Component {
+public:
+	using Component::Component;
+	TestComponent(const nlohmann ::json &j, unsigned int obj_id) : Component(obj_id) {
+		secret = j["secret"];
+		name = j["name"];
+	}
+
+	void start() override {
+		std ::cout << "TestComponent with name: " << name << " started on object "
+			<< std ::endl;
+	}
+
+	void update() override {
+		std ::cout << "TestComponent updated on object " << std ::endl;
+	}
+	
+	std ::string getName() const { return name; }
+	void setName(const std ::string value) { name = value; }
+	int getSecret() const { return secret; }
+	void setSecret(const int value) { secret = value; }
+
+private:
+	std ::string name = "";
+	int secret = 0;
+
+	IMPL_SERIALIZE(TestComponent, {"secret", secret}, {"name", name})
+};
+
+REGISTER_COMPONENT(TestComponent)

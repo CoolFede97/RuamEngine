@@ -26,51 +26,27 @@ public: \
 	void start() override startCode \
 	void update() override updateCode
 
-#define END_COMPONENT_ARGS(ComponentClass, ...) \
-	public: \
-	operator nlohmann::json() const override { \
-		return nlohmann::json{__VA_ARGS__, \
-			{"type", #ComponentClass}, \
-			{"id", m_id} \
-}; \
-	} \
-}; \
-REGISTER_COMPONENT(ComponentClass)
-
-
-#define END_COMPONENT_NOARGS(ComponentClass) \
+#define IMPL_SERIALIZE(ComponentClass, ...) \
 public: \
 	operator nlohmann::json() const override { \
-		return nlohmann::json{ \
+		return nlohmann::json{			\
+			__VA_ARGS__, \
+			{"id", m_id}, \
 			{"type", #ComponentClass}, \
-			{"id", m_id} \
 		}; \
 	} \
-}; \
-REGISTER_COMPONENT(ComponentClass)
-
-#define FIELD(type, name, capitalisedName, default_value) \
-	public: \
-	type get##capitalisedName() const {return name;} \
-	void set##capitalisedName(const type value) {name = value;} \
-	private: \
-		type name = default_value;
-
-
 
 class Object;
 class Component {
 public:
 	using componentFactory = std::function<Component*(const nlohmann::json&, Object*)>;
 	virtual ~Component() = default;
-    explicit Component(const unsigned int obj_id) : m_object_id(obj_id), m_id(s_id_count++) {
-    }
+	explicit Component(const unsigned int obj_id) : m_object_id(obj_id), m_id(s_id_count++) {
+	}
 
 	virtual void start() = 0;
-	virtual void update()
-	{
-		if (!m_started)
-		{
+	virtual void update() {
+		if (!m_started) {
 			start();
 			m_started = true;
 		}
@@ -85,7 +61,7 @@ public:
 
 	virtual operator nlohmann::json() const {
 		return nlohmann::json{
-							{"type", "Component"}
+			{"type", "Component"}
 		};
 	}
 

@@ -9,8 +9,8 @@ public:
 
 	AudioSource(const unsigned int obj_id, const std::string& audio_path);
 
-    void start();
-    void update();
+	void start();
+	void update();
 
 	void setAudioPath(const std::string& path);
 	int status();

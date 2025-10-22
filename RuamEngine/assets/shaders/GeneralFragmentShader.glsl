@@ -23,6 +23,8 @@ uniform float u_specular;
 
 void main()
 {
-    sampler2D tex = textures[frag_texID];
-    final_color = texture(tex, frag_uv);   
+    sampler2D diffuse = textures[u_diffuse];
+    sampler2D specular = textures[u_specular];
+    //final_color = texture(tex, frag_uv);   
+    final_color = diffuse * 0.8f + specular * 0.2f;   
 }

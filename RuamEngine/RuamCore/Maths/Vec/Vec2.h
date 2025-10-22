@@ -10,7 +10,7 @@ struct Vec2
 
     // Constructor
     Vec2(float xP = 0.0, float yP = 0.0);
-    Vec2(const glm::vec2 other);
+    Vec2(const glm::vec2& other);
 
     // Basic operators
     Vec2 operator+(Vec2 other) const;

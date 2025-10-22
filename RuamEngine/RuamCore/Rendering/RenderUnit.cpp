@@ -7,7 +7,7 @@ namespace RuamEngine
 	{
 		if (m_vertices->GetCurrentSize() > 0)
 		{
-			Renderer::m_drawingDataMap[Shader::PipelineType::Generic]->m_renderUnits[Material::MaterialType::Generic].m_vertices->m_data;
+			Renderer::m_drawingDataMap[0]->m_renderUnits[0].m_vertices->m_data;
 			m_vertices->SubmitData();
 			m_vertices->BindBufferBase(SSBOType::vertices);
 		}

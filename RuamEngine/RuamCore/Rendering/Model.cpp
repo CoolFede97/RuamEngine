@@ -53,7 +53,7 @@ namespace RuamEngine
 			{
 				vector.x = mesh->mTextureCoords[0][i].x;
 				vector.y = mesh->mTextureCoords[0][i].y;
-				vertex.m_uv = {x, y};
+				vertex.m_uv = Vec2(vector.x, vector.y);
 			}
 			else vertex.m_uv = {0.0f, 0.0f};	
 

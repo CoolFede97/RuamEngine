@@ -100,7 +100,7 @@ namespace RuamEngine
 
 	void Shader::Bind() const
 	{
-		GLCall(glUseProgram(m_id));
+		GLCall(glUseProgram(m_rendererId));
 	}
 
 	void Shader::Unbind() const
@@ -171,7 +171,7 @@ namespace RuamEngine
 		Bind();
 
 		int location;
-		GLCall(location = glGetUniformLocation(m_id, name.c_str()));
+		GLCall(location = glGetUniformLocation(m_rendererId, name.c_str()));
 		if (location == -1)
 			std::cout << "Warning: uniform " << name << " does not exist!\n";
 	

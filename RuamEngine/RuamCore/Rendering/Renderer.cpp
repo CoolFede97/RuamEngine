@@ -42,7 +42,7 @@ namespace RuamEngine
             CreateTexture("assets/sprites/bigBrain.png");
 
 			ShaderPtr genericShader = std::make_shared<Shader>("assets/shaders/GeneralVertexShader.glsl", "assets/shaders/GeneralFragmentShader.glsl");
-            m_drawingDataMap.emplace(genericShader->GetInstanceID(), std::make_unique<DrawingData>(genericShader->GetInstanceID()));
+            m_drawingDataMap.emplace(genericShader->GetInstanceID(), std::make_unique<DrawingData>());
             DrawingData& basicDrawingData = *m_drawingDataMap.at(genericShader->GetInstanceID());
             basicDrawingData.m_shader = genericShader;
 			MaterialPtr genericMaterial = std::make_shared<Material>();

@@ -12,7 +12,7 @@ namespace RuamEngine
 	Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
 		: m_vFilePath(GlobalizePath(vertexPath)), m_fFilePath(GlobalizePath(fragmentPath)), m_id(0)
 	{
-		m_id = CreateShader(vertexPath, fragmentPath);
+		m_id = CreateProgram(vertexPath, fragmentPath);
 		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureSlots);
 		SetUniformTextureSlots("u_albedoMap");
 	}
@@ -51,7 +51,7 @@ namespace RuamEngine
 	
 	}
 
-	unsigned int Shader::CreateShader(const std::string& vertexPath, const std::string& fragmentPath)
+	unsigned int Shader::CreateProgram(const std::string& vertexPath, const std::string& fragmentPath)
 	{
 		unsigned int program = glCreateProgram();
 		unsigned int vs = CompileShader(GL_VERTEX_SHADER, RelativeFileToString(vertexPath));
@@ -63,32 +63,32 @@ namespace RuamEngine
 		GLCall(glLinkProgram(program));
 
 		int link_result;
-		glGetShaderiv(program, GL_LINK_STATUS, &link_result);
+		glGetProgramiv(program, GL_LINK_STATUS, &link_result);
 		if (link_result == GL_FALSE)
 		{
 			int length;
-			GLCall(glGetShaderiv(program, GL_INFO_LOG_LENGTH, &length));
+			GLCall(glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length));
 			char* message = (char*)alloca(length * sizeof(char));
-			GLCall(glGetShaderInfoLog(program, length, &length, message));
+			GLCall(glGetProgramInfoLog(program, length, &length, message));
 			std::cout << "Failed to link: "<< "shader! " << "\n";
 			std::cout << message << "\n";
-			GLCall(glDeleteShader(program));
+			GLCall(glDeleteProgram(program));
 			return 0;
 		}
 
 		GLCall(glValidateProgram(program));
 
 		int validation_result;
-		glGetShaderiv(program, GL_VALIDATE_STATUS, &validation_result);
+		glGetProgramiv(program, GL_VALIDATE_STATUS, &validation_result);
 		if (validation_result == GL_FALSE)
 		{
 			int length;
-			GLCall(glGetShaderiv(program, GL_INFO_LOG_LENGTH, &length));
+			GLCall(glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length));
 			char* message = (char*)alloca(length * sizeof(char));
-			GLCall(glGetShaderInfoLog(program, length, &length, message));
+			GLCall(glGetProgramInfoLog(program, length, &length, message));
 			std::cout << "Failed to validate: " << "shader! " << "\n";
 			std::cout << message << "\n";
-			GLCall(glDeleteShader(program));
+			GLCall(glDeleteProgram(program));
 			return 0;
 		}
 

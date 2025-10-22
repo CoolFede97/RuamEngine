@@ -3,6 +3,7 @@
 #include "SceneManager.hpp"
 #include "Scene.hpp"
 #include "Object.hpp"
+#include "Serial.hpp"
 #include <Component.hpp>
 
 #include "glm/glm.hpp"
@@ -20,6 +21,8 @@ namespace RuamEngine
 		const glm::vec3 m_up = glm::vec3(0.0, 1.0, 0.0);
 
 	public:
+		Camera(const nlohmann::json& j, const unsigned int obj_id);
+
 		float m_near_plane = 0.1f;
 		float m_far_plane = 100.0f;
 		float m_fov = 45.0f; 
@@ -34,5 +37,13 @@ namespace RuamEngine
 
 		void update() { Component::update(); };
 		void start() { SetAsMainCamera(); };
+
+		IMPL_SERIALIZE(Camera,
+				 SER_FIELD(m_near_plane),
+				 SER_FIELD(m_far_plane),
+				 SER_FIELD(m_fov),
+				 SER_FIELD(m_aspect_ratio));
 	};
+
+REGISTER_COMPONENT(Camera)
 }

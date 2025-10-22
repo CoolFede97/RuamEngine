@@ -6,6 +6,9 @@ AudioSource::AudioSource(const unsigned int object_id, const std::string& audio)
 	EASY_FUNCTION("AudioSource Constructor")
 }
 
+AudioSource::AudioSource(const nlohmann::json& j, const unsigned int obj_id) 
+	: AudioSource(obj_id, static_cast<std::string>(j["m_audio_path"])) {}
+
 void AudioSource::start() {
 	EASY_FUNCTION("AudioSourceStart");
 	try {

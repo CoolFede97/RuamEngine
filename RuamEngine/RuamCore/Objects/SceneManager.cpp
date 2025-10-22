@@ -1,5 +1,6 @@
 #include "SceneManager.hpp"
 #include "Serial.hpp"
+#include "Camera.h"
 
 SceneManager::SceneList SceneManager::s_scenes;
 SceneManager::ScenePtr SceneManager::s_active_scene = nullptr;

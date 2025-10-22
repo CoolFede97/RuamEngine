@@ -28,13 +28,15 @@ public: \
 
 #define IMPL_SERIALIZE(ComponentClass, ...) \
 public: \
-	operator nlohmann::json() const override { \
+	operator nlohmann::json() const { \
 		return nlohmann::json{			\
 			__VA_ARGS__, \
 			{"id", m_id}, \
 			{"type", #ComponentClass}, \
 		}; \
 	} \
+
+#define SER_FIELD(x) {#x, x}
 
 class Object;
 class Component {

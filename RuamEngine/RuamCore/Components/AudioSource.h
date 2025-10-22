@@ -8,6 +8,7 @@ public:
 	using Component::Component;
 
 	AudioSource(const unsigned int obj_id, const std::string& audio_path);
+	AudioSource(const nlohmann::json& j, const unsigned int obj_id);
 
 	void start();
 	void update();
@@ -26,6 +27,10 @@ public:
 	void setVolume(float vol);
 	float volume();
 
+	IMPL_SERIALIZE(AudioSource,
+				SER_FIELD(m_volume),
+				SER_FIELD(m_max_volume),
+				SER_FIELD(m_audio_path));
 protected:
 	void loadBuffer(std::unique_ptr<Wave>& wave);
 
@@ -40,3 +45,5 @@ protected:
 	std::condition_variable m_buf_wait;
 	std::mutex m_mutex;
 };
+
+REGISTER_COMPONENT(AudioSource);

@@ -10,12 +10,12 @@ public:
 		name = j["name"];
 	}
 
-	void start() override {
+	void start() {
 		std ::cout << "TestComponent with name: " << name << " started on object "
 			<< std ::endl;
 	}
 
-	void update() override {
+	void update() {
 		std ::cout << "TestComponent updated on object " << std ::endl;
 	}
 	

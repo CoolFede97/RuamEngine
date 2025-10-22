@@ -1,7 +1,6 @@
 #pragma once
 
 #include "SceneManager.hpp"
-#include "Scene.hpp"  
 #include "nlohmann/json.hpp"
 
 using sm = SceneManager;

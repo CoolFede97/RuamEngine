@@ -37,4 +37,8 @@ namespace RuamEngine
 	{
 		return s_mainCamera; 
 	}
+
+	Camera::Camera(const nlohmann::json& j, const unsigned int obj_id)
+	: Component(obj_id), m_near_plane(j["m_near_plane"]), m_far_plane(j["m_far_plane"]), m_fov(j["m_fov"]), m_aspect_ratio(j["m_aspect_ratio"])
+	{}
 }

@@ -3,6 +3,9 @@
 #include <iostream>
 #include <glm/glm.hpp>
 
+struct Vec3;
+struct Vec4;
+
 struct Vec2
 {
     float x;
@@ -11,6 +14,9 @@ struct Vec2
     // Constructor
     Vec2(float xP = 0.0, float yP = 0.0);
     Vec2(const glm::vec2& other);
+
+    Vec2(const Vec3& other);
+    Vec2(const Vec4& other);
 
     // Basic operators
     Vec2 operator+(Vec2 other) const;
@@ -40,6 +46,12 @@ struct Vec2
     Vec2& operator*=(Vec2 other);
     Vec2& operator/=(Vec2 other);
     Vec2& operator*=(float number);
+    operator glm::vec4() {
+        return glm::vec4(x, y, 0, 0);
+    }
+    operator glm::vec3() {
+        return glm::vec3(x, y, 0);
+    }
     operator glm::vec2() {
         return glm::vec2(x, y);
     }

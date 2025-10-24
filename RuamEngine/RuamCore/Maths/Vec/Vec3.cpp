@@ -1,8 +1,13 @@
 #include "Vec3.h"
 #include <cmath> // Para std::sqrt
+#include "Vec2.h"
+#include "Vec4.h"
 
 Vec3::Vec3(float xP, float yP, float zP) : x(xP), y(yP), z(zP) {}
 Vec3::Vec3(const glm::vec3& v) : Vec3(v.x, v.y, v.z) {}
+
+Vec3::Vec3(const Vec2& other) : Vec3(other.x, other.y, 0.0f) {}
+Vec3::Vec3(const Vec4& other) : Vec3(other.x, other.y, other.z) {}
 
 Vec3 Vec3::operator+(Vec3 other) const {
     return Vec3(x + other.x, y + other.y, z + other.z);
@@ -118,6 +123,8 @@ Vec3& Vec3::operator*=(float number) {
     z *= number;
     return *this;
 }
+
+
 
 std::ostream& operator<<(std::ostream& os, const Vec3& v) {
     os << "(" << v.x << ", " << v.y << ", " << v.z << ")";

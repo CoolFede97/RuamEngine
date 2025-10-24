@@ -1,7 +1,13 @@
 #include "Vec2.h"
+#include "Vec3.h"
+#include "Vec4.h"
 
 Vec2::Vec2(float xP, float yP) : x(xP), y(yP) {}
 Vec2::Vec2(const glm::vec2& other) : Vec2(other.x, other.y) {}
+
+Vec2::Vec2(const Vec3& other) : Vec2(other.x, other.y) {}
+Vec2::Vec2(const Vec4& other) : Vec2(other.x, other.y) {}
+
 
 Vec2 Vec2::operator+(Vec2 other) const {
     return Vec2(x + other.x, y + other.y);

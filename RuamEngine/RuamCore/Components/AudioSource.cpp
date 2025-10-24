@@ -14,7 +14,7 @@ void AudioSource::start() {
 		std::cerr << "Error generating source, " << e.what() << '\n';
 	}
 
-	glm::vec3 zero(0, 0, 0);
+	glm::vec3 zero(0.0f, 0.0f, 0.0f);
 
 	try {
 		m_source.setParam(AL_PITCH, 1);

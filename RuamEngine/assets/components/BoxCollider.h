@@ -19,7 +19,7 @@ class BoxCollider : public Component {
 
 
     void start() {
-        size = 1;
+        size = 1.0f;
         originPos = object()->transform().position();
         verticesPos[0] = originPos + glm::vec3(-size / 2.0f, size / 2.0f, -size / 2.0f);
         verticesPos[1] = originPos + glm::vec3(-size / 2.0f, -size / 2.0f, -size / 2.0f);

@@ -21,7 +21,7 @@ class CameraController : public Component
 	float m_speed;
 	void update()
 	{
-		object()->transform().rotation() += Input::GetMouseDeltaNorm() * Time::DeltaTime();
+		object()->transform().rotation() += static_cast<glm::vec3>(Input::GetMouseDeltaNorm() * Time::DeltaTime());
 		object()->transform().rotation().x = std::clamp(object()->transform().rotation().x, -89.0f, 89.0f);
 
 
@@ -33,10 +33,10 @@ class CameraController : public Component
 		
 		m_direction = Vec3::GetDirectionFromEuler(object()->transform().rotation());
 
-		object()->transform().position() += m_direction * m_horizontalDirection.z * Time::DeltaTime() * m_speed;
-		object()->transform().position() += m_direction.CrossProduct(Vec3::Up() * m_horizontalDirection.x * Time::DeltaTime() * m_speed);
+		object()->transform().position() += static_cast<glm::vec3>(m_direction * m_horizontalDirection.z * Time::DeltaTime() * m_speed);
+		object()->transform().position() += static_cast<glm::vec3>(m_direction.CrossProduct(Vec3::Up() * m_horizontalDirection.x * Time::DeltaTime() * m_speed));
 
-		Camera::GetMainCamera()->object()->transform().position() += glm::vec3(0, 0, Time::DeltaTime() * 100);
+		Camera::GetMainCamera()->object()->transform().position() += glm::vec3(0.0f, 0.0f, Time::DeltaTime() * 100.0f);
 	};
 	void start() {};
 };

@@ -18,8 +18,8 @@ class CubeRenderer : public BaseRenderer
 
 	void render()
 	{
-		RenderUnit& genericUnit = Renderer::m_drawingDataMap[0]->m_renderUnits[0];
-		std::vector<Vertex> newCube = Vertex::CreateCube(1);
+		RenderUnitPtr genericUnit = Renderer::m_drawingDatas[0]->m_renderUnits[0];
+		std::vector<Vertex> newCube = Vertex::CreateCube();
 		std::vector<unsigned int> newIndices = 
 		{
 			0, 1, 2, 2, 3, 0,       // Cara frontal
@@ -38,7 +38,7 @@ class CubeRenderer : public BaseRenderer
 		modelMatrix = glm::rotate(modelMatrix, glm::radians(object()->transform().rotation().z), glm::vec3(0.0f, 0.0f, 1.0f));
 		modelMatrix = glm::scale(modelMatrix, object()->transform().scale());
 
-		genericUnit.AddBatchData(newCube, newIndices, { modelMatrix });
+		genericUnit->AddBatchData(newCube, newIndices, { modelMatrix });
 	};
 	
 	

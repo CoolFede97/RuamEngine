@@ -32,11 +32,13 @@ int main()
 
 		ImGui::StyleColorsDark();
 
-		CreateMenuScene();
 
-		SceneManager::SetActiveScene(0);
 		
+		
+		CreateMenuScene();
 		CreateCFSandboxScene();
+		//SceneManager::SetActiveScene(0);
+
 		// Scene* collisionSandboxScene = CreateCollisionSandboxScene();
 
 		while (!Renderer::WindowShouldClose())

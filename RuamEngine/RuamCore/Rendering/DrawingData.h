@@ -16,14 +16,18 @@ namespace RuamEngine
     public:
         DrawingData();
         ~DrawingData();
-        ShaderPtr m_shader = nullptr;
-        std::unordered_map<unsigned int, RenderUnit> m_renderUnits = {};
+        ShaderProgramPtr m_program = nullptr;
+        std::vector<RenderUnitPtr> m_renderUnits = {};
 
         void SubmitBatchData();
         void SubmitBatchData(RenderUnit& renderUnit);
 		void Flush();
+
+		unsigned int GetInstanceId() const { return m_instanceId; }
     private:
 		unsigned int m_instanceId;
 		static unsigned int s_instanceIdCount;
     };
+    using DrawingDataPtr = std::shared_ptr<DrawingData>;
+
 }

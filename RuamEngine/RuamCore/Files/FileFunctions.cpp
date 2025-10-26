@@ -22,3 +22,8 @@ std::string GlobalizePath(const std::string& relativeFilePath)
 	return std::string(PROJECT_ROOT_DIR) + "/" + relativeFilePath;
 }
 
+std::string RelativizePath(const std::string& absoluteFilePath)
+{
+	return std::filesystem::relative(absoluteFilePath, std::string(PROJECT_ROOT_DIR)).string();
+}
+

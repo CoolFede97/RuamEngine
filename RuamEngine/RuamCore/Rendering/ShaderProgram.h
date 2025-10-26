@@ -13,14 +13,14 @@
 
 namespace RuamEngine
 {
-	class Shader
+	class ShaderProgram
 	{
 		// caching for uniforms
 	public:
 
 		// Los paths son relativos a la carpeta RuamEngine
-		Shader(const std::string& vertexPath, const std::string& fragmentPath);
-		~Shader();
+		ShaderProgram(const std::string& vertexPath, const std::string& fragmentPath);
+		~ShaderProgram();
 
 		void Bind() const;
 		void Unbind() const;
@@ -34,12 +34,12 @@ namespace RuamEngine
 		void LoadMaterial(const Material& material);
 		void UpdateCameraMatrices();
 		unsigned int GetMaxTexturesCapacity() { return  maxTextureSlots; }
-		unsigned int GetInstanceID() const { return m_instanceId; }
+		unsigned int GetInstanceId() const { return m_instanceId; }
 		unsigned int GetRendererID() const { return m_rendererId; }
 
 	private:
 		unsigned int CompileShader(unsigned int type, const std::string& source);
-		unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
+		unsigned int CreateProgram(const std::string& vertexShader, const std::string& fragmentShader);
 		int GetUniformLocation(const std::string& name);
 		unsigned int m_rendererId;
 		unsigned int m_instanceId;
@@ -50,7 +50,7 @@ namespace RuamEngine
 		static GLint maxTextureSlots;
 	};
 
-	using ShaderPtr = std::shared_ptr<Shader>;
+	using ShaderProgramPtr = std::shared_ptr<ShaderProgram>;
 }
 
 

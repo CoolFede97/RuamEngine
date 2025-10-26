@@ -26,7 +26,7 @@
 #include "VertexBufferLayout.h"
 #include "IndexBuffer.h" 
 #include "VertexArray.h"
-#include "Shader.h"
+#include "ShaderProgram.h"
 #include "Texture.h"
 #include "Camera.h"
 #include "RuamEngine.h"

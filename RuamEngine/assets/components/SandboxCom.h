@@ -24,36 +24,36 @@ class SandboxCom : public BaseRenderer
 	// It's called in update
 	void render()
 	{
-		RenderUnit& genericUnit = Renderer::m_drawingDataMap[0]->m_renderUnits[0];
-		//genericUnit.m_vertexArray->Bind();
+		//RenderUnitPtr genericUnit = Renderer::m_drawingDatas[0]->m_renderUnits[0];
+		////genericUnit.m_vertexArray->Bind();
 
-		//genericUnit.m_shader->Bind();
-		
-		indexCount = 0;
-		for (int row = 0; row < gridSide; row++)
-		{
-			for (int col = 0; col < gridSide; col++)
-			{				
-				std::vector<Vertex> newQuad = Vertex::CreateQuad
-				(
-					quadWidth,
-					col * (screenX / gridSide - 0.5f * padding) + col * padding + quadWidth / 2 - screenX / 2,
-					row * (screenY / gridSide - 0.5f * padding) + row * padding + quadHeight / 2 - screenY / 2,
-					1.0f
-				);
-				
-				std::vector<unsigned int> newIndices =
-				{
-					indexCount + 0, indexCount + 1, indexCount + 2,indexCount + 2, indexCount + 3, indexCount + 0
-				};
-				indexCount += 4;
-				if (genericUnit.AddBatchData(newQuad, newIndices, { glm::mat4(1.0f) }))
-				{
-					indexCount = 0;
-				}
-				
-			}
-		}
+		////genericUnit.m_shader->Bind();
+		//
+		//indexCount = 0;
+		//for (int row = 0; row < gridSide; row++)
+		//{
+		//	for (int col = 0; col < gridSide; col++)
+		//	{				
+		//		std::vector<Vertex> newQuad = Vertex::CreateQuad
+		//		(
+		//			quadWidth,
+		//			col * (screenX / gridSide - 0.5f * padding) + col * padding + quadWidth / 2 - screenX / 2,
+		//			row * (screenY / gridSide - 0.5f * padding) + row * padding + quadHeight / 2 - screenY / 2,
+		//			1.0f
+		//		);
+		//		
+		//		std::vector<unsigned int> newIndices =
+		//		{
+		//			indexCount + 0, indexCount + 1, indexCount + 2,indexCount + 2, indexCount + 3, indexCount + 0
+		//		};
+		//		indexCount += 4;
+		//		if (genericUnit.AddBatchData(newQuad, newIndices, { glm::mat4(1.0f) }))
+		//		{
+		//			indexCount = 0;
+		//		}
+		//		
+		//	}
+		//}
 	};
 	void update() 
 	{

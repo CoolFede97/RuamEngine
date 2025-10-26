@@ -5,9 +5,9 @@ namespace RuamEngine
 	unsigned int Model::s_idCount = 0;
 
 	Model::Model(std::string path)
-		: m_path(path), m_id(s_idCount++)
+		: m_path(GlobalizePath(path)), m_id(s_idCount++)
 	{
-		LoadModel(path);
+		LoadModel(m_path);
 	}
 	void Model::LoadModel(std::string path)
 	{
@@ -74,19 +74,49 @@ namespace RuamEngine
 		}
 
 		MaterialPtr newMaterial = Renderer::CreateMaterial();
+
+		Renderer::CreateRenderUnit(Renderer::m_drawingDatas[0], newMaterial);
 		
 		if (mesh->mMaterialIndex >= 0)
 		{
 			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-			aiString path;
+			aiString texAiPath;
 
-			material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
-            unsigned int diffuseHandle = Renderer::CreateTexture(std::string(PROJECT_ROOT_DIR) + "/" + m_path + "/" + std::string(path.C_Str()));
-			newMaterial->m_diffuseIndex = diffuseHandle;
-			
-			material->GetTexture(aiTextureType_SPECULAR, 0, &path);
-			unsigned int specularIndex = Renderer::CreateTexture(std::string(PROJECT_ROOT_DIR) + "/" + m_path + "/" + std::string(path.C_Str()));
-			newMaterial->m_specularIndex = specularIndex;
+			if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texAiPath) != AI_SUCCESS)
+				std::cout << "Material has no diffuse texture\n";
+			else
+			{
+				std::string assimpPath = texAiPath.C_Str();
+				if (assimpPath.empty() || assimpPath[0] == '*')
+				{
+					std::cout << "This kind of texture path is not supported: " << assimpPath << "\n";
+					ASSERT(false);
+				}
+				else
+				{
+					std::string absoluteModelPath = std::filesystem::path(m_path).parent_path().string();
+					std::string relativeDiffusePath = RelativizePath(absoluteModelPath) + "/" +assimpPath;
+					newMaterial->m_diffuseIndex = Renderer::CreateTexture(relativeDiffusePath);
+				}
+			}
+
+			if (material->GetTexture(aiTextureType_SPECULAR, 0, &texAiPath) != AI_SUCCESS)
+				std::cout << "Material has no specular texture\n";
+			else
+			{
+				std::string assimpPath = texAiPath.C_Str();
+				if (assimpPath.empty() || assimpPath[0] == '*')
+				{
+					std::cout << "This kind of texture path is not supported: " << assimpPath << "\n";
+					ASSERT(false);
+				}
+				else
+				{
+					std::string absoluteModelPath = std::filesystem::path(m_path).parent_path().string();
+					std::string relativeSpecularPath = RelativizePath(absoluteModelPath) + "/" + assimpPath;
+					newMaterial->m_specularIndex = Renderer::CreateTexture(relativeSpecularPath);
+				}
+			}
 		}
 
 		return Mesh(vertices, indices, newMaterial);

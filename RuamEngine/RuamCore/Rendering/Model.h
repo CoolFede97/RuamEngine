@@ -10,6 +10,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include "FileFunctions.h"
 namespace RuamEngine
 {
 	class Model 
@@ -26,4 +27,5 @@ namespace RuamEngine
 		Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
 		std::vector<Texture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 	};
+	using ModelPtr = std::shared_ptr<Model>;
 }

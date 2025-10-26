@@ -11,7 +11,7 @@ struct VertexData
 {
 	float position[3];
 	float uv[2];
-    float texID;
+    float normal[3];
 };
 
 layout(binding = SSBOType_vertices, std430) readonly buffer ssbo0
@@ -52,9 +52,19 @@ vec2 GetUV(uint index)
     );
 }
 
+vec3 GetNormal(uint index) 
+{
+    return vec3
+    (
+        data[index].normal[0], 
+        data[index].normal[1], 
+        data[index].normal[2]
+    );
+}
+
 smooth out vec2 frag_uv;
+smooth out vec3 frag_normal;
 flat out int frag_instance;
-flat out int frag_texID;
 
 void main()
 {
@@ -64,5 +74,5 @@ void main()
 	gl_Position = vp * modelTransforms[gl_InstanceID] * position;
     frag_uv = GetUV(realIndex);
     frag_instance = gl_InstanceID;
-    frag_texID = int(data[realIndex].texID);
+    frag_normal = GetNormal(realIndex);
 };

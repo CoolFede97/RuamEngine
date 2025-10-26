@@ -15,16 +15,17 @@ flat in int frag_instance;
 
 out vec4 final_color;
 
-flat in int frag_texID;
+smooth in vec3 frag_normal;
 
-uniform vec4  u_albedoColor;
+//uniform vec4  u_albedoColor;
 uniform float u_diffuse;
 uniform float u_specular;
 
 void main()
 {
-    sampler2D diffuse = textures[int(u_diffuse)];
-    sampler2D specular = textures[int(u_specular)];
-    //final_color = texture(tex, frag_uv);   
-    final_color = diffuse * 0.8f + specular * 0.2f;   
+    // sample the textures to get colors
+    vec4 diffuse = texture(textures[int(u_diffuse)], frag_uv);
+    vec4 specular = texture(textures[int(u_specular)], frag_uv);
+
+    final_color = diffuse * 0.8 + specular * 0.2;  
 }

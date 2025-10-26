@@ -5,8 +5,9 @@ namespace RuamEngine
 {
     RendererConfig Renderer::m_config;
     GLFWwindow* Renderer::m_window = nullptr;
-    std::unordered_map<unsigned int, std::unique_ptr<DrawingData>> Renderer::m_drawingDataMap;
     GLuint Renderer::m_textureBuffer = 0;
+    std::vector<ShaderProgramPtr> Renderer::m_shaderPrograms;
+	std::vector<DrawingDataPtr> Renderer::m_drawingDatas;
 	std::vector<MaterialPtr> Renderer::m_materials;
     std::vector<TexturePtr> Renderer::m_textures;
     std::vector<GLuint64> Renderer::m_textureHandles;
@@ -41,17 +42,10 @@ namespace RuamEngine
 			CreateTexture("assets/sprites/defaultSprite.png");
             CreateTexture("assets/sprites/bigBrain.png");
 
-			ShaderPtr genericShader = std::make_shared<Shader>("assets/shaders/GeneralVertexShader.glsl", "assets/shaders/GeneralFragmentShader.glsl");
-            m_drawingDataMap.emplace(genericShader->GetInstanceID(), std::make_unique<DrawingData>());
-            DrawingData& basicDrawingData = *m_drawingDataMap.at(genericShader->GetInstanceID());
-            basicDrawingData.m_shader = genericShader;
-			MaterialPtr genericMaterial = std::make_shared<Material>();
-			m_materials.push_back(genericMaterial);
-            basicDrawingData.m_renderUnits.emplace(genericMaterial->GetId(), RenderUnit(basicDrawingData.m_shader));
-            RenderUnit& genericUnit = basicDrawingData.m_renderUnits.at(genericMaterial->GetId());
-            basicDrawingData.m_shader->Bind();
-            genericUnit.m_material = genericMaterial;
-            VertexBufferLayout& genericLayout = *genericUnit.m_layout;
+			DrawingDataPtr basicDrawingData = CreateDrawingData("assets/shaders/GeneralVertexShader.glsl", "assets/shaders/GeneralFragmentShader.glsl");
+			MaterialPtr genericMaterial = CreateMaterial();
+			RenderUnitPtr genericRenderUnit = CreateRenderUnit(basicDrawingData, genericMaterial);
+            VertexBufferLayout& genericLayout = *genericRenderUnit->m_layout;
             //genericLayout.Reset();
             //genericLayout.Push<float>(3);
             //genericLayout.Push<float>(2);
@@ -76,9 +70,9 @@ namespace RuamEngine
     }
     void Renderer::EndBatch()
     {
-        for (auto& pair : m_drawingDataMap)
+        for (DrawingDataPtr drawingData : m_drawingDatas)
         {
-            pair.second->SubmitBatchData();
+            drawingData->SubmitBatchData();
         }
     }
     void Renderer::EndBatch(RenderUnit& renderUnit)
@@ -87,9 +81,9 @@ namespace RuamEngine
     }
     void Renderer::Flush()
     {
-        for (auto& pair : m_drawingDataMap)
+        for (DrawingDataPtr drawingData : m_drawingDatas)
         {
-            pair.second->Flush();
+            drawingData->Flush();
         }
     }
 
@@ -141,10 +135,57 @@ namespace RuamEngine
         }
     }
 
-    // Returns index in the vector of handles
-    unsigned int Renderer::CreateTexture(const std::string& texturePath)
+    DrawingDataPtr Renderer::CreateDrawingData(const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
     {
-        TexturePtr newTex = std::make_shared<Texture>(texturePath);
+		ShaderProgramPtr newProgram = Renderer::CreateProgram(vertexShaderPath, fragmentShaderPath);
+        m_shaderPrograms.push_back(newProgram);
+        DrawingDataPtr newDrawingData = std::make_unique<DrawingData>();
+        m_drawingDatas.push_back(newDrawingData);
+        newDrawingData->m_program = newProgram;
+        return newDrawingData;
+	}
+
+    ShaderProgramPtr Renderer::CreateProgram(const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
+    {
+        ShaderProgramPtr newProgram = std::make_shared<ShaderProgram>(vertexShaderPath, fragmentShaderPath);
+        m_shaderPrograms.push_back(newProgram);
+		return newProgram;
+    }
+
+    RenderUnitPtr Renderer::CreateRenderUnit(DrawingDataPtr drawingData, MaterialPtr material)
+    {
+        RenderUnitPtr newRenderUnit = std::make_shared<RenderUnit>();
+        for (unsigned int i = 0; i < drawingData->m_renderUnits.size(); i++)
+        {
+            if (drawingData->m_renderUnits[i]->m_material->GetId() == material->GetId())
+            {
+                std::cout << "Warning: RenderUnit with the same material already exists in this DrawingData.\n";
+            }
+		}
+		newRenderUnit->m_material = material;
+		newRenderUnit->m_drawingData = drawingData;
+		newRenderUnit->m_program = drawingData->m_program;
+        drawingData->m_renderUnits.push_back(newRenderUnit);
+        return newRenderUnit;
+	}
+
+    MaterialPtr Renderer::CreateMaterial()
+    {
+		MaterialPtr newMaterial = std::make_shared<Material>();
+		m_materials.push_back(newMaterial);
+		return newMaterial;
+    }
+	
+    // If the texture already exists, it returns the existing index. Otherwise, it creates a new texture and returns its index.
+    unsigned int Renderer::CreateTexture(const std::string& relativeTexturePath)
+    {
+		unsigned int foundIndex = FindTexture(GlobalizePath(relativeTexturePath));
+        if (foundIndex != -1)
+        {
+            return foundIndex;
+		}
+        std::cout << "NUEVA TEXTURA CREADA\n";
+        TexturePtr newTex = std::make_shared<Texture>(relativeTexturePath);
         GLuint64 newHandle; 
         GLCall(newHandle = glGetTextureHandleARB(newTex->GetId()));
         ASSERT(newHandle != 0);
@@ -155,6 +196,32 @@ namespace RuamEngine
         m_textures.push_back(newTex);
         return m_textureHandles.size()-1;
     }
+
+	// Returns -1 if not found, otherwise it returns the index in the vector of textures
+    unsigned int Renderer::FindTexture(const std::string& absoluteTexturePath)
+    {
+        for (unsigned int i = 0; i < m_textures.size(); i++)
+        {
+            if (m_textures[i]->m_filePath == absoluteTexturePath)
+            {
+                return i;
+            }
+        }
+        return -1;
+	}
+
+	// Finds if a material already exists in the renderer
+    unsigned int Renderer::FindMaterial(MaterialPtr material)
+    {
+        for (unsigned int i = 0; i < m_materials.size(); i++)
+        {
+            if (m_materials[i]->GetId() == material->GetId())
+            {
+                return i;
+            }
+        }
+        return -1;
+	}
 
     // Should be called only once when finished all the textures
     void Renderer::UploadTextures()
@@ -183,32 +250,26 @@ namespace RuamEngine
         ));
 	}
 
-    MaterialPtr Renderer::CreateMaterial()
-    {
-		MaterialPtr newMaterial = std::make_shared<Material>();
-		m_materials.push_back(newMaterial);
-		return newMaterial;
-    }
 
     void Renderer::Draw()
     {
-        for (auto& drawingData : m_drawingDataMap)
+        for (DrawingDataPtr drawingData : m_drawingDatas)
         {
-            for (auto& renderUnit : drawingData.second->m_renderUnits)
+			drawingData->m_program->UpdateCameraMatrices();
+            for (RenderUnitPtr renderUnit : drawingData->m_renderUnits)
             {
-                drawingData.second->m_shader->Bind();
-                drawingData.second->m_shader->LoadMaterial(*renderUnit.second.m_material);
-				drawingData.second->m_shader->UpdateCameraMatrices();
-                GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit.second.m_indices->GetCurrentSize()/sizeof(unsigned int), renderUnit.second.m_modelMatricesBuffer->m_data.size()));
+                drawingData->m_program->Bind();
+                drawingData->m_program->LoadMaterial(*renderUnit->m_material);
+                GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit->m_indices->GetCurrentSize()/sizeof(unsigned int), renderUnit->m_modelMatricesBuffer->m_data.size()));
             }
         }
     }
 
     void Renderer::Draw(RenderUnit& renderUnit)
     {
-        renderUnit.m_shader->Bind();
-        renderUnit.m_shader->LoadMaterial(*renderUnit.m_material);
-        renderUnit.m_shader->UpdateCameraMatrices();
+        renderUnit.m_program->Bind();
+        renderUnit.m_program->LoadMaterial(*renderUnit.m_material);
+        renderUnit.m_program->UpdateCameraMatrices();
         GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit.m_indices->GetCurrentSize() / sizeof(unsigned int), renderUnit.m_modelMatricesBuffer->m_data.size()));
     }
 

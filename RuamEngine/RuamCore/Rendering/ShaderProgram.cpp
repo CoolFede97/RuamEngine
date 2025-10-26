@@ -1,28 +1,28 @@
-#include "Shader.h"
+#include "ShaderProgram.h"
 #include "FileFunctions.h"
 #include "Renderer.h"
 #include "Camera.h"
 namespace RuamEngine
 {
 
-	GLint Shader::maxTextureSlots= 0;
-	unsigned int Shader::s_idInstanceCount = 0;
+	GLint ShaderProgram::maxTextureSlots= 0;
+	unsigned int ShaderProgram::s_idInstanceCount = 0;
 
 
-	Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
+	ShaderProgram::ShaderProgram(const std::string& vertexPath, const std::string& fragmentPath)
 		: m_vFilePath(GlobalizePath(vertexPath)), m_fFilePath(GlobalizePath(fragmentPath)), m_instanceId(s_idInstanceCount++), m_rendererId(0)
 	{
-		m_rendererId = CreateShader(vertexPath, fragmentPath);
+		m_rendererId = CreateProgram(vertexPath, fragmentPath);
 		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureSlots);
 		SetUniformTextureSlots("u_albedoMap");
 	}
 
-	Shader::~Shader()
+	ShaderProgram::~ShaderProgram()
 	{
 		std::cout << "Shader Destroyed!\n";
 	}
 
-	unsigned int Shader::CompileShader(unsigned int type, const std::string& source)
+	unsigned int ShaderProgram::CompileShader(unsigned int type, const std::string& source)
 	{
 	
 		unsigned int id = glCreateShader(type);
@@ -51,7 +51,7 @@ namespace RuamEngine
 	
 	}
 
-	unsigned int Shader::CreateShader(const std::string& vertexPath, const std::string& fragmentPath)
+	unsigned int ShaderProgram::CreateProgram(const std::string& vertexPath, const std::string& fragmentPath)
 	{
 		unsigned int program = glCreateProgram();
 		unsigned int vs = CompileShader(GL_VERTEX_SHADER, RelativeFileToString(vertexPath));
@@ -98,37 +98,37 @@ namespace RuamEngine
 		return program;
 	}	
 
-	void Shader::Bind() const
+	void ShaderProgram::Bind() const
 	{
 		GLCall(glUseProgram(m_rendererId));
 	}
 
-	void Shader::Unbind() const
+	void ShaderProgram::Unbind() const
 	{
 		GLCall(glUseProgram(0));
 	}
 
-	void Shader::SetUniform1i(const std::string& name, int value)
+	void ShaderProgram::SetUniform1i(const std::string& name, int value)
 	{
 		GLCall(glUniform1i(GetUniformLocation(name), value));
 	}
 
-	void Shader::SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3)
+	void ShaderProgram::SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3)
 	{
 		GLCall(glUniform4f(GetUniformLocation(name), v0, v1, v2, v3));
 	}
 
-	void Shader::SetUniform1f(const std::string& name, float value)
+	void ShaderProgram::SetUniform1f(const std::string& name, float value)
 	{
 		GLCall(glUniform1f(GetUniformLocation(name), value));
 	}
 
-	void Shader::SetUniformMat4f(const std::string& name, glm::mat4 matrix)
+	void ShaderProgram::SetUniformMat4f(const std::string& name, glm::mat4 matrix)
 	{
 		GLCall(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &matrix[0][0]));
 	}
 
-	void Shader::SetUniformTextureSlots(const std::string& name)
+	void ShaderProgram::SetUniformTextureSlots(const std::string& name)
 	{
 		std::vector<GLint> samplers = {};
 		for (int i = 0; i < maxTextureSlots; i++)	
@@ -140,16 +140,18 @@ namespace RuamEngine
 		GLCall(glUniform1iv(loc, maxTextureSlots, samplers.data()));
 	}
 
-	void Shader::LoadMaterial(const Material& material)
+	void ShaderProgram::LoadMaterial(const Material& material)
 	{
 		Bind();
 
-		SetUniform4f("u_albedoColor", material.albedoColor.x, material.albedoColor.y, material.albedoColor.z, material.albedoColor.w);
+		std::cout << "Material count: " << Renderer::m_materials.size() << "\n";
+
+		//SetUniform4f("u_albedoColor", material.albedoColor.x, material.albedoColor.y, material.albedoColor.z, material.albedoColor.w);
 		SetUniform1f("u_diffuse", material.m_diffuseIndex);
 		SetUniform1f("u_specular", material.m_specularIndex);
 	}	
 
-	void Shader::UpdateCameraMatrices()
+	void ShaderProgram::UpdateCameraMatrices()
 	{
 		if (Camera::GetMainCamera() == nullptr)
 		{
@@ -163,7 +165,7 @@ namespace RuamEngine
 		SetUniformMat4f("u_projection", Camera::GetMainCamera()->GetProjectionMatrix());
 	}
 
-	int Shader::GetUniformLocation(const std::string& name)
+	int ShaderProgram::GetUniformLocation(const std::string& name)
 	{
 		if (m_UniformLocationCache.find(name) != m_UniformLocationCache.end())
 			return m_UniformLocationCache[name];

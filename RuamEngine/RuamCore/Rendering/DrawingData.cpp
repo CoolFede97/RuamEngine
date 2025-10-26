@@ -7,9 +7,9 @@ namespace RuamEngine
 
 	void DrawingData::SubmitBatchData()
 	{
-		for (auto& pair : m_renderUnits)
+		for (RenderUnitPtr renderUnit : m_renderUnits)
 		{
-			pair.second.SubmitBatchData();
+			renderUnit->SubmitBatchData();
 		}
 	}
 
@@ -20,9 +20,9 @@ namespace RuamEngine
 
 	void DrawingData::Flush()
 	{
-		for (auto& pair : m_renderUnits)
+		for (RenderUnitPtr renderUnit: m_renderUnits)
 		{
-			pair.second.Flush();
+			renderUnit->Flush();
 		}
 	}
 

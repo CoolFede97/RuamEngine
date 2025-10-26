@@ -85,14 +85,20 @@ namespace RuamEngine
 		static GLFWwindow* GetWindow() { return m_window; }
 		static int WindowShouldClose() { return glfwWindowShouldClose(m_window); }
 
-        static unsigned int CreateTexture(const std::string& texturePath);
-        static void UpdateTextures();
+        static DrawingDataPtr CreateDrawingData(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
+		static ShaderProgramPtr CreateProgram(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
+        static RenderUnitPtr CreateRenderUnit(DrawingDataPtr drawingData, MaterialPtr material);
 		static MaterialPtr CreateMaterial();
+        static unsigned int CreateTexture(const std::string& relativeTexturePath);
+		static unsigned int FindTexture(const std::string& absoluteTexturePath);
+        static unsigned int FindMaterial(MaterialPtr material);
+        static void UpdateTextures();
 
         static void Draw();
         static void Draw(RenderUnit& renderUnit);
 
-        static std::unordered_map<unsigned int, std::unique_ptr<DrawingData>> m_drawingDataMap;
+		static std::vector<DrawingDataPtr> m_drawingDatas;
+		static std::vector<ShaderProgramPtr> m_shaderPrograms;
         static std::vector<MaterialPtr> m_materials;
         static std::vector<TexturePtr> m_textures;
         static std::vector<GLuint64> m_textureHandles;

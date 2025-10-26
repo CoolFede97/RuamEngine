@@ -14,7 +14,6 @@ namespace RuamEngine
 	{
 		m_rendererId = CreateProgram(vertexPath, fragmentPath);
 		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureSlots);
-		SetUniformTextureSlots("u_albedoMap");
 	}
 
 	ShaderProgram::~ShaderProgram()
@@ -63,32 +62,36 @@ namespace RuamEngine
 		GLCall(glLinkProgram(program));
 
 		int link_result;
-		glGetShaderiv(program, GL_LINK_STATUS, &link_result);
+		glGetProgramiv(program, GL_LINK_STATUS, &link_result);
 		if (link_result == GL_FALSE)
 		{
 			int length;
-			GLCall(glGetShaderiv(program, GL_INFO_LOG_LENGTH, &length));
+			GLCall(glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length));
 			char* message = (char*)alloca(length * sizeof(char));
-			GLCall(glGetShaderInfoLog(program, length, &length, message));
+			GLCall(glGetProgramInfoLog(program, length, &length, message));
 			std::cout << "Failed to link: "<< "shader! " << "\n";
 			std::cout << message << "\n";
-			GLCall(glDeleteShader(program));
+			GLCall(glDeleteProgram(program));
+			GLCall(glDeleteShader(vs));
+			GLCall(glDeleteShader(fs));
 			return 0;
 		}
 
 		GLCall(glValidateProgram(program));
 
 		int validation_result;
-		glGetShaderiv(program, GL_VALIDATE_STATUS, &validation_result);
+		glGetProgramiv(program, GL_VALIDATE_STATUS, &validation_result);
 		if (validation_result == GL_FALSE)
 		{
 			int length;
-			GLCall(glGetShaderiv(program, GL_INFO_LOG_LENGTH, &length));
+			GLCall(glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length));
 			char* message = (char*)alloca(length * sizeof(char));
-			GLCall(glGetShaderInfoLog(program, length, &length, message));
+			GLCall(glGetProgramInfoLog(program, length, &length, message));
 			std::cout << "Failed to validate: " << "shader! " << "\n";
 			std::cout << message << "\n";
-			GLCall(glDeleteShader(program));
+			GLCall(glDeleteProgram(program));
+			GLCall(glDeleteShader(vs));
+			GLCall(glDeleteShader(fs));
 			return 0;
 		}
 
@@ -143,8 +146,6 @@ namespace RuamEngine
 	void ShaderProgram::LoadMaterial(const Material& material)
 	{
 		Bind();
-
-		std::cout << "Material count: " << Renderer::m_materials.size() << "\n";
 
 		//SetUniform4f("u_albedoColor", material.albedoColor.x, material.albedoColor.y, material.albedoColor.z, material.albedoColor.w);
 		SetUniform1f("u_diffuse", material.m_diffuseIndex);

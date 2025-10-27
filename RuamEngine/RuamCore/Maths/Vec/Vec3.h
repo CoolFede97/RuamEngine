@@ -24,6 +24,7 @@ struct Vec3
     Vec3 operator+(Vec3 other) const;
     Vec3 operator-(Vec3 other) const;
     Vec3 operator*(Vec3 other) const;
+    Vec3 operator*(float number) const;
     Vec3 operator/(Vec3 other) const;
     Vec3 operator/(float number) const;
 

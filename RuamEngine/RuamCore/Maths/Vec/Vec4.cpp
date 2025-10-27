@@ -23,6 +23,10 @@ Vec4 Vec4::operator*(Vec4 other) const {
     return Vec4(x * other.x, y * other.y, z * other.z, w * other.w);
 }
 
+Vec4 Vec4::operator*(float number) const {
+    return Vec4(x * number, y * number, z * number, w * number);
+}
+
 Vec4 Vec4::operator/(Vec4 other) const {
     return Vec4(x / other.x, y / other.y, z / other.z, w / other.w);
 }

@@ -260,8 +260,8 @@ namespace RuamEngine
             {
                 drawingData->m_program->Bind();
                 drawingData->m_program->LoadMaterial(*renderUnit->m_material);
-				std::cout << "Vertices count: " << renderUnit->m_vertices->GetCurrentSize() / sizeof(Vertex) << "\n";
-                std::cout << "Indices count: " << renderUnit->m_indices->GetCurrentSize() / sizeof(unsigned int) << "\n";
+				//std::cout << "Vertices count: " << renderUnit->m_vertices->GetCurrentSize() / sizeof(Vertex) << "\n";
+    //            std::cout << "Indices count: " << renderUnit->m_indices->GetCurrentSize() / sizeof(unsigned int) << "\n";
 
                 GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit->m_indices->GetCurrentSize()/sizeof(unsigned int), renderUnit->m_modelMatricesBuffer->m_data.size()));
             }

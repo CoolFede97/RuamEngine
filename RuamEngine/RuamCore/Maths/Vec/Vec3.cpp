@@ -21,6 +21,10 @@ Vec3 Vec3::operator*(Vec3 other) const {
     return Vec3(x * other.x, y * other.y, z * other.z);
 }
 
+Vec3 Vec3::operator*(float number) const {
+    return Vec3(x * number, y * number, z * number);
+}
+
 Vec3 Vec3::operator/(Vec3 other) const {
     return Vec3(x / other.x, y / other.y, z / other.z);
 }
@@ -62,15 +66,15 @@ Vec3 Vec3::CrossProduct(Vec3 other) const
 
 Vec3 Vec3::GetDirectionFromEuler(Vec3 eulerAngles)
 {
-    float pitch = eulerAngles.x;
-    float yaw = eulerAngles.y;
+    float pitch = glm::radians(eulerAngles.x);
+    float yaw = glm::radians(eulerAngles.y);
 
     Vec3 direction;
-    direction.x = cos(pitch) * cos(yaw);
+    direction.x = cos(pitch) * sin(yaw);
     direction.y = sin(pitch);
-    direction.z = cos(pitch) * sin(yaw);
+    direction.z = cos(pitch) * cos(yaw);
 
-	return direction.Normalized();
+    return direction;
 }
 
 Vec3 Vec3::Right() { return Vec3(1, 0, 0); }

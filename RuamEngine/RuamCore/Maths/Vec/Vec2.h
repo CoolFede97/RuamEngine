@@ -22,6 +22,7 @@ struct Vec2
     Vec2 operator+(Vec2 other) const;
     Vec2 operator-(Vec2 other) const;
     Vec2 operator*(Vec2 other) const;
+    Vec2 operator*(float number) const;
     Vec2 operator/(Vec2 other) const;
     Vec2 operator/(float number) const;
 

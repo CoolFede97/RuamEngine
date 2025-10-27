@@ -54,7 +54,8 @@ int main()
 			glfwPollEvents();
 
 			// Input
-			Input::UpdateInput();
+			
+			//std::cout << "Normal variation: " << Input::GetMouseDeltaNorm() << "\n";
 
 			// Time
 			Time::Update();
@@ -81,7 +82,7 @@ int main()
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 			Renderer::EndDraw();
-
+			Input::UpdateInput();
 			glfwPollEvents();
 		}
 	}

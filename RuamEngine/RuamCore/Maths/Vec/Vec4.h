@@ -26,6 +26,7 @@ struct Vec4
     Vec4 operator+(Vec4 other) const;
     Vec4 operator-(Vec4 other) const;
     Vec4 operator*(Vec4 other) const;
+    Vec4 operator*(float number) const;
     Vec4 operator/(Vec4 other) const;
     Vec4 operator/(float number) const;
 

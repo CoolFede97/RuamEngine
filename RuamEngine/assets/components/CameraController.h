@@ -18,12 +18,17 @@ class CameraController : public Component
 
 	Vec3 m_direction;
 	Vec3 m_horizontalDirection;
-	float m_speed;
+public:
+	float m_speed = 0;
+	float m_rotationSpeed = 0;
+private:
 	void update()
 	{
-		object()->transform().rotation() += static_cast<glm::vec3>(Input::GetMouseDeltaNorm() * Time::DeltaTime());
+		object()->transform().rotation() += static_cast<glm::vec3>(Input::GetMouseDeltaNorm() * Time::DeltaTime() * m_rotationSpeed);
 		object()->transform().rotation().x = std::clamp(object()->transform().rotation().x, -89.0f, 89.0f);
-
+		//std::cout << "Rotation variation: " << static_cast<glm::vec3>(Input::GetMouseDeltaNorm() * Time::DeltaTime() * m_rotationSpeed) << "\n";
+		//std::cout << "Rotation: " << object()->transform().rotation() << "\n";
+		//std::cout << "Normal variation: " << Input::GetMouseDeltaNorm() << "\n";
 
 		m_horizontalDirection = {0, 0, 0};
 		if (Input::GetKeyDown(KeyCode::W_Key)) m_horizontalDirection.z += 1;
@@ -32,11 +37,12 @@ class CameraController : public Component
 		if (Input::GetKeyDown(KeyCode::D_Key)) m_horizontalDirection.x += 1;
 		
 		m_direction = Vec3::GetDirectionFromEuler(object()->transform().rotation());
+		//std::cout << "Direction: " << m_direction << "\n";
 
+		Vec3 left = Vec3::Up().CrossProduct(m_direction).Normalized();
 		object()->transform().position() += static_cast<glm::vec3>(m_direction * m_horizontalDirection.z * Time::DeltaTime() * m_speed);
-		object()->transform().position() += static_cast<glm::vec3>(m_direction.CrossProduct(Vec3::Up() * m_horizontalDirection.x * Time::DeltaTime() * m_speed));
+		object()->transform().position() += static_cast<glm::vec3>(left * -m_horizontalDirection.x * Time::DeltaTime() * m_speed);
 
-		Camera::GetMainCamera()->object()->transform().position() += glm::vec3(0.0f, 0.0f, Time::DeltaTime() * 100.0f);
 	};
 	void start() {};
 };

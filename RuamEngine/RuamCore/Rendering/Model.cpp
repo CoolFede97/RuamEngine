@@ -22,6 +22,7 @@ namespace RuamEngine
 	}
 	void Model::ProcessNode(aiNode* node, const aiScene* scene)
 	{
+
 		for (unsigned int i = 0; i < node->mNumMeshes; i++)
 		{
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
@@ -40,6 +41,7 @@ namespace RuamEngine
 
 		for (unsigned int  i = 0; i < mesh->mNumVertices; i++)
 		{
+
 			Vertex vertex;
 
 			glm::vec3 vector;
@@ -63,15 +65,16 @@ namespace RuamEngine
 			vertex.m_normal = vector;
 
 
-			// Leé esto después Fede
-			/*std::cout << "Vertex data: --------\n";
-			std::cout << "Position: " << vertex.m_position << "\n";
-			std::cout << "UV: " << vertex.m_uv<< "\n";
-			std::cout << "Position: " << vertex.m_normal << "\n";*/
+			//// Leé esto después Fede
+			//std::cout << "Vertex data: --------\n";
+			//std::cout << "Position: " << vertex.m_position << "\n";
+			//std::cout << "UV: " << vertex.m_uv<< "\n";
+			//std::cout << "Normals: " << vertex.m_normal << "\n";
 
 
 			vertices.push_back(vertex);
 		}
+
 
 		for (unsigned int i = 0; i < mesh->mNumFaces; i++)
 		{
@@ -82,7 +85,7 @@ namespace RuamEngine
 		MaterialPtr newMaterial = Renderer::CreateMaterial();
 
 		Renderer::CreateRenderUnit(Renderer::m_drawingDatas[0], newMaterial);
-		
+
 		if (mesh->mMaterialIndex >= 0)
 		{
 			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
@@ -101,7 +104,7 @@ namespace RuamEngine
 				else
 				{
 					std::string absoluteModelPath = std::filesystem::path(m_path).parent_path().string();
-					std::string relativeDiffusePath = RelativizePath(absoluteModelPath) + "/" +assimpPath;
+					std::string relativeDiffusePath = RelativizePath(absoluteModelPath) + "/" + assimpPath;
 					newMaterial->m_diffuseIndex = Renderer::CreateTexture(relativeDiffusePath);
 				}
 			}
@@ -124,7 +127,7 @@ namespace RuamEngine
 				}
 			}
 		}
-
+		else std::cout << "No materials\n";
 		return Mesh(vertices, indices, newMaterial);
 	}
 	std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)

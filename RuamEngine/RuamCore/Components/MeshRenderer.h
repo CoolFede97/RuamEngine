@@ -23,7 +23,6 @@ private:
 	std::vector<unsigned int> m_indices;
 	void render()
 	{
-
 		glm::mat4 modelMatrix(1.0f);
 		modelMatrix = glm::translate(modelMatrix, object()->transform().position());
 		modelMatrix = glm::rotate(modelMatrix, glm::radians(object()->transform().rotation().x), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -34,17 +33,14 @@ private:
 		
 		for (Mesh mesh : m_model->m_meshes)
 		{
-
-			RenderUnitPtr renderUnit;
-			for (RenderUnitPtr ru : Renderer::m_drawingDatas[0]->m_renderUnits)
+			for (auto& ru : Renderer::m_drawingDatas[0]->m_renderUnits)
 			{
 				if (ru->m_material->GetId() == mesh.m_material->GetId())
 				{
-					renderUnit = ru;
+					ru->AddBatchData(mesh.m_vertices, mesh.m_indices, { modelMatrix });
 					break;
 				}
 			}
-			renderUnit->AddBatchData(mesh.m_vertices, mesh.m_indices, { modelMatrix });
 		}
 
 		/*for (unsigned int i = 0; i < m_indices.size(); i++)

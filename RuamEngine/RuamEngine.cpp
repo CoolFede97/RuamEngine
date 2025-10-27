@@ -55,8 +55,6 @@ int main()
 
 			// Input
 			
-			//std::cout << "Normal variation: " << Input::GetMouseDeltaNorm() << "\n";
-
 			// Time
 			Time::Update();
 

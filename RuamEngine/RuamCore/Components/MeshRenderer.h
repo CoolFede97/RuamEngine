@@ -23,6 +23,7 @@ private:
 	std::vector<unsigned int> m_indices;
 	void render()
 	{
+		std::cout << "MeshRenderer Render called\n";
 		glm::mat4 modelMatrix(1.0f);
 		modelMatrix = glm::translate(modelMatrix, object()->transform().position());
 		modelMatrix = glm::rotate(modelMatrix, glm::radians(object()->transform().rotation().x), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -82,7 +83,7 @@ private:
 
 	void start()
 	{
-		std::cout << "Start called\n";
+		std::cout << "MeshRenderer started\n";
 		m_model = std::make_shared<Model>(m_meshPath);
 		m_vertices = GetMeshesVertices();
 		m_indices = GetMeshesIndices();

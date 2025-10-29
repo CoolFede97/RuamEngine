@@ -37,7 +37,7 @@ private:
 			{
 				if (ru->m_material->GetId() == mesh.m_material->GetId())
 				{
-					ru->AddBatchData(mesh.m_vertices, mesh.m_indices, { modelMatrix });
+					//ru->AddBatchData(mesh.m_vertices, mesh.m_indices, { modelMatrix });
 					break;
 				}
 			}
@@ -85,6 +85,8 @@ private:
 		m_model = std::make_shared<Model>(m_meshPath);
 		m_vertices = GetMeshesVertices();
 		m_indices = GetMeshesIndices();
+		Renderer::UpdateTextures();
+		std::cout << "Cantidad de texturas: " << Renderer::m_textures.size() << "\n";
 	}
 
 	void update()

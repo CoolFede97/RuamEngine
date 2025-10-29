@@ -14,11 +14,12 @@ class CubeRenderer : public BaseRenderer
 {
 	using BaseRenderer::BaseRenderer;
 
-	GLuint textureId = 0;
-
+public:
+	GLuint materialId = 0;
+private:
 	void render()
 	{
-		RenderUnitPtr genericUnit = Renderer::m_drawingDatas[0]->m_renderUnits[0];
+		RenderUnitPtr genericUnit = Renderer::m_drawingDatas[0]->m_renderUnits[materialId];
 		std::vector<Vertex> newCube = Vertex::CreateCube();
 		std::vector<unsigned int> newIndices = 
 		{

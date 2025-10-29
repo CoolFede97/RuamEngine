@@ -22,13 +22,14 @@ void CreateCFSandboxScene()
 	bag->transform().setRotation(glm::vec3(45.0f, 5.0f, 45.0f));
 	//bag->addComponent<CubeRenderer>();
 	
-	/*Object* bag2 = sandboxScene->newObject();
+	/*Object* bag2 = sandb	oxScene->newObject();
 	bag2->transform().setPosition(glm::vec3(7.0f, 0.0f, 15.5f));
 	bag2->transform().setRotation(glm::vec3(45.0f, 5.0f, 45.0f));
 	bag2->addComponent<CubeRenderer>();*/
 
 	bag->addComponent<MeshRenderer>();
 	bag->getComponent<MeshRenderer>()->m_meshPath = "assets/meshes/backpack/backpack.obj";
+	bag->addComponent<CubeRenderer>()->materialId = 0;
 	manager->addComponent<Camera>();/*
 	manager->addComponent<CameraController>();
 	manager->getComponent<CameraController>()->m_speed = 50.0f;

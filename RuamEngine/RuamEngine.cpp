@@ -40,7 +40,6 @@ int main()
 		//SceneManager::SetActiveScene(0);
 
 		// Scene* collisionSandboxScene = CreateCollisionSandboxScene();
-
 		while (!Renderer::WindowShouldClose())
 		{
 			// ImGUI

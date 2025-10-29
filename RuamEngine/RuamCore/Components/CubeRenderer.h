@@ -19,6 +19,7 @@ public:
 private:
 	void render()
 	{
+		std::cout << "Render called\n";
 		RenderUnitPtr genericUnit = Renderer::m_drawingDatas[0]->m_renderUnits[materialId];
 		std::vector<Vertex> newCube = Vertex::CreateCube();
 		std::vector<unsigned int> newIndices = 

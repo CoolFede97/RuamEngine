@@ -37,9 +37,15 @@ int main()
 		
 		CreateMenuScene();
 		CreateCFSandboxScene();
+
+		
+
 		//SceneManager::SetActiveScene(0);
 
 		// Scene* collisionSandboxScene = CreateCollisionSandboxScene();
+
+		bool test = false;
+
 		while (!Renderer::WindowShouldClose())
 		{
 			// ImGUI
@@ -81,6 +87,14 @@ int main()
 			Renderer::EndDraw();
 			Input::UpdateInput();
 			glfwPollEvents();
+			if (!test)
+			{
+				for (MaterialPtr mat : Renderer::m_materials)
+				{
+					std::cout << "Mat " << mat->GetId() << " Diffuse: " << mat->m_diffuseIndex << "\n";
+				}
+				test = true;
+			}
 		}
 	}
 	// Cleanup

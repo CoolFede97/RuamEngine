@@ -82,11 +82,11 @@ private:
 
 	void start()
 	{
+		std::cout << "Start called\n";
 		m_model = std::make_shared<Model>(m_meshPath);
 		m_vertices = GetMeshesVertices();
 		m_indices = GetMeshesIndices();
 		Renderer::UpdateTextures();
-		std::cout << "Cantidad de texturas: " << Renderer::m_textures.size() << "\n";
 	}
 
 	void update()

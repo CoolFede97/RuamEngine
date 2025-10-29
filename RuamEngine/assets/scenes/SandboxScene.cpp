@@ -29,7 +29,7 @@ void CreateCFSandboxScene()
 
 	bag->addComponent<MeshRenderer>();
 	bag->getComponent<MeshRenderer>()->m_meshPath = "assets/meshes/backpack/backpack.obj";
-	bag->addComponent<CubeRenderer>()->materialId = 0;
+	bag->addComponent<CubeRenderer>()->materialId = 2;
 	manager->addComponent<Camera>();/*
 	manager->addComponent<CameraController>();
 	manager->getComponent<CameraController>()->m_speed = 50.0f;

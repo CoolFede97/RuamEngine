@@ -179,13 +179,11 @@ namespace RuamEngine
     // If the texture already exists, it returns the existing index. Otherwise, it creates a new texture and returns its index.
     unsigned int Renderer::CreateTexture(const std::string& relativeTexturePath)
     {
-		std::cout << "QUIERO CREAR TEXURA: " << relativeTexturePath << "\n";
 		unsigned int foundIndex = FindTexture(GlobalizePath(relativeTexturePath));
         if (foundIndex != -1)
         {
             return foundIndex;
 		}
-        std::cout << "NUEVA TEXTURA CREADA\n";
         TexturePtr newTex = std::make_shared<Texture>(relativeTexturePath);
         GLuint64 newHandle; 
         GLCall(newHandle = glGetTextureHandleARB(newTex->GetId()));
@@ -208,7 +206,6 @@ namespace RuamEngine
                 return i;
             }
         }
-        std::cout << "Texture not found: " << "같같같같같같같같같같같�" << "\n";
         return -1;
 	}
 
@@ -246,12 +243,8 @@ namespace RuamEngine
     {
         ASSERT(m_textureHandles.size() < maxTextureCount);
         
-        std::cout << "Size: " << sizeof(GLuint64) * m_textureHandles.size() << "\n";
-
         GLint size = 0;
         GLCall(glGetNamedBufferParameteriv(m_textureBuffer, GL_BUFFER_SIZE, &size));
-
-		std::cout << "Buffer size: " << size << "\n";
 
         GLCall(glNamedBufferSubData(
             m_textureBuffer,

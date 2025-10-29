@@ -87,7 +87,6 @@ namespace RuamEngine
 
 		if (mesh->mMaterialIndex >= 0)
 		{
-			std::cout << "Material index: " << mesh->mMaterialIndex << "\n";
 			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 			aiString texAiPath;
 

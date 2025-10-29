@@ -16,7 +16,6 @@ namespace RuamEngine
 		Object* manager = menuScene->newObject();
 		manager->addComponent<Camera>();
 		//manager->addComponent<AudioSource>("/home/tomy/programming/ce/masmas/RuamEngine/RuamEngine/1 Crumbling Castle.wav");
-		manager->addComponent<Counter>();
 		manager->addComponent<Manager>();
 		Serial::serialise(menuScene);
 	}

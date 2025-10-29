@@ -10,7 +10,7 @@
 class Manager : public BaseRenderer {
 public:
 	using BaseRenderer::BaseRenderer;
-	Manager(unsigned int obj_id) : BaseRenderer(obj_id) {};
+	Manager(const nlohmann::json& j, int obj_id) : BaseRenderer(obj_id) {};
 	void render() {
 		ImGuiIO& io = ImGui::GetIO();
 		ImGui::Text("FPS: %.1f", io.Framerate);
@@ -28,4 +28,8 @@ public:
 	{
 		BaseRenderer::update();
 	}
+
+	IMPL_SIMPLE_SERIALIZE(Manager)
 };
+
+REGISTER_COMPONENT(Manager)

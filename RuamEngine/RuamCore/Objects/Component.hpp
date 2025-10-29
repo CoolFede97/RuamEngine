@@ -34,7 +34,17 @@ public: \
 			{"id", m_id}, \
 			{"type", #ComponentClass}, \
 		}; \
-	} \
+	}
+
+
+#define IMPL_SIMPLE_SERIALIZE(ComponentClass)\
+public: \
+	operator nlohmann::json() const { \
+	return nlohmann::json{			\
+			{"id", m_id}, \
+			{"type", #ComponentClass} \
+		}; \
+	}
 
 #define SER_FIELD(x) {#x, x}
 

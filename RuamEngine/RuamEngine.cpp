@@ -35,7 +35,7 @@ int main()
 		CreateMenuScene();
 
 		SceneManager::SetActiveScene(0);
-		
+
 		CreateCFSandboxScene();
 		// Scene* collisionSandboxScene = CreateCollisionSandboxScene();
 

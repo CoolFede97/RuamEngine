@@ -12,7 +12,6 @@ namespace RuamEngine
 
 		std::string absolutePath = std::string(PROJECT_ROOT_DIR) + "/" + relativePath;
 		m_LocalBuffer = stbi_load(absolutePath.c_str(), &m_Width, &m_Height, &m_BPP, 4);
-
 		GLCall(glTextureStorage2D(m_id, 1, GL_RGBA8, m_Width, m_Height));
 		GLCall(glTextureSubImage2D(m_id, 0, 0, 0, m_Width, m_Height, GL_RGBA, GL_UNSIGNED_BYTE, m_LocalBuffer));
 		glGenerateTextureMipmap(m_id);

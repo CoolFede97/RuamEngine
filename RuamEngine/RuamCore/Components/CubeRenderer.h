@@ -12,7 +12,11 @@ using namespace RuamEngine;
 
 class CubeRenderer : public BaseRenderer
 {
+public:
 	using BaseRenderer::BaseRenderer;
+	CubeRenderer(const nlohmann::json& j, unsigned int obj_id) : BaseRenderer(obj_id)
+	{
+	}
 
 	GLuint textureId = 0;
 
@@ -49,5 +53,7 @@ class CubeRenderer : public BaseRenderer
 	void update()
 	{
 		BaseRenderer::update();
-	};	
-};
+	};
+	IMPL_SIMPLE_SERIALIZE(CubeRenderer)
+ };
+REGISTER_COMPONENT(CubeRenderer)

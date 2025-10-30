@@ -3,7 +3,6 @@
 
 namespace RuamEngine
 {
-	unsigned int RenderUnit::s_indexCount = 0;
 	void RenderUnit::SubmitBatchData()
 	{
 		if (m_vertices->GetCurrentSize() > 0)
@@ -40,7 +39,7 @@ namespace RuamEngine
 		return fullBatch;
 	}*/
 
-	bool RenderUnit::AddBatchData(const std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, const std::vector<glm::mat4>& modelMatrices)
+	bool RenderUnit::AddBatchData(const std::vector<Vertex>& vertices, std::vector<unsigned int> indices, const std::vector<glm::mat4>& modelMatrices)
 	{
 		ASSERT(vertices.size() * sizeof(Vertex) <= m_vertices->GetMaxSize());
 		ASSERT(indices.size() * sizeof(unsigned int) <= m_indices->GetMaxSize());

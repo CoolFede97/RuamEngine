@@ -27,10 +27,10 @@ namespace RuamEngine
         SSBOPointer<glm::mat4> m_modelMatricesBuffer = std::make_unique<SSBO<glm::mat4>>(maxVertexCount, GL_DYNAMIC_STORAGE_BIT);
         VertexBufferLayoutPtr m_layout = std::make_unique<VertexBufferLayout>();
         IndexBufferPtr m_indexBuffer = std::make_unique<IndexBuffer>(maxIndexCount, GL_DYNAMIC_DRAW);
-        static unsigned int s_indexCount;
+        unsigned int s_indexCount = 0;
         void SubmitBatchData();
         //bool AddBatchData(const std::vector<Vertex> vertices, unsigned int vertexDataSize, const std::vector<unsigned int> indices, unsigned int indexDataSize);
-        bool AddBatchData(const std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, const std::vector<glm::mat4>& modelMatrices);
+        bool AddBatchData(const std::vector<Vertex>& vertices, std::vector<unsigned int> indices, const std::vector<glm::mat4>& modelMatrices);
         void Flush();
     private:
     };

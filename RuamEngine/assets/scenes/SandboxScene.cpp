@@ -30,10 +30,10 @@ void CreateCFSandboxScene()
 	bag->addComponent<MeshRenderer>();
 	bag->getComponent<MeshRenderer>()->m_meshPath = "assets/meshes/backpack/backpack.obj";
 	bag->addComponent<CubeRenderer>()->materialId = 0;
-	manager->addComponent<Camera>();/*
+	manager->addComponent<Camera>();
 	manager->addComponent<CameraController>();
-	manager->getComponent<CameraController>()->m_speed = 50.0f;
-	manager->getComponent<CameraController>()->m_rotationSpeed = 5000.0f;*/
+	manager->getComponent<CameraController>()->m_speed = 200.0f;
+	/*manager->getComponent<CameraController>()->m_rotationSpeed = 5000.0f;*/
 	//manager->addComponent<CameraController>();
 	manager->addComponent<Manager>();
 	//manager->addComponent<AudioSource>("/home/tomy/programming/ce/masmas/RuamEngine/RuamEngine/1 Crumbling Castle.wav");

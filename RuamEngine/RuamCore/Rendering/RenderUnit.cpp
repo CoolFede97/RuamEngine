@@ -3,6 +3,7 @@
 
 namespace RuamEngine
 {
+	unsigned int RenderUnit::s_indexCount = 0;
 	void RenderUnit::SubmitBatchData()
 	{
 		if (m_vertices->GetCurrentSize() > 0)
@@ -39,12 +40,25 @@ namespace RuamEngine
 		return fullBatch;
 	}*/
 
-	bool RenderUnit::AddBatchData(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::vector<glm::mat4>& modelMatrices)
+	bool RenderUnit::AddBatchData(const std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, const std::vector<glm::mat4>& modelMatrices)
 	{
 		ASSERT(vertices.size() * sizeof(Vertex) <= m_vertices->GetMaxSize());
 		ASSERT(indices.size() * sizeof(unsigned int) <= m_indices->GetMaxSize());
 		ASSERT(modelMatrices.size() * mat4Size <= m_modelMatricesBuffer->GetMaxSize());
 
+		if (s_indexCount != 0)
+		{
+			std::cout << "First index: " << indices[4] << "\n";
+		}
+		for (unsigned int i = 0; i < indices.size() ; i++)
+		{
+			indices[i] += s_indexCount;
+		}
+		if (s_indexCount != 0)
+		{
+			std::cout << "Post index: " << indices[4] << "\n";
+		}
+		s_indexCount += *std::max_element(indices.begin(), indices.end());
 		bool fullBatch = false;
 
 		if (m_vertices->GetCurrentSize() + vertices.size() * sizeof(Vertex) > m_vertices->GetMaxSize())
@@ -62,6 +76,7 @@ namespace RuamEngine
 
 	void RenderUnit::Flush()
 	{
+		s_indexCount = 0;
 		m_vertices->Flush();
 		m_indices->Flush();
 		m_modelMatricesBuffer->Flush();

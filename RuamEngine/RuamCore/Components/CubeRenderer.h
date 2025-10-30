@@ -19,7 +19,6 @@ public:
 private:
 	void render()
 	{
-		std::cout << "CubeRenderer render called";
 		RenderUnitPtr genericUnit = Renderer::m_drawingDatas[0]->m_renderUnits[materialId];
 		std::vector<Vertex> newCube = Vertex::CreateCube();
 		std::vector<unsigned int> newIndices = 
@@ -46,7 +45,6 @@ private:
 	
 	void start()
 	{
-		std::cout << "CubeRenderer started\n";
 	}
 
 	void update()

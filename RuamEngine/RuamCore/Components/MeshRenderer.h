@@ -23,7 +23,6 @@ private:
 	std::vector<unsigned int> m_indices;
 	void render()
 	{
-		std::cout << "MeshRenderer Render called\n";
 		glm::mat4 modelMatrix(1.0f);
 		modelMatrix = glm::translate(modelMatrix, object()->transform().position());
 		modelMatrix = glm::rotate(modelMatrix, glm::radians(object()->transform().rotation().x), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -38,11 +37,12 @@ private:
 			{
 				if (ru->m_material->GetId() == mesh.m_material->GetId())
 				{
-					//ru->AddBatchData(mesh.m_vertices, mesh.m_indices, { modelMatrix });
+					ru->AddBatchData(mesh.m_vertices, mesh.m_indices, { modelMatrix });
 					break;
 				}
 			}
 		}
+
 
 		/*for (unsigned int i = 0; i < m_indices.size(); i++)
 		{
@@ -83,7 +83,6 @@ private:
 
 	void start()
 	{
-		std::cout << "MeshRenderer started\n";
 		m_model = std::make_shared<Model>(m_meshPath);
 		m_vertices = GetMeshesVertices();
 		m_indices = GetMeshesIndices();

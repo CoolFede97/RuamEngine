@@ -45,19 +45,12 @@ namespace RuamEngine
 		ASSERT(indices.size() * sizeof(unsigned int) <= m_indices->GetMaxSize());
 		ASSERT(modelMatrices.size() * mat4Size <= m_modelMatricesBuffer->GetMaxSize());
 
-		if (s_indexCount != 0)
-		{
-			std::cout << "First index: " << indices[4] << "\n";
-		}
 		for (unsigned int i = 0; i < indices.size() ; i++)
 		{
-			indices[i] += s_indexCount;
+			indices[i] += m_indexCount;
 		}
-		if (s_indexCount != 0)
-		{
-			std::cout << "Post index: " << indices[4] << "\n";
-		}
-		s_indexCount += *std::max_element(indices.begin(), indices.end());
+		m_indexCount += indices.size();
+		//m_indexCount += *std::max_element(indices.begin(), indices.end());
 		bool fullBatch = false;
 
 		if (m_vertices->GetCurrentSize() + vertices.size() * sizeof(Vertex) > m_vertices->GetMaxSize())
@@ -75,7 +68,7 @@ namespace RuamEngine
 
 	void RenderUnit::Flush()
 	{
-		s_indexCount = 0;
+		m_indexCount = 0;
 		m_vertices->Flush();
 		m_indices->Flush();
 		m_modelMatricesBuffer->Flush();

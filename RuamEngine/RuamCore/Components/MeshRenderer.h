@@ -33,14 +33,15 @@ private:
 		
 		for (Mesh mesh : m_model->m_meshes)
 		{
-			for (auto& ru : Renderer::m_drawingDatas[0]->m_renderUnits)
+			Renderer::m_drawingDatas[0]->m_renderUnits[3]->AddBatchData(mesh.m_vertices, mesh.m_indices, { modelMatrix });
+			/*for (auto& ru : Renderer::m_drawingDatas[0]->m_renderUnits)
 			{
 				if (ru->m_material->GetId() == mesh.m_material->GetId())
 				{
 					ru->AddBatchData(mesh.m_vertices, mesh.m_indices, { modelMatrix });
 					break;
 				}
-			}
+			}*/
 		}
 
 

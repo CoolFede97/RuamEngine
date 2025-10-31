@@ -18,13 +18,22 @@ class CameraController : public Component
 
 	Vec3 m_direction;
 	Vec3 m_horizontalDirection;
+	Vec2 m_mouseRotation;
 public:
 	float m_speed = 0;
 	float m_rotationSpeed = 0;
 private:
 	void update()
 	{
-		object()->transform().rotation() += static_cast<glm::vec3>(Input::GetMouseDeltaNorm() * Time::DeltaTime() * m_rotationSpeed);
+		m_mouseRotation = Vec2(0.0f, 0.0f);
+
+		if (Input::GetKeyDown(KeyCode::Down_Arrow)) m_mouseRotation.x -= 1;
+		if (Input::GetKeyDown(KeyCode::Up_Arrow)) m_mouseRotation.x += 1;
+		if (Input::GetKeyDown(KeyCode::Left_Arrow)) m_mouseRotation.y += 1;
+		if (Input::GetKeyDown(KeyCode::Right_Arrow)) m_mouseRotation.y -= 1;
+
+		object()->transform().rotation() += static_cast<glm::vec3>(m_mouseRotation * Time::DeltaTime() * m_rotationSpeed);
+		//object()->transform().rotation() += static_cast<glm::vec3>(Input::GetMouseDeltaNorm() * Time::DeltaTime() * m_rotationSpeed);
 		object()->transform().rotation().x = std::clamp(object()->transform().rotation().x, -89.0f, 89.0f);
 		//std::cout << "Rotation variation: " << static_cast<glm::vec3>(Input::GetMouseDeltaNorm() * Time::DeltaTime() * m_rotationSpeed) << "\n";
 		//std::cout << "Rotation: " << object()->transform().rotation() << "\n";

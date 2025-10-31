@@ -20,7 +20,7 @@ void CreateCFSandboxScene()
 	Object* bag = sandboxScene->newObject();
 	bag->transform().setPosition(glm::vec3(0.0f, -1.5f, 15.0f));
 	//bag->transform().setRotation(glm::vec3(45.0f, 5.0f, 45.0f));
-	//bag->addComponent<CubeRenderer>();
+	bag->addComponent<CubeRenderer>()->materialId = 0;
 	
 	Object* bag2 = sandboxScene->newObject();
 	bag2->transform().setPosition(glm::vec3(7.0f, 0.0f, 15.5f));
@@ -29,7 +29,7 @@ void CreateCFSandboxScene()
 	//bag2->addComponent<CubeRenderer>()->materialId = 0;
 
 
-	bag->addComponent<CubeRenderer>()->materialId = 0;
+	//bag->addComponent<CubeRenderer>()->materialId = 0;
 	bag->addComponent<MeshRenderer>()->m_meshPath = "assets/meshes/backpack/backpack.obj";
 	manager->addComponent<Camera>();
 	manager->addComponent<CameraController>();

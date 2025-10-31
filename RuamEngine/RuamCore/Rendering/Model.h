@@ -11,6 +11,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include "FileFunctions.h"
+#include <algorithm>
 namespace RuamEngine
 {
 	class Model 
@@ -20,6 +21,7 @@ namespace RuamEngine
 		std::vector<Mesh> m_meshes;
 	private:
 		std::string m_path;
+		std::vector<MaterialPtr> m_localMaterials = {};
 		unsigned int m_id;
 		static unsigned int s_idCount;
 		void LoadModel(std::string path);

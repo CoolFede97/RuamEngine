@@ -82,7 +82,17 @@ namespace RuamEngine
 			for (unsigned int j = 0; j < face.mNumIndices; j++) indices.push_back(face.mIndices[j]);
 		}
 
-		MaterialPtr newMaterial = Renderer::CreateMaterial();
+		MaterialPtr meshMaterial = nullptr;
+		auto foundMaterial = std::find(m_localMaterials.begin(), m_localMaterials.end(), mesh->mMaterialIndex);
+		if (foundMaterial != m_localMaterials.end())
+		{
+			meshMaterial = *foundMaterial;
+		}
+		else
+		{
+			meshMaterial = Renderer::CreateMaterial();
+			m_localMaterials.push_back(meshMaterial);
+		}
 		Renderer::CreateRenderUnit(Renderer::m_drawingDatas[0], newMaterial);
 
 		if (mesh->mMaterialIndex >= 0)

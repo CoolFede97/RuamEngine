@@ -15,8 +15,10 @@ namespace RuamEngine
 		auto menuScene = SceneManager::ActiveScene();
 		Object* manager = menuScene->newObject();
 		manager->addComponent<Camera>();
-		//manager->addComponent<AudioSource>("/home/tomy/programming/ce/masmas/RuamEngine/RuamEngine/1 Crumbling Castle.wav");
+		manager->addComponent<AudioSource>("/home/tomy/programming/ce/masmas/RuamEngine/RuamEngine/1 Crumbling Castle.wav");
+		manager->addComponent<Counter>();
 		manager->addComponent<Manager>();
-		Serial::serialise(menuScene);
+		manager->addComponent<Counter>();
+		std::cout << "YAY\n";
 	}
 }

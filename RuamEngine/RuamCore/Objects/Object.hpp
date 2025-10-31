@@ -107,14 +107,7 @@ public:
 	const std::string& name() const;
 	void setName(const std::string& name);
 
-	std::vector<Component*> getComponents() const {
-		std::vector<Component*> comps;
-		for (auto& i : m_components) {
-			auto c = i.second.front().get();
-			comps.push_back(c);
-		}
-		return comps;
-	}
+	std::vector<Component*> getComponents() const;
 	bool operator==(const Object& obj) {
 		return this->m_id == obj.m_id;
 	}

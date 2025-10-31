@@ -52,6 +52,9 @@ void Scene::start() {
 }
 
 void Scene::update() {
+	if (SceneManager::SceneChange()) {
+		start();
+	}
 	for (auto& obj : m_objects) {
 		obj->update();
 	}

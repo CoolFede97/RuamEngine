@@ -35,7 +35,6 @@ int main()
 		CreateMenuScene();
 
 		SceneManager::SetActiveScene(0);
-
 		CreateCFSandboxScene();
 		// Scene* collisionSandboxScene = CreateCollisionSandboxScene();
 
@@ -68,7 +67,6 @@ int main()
 			EASY_BLOCK("UpdateScene");
 			if (SceneManager::ActiveScene() != nullptr)
 			{
-				SceneManager::SetSceneChange(false);
 				SceneManager::ActiveScene()->update();
 			}
 

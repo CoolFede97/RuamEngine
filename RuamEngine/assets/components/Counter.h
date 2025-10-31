@@ -14,17 +14,10 @@ class Counter : public Component {
 public:
 	using Component::Component;
 	void start() {
-		m_audio = object()->getComponent<AudioSource>();
-		if (m_audio != nullptr) {
-			std::cout << "Inicio: volumen=" << m_audio->volume() << "\n";
-			m_audio->setVolume(2);
-			std::cout << "Inicio: volumen=" << m_audio->volume() << "\n";
-		}
+		std::cout << "Starting\n";
 	}
 
 	void update() {
+		std::cout << "Updating\n";
 	}
-
-private:
-	AudioSource* m_audio;
 };

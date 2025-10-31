@@ -17,8 +17,8 @@ void Object::setName(const std::string &name) {
 }
 
 void Object::start() {
-    for (auto &cmp: getComponents()) {
-		if (SceneManager::SceneChange()) continue;
+	for (auto &cmp : getComponents()) {
+		if (SceneManager::SceneChange()) break;
 		cmp->start();
     }
 }
@@ -41,4 +41,14 @@ void Object::destroy() {
 
 Transform &Object::transform() {
     return m_transform;
+}
+
+std::vector<Component*> Object::getComponents() const {
+	std::vector<Component*> comps;
+	for (auto& comp_v : m_components) {
+		for (auto& cmp : comp_v.second) {
+	   		comps.push_back(cmp.get());
+		}
+	}
+	return comps;
 }

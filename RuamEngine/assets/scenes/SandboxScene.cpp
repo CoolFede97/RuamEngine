@@ -22,7 +22,8 @@ void CreateCFSandboxScene()
 	cube->addComponent<CubeRenderer>();
 	manager->addComponent<Camera>();
 	//manager->addComponent<CameraController>();
+	manager->addComponent<Counter>();
 	manager->addComponent<Manager>();
 	//manager->addComponent<AudioSource>("/home/tomy/programming/ce/masmas/RuamEngine/RuamEngine/1 Crumbling Castle.wav");
-	Serial::serialise(sandboxScene);
+	manager->addComponent<Counter>();
 }

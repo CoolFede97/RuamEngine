@@ -41,6 +41,7 @@ int main()
 
 		while (!Renderer::WindowShouldClose())
 		{
+		//	std::cout << Camera::GetMainCamera() << '\n';
 			// ImGUI
 			ImGui_ImplOpenGL3_NewFrame();
 			ImGui_ImplGlfw_NewFrame();

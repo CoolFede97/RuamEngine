@@ -2,11 +2,11 @@
 #include <fstream>
 #include <filesystem>
 
-void to_json(json& j, Scene* s) {
+void to_json(json& j, const Scene* s) {
     json serialisedObjects = json::array();
     json o;
     int i = 0;
-    for (Object* obj : s->getObjects()) {
+    for (auto& obj : s->getObjects()) {
         o = obj;
         o.push_back({"idx", i});
 		serialisedObjects.push_back(o);
@@ -20,7 +20,7 @@ void to_json(json& j, Scene* s) {
     };
 }
 
-void to_json(json& j, Object* o) {
+void to_json(json& j, const Object* o) {
 
 	json serialisedComponents = json::array();
 
@@ -55,23 +55,25 @@ Scene* Serial::deserialise(const std::string &scene_name) {
     const std::string name = j["name"];
     unsigned int id = j["id"];
     Scene *s = new Scene(id, name);
-    if (!j["objects"].is_null()) {
-        for (const auto& obj : j["objects"]) {
-            Object *o = s->newObject(obj["idx"]);
-            std::string objName = obj["name"];
-            o->setName(objName);
-            if (!obj["components"].is_null()) {
-                for (const auto& comp : obj["components"]) {
-                    std::string type = comp["type"];
-                    if (!Component::componentRegistry.contains(type)) {
-                        std::cerr << "Component type " << type << " not registered!" << std::endl;
-                        return nullptr;
-                    }
-                    auto constructor = Component::componentRegistry[type];
-                    constructor(comp, o);
-                }
-            }
-        }
-    }
-    return s;
+    if (j["objects"].is_null()) {
+		return s;
+	}
+	for (const auto& obj : j["objects"]) {
+		Object *o = s->newObject(obj["idx"]);
+		std::string objName = obj["name"];
+		o->setName(objName);
+		if (obj["components"].is_null()) {
+			continue;
+		}
+		for (const auto& comp : obj["components"]) {
+			std::string type = comp["type"];
+			if (!Component::componentRegistry.contains(type)) {
+				std::cerr << "Component type " << type << " not registered!" << std::endl;
+				return nullptr;
+			}
+			auto constructor = Component::componentRegistry[type];
+			constructor(comp, o);
+		}
+	}
+	return s;
 }

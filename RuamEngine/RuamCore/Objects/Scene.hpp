@@ -26,7 +26,7 @@ public:
     Object* getObjectByIdx(unsigned int idx) const;
     Object* getObjectById(unsigned int id) const;
 
-	std::list<Object*> getObjects() const { return m_objects; }
+	const std::list<const Object*> getObjects() const;
 
     void deleteObjectByIdx(unsigned int idx);
     void deleteObjectById(unsigned int idx);
@@ -37,7 +37,7 @@ public:
 	void update();
 
 private:
-    std::list<Object*> m_objects;
+    std::list<std::unique_ptr<Object>> m_objects;
 	const std::string m_name;
     const unsigned int m_id;
     static unsigned int s_id_count;

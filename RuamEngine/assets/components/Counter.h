@@ -14,10 +14,9 @@ class Counter : public Component {
 public:
 	using Component::Component;
 	void start() {
-		std::cout << "Starting\n";
+		std::cout << "HOADA\n";
 	}
 
 	void update() {
-		std::cout << "Updating\n";
 	}
 };

@@ -36,7 +36,7 @@ namespace RuamEngine
 		static Camera* GetMainCamera();
 
 		void update() { Component::update(); };
-		void start() { SetAsMainCamera(); };
+		void start() { SetAsMainCamera(); std::cout << "HOAHAOA\n";};
 
 		IMPL_SERIALIZE(Camera,
 				 SER_FIELD(m_near_plane),
@@ -44,6 +44,4 @@ namespace RuamEngine
 				 SER_FIELD(m_fov),
 				 SER_FIELD(m_aspect_ratio));
 	};
-
-REGISTER_COMPONENT(Camera)
 }

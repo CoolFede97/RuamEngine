@@ -7,13 +7,12 @@ using sm = SceneManager;
 
 using json = nlohmann::json;
 
-void to_json(json& j, Scene* s);
+void to_json(json& j, const Scene* s);
 void from_json(const json& j, Scene* s);
 
-void to_json(json& j, Object* o);
+void to_json(json& j, const Object* o);
 
-class Serial {
-	public:
-		static void serialise(Scene* s);
-		static Scene* deserialise(const std::string& scene_name);
+namespace Serial {
+void serialise(Scene* s);
+Scene* deserialise(const std::string& scene_name);
 };

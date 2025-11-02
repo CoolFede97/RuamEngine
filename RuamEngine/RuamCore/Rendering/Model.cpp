@@ -83,17 +83,24 @@ namespace RuamEngine
 		}
 
 		MaterialPtr meshMaterial = nullptr;
-		auto foundMaterial = std::find(m_localMaterials.begin(), m_localMaterials.end(), mesh->mMaterialIndex);
-		if (foundMaterial != m_localMaterials.end())
+
+		bool materialFound = false;
+		for (auto& pair : m_localToGlobalMaterials)
 		{
-			meshMaterial = *foundMaterial;
+			if (pair.first == mesh->mMaterialIndex)
+			{
+				meshMaterial = pair.second;
+				materialFound = true;
+				break;
+			}
 		}
-		else
+		if (!materialFound)
 		{
 			meshMaterial = Renderer::CreateMaterial();
-			m_localMaterials.push_back(meshMaterial);
+			m_localToGlobalMaterials.emplace(mesh->mMaterialIndex, meshMaterial);
 		}
-		Renderer::CreateRenderUnit(Renderer::m_drawingDatas[0], newMaterial);
+
+		RenderUnitPtr newRenderUnit = Renderer::CreateRenderUnit(Renderer::m_drawingDatas[0],  meshMaterial);
 
 		if (mesh->mMaterialIndex >= 0)
 		{
@@ -114,7 +121,7 @@ namespace RuamEngine
 				{
 					std::string absoluteModelPath = std::filesystem::path(m_path).parent_path().string();
 					std::string relativeDiffusePath = RelativizePath(absoluteModelPath) + "/" + assimpPath;
-					newMaterial->m_diffuseIndex = Renderer::CreateTexture(relativeDiffusePath);
+					meshMaterial->m_diffuseIndex = Renderer::CreateTexture(relativeDiffusePath);
 				}
 			}
 
@@ -132,12 +139,12 @@ namespace RuamEngine
 				{
 					std::string absoluteModelPath = std::filesystem::path(m_path).parent_path().string();
 					std::string relativeSpecularPath = RelativizePath(absoluteModelPath) + "/" + assimpPath;
-					newMaterial->m_specularIndex = Renderer::CreateTexture(relativeSpecularPath);
+					meshMaterial->m_specularIndex = Renderer::CreateTexture(relativeSpecularPath);
 				}
 			}
 		}
 		else std::cout << "No materials\n";
-		return Mesh(vertices, indices, newMaterial);
+		return Mesh(vertices, indices, meshMaterial);
 	}
 	std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
 	{

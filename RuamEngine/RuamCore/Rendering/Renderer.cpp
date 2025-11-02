@@ -152,16 +152,15 @@ namespace RuamEngine
 		return newProgram;
     }
 
+    // If the render unit already exists, it returns the existing index. Otherwise, it creates a new render unit and returns its index.
     RenderUnitPtr Renderer::CreateRenderUnit(DrawingDataPtr drawingData, MaterialPtr material)
     {
-        RenderUnitPtr newRenderUnit = std::make_shared<RenderUnit>();
-        for (unsigned int i = 0; i < drawingData->m_renderUnits.size(); i++)
+		unsigned int foundIndex = FindRenderUnit(material, drawingData);
+        if (foundIndex != -1)
         {
-            if (drawingData->m_renderUnits[i]->m_material->GetId() == material->GetId())
-            {
-                std::cout << "Warning: RenderUnit with the same material already exists in this DrawingData.\n";
-            }
-		}
+            return drawingData->m_renderUnits[foundIndex];
+        }
+        RenderUnitPtr newRenderUnit = std::make_shared<RenderUnit>();
 		newRenderUnit->m_material = material;
 		newRenderUnit->m_drawingData = drawingData;
 		newRenderUnit->m_program = drawingData->m_program;
@@ -209,7 +208,7 @@ namespace RuamEngine
         return -1;
 	}
 
-	// Finds if a material already exists in the renderer
+	// Finds if a material already exists in the renderer, if not, returns -1
     unsigned int Renderer::FindMaterial(MaterialPtr material)
     {
         for (unsigned int i = 0; i < m_materials.size(); i++)
@@ -222,6 +221,18 @@ namespace RuamEngine
         return -1;
 	}
 
+    // Finds if a render unit already exists in a certain drawing data, if not, returns -1
+    unsigned int Renderer::FindRenderUnit(MaterialPtr material, DrawingDataPtr drawingData)
+    {
+        for (unsigned int i = 0; i < drawingData->m_renderUnits.size(); i++)
+        {
+            if (drawingData->m_renderUnits[i]->m_material->GetId() == material->GetId())
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
     // Should be called only once when finished all the textures
     void Renderer::UploadTextures()
     {

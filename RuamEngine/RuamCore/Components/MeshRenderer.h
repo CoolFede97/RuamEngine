@@ -30,20 +30,17 @@ private:
 		modelMatrix = glm::rotate(modelMatrix, glm::radians(object()->transform().rotation().z), glm::vec3(0.0f, 0.0f, 1.0f));
 		modelMatrix = glm::scale(modelMatrix, object()->transform().scale());
 
-		
 		for (Mesh mesh : m_model->m_meshes)
 		{
-			Renderer::m_drawingDatas[0]->m_renderUnits[3]->AddBatchData(mesh.m_vertices, mesh.m_indices, { modelMatrix });
-			/*for (auto& ru : Renderer::m_drawingDatas[0]->m_renderUnits)
+			for (auto& ru : Renderer::m_drawingDatas[0]->m_renderUnits)
 			{
 				if (ru->m_material->GetId() == mesh.m_material->GetId())
 				{
-					ru->AddBatchData(mesh.m_vertices, mesh.m_indices, { modelMatrix });
+					ru->AddModelMatrix({modelMatrix});
 					break;
 				}
-			}*/
+			}
 		}
-
 
 		/*for (unsigned int i = 0; i < m_indices.size(); i++)
 		{
@@ -88,6 +85,20 @@ private:
 		m_vertices = GetMeshesVertices();
 		m_indices = GetMeshesIndices();
 		Renderer::UpdateTextures();
+
+		// Pre-upload geometry once per mesh into the appropriate RenderUnit (vertices + indices).
+		for (Mesh& mesh : m_model->m_meshes)
+		{
+			for (auto& ru : Renderer::m_drawingDatas[0]->m_renderUnits)
+			{
+				if (ru->m_material->GetId() == mesh.m_material->GetId())
+				{
+					ru->AddBatchData(mesh.m_vertices, mesh.m_indices, {});
+					ru->m_staticStorage = true;
+					break;
+				}
+			}
+		}
 	}
 
 	void update()

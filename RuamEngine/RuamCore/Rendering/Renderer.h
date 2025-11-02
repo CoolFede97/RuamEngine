@@ -92,6 +92,7 @@ namespace RuamEngine
         static unsigned int CreateTexture(const std::string& relativeTexturePath);
 		static unsigned int FindTexture(const std::string& absoluteTexturePath);
         static unsigned int FindMaterial(MaterialPtr material);
+        static unsigned int FindRenderUnit(MaterialPtr material, DrawingDataPtr drawingData);
         static void UpdateTextures();
 
         static void Draw();

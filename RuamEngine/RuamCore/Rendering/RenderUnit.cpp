@@ -5,12 +5,12 @@ namespace RuamEngine
 {
 	void RenderUnit::SubmitBatchData()
 	{
-		if (m_vertices->GetCurrentSize() > 0)
+		if (m_vertices->GetCurrentSize() > 0 && (!m_staticStorage || !m_uploaded))
 		{
 			m_vertices->SubmitData();
 			m_vertices->BindBufferBase(SSBOType::vertices);
 		}
-		if (m_indices->GetCurrentSize() > 0)
+		if (m_indices->GetCurrentSize() > 0 && (!m_staticStorage || !m_uploaded))
 		{
 			m_indices->SubmitData();
 			m_indices->BindBufferBase(SSBOType::indices);
@@ -19,6 +19,11 @@ namespace RuamEngine
 		{
 			m_modelMatricesBuffer->SubmitData();
 			m_modelMatricesBuffer->BindBufferBase(SSBOType::modelMatrices);
+		}
+
+		if (m_staticStorage && !m_uploaded && (m_vertices->GetCurrentSize() > 0 || m_indices->GetCurrentSize() > 0))
+		{
+			m_uploaded = true;
 		}
 	}
 
@@ -50,7 +55,6 @@ namespace RuamEngine
 			indices[i] += m_indexCount;
 		}
 		m_indexCount += indices.size();
-		//m_indexCount += *std::max_element(indices.begin(), indices.end());
 		bool fullBatch = false;
 
 		if (m_vertices->GetCurrentSize() + vertices.size() * sizeof(Vertex) > m_vertices->GetMaxSize())
@@ -66,12 +70,30 @@ namespace RuamEngine
 		return fullBatch;
 	}
 
+	bool RenderUnit::AddModelMatrix(const std::vector<glm::mat4>& modelMatrices)
+	{
+		ASSERT(modelMatrices.size() * mat4Size <= m_modelMatricesBuffer->GetMaxSize());
+		bool fullBatch = false;
+		if (m_modelMatricesBuffer->GetCurrentSize() + modelMatrices.size() * mat4Size > m_modelMatricesBuffer->GetMaxSize())
+		{
+			SubmitBatchData();
+			Renderer::Draw(*this);
+			Flush();
+			fullBatch = true;
+		}
+		m_modelMatricesBuffer->AddBatchData(modelMatrices);
+		return fullBatch;
+	}
+
 	void RenderUnit::Flush()
 	{
-		m_indexCount = 0;
-		m_vertices->Flush();
-		m_indices->Flush();
-		m_modelMatricesBuffer->Flush();
+		if (!m_staticPosition) m_modelMatricesBuffer->Flush();
+		if (!m_staticStorage)
+		{
+			m_indexCount = 0;
+			m_vertices->Flush();
+			m_indices->Flush();
+		}
 	}
 
 	RenderUnit::RenderUnit()

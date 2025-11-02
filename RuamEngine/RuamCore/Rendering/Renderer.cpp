@@ -25,7 +25,7 @@ namespace RuamEngine
 
         glfwMakeContextCurrent(m_window);
 
-        glfwSwapInterval(1);
+        glfwSwapInterval(0);
 
         ASSERT(glewInit() == GLEW_OK);
 
@@ -43,9 +43,9 @@ namespace RuamEngine
             CreateTexture("assets/sprites/bigBrain.png");
 
 			DrawingDataPtr basicDrawingData = CreateDrawingData("assets/shaders/GeneralVertexShader.glsl", "assets/shaders/GeneralFragmentShader.glsl");
-			MaterialPtr genericMaterial = CreateMaterial();
+			/*MaterialPtr genericMaterial = CreateMaterial();
 			RenderUnitPtr genericRenderUnit = CreateRenderUnit(basicDrawingData, genericMaterial);
-            VertexBufferLayout& genericLayout = *genericRenderUnit->m_layout;
+            VertexBufferLayout& genericLayout = *genericRenderUnit->m_layout;*/
             //genericLayout.Reset();
             //genericLayout.Push<float>(3);
             //genericLayout.Push<float>(2);
@@ -268,6 +268,8 @@ namespace RuamEngine
 
     void Renderer::Draw()
     {
+        //std::cout << "Render units count: " << m_drawingDatas[0]->m_renderUnits.size() << "\n";
+
         for (DrawingDataPtr drawingData : m_drawingDatas)
         {
 			drawingData->m_program->UpdateCameraMatrices();

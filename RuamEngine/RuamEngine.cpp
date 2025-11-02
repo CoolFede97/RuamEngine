@@ -44,17 +44,16 @@ int main()
 
 		// Scene* collisionSandboxScene = CreateCollisionSandboxScene();
 
-		bool test = false;
+		unsigned int frameCount = 0;
 
 		while (!Renderer::WindowShouldClose())
 		{
+			std::cout << "Frame " << frameCount++  << "###############################################" << "\n";
+
 			// ImGUI
 			ImGui_ImplOpenGL3_NewFrame();
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
-
-			// OpenGL
-			GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
 			glfwPollEvents();
 
@@ -87,14 +86,6 @@ int main()
 			Renderer::EndDraw();
 			Input::UpdateInput();
 			glfwPollEvents();
-			if (!test)
-			{
-				for (MaterialPtr mat : Renderer::m_materials)
-				{
-					std::cout << "Mat " << mat->GetId() << " Diffuse: " << mat->m_diffuseIndex << "\n";
-				}
-				test = true;
-			}
 		}
 	}
 	// Cleanup

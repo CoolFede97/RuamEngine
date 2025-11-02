@@ -30,18 +30,38 @@ private:
 		modelMatrix = glm::rotate(modelMatrix, glm::radians(object()->transform().rotation().z), glm::vec3(0.0f, 0.0f, 1.0f));
 		modelMatrix = glm::scale(modelMatrix, object()->transform().scale());
 
+		if (m_model->m_localToGlobalMaterials.size() == 1)
+		{
+			for (Mesh mesh : m_model->m_meshes)
+			{
+				for (auto& ru : Renderer::m_drawingDatas[0]->m_renderUnits)
+				{
+					if (ru->m_material->GetId() == mesh.m_material->GetId())
+					{
+						ru->m_modelMatricesBuffer->AddBatchData({ modelMatrix });
+						return;
+					}
+				}
+			}
+		}
+
+		std::vector<unsigned int> renderUnitsUsed = {};
 		for (Mesh mesh : m_model->m_meshes)
 		{
 			for (auto& ru : Renderer::m_drawingDatas[0]->m_renderUnits)
 			{
 				if (ru->m_material->GetId() == mesh.m_material->GetId())
 				{
-					ru->AddModelMatrix({modelMatrix});
+					std::vector<unsigned int>::iterator it = std::find(renderUnitsUsed.begin(), renderUnitsUsed.end(), ru->m_material->GetId());
+					if (it == renderUnitsUsed.end())
+					{
+						ru->m_modelMatricesBuffer->AddBatchData({ modelMatrix });
+						renderUnitsUsed.push_back(ru->m_material->GetId());
+					}
 					break;
 				}
 			}
 		}
-
 		/*for (unsigned int i = 0; i < m_indices.size(); i++)
 		{
 			std::vector<Vertex> localVertices;

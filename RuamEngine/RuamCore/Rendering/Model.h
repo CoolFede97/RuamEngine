@@ -20,9 +20,9 @@ namespace RuamEngine
 	public:
 		Model(std::string path);
 		std::vector<Mesh> m_meshes;
+		std::unordered_map<unsigned int, MaterialPtr> m_localToGlobalMaterials = {};
 	private:
 		std::string m_path;
-		std::unordered_map<unsigned int, MaterialPtr> m_localToGlobalMaterials = {};
 		unsigned int m_id;
 		static unsigned int s_idCount;
 		void LoadModel(std::string path);

@@ -21,6 +21,7 @@ private:
 	ModelPtr m_model;
 	std::vector<Vertex> m_vertices;
 	std::vector<unsigned int> m_indices;
+
 	void render()
 	{
 		glm::mat4 modelMatrix(1.0f);
@@ -32,17 +33,19 @@ private:
 
 		if (m_model->m_localToGlobalMaterials.size() == 1)
 		{
-			for (Mesh mesh : m_model->m_meshes)
-			{
+			Mesh mesh = m_model->m_meshes[0];
+			//for (Mesh mesh : m_model->m_meshes)
+			//{
 				for (auto& ru : Renderer::m_drawingDatas[0]->m_renderUnits)
 				{
 					if (ru->m_material->GetId() == mesh.m_material->GetId())
 					{
+						Renderer::matrices.push_back(modelMatrix);
 						ru->m_modelMatricesBuffer->AddBatchData({ modelMatrix });
 						return;
 					}
 				}
-			}
+			//}
 		}
 
 		std::vector<unsigned int> renderUnitsUsed = {};

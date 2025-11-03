@@ -103,6 +103,9 @@ namespace RuamEngine
         static std::vector<MaterialPtr> m_materials;
         static std::vector<TexturePtr> m_textures;
         static std::vector<GLuint64> m_textureHandles;
+
+        static std::vector<glm::mat4> matrices;
+
         //static std::vector<uvec2>
     private:
         static void UploadTextures();

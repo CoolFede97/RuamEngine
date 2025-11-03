@@ -11,6 +11,9 @@ namespace RuamEngine
 	std::vector<MaterialPtr> Renderer::m_materials;
     std::vector<TexturePtr> Renderer::m_textures;
     std::vector<GLuint64> Renderer::m_textureHandles;
+
+    std::vector<glm::mat4> Renderer::matrices = {};
+
 	bool Renderer::texturesUploaded = false;
     void Renderer::Init()
     {
@@ -277,8 +280,6 @@ namespace RuamEngine
             {
                 drawingData->m_program->Bind();
                 drawingData->m_program->LoadMaterial(*renderUnit->m_material);
-				//std::cout << "Vertices count: " << renderUnit->m_vertices->GetCurrentSize() / sizeof(Vertex) << "\n";
-    //            std::cout << "Indices count: " << renderUnit->m_indices->GetCurrentSize() / sizeof(unsigned int) << "\n";
 
                 GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit->m_indices->GetCurrentSize()/sizeof(unsigned int), renderUnit->m_modelMatricesBuffer->m_data.size()));
             }

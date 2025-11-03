@@ -48,7 +48,7 @@ int main()
 
 		while (!Renderer::WindowShouldClose())
 		{
-			std::cout << "Frame " << frameCount++  << "###############################################" << "\n";
+			//std::cout << "Frame " << frameCount++  << "###############################################" << "\n";
 
 			// ImGUI
 			ImGui_ImplOpenGL3_NewFrame();

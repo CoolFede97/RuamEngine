@@ -19,6 +19,7 @@ void CreateCFSandboxScene()
 	//manager->addComponent<SandboxCom>();
 	Object* bag = sandboxScene->newObject();
 	bag->transform().setPosition(glm::vec3(0.0f, -1.5f, 15.0f));
+	bag->addComponent<MeshRenderer>()->m_meshPath = "assets/meshes/backpack/backpack.obj";
 	//bag->transform().setRotation(glm::vec3(45.0f, 5.0f, 45.0f));
 	//bag->addComponent<CubeRenderer>()->materialId = 0;
 	
@@ -30,7 +31,6 @@ void CreateCFSandboxScene()
 
 
 	//bag->addComponent<CubeRenderer>()->materialId = 0;
-	bag->addComponent<MeshRenderer>()->m_meshPath = "assets/meshes/backpack/backpack.obj";
 	manager->addComponent<Camera>();
 	manager->addComponent<CameraController>();
 	manager->getComponent<CameraController>()->m_speed = 2.5f;

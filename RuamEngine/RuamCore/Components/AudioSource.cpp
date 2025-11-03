@@ -122,3 +122,5 @@ float AudioSource::volume() {
 	m_source.get(AL_GAIN, &m_volume);
 	return m_volume;
 }
+
+REGISTER_COMPONENT(AudioSource);

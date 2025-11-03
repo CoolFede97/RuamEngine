@@ -11,6 +11,10 @@ const SceneManager::SceneList& SceneManager::sceneList() {
 }
 
 void SceneManager::SetActiveScene(const unsigned int id) {
+	if (s_active_scene != nullptr) {
+		Serial::serialise(s_active_scene.get());
+		std::cout << "AAA: " << s_active_scene->getObjects().size();
+	}
 	RuamEngine::Camera::EmptyMainCamera();
 	s_active_scene.reset(s_scenes[id]());
 	s_scene_change = true;

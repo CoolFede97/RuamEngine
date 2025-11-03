@@ -21,6 +21,4 @@ void CreateCollisionSandboxScene()
     manager->addComponent<Manager>();
     camera->addComponent<Camera>();
     cube->transform().setPosition(glm::vec3(0.0f, 0.0f, 5.5f));
-
-    Serial::serialise(collisionSandboxScene);
 }

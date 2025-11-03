@@ -45,5 +45,3 @@ protected:
 	std::condition_variable m_buf_wait;
 	std::mutex m_mutex;
 };
-
-REGISTER_COMPONENT(AudioSource);

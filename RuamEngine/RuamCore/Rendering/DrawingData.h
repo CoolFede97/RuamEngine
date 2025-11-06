@@ -19,8 +19,8 @@ namespace RuamEngine
         ShaderProgramPtr m_program = nullptr;
         std::vector<RenderUnitPtr> m_renderUnits = {};
 
-        void SubmitBatchData();
-        void SubmitBatchData(RenderUnit& renderUnit);
+        void SubmitData();
+        void SubmitData(RenderUnit& renderUnit);
 		void Flush();
 
 		unsigned int GetInstanceId() const { return m_instanceId; }

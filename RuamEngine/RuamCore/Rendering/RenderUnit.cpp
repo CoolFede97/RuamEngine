@@ -3,7 +3,7 @@
 
 namespace RuamEngine
 {
-	void RenderUnit::SubmitBatchData()
+	void RenderUnit::SubmitData()
 	{
 		if (m_vertices->GetCurrentSize() > 0 && (!m_staticStorage || !m_uploaded))
 		{
@@ -34,7 +34,7 @@ namespace RuamEngine
 
 		if (m_indexBuffer->GetCurrentSize() + indexDataSize > m_indexBuffer->GetMaxSize())
 		{
-			SubmitBatchData();
+			SubmitData();
 			Renderer::Draw(*this);
 			Flush();
 			fullBatch = true;
@@ -59,11 +59,12 @@ namespace RuamEngine
 
 		if (m_vertices->GetCurrentSize() + vertices.size() * sizeof(Vertex) > m_vertices->GetMaxSize())
 		{
-			SubmitBatchData();
+			SubmitData();
 			Renderer::Draw(*this);
 			Flush();
 			fullBatch = true;
 		}
+
 		m_vertices->AddBatchData(vertices);
 		m_indices->AddBatchData(indices);
 		m_modelMatricesBuffer->AddBatchData(modelMatrices);
@@ -76,7 +77,7 @@ namespace RuamEngine
 		bool fullBatch = false;
 		if (m_modelMatricesBuffer->GetCurrentSize() + modelMatrices.size() * mat4Size > m_modelMatricesBuffer->GetMaxSize())
 		{
-			SubmitBatchData();
+			SubmitData();
 			Renderer::Draw(*this);
 			Flush();
 			fullBatch = true;

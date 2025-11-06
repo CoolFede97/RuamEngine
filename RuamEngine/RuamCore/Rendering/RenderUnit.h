@@ -31,7 +31,8 @@ namespace RuamEngine
 		bool m_staticStorage = false;
 		bool m_staticPosition = false;
         
-        void SubmitBatchData();
+        void SubmitData();
+        
         //bool AddBatchData(const std::vector<Vertex> vertices, unsigned int vertexDataSize, const std::vector<unsigned int> indices, unsigned int indexDataSize);
         bool AddBatchData(const std::vector<Vertex>& vertices, std::vector<unsigned int> indices, const std::vector<glm::mat4>& modelMatrices);
         bool AddModelMatrix(const std::vector<glm::mat4>& modelMatrices);

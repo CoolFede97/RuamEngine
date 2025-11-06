@@ -5,17 +5,17 @@ namespace RuamEngine
 
 	unsigned int DrawingData::s_instanceIdCount = 0;
 
-	void DrawingData::SubmitBatchData()
+	void DrawingData::SubmitData()
 	{
 		for (RenderUnitPtr renderUnit : m_renderUnits)
 		{
-			renderUnit->SubmitBatchData();
+			renderUnit->SubmitData();
 		}
 	}
 
-	void DrawingData::SubmitBatchData(RenderUnit& renderUnit)
+	void DrawingData::SubmitData(RenderUnit& renderUnit)
 	{
-		renderUnit.SubmitBatchData();
+		renderUnit.SubmitData();
 	}
 
 	void DrawingData::Flush()

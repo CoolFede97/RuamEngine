@@ -43,7 +43,6 @@ namespace RuamEngine
         {
             GLCall(glCreateBuffers(1, &m_textureBuffer));
 			CreateTexture("assets/sprites/defaultSprite.png");
-            CreateTexture("assets/sprites/bigBrain.png");
 
 			DrawingDataPtr basicDrawingData = CreateDrawingData("assets/shaders/GeneralVertexShader.glsl", "assets/shaders/GeneralFragmentShader.glsl");
 			/*MaterialPtr genericMaterial = CreateMaterial();
@@ -75,12 +74,12 @@ namespace RuamEngine
     {
         for (DrawingDataPtr drawingData : m_drawingDatas)
         {
-            drawingData->SubmitBatchData();
+            drawingData->SubmitData();
         }
     }
     void Renderer::EndBatch(RenderUnit& renderUnit)
     {
-        renderUnit.SubmitBatchData();
+        renderUnit.SubmitData();
     }
     void Renderer::Flush()
     {
@@ -280,6 +279,9 @@ namespace RuamEngine
             {
                 drawingData->m_program->Bind();
                 drawingData->m_program->LoadMaterial(*renderUnit->m_material);
+
+                // Bind the SSBOs for this specific render unit
+                renderUnit->SubmitData();
 
                 GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit->m_indices->GetCurrentSize()/sizeof(unsigned int), renderUnit->m_modelMatricesBuffer->m_data.size()));
             }

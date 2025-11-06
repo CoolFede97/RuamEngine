@@ -293,6 +293,7 @@ namespace RuamEngine
         renderUnit.m_program->Bind();
         renderUnit.m_program->LoadMaterial(*renderUnit.m_material);
         renderUnit.m_program->UpdateCameraMatrices();
+        renderUnit.SubmitData();
         GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit.m_indices->GetCurrentSize() / sizeof(unsigned int), renderUnit.m_modelMatricesBuffer->m_data.size()));
     }
 

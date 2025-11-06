@@ -5,12 +5,12 @@ namespace RuamEngine
 {
 	void RenderUnit::SubmitData()
 	{
-		if (m_vertices->GetCurrentSize() > 0 && (!m_staticStorage || !m_uploaded))
+		if (m_vertices->GetCurrentSize() > 0 /*&& (!m_staticStorage || !m_uploaded)*/)
 		{
 			m_vertices->SubmitData();
 			m_vertices->BindBufferBase(SSBOType::vertices);
 		}
-		if (m_indices->GetCurrentSize() > 0 && (!m_staticStorage || !m_uploaded))
+		if (m_indices->GetCurrentSize() > 0 /*&& (!m_staticStorage || !m_uploaded)*/)
 		{
 			m_indices->SubmitData();
 			m_indices->BindBufferBase(SSBOType::indices);

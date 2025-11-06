@@ -121,7 +121,7 @@ namespace RuamEngine
 				{
 					std::string absoluteModelPath = std::filesystem::path(m_path).parent_path().string();
 					std::string relativeDiffusePath = RelativizePath(absoluteModelPath) + "/" + assimpPath;
-					meshMaterial->m_diffuseIndex = Renderer::CreateTexture(relativeDiffusePath);
+					meshMaterial->m_diffuseIndex = Renderer::CreateTexture2D(relativeDiffusePath);
 				}
 			}
 
@@ -139,15 +139,15 @@ namespace RuamEngine
 				{
 					std::string absoluteModelPath = std::filesystem::path(m_path).parent_path().string();
 					std::string relativeSpecularPath = RelativizePath(absoluteModelPath) + "/" + assimpPath;
-					meshMaterial->m_specularIndex = Renderer::CreateTexture(relativeSpecularPath);
+					meshMaterial->m_specularIndex = Renderer::CreateTexture2D(relativeSpecularPath);
 				}
 			}
 		}
 		else std::cout << "No materials\n";
 		return Mesh(vertices, indices, meshMaterial);
 	}
-	std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
+	std::vector<Texture2D> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
 	{
-		return std::vector<Texture>();
+		return std::vector<Texture2D>();
 	}
 }

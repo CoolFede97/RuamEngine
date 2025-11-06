@@ -5,12 +5,12 @@ namespace RuamEngine
 {
     RendererConfig Renderer::m_config;
     GLFWwindow* Renderer::m_window = nullptr;
-    GLuint Renderer::m_textureBuffer = 0;
+    GLuint Renderer::m_texture2DBuffer = 0;
     std::vector<ShaderProgramPtr> Renderer::m_shaderPrograms;
 	std::vector<DrawingDataPtr> Renderer::m_drawingDatas;
 	std::vector<MaterialPtr> Renderer::m_materials;
-    std::vector<TexturePtr> Renderer::m_textures;
-    std::vector<GLuint64> Renderer::m_textureHandles;
+    std::vector<Texture2DPtr> Renderer::m_textures2D;
+    std::vector<GLuint64> Renderer::m_texture2DHandles;
 
     std::vector<glm::mat4> Renderer::matrices = {};
 
@@ -41,8 +41,8 @@ namespace RuamEngine
 
 
         {
-            GLCall(glCreateBuffers(1, &m_textureBuffer));
-			CreateTexture("assets/sprites/defaultSprite.png");
+            GLCall(glCreateBuffers(1, &m_texture2DBuffer));
+			CreateTexture2D("assets/sprites/defaultSprite.png");
 
 			DrawingDataPtr basicDrawingData = CreateDrawingData("assets/shaders/GeneralVertexShader.glsl", "assets/shaders/GeneralFragmentShader.glsl");
 			/*MaterialPtr genericMaterial = CreateMaterial();
@@ -54,7 +54,7 @@ namespace RuamEngine
             //genericLayout.Push<float>(1);
             //genericUnit.m_vertexArray->AddBuffer(*genericUnit.m_vertexBuffer, *genericUnit.m_layout);
 
-            UploadTextures();
+            UploadTextures2D();
         }
 
     }
@@ -178,31 +178,31 @@ namespace RuamEngine
     }
 	
     // If the texture already exists, it returns the existing index. Otherwise, it creates a new texture and returns its index.
-    unsigned int Renderer::CreateTexture(const std::string& relativeTexturePath)
+    unsigned int Renderer::CreateTexture2D(const std::string& relativeTexturePath)
     {
-		unsigned int foundIndex = FindTexture(GlobalizePath(relativeTexturePath));
+		unsigned int foundIndex = FindTexture2D(GlobalizePath(relativeTexturePath));
         if (foundIndex != -1)
         {
             return foundIndex;
 		}
-        TexturePtr newTex = std::make_shared<Texture>(relativeTexturePath);
+        Texture2DPtr newTex = std::make_shared<Texture2D>(relativeTexturePath);
         GLuint64 newHandle; 
         GLCall(newHandle = glGetTextureHandleARB(newTex->GetId()));
         ASSERT(newHandle != 0);
 
         GLCall(glMakeTextureHandleResidentARB(newHandle));
 
-        m_textureHandles.push_back(newHandle);
-        m_textures.push_back(newTex);
-        return m_textureHandles.size()-1;
+        m_texture2DHandles.push_back(newHandle);
+        m_textures2D.push_back(newTex);
+        return m_texture2DHandles.size()-1;
     }
 
-	// Returns -1 if not found, otherwise it returns the index in the vector of textures
-    unsigned int Renderer::FindTexture(const std::string& absoluteTexturePath)
+	// Returns -1 if not found, otherwise it returns the index in the vector of Texture2Ds
+    unsigned int Renderer::FindTexture2D(const std::string& absoluteTexturePath)
     {
-        for (unsigned int i = 0; i < m_textures.size(); i++)
+        for (unsigned int i = 0; i < m_textures2D.size(); i++)
         {
-            if (m_textures[i]->m_filePath == absoluteTexturePath)
+            if (m_textures2D[i]->m_filePath == absoluteTexturePath)
             {
                 return i;
             }
@@ -236,34 +236,34 @@ namespace RuamEngine
         return -1;
     }
     // Should be called only once when finished all the textures
-    void Renderer::UploadTextures()
+    void Renderer::UploadTextures2D()
     {
-        ASSERT(m_textureHandles.size() < maxTextureCount);
+        ASSERT(m_texture2DHandles.size() < maxTextureCount);
 		ASSERT(!texturesUploaded);
 
         GLCall(glNamedBufferStorage(
-            m_textureBuffer,
+            m_texture2DBuffer,
             sizeof(GLuint64) * maxTextureCount,
-            (const void*)m_textureHandles.data(),
+            (const void*)m_texture2DHandles.data(),
             GL_DYNAMIC_STORAGE_BIT
         ));
-        GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, SSBOType::textures, m_textureBuffer));
+        GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, SSBOType::textures, m_texture2DBuffer));
 		texturesUploaded = true;
     }
 
     // Should be used after calling UploadTextures()
-    void Renderer::UpdateTextures()
+    void Renderer::UpdateTextures2D()
     {
-        ASSERT(m_textureHandles.size() < maxTextureCount);
+        ASSERT(m_texture2DHandles.size() < maxTextureCount);
         
         GLint size = 0;
-        GLCall(glGetNamedBufferParameteriv(m_textureBuffer, GL_BUFFER_SIZE, &size));
+        GLCall(glGetNamedBufferParameteriv(m_texture2DBuffer, GL_BUFFER_SIZE, &size));
 
         GLCall(glNamedBufferSubData(
-            m_textureBuffer,
+            m_texture2DBuffer,
             0,
-            sizeof(GLuint64) * m_textureHandles.size(),
-            (const void*)m_textureHandles.data()
+            sizeof(GLuint64) * m_texture2DHandles.size(),
+            (const void*)m_texture2DHandles.data()
         ));
 	}
 

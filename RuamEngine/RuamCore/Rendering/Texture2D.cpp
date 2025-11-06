@@ -1,9 +1,9 @@
-#include "Texture.h"
+#include "Texture2D.h"
 #include "stb_image.h"
 
 namespace RuamEngine
 {
-	Texture::Texture(const std::string& relativePath)
+	Texture2D::Texture2D(const std::string& relativePath)
 		: m_filePath(GlobalizePath(relativePath)), m_localBuffer(nullptr)
 	{
 		GLCall(glCreateTextures(GL_TEXTURE_2D, 1, &m_rendererId));
@@ -34,20 +34,20 @@ namespace RuamEngine
 		stbi_image_free(m_localBuffer);
 	}
 
-	Texture::~Texture()
+	Texture2D::~Texture2D()
 	{
-		std::cout << "Texture Destroyed!\n";
+		std::cout << "Texture2D Destroyed!\n";
 		GLCall(glDeleteTextures(1, &m_rendererId));
 	}
 
-	void Texture::Bind(unsigned int slot /*= 0*/) const
+	void Texture2D::Bind(unsigned int slot /*= 0*/) const
 	{
 		// OpenGL has slots for textures. "Put this texture into slot 3 please"
 		GLCall(glActiveTexture(GL_TEXTURE0 + slot));
 		GLCall(glBindTexture(GL_TEXTURE_2D, m_rendererId));
 	}
 
-	void Texture::Unbind()
+	void Texture2D::Unbind()
 	{
 		GLCall(glBindTexture(GL_TEXTURE_2D, 0));
 	}

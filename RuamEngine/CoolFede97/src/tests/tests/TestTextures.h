@@ -8,7 +8,7 @@
 #include "Input.h"
 #include "RuamEngine.h"
 #include "imgui.h"
-#include "Texture.h"
+#include "Texture2D.h"
 #include "VertexBufferLayout.h"
 
 namespace test

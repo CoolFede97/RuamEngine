@@ -1,6 +1,6 @@
 #pragma once
 #include "Vec4.h"
-#include "Texture.h"
+#include "Texture2D.h"
 #include <unordered_map>
 namespace RuamEngine
 {

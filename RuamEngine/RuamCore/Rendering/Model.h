@@ -3,7 +3,7 @@
 #include <vector>
 #include "Mesh.h"
 #include <string>
-#include "Texture.h"
+#include "Texture2D.h"
 #include "Material.h"
 #include "Renderer.h"
 #include "Vec3.h"
@@ -28,7 +28,7 @@ namespace RuamEngine
 		void LoadModel(std::string path);
 		void ProcessNode(aiNode* node, const aiScene* scene);
 		Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
-		std::vector<Texture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
+		std::vector<Texture2D> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 	};
 	using ModelPtr = std::shared_ptr<Model>;
 }

@@ -5,26 +5,36 @@ namespace RuamEngine
 {
 	void RenderUnit::SubmitData()
 	{
-		if (m_vertices->GetCurrentSize() > 0 /*&& (!m_staticStorage || !m_uploaded)*/)
+		if (m_vertices->GetCurrentSize() > 0)
 		{
-			m_vertices->SubmitData();
-			m_vertices->BindBufferBase(SSBOType::vertices);
+			if (!m_staticStorage || !m_uploaded) 
+			{
+				m_vertices->SubmitData();
+			}
 		}
-		if (m_indices->GetCurrentSize() > 0 /*&& (!m_staticStorage || !m_uploaded)*/)
+		if (m_indices->GetCurrentSize() > 0)
 		{
-			m_indices->SubmitData();
-			m_indices->BindBufferBase(SSBOType::indices);
+			if (!m_staticStorage || !m_uploaded) 
+			{
+				m_indices->SubmitData();
+			}
 		}
 		if (m_modelMatricesBuffer->GetCurrentSize() > 0)
 		{
 			m_modelMatricesBuffer->SubmitData();
-			m_modelMatricesBuffer->BindBufferBase(SSBOType::modelMatrices);
 		}
 
 		if (m_staticStorage && !m_uploaded && (m_vertices->GetCurrentSize() > 0 || m_indices->GetCurrentSize() > 0))
 		{
 			m_uploaded = true;
 		}
+	}
+
+	void RenderUnit::BindBuffersBase()
+	{
+		m_vertices->BindBufferBase(SSBOType::vertices);
+		m_indices->BindBufferBase(SSBOType::indices);
+		m_modelMatricesBuffer->BindBufferBase(SSBOType::modelMatrices);
 	}
 
 	/*bool RenderUnit::AddBatchData(const std::vector<Vertex> vertices, unsigned int vertexDataSize, const std::vector<unsigned int> indices, unsigned int indexDataSize)
@@ -60,6 +70,7 @@ namespace RuamEngine
 		if (m_vertices->GetCurrentSize() + vertices.size() * sizeof(Vertex) > m_vertices->GetMaxSize())
 		{
 			SubmitData();
+			BindBuffersBase();
 			Renderer::Draw(*this);
 			Flush();
 			fullBatch = true;

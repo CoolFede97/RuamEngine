@@ -28,7 +28,7 @@ void CreateCFSandboxScene()
 
 	Object* bag = sandboxScene->newObject();
 	bag->transform().setPosition(glm::vec3(0.0f, -1.5f, 15.0f));
-	//bag->addComponent<MeshRenderer>()->m_meshPath = "assets/meshes/taza/taza.obj";
+	bag->addComponent<MeshRenderer>()->m_meshPath = "assets/meshes/taza/taza.obj";
 
 	//bag->addComponent<CubeRenderer>()->materialId = 0;
 	manager->addComponent<Camera>();

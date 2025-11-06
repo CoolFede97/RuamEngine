@@ -111,7 +111,6 @@ namespace RuamEngine
 				std::cout << "Material has no diffuse texture\n";
 			else
 			{
-				std::cout << "HELOOOOOOOOOOOOOOOOOOOO!\n";
 				std::string assimpPath = texAiPath.C_Str();
 				if (assimpPath.empty() || assimpPath[0] == '*')
 				{

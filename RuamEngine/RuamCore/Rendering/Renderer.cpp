@@ -282,6 +282,7 @@ namespace RuamEngine
 
                 // Bind the SSBOs for this specific render unit
                 renderUnit->SubmitData();
+				renderUnit->BindBuffersBase();
 
                 GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit->m_indices->GetCurrentSize()/sizeof(unsigned int), renderUnit->m_modelMatricesBuffer->m_data.size()));
             }

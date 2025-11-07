@@ -12,8 +12,19 @@ namespace RuamEngine
 
 		m_localBuffer = stbi_load(m_filePath.c_str(), &m_Width, &m_Height, &m_BPP, 4);
 
-		std::cout << "Absolute path: " << m_filePath << "\n";
-		std::cout << "Width: " << m_Width << ", Height: " << m_Height << ", BPP: " << m_BPP << "\n";
+		if (m_localBuffer == NULL) 
+		{
+			const char* reason = stbi_failure_reason();
+			if (reason) {
+				std::cerr << "Couldn't load texture at path : "<< m_filePath << "\n The reason was: " << reason << "\n";
+			}
+			else {
+				std::cerr << "Couldn't load texture at path :" << m_filePath << "\n There was no apparent reason\n";
+			}
+		}
+		else {
+			std::cout << "Texture2D at path: " << m_filePath << " was loaded succesfully" << "\n";
+		}
 
 		GLCall(glTextureStorage2D(m_rendererId, 1, GL_RGBA8, m_Width, m_Height));
 		GLCall(glTextureSubImage2D(m_rendererId, 0, 0, 0, m_Width, m_Height, GL_RGBA, GL_UNSIGNED_BYTE, m_localBuffer));
@@ -25,8 +36,8 @@ namespace RuamEngine
 
 		GLCall(glTextureParameteri(m_rendererId, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
 		GLCall(glTextureParameteri(m_rendererId, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-		GLCall(glTextureParameteri(m_rendererId, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
-		GLCall(glTextureParameteri(m_rendererId, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
+		GLCall(glTextureParameteri(m_rendererId, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT));
+		GLCall(glTextureParameteri(m_rendererId, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT));
 
 
 		if (!m_localBuffer) std::cout << "Error: image not found at relative path: " << relativePath  << "\n";

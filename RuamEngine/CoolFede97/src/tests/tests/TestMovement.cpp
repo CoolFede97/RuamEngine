@@ -6,7 +6,7 @@
 #include "Camera.h"
 #include "Renderer.h"
 #include "Input.h"
-#include "RuamEngine.h"
+//#include "RuamEngine.h"
 namespace test
 {
 	TestMovement::TestMovement()

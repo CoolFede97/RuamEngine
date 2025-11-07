@@ -23,6 +23,14 @@ void Transform::setRotation(float x, float y, float z) {
 	m_rotation = glm::vec3(x, y, z);
 }
 
+void Transform::setScale(glm::vec3 new_scale) {
+	m_scale = new_scale;
+}
+
+void Transform::setScale(float x, float y, float z) {
+	m_scale = glm::vec3(x, y, z);
+}
+
 glm::vec3& Transform::position() {
 	return m_position;
 }

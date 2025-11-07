@@ -64,6 +64,7 @@ vec3 GetNormal(uint index)
 
 smooth out vec2 frag_uv;
 smooth out vec3 frag_normal;
+smooth out vec4 frag_pos;
 flat out int frag_instance;
 
 void main()
@@ -71,6 +72,7 @@ void main()
     uint realIndex = indices[gl_VertexID];
     mat4 vp = u_projection * u_view;
     vec4 position = vec4(GetPosition(realIndex), 1.0);
+    frag_pos = position;
 	gl_Position = vp * modelTransforms[gl_InstanceID] * position;
     frag_uv = GetUV(realIndex);
     frag_instance = gl_InstanceID;

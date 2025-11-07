@@ -121,6 +121,11 @@ namespace RuamEngine
 		GLCall(glUniform4f(GetUniformLocation(name), v0, v1, v2, v3));
 	}
 
+	void ShaderProgram::SetUniform3f(const std::string& name, float v0, float v1, float v2)
+	{
+		GLCall(glUniform3f(GetUniformLocation(name), v0, v1, v2));
+	}
+
 	void ShaderProgram::SetUniform1f(const std::string& name, float value)
 	{
 		GLCall(glUniform1f(GetUniformLocation(name), value));
@@ -150,6 +155,7 @@ namespace RuamEngine
 		//SetUniform4f("u_albedoColor", material.albedoColor.x, material.albedoColor.y, material.albedoColor.z, material.albedoColor.w);
 		SetUniform1f("u_diffuse", material.m_diffuseIndex);
 		SetUniform1f("u_specular", material.m_specularIndex);
+		SetUniform1f("u_shininess", material.m_shininess);
 	}	
 
 	void ShaderProgram::UpdateCameraMatrices()

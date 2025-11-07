@@ -10,12 +10,16 @@
 #include "AudioSource.h"
 #include "Serial.hpp"
 #include "MeshRenderer.h"
+#include "GlobalLight.h"
 
 void CreateCFSandboxScene()
 {
 	SceneManager::CreateScene(1, "SandboxScene");
 	auto sandboxScene = SceneManager::ActiveScene();
-	Object* manager = sandboxScene->newObject();
+
+	Object* light = sandboxScene->newObject();
+	light->addComponent<GlobalLight>();
+	light->transform().setPosition(glm::vec3(0.0f, 0.0f, 80.0f));
 	//manager->addComponent<SandboxCom>();
 	//bag->transform().setRotation(glm::vec3(45.0f, 5.0f, 45.0f));
 	//bag->addComponent<CubeRenderer>()->materialId = 0;
@@ -30,7 +34,8 @@ void CreateCFSandboxScene()
 	bag->addComponent<MeshRenderer>()->m_meshPath = "assets/meshes/skyboxes/galaxy/galaxySkybox.obj";
 	bag->transform().setRotation(glm::vec3(180.0f, 0.0, 0.0));
 	bag->transform().setScale(glm::vec3(100.0f, 100.0f, 100.0f));
-	//bag->addComponent<CubeRenderer>()->materialId = 0;
+
+	Object* manager = sandboxScene->newObject();
 	manager->addComponent<Camera>();
 	manager->addComponent<CameraController>();
 	manager->getComponent<CameraController>()->m_speed = 10.5f;

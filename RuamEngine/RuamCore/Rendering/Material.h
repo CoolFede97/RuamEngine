@@ -14,7 +14,7 @@ namespace RuamEngine
         float m_diffuseIndex = 0.0f;
         float m_specularIndex = 0.0f;
         float m_reflectionIndex = 0.0f;
-        
+        float m_shininess = 1.0f;
 	    unsigned int GetId() const { return m_id; }
     private:
         unsigned int m_id;

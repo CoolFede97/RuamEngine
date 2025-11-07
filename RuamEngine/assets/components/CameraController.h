@@ -25,6 +25,9 @@ public:
 private:
 	void update()
 	{
+		if (Input::GetKeyDown(KeyCode::LeftShift_Key)) m_speed = 25.0f;
+		else m_speed = 10.0f;
+
 		m_mouseRotation = Vec2(0.0f, 0.0f);
 
 		if (Input::GetKeyDown(KeyCode::Down_Arrow)) m_mouseRotation.x -= 1;

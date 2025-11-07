@@ -20,12 +20,14 @@ smooth in vec3 frag_normal;
 //uniform vec4  u_albedoColor;
 uniform float u_diffuse;
 uniform float u_specular;
+uniform float u_reflection;
 
 void main()
 {
     // sample the textures to get colors
     vec4 diffuse = texture(textures[int(u_diffuse)], frag_uv);
     vec4 specular = texture(textures[int(u_specular)], frag_uv);
+    vec4 reflection = texture(textures[int(u_reflection)], frag_uv);
 
-    final_color = diffuse * 0.8 + specular * 0.2;  
+    final_color = (diffuse * 0.8 + specular * 0.2)*reflection;  
 }

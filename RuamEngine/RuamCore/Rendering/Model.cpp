@@ -107,9 +107,7 @@ namespace RuamEngine
 			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 			aiString texAiPath;
 
-			if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texAiPath) != AI_SUCCESS)
-				std::cout << "Material has no diffuse texture\n";
-			else
+			if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texAiPath) == AI_SUCCESS)
 			{
 				std::string assimpPath = texAiPath.C_Str();
 				if (assimpPath.empty() || assimpPath[0] == '*')
@@ -125,9 +123,7 @@ namespace RuamEngine
 				}
 			}
 
-			if (material->GetTexture(aiTextureType_SPECULAR, 0, &texAiPath) != AI_SUCCESS)
-				std::cout << "Material has no specular texture\n";
-			else
+			if (material->GetTexture(aiTextureType_SPECULAR, 0, &texAiPath) == AI_SUCCESS)
 			{
 				std::string assimpPath = texAiPath.C_Str();
 				if (assimpPath.empty() || assimpPath[0] == '*')
@@ -140,6 +136,22 @@ namespace RuamEngine
 					std::string absoluteModelPath = std::filesystem::path(m_path).parent_path().string();
 					std::string relativeSpecularPath = RelativizePath(absoluteModelPath) + "/" + assimpPath;
 					meshMaterial->m_specularIndex = Renderer::CreateTexture2D(relativeSpecularPath);
+				}
+			}
+
+			if (material->GetTexture(aiTextureType_REFLECTION, 0, &texAiPath) == AI_SUCCESS)
+			{
+				std::string assimpPath = texAiPath.C_Str();
+				if (assimpPath.empty() || assimpPath[0] == '*')
+				{
+					std::cout << "This kind of texture path is not supported: " << assimpPath << "\n";
+					ASSERT(false);
+				}
+				else
+				{
+					std::string absoluteModelPath = std::filesystem::path(m_path).parent_path().string();
+					std::string relativeReflectionPath = RelativizePath(absoluteModelPath) + "/" + assimpPath;
+					meshMaterial->m_reflectionIndex = Renderer::CreateTexture2D(relativeReflectionPath);
 				}
 			}
 		}

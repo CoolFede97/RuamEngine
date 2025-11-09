@@ -33,7 +33,7 @@ void CreateCFSandboxScene()
 	bag->transform().setPosition(glm::vec3(0.0f, -1.5f, 15.0f));
 	bag->addComponent<MeshRenderer>()->m_meshPath = "assets/meshes/skyboxes/galaxy/galaxySkybox.obj";
 	bag->transform().setRotation(glm::vec3(180.0f, 0.0, 0.0));
-	bag->transform().setScale(glm::vec3(100.0f, 100.0f, 100.0f));
+	bag->transform().setScale(glm::vec3(500.0f, 500.0f, 500.0f));
 
 	Object* manager = sandboxScene->newObject();
 	manager->addComponent<Camera>();

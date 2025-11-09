@@ -5,24 +5,24 @@
 
 namespace RuamEngine
 {
-	class Texture
+	class Texture2D
 	{
 	private:
-		unsigned int m_id;
-		std::string m_FilePath;
+		unsigned int m_rendererId;
 		int m_Width, m_Height, m_BPP; // Bits per pixel
 
 	public:
-		unsigned char* m_LocalBuffer;
-		Texture(const std::string& relativePath); // Relative path from the project root directory
-		~Texture();
+		std::string m_filePath;
+		unsigned char* m_localBuffer;
+		Texture2D(const std::string& relativePath); // Relative path from the project root directory
+		~Texture2D();
 
 		void Bind(unsigned int slot = 0) const;
 		void Unbind();
 
-		inline GLuint GetID() const { return m_id; }
+		inline GLuint GetId() const { return m_rendererId; }
 		inline int GetWidth() const { return m_Width; }
 		inline int GetHeight() const { return m_Height; }
 	};
-	using TexturePtr = std::shared_ptr<Texture>;
+	using Texture2DPtr = std::shared_ptr<Texture2D>;
 }

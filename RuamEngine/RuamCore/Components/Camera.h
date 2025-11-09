@@ -24,7 +24,7 @@ namespace RuamEngine
 		Camera(const nlohmann::json& j, const unsigned int obj_id);
 
 		float m_near_plane = 0.1f;
-		float m_far_plane = 100.0f;
+		float m_far_plane = 3000.0f;
 		float m_fov = 45.0f; 
 		float m_aspect_ratio = 800.0f/600.0f;
 

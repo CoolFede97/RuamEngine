@@ -2,7 +2,7 @@
 
 #include "Test.h"
 #include "Renderer.h"
-#include "Texture.h"
+#include "Texture2D.h"
 #include <Vertex.h>
 #include "VertexBufferLayout.h"
 

@@ -3,33 +3,31 @@
 namespace RuamEngine
 {
 
-	void DrawingData::SubmitBatchData()
+	unsigned int DrawingData::s_instanceIdCount = 0;
+
+	void DrawingData::SubmitData()
 	{
-		for (auto& pair : m_renderUnits)
+		for (RenderUnitPtr renderUnit : m_renderUnits)
 		{
-			pair.second.SubmitBatchData();
+			renderUnit->SubmitData();
 		}
 	}
 
-	void DrawingData::SubmitBatchData(RenderUnit& renderUnit)
+	void DrawingData::SubmitData(RenderUnit& renderUnit)
 	{
-		renderUnit.SubmitBatchData();
+		renderUnit.SubmitData();
 	}
 
 	void DrawingData::Flush()
 	{
-		for (auto& pair : m_renderUnits)
+		for (RenderUnitPtr renderUnit: m_renderUnits)
 		{
-			pair.second.Flush();
+			renderUnit->Flush();
 		}
 	}
 
-	DrawingData::DrawingData(Shader::PipelineType pipelineType)
-		: m_pipelineType(pipelineType)
-	{
-	}
-
 	DrawingData::DrawingData()
+		: m_instanceId(s_instanceIdCount++)
 	{
 	}
 	DrawingData::~DrawingData()

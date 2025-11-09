@@ -32,29 +32,33 @@ int main()
 
 		ImGui::StyleColorsDark();
 
-		CreateMenuScene();
 
-		SceneManager::SetActiveScene(0);
+		
+		
+		CreateMenuScene();
 		CreateCFSandboxScene();
+
+		
+
+		//SceneManager::SetActiveScene(0);
+
 		// Scene* collisionSandboxScene = CreateCollisionSandboxScene();
 
+		unsigned int frameCount = 0;
 
 		while (!Renderer::WindowShouldClose())
 		{
-		//	std::cout << Camera::GetMainCamera() << '\n';
+			//std::cout << "Frame " << frameCount++  << "###############################################" << "\n";
+
 			// ImGUI
 			ImGui_ImplOpenGL3_NewFrame();
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
 
-			// OpenGL
-			GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-
 			glfwPollEvents();
 
 			// Input
-			Input::UpdateInput();
-
+			
 			// Time
 			Time::Update();
 
@@ -79,7 +83,7 @@ int main()
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 			Renderer::EndDraw();
-
+			Input::UpdateInput();
 			glfwPollEvents();
 		}
 	}

@@ -1,28 +1,27 @@
-#include "Shader.h"
+#include "ShaderProgram.h"
 #include "FileFunctions.h"
 #include "Renderer.h"
-
+#include "Camera.h"
 namespace RuamEngine
 {
 
-	GLint Shader::maxTextureSlots= 0;
+	GLint ShaderProgram::maxTextureSlots= 0;
+	unsigned int ShaderProgram::s_idInstanceCount = 0;
 
 
-
-	Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
-		: m_vFilePath(GlobalizePath(vertexPath)), m_fFilePath(GlobalizePath(fragmentPath)), m_id(0)
+	ShaderProgram::ShaderProgram(const std::string& vertexPath, const std::string& fragmentPath)
+		: m_vFilePath(GlobalizePath(vertexPath)), m_fFilePath(GlobalizePath(fragmentPath)), m_instanceId(s_idInstanceCount++), m_rendererId(0)
 	{
-		m_id = CreateProgram(vertexPath, fragmentPath);
+		m_rendererId = CreateProgram(vertexPath, fragmentPath);
 		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureSlots);
-		SetUniformTextureSlots("u_albedoMap");
 	}
 
-	Shader::~Shader()
+	ShaderProgram::~ShaderProgram()
 	{
 		std::cout << "Shader Destroyed!\n";
 	}
 
-	unsigned int Shader::CompileShader(unsigned int type, const std::string& source)
+	unsigned int ShaderProgram::CompileShader(unsigned int type, const std::string& source)
 	{
 	
 		unsigned int id = glCreateShader(type);
@@ -51,7 +50,7 @@ namespace RuamEngine
 	
 	}
 
-	unsigned int Shader::CreateProgram(const std::string& vertexPath, const std::string& fragmentPath)
+	unsigned int ShaderProgram::CreateProgram(const std::string& vertexPath, const std::string& fragmentPath)
 	{
 		unsigned int program = glCreateProgram();
 		unsigned int vs = CompileShader(GL_VERTEX_SHADER, RelativeFileToString(vertexPath));
@@ -73,6 +72,8 @@ namespace RuamEngine
 			std::cout << "Failed to link: "<< "shader! " << "\n";
 			std::cout << message << "\n";
 			GLCall(glDeleteProgram(program));
+			GLCall(glDeleteShader(vs));
+			GLCall(glDeleteShader(fs));
 			return 0;
 		}
 
@@ -89,6 +90,8 @@ namespace RuamEngine
 			std::cout << "Failed to validate: " << "shader! " << "\n";
 			std::cout << message << "\n";
 			GLCall(glDeleteProgram(program));
+			GLCall(glDeleteShader(vs));
+			GLCall(glDeleteShader(fs));
 			return 0;
 		}
 
@@ -98,37 +101,42 @@ namespace RuamEngine
 		return program;
 	}	
 
-	void Shader::Bind() const
+	void ShaderProgram::Bind() const
 	{
-		GLCall(glUseProgram(m_id));
+		GLCall(glUseProgram(m_rendererId));
 	}
 
-	void Shader::Unbind() const
+	void ShaderProgram::Unbind() const
 	{
 		GLCall(glUseProgram(0));
 	}
 
-	void Shader::SetUniform1i(const std::string& name, int value)
+	void ShaderProgram::SetUniform1i(const std::string& name, int value)
 	{
 		GLCall(glUniform1i(GetUniformLocation(name), value));
 	}
 
-	void Shader::SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3)
+	void ShaderProgram::SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3)
 	{
 		GLCall(glUniform4f(GetUniformLocation(name), v0, v1, v2, v3));
 	}
 
-	void Shader::SetUniform1f(const std::string& name, float value)
+	void ShaderProgram::SetUniform3f(const std::string& name, float v0, float v1, float v2)
+	{
+		GLCall(glUniform3f(GetUniformLocation(name), v0, v1, v2));
+	}
+
+	void ShaderProgram::SetUniform1f(const std::string& name, float value)
 	{
 		GLCall(glUniform1f(GetUniformLocation(name), value));
 	}
 
-	void Shader::SetUniformMat4f(const std::string& name, glm::mat4 matrix)
+	void ShaderProgram::SetUniformMat4f(const std::string& name, glm::mat4 matrix)
 	{
 		GLCall(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &matrix[0][0]));
 	}
 
-	void Shader::SetUniformTextureSlots(const std::string& name)
+	void ShaderProgram::SetUniformTextureSlots(const std::string& name)
 	{
 		std::vector<GLint> samplers = {};
 		for (int i = 0; i < maxTextureSlots; i++)	
@@ -140,36 +148,17 @@ namespace RuamEngine
 		GLCall(glUniform1iv(loc, maxTextureSlots, samplers.data()));
 	}
 
-	void Shader::LoadMaterial(const Material& material)
+	void ShaderProgram::LoadMaterial(const Material& material)
 	{
 		Bind();
 
-		SetUniform4f("u_albedoColor", material.albedoColor.x, material.albedoColor.y, material.albedoColor.z, material.albedoColor.w);
-		SetUniform1f("u_metallic", material.metallic);
-		SetUniform1f("u_roughness", material.roughness);
-		SetUniform1f("u_ambientOcclusion", material.ambientOcclusion);
-		SetUniform1f("u_emissiveStrength", material.emissiveStrength);
-
-		glm::mat4 projectionMatrix = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-		SetUniformMat4f("u_projection", projectionMatrix);
-		
-		glm::mat4 viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f) + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		SetUniformMat4f("u_view", viewMatrix);
-		SetUniformMat4f("u_projection", projectionMatrix);
-		/*ASSERT(material.textures[0].m_LocalBuffer);
-		ASSERT(texture.m_LocalBuffer);
-		ASSERT(*material.textures[0].m_LocalBuffer == *texture.m_LocalBuffer);
-		*/
-		/*for (int i = 0 ; i < material.textures.size(); i++)
-		{
-			material.textures[i]->Bind(i);
-		}*/
-
-		/*ASSERT(*texture.m_LocalBuffer == *material.textures[0].m_LocalBuffer);*/
-		//material.textures[0].Bind(0);
+		//SetUniform4f("u_albedoColor", material.albedoColor.x, material.albedoColor.y, material.albedoColor.z, material.albedoColor.w);
+		SetUniform1f("u_diffuse", material.m_diffuseIndex);
+		SetUniform1f("u_specular", material.m_specularIndex);
+		SetUniform1f("u_shininess", material.m_shininess);
 	}	
 
-	void Shader::UpdateCameraMatrices()
+	void ShaderProgram::UpdateCameraMatrices()
 	{
 		if (Camera::GetMainCamera() == nullptr)
 		{
@@ -183,7 +172,7 @@ namespace RuamEngine
 		SetUniformMat4f("u_projection", Camera::GetMainCamera()->GetProjectionMatrix());
 	}
 
-	int Shader::GetUniformLocation(const std::string& name)
+	int ShaderProgram::GetUniformLocation(const std::string& name)
 	{
 		if (m_UniformLocationCache.find(name) != m_UniformLocationCache.end())
 			return m_UniformLocationCache[name];
@@ -191,7 +180,7 @@ namespace RuamEngine
 		Bind();
 
 		int location;
-		GLCall(location = glGetUniformLocation(m_id, name.c_str()));
+		GLCall(location = glGetUniformLocation(m_rendererId, name.c_str()));
 		if (location == -1)
 			std::cout << "Warning: uniform " << name << " does not exist!\n";
 	

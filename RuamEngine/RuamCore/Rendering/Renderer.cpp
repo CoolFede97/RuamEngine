@@ -5,10 +5,16 @@ namespace RuamEngine
 {
     RendererConfig Renderer::m_config;
     GLFWwindow* Renderer::m_window = nullptr;
-    std::unordered_map<Shader::PipelineType, std::unique_ptr<DrawingData>> Renderer::m_drawingDataMap;
-    GLuint Renderer::m_textureBuffer = 0;
-    std::vector<TexturePtr> Renderer::m_textures;
-    std::vector<GLuint64> Renderer::m_textureHandles;
+    GLuint Renderer::m_texture2DBuffer = 0;
+    std::vector<ShaderProgramPtr> Renderer::m_shaderPrograms;
+	std::vector<DrawingDataPtr> Renderer::m_drawingDatas;
+	std::vector<MaterialPtr> Renderer::m_materials;
+    std::vector<Texture2DPtr> Renderer::m_textures2D;
+    std::vector<GLuint64> Renderer::m_texture2DHandles;
+
+    std::vector<glm::mat4> Renderer::matrices = {};
+
+	bool Renderer::texturesUploaded = false;
     void Renderer::Init()
     {
         ASSERT(glfwInit());
@@ -22,7 +28,7 @@ namespace RuamEngine
 
         glfwMakeContextCurrent(m_window);
 
-        glfwSwapInterval(1);
+        glfwSwapInterval(0);
 
         ASSERT(glewInit() == GLEW_OK);
 
@@ -35,29 +41,20 @@ namespace RuamEngine
 
 
         {
-            //GLuint dummyVAO;
-            //glCreateVertexArrays(1, &dummyVAO);   // DSA
-            //glBindVertexArray(dummyVAO);
+            GLCall(glCreateBuffers(1, &m_texture2DBuffer));
+			CreateTexture2D("assets/sprites/defaultSprite.png");
 
-            GLCall(glCreateBuffers(1, &m_textureBuffer));
-			CreateTexture("assets/sprites/defaultSprite.png");
-            CreateTexture("assets/sprites/bigBrain.png");
-
-            m_drawingDataMap.emplace(Shader::PipelineType::Generic, std::make_unique<DrawingData>(Shader::PipelineType::Generic));
-            DrawingData& basicDrawingData = *m_drawingDataMap.at(Shader::PipelineType::Generic);
-            basicDrawingData.m_shader = std::make_shared<Shader>("assets/shaders/GeneralVertexShader.glsl", "assets/shaders/GeneralFragmentShader.glsl");
-            basicDrawingData.m_renderUnits.emplace(Material::MaterialType::Generic, RenderUnit(basicDrawingData.m_shader));
-            RenderUnit& genericUnit = basicDrawingData.m_renderUnits.at(Material::MaterialType::Generic);
-            basicDrawingData.m_shader->Bind();
-            genericUnit.m_material = std::make_unique<Material>(Material::MaterialType::Generic);
-            VertexBufferLayout& genericLayout = *genericUnit.m_layout;
+			DrawingDataPtr basicDrawingData = CreateDrawingData("assets/shaders/GeneralVertexShader.glsl", "assets/shaders/GeneralFragmentShader.glsl");
+			/*MaterialPtr genericMaterial = CreateMaterial();
+			RenderUnitPtr genericRenderUnit = CreateRenderUnit(basicDrawingData, genericMaterial);
+            VertexBufferLayout& genericLayout = *genericRenderUnit->m_layout;*/
             //genericLayout.Reset();
             //genericLayout.Push<float>(3);
             //genericLayout.Push<float>(2);
             //genericLayout.Push<float>(1);
             //genericUnit.m_vertexArray->AddBuffer(*genericUnit.m_vertexBuffer, *genericUnit.m_layout);
 
-            UploadTextures();
+            UploadTextures2D();
         }
 
     }
@@ -75,20 +72,20 @@ namespace RuamEngine
     }
     void Renderer::EndBatch()
     {
-        for (auto& pair : m_drawingDataMap)
+        for (DrawingDataPtr drawingData : m_drawingDatas)
         {
-            pair.second->SubmitBatchData();
+            drawingData->SubmitData();
         }
     }
     void Renderer::EndBatch(RenderUnit& renderUnit)
     {
-        renderUnit.SubmitBatchData();
+        renderUnit.SubmitData();
     }
     void Renderer::Flush()
     {
-        for (auto& pair : m_drawingDataMap)
+        for (DrawingDataPtr drawingData : m_drawingDatas)
         {
-            pair.second->Flush();
+            drawingData->Flush();
         }
     }
 
@@ -140,50 +137,164 @@ namespace RuamEngine
         }
     }
 
-    void Renderer::CreateTexture(const std::string& texturePath)
+    DrawingDataPtr Renderer::CreateDrawingData(const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
     {
-        TexturePtr newTex = std::make_shared<Texture>(texturePath);
+		ShaderProgramPtr newProgram = Renderer::CreateProgram(vertexShaderPath, fragmentShaderPath);
+        m_shaderPrograms.push_back(newProgram);
+        DrawingDataPtr newDrawingData = std::make_unique<DrawingData>();
+        m_drawingDatas.push_back(newDrawingData);
+        newDrawingData->m_program = newProgram;
+        return newDrawingData;
+	}
+
+    ShaderProgramPtr Renderer::CreateProgram(const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
+    {
+        ShaderProgramPtr newProgram = std::make_shared<ShaderProgram>(vertexShaderPath, fragmentShaderPath);
+        m_shaderPrograms.push_back(newProgram);
+		return newProgram;
+    }
+
+    // If the render unit already exists, it returns the existing index. Otherwise, it creates a new render unit and returns its index.
+    RenderUnitPtr Renderer::CreateRenderUnit(DrawingDataPtr drawingData, MaterialPtr material)
+    {
+		unsigned int foundIndex = FindRenderUnit(material, drawingData);
+        if (foundIndex != -1)
+        {
+            return drawingData->m_renderUnits[foundIndex];
+        }
+        RenderUnitPtr newRenderUnit = std::make_shared<RenderUnit>();
+		newRenderUnit->m_material = material;
+		newRenderUnit->m_drawingData = drawingData;
+		newRenderUnit->m_program = drawingData->m_program;
+        drawingData->m_renderUnits.push_back(newRenderUnit);
+        return newRenderUnit;
+	}
+
+    MaterialPtr Renderer::CreateMaterial()
+    {
+		MaterialPtr newMaterial = std::make_shared<Material>();
+		m_materials.push_back(newMaterial);
+		return newMaterial;
+    }
+	
+    // If the texture already exists, it returns the existing index. Otherwise, it creates a new texture and returns its index.
+    unsigned int Renderer::CreateTexture2D(const std::string& relativeTexturePath)
+    {
+		unsigned int foundIndex = FindTexture2D(GlobalizePath(relativeTexturePath));
+        if (foundIndex != -1)
+        {
+            return foundIndex;
+		}
+        Texture2DPtr newTex = std::make_shared<Texture2D>(relativeTexturePath);
         GLuint64 newHandle; 
-        GLCall(newHandle = glGetTextureHandleARB(newTex->GetID()));
+        GLCall(newHandle = glGetTextureHandleARB(newTex->GetId()));
         ASSERT(newHandle != 0);
 
         GLCall(glMakeTextureHandleResidentARB(newHandle));
 
-        m_textureHandles.push_back(newHandle);
-        m_textures.push_back(newTex);
+        m_texture2DHandles.push_back(newHandle);
+        m_textures2D.push_back(newTex);
+        return m_texture2DHandles.size()-1;
     }
 
-    // Should be called only once when finished all the textures
-    void Renderer::UploadTextures()
+	// Returns -1 if not found, otherwise it returns the index in the vector of Texture2Ds
+    unsigned int Renderer::FindTexture2D(const std::string& absoluteTexturePath)
     {
+        for (unsigned int i = 0; i < m_textures2D.size(); i++)
+        {
+            if (m_textures2D[i]->m_filePath == absoluteTexturePath)
+            {
+                return i;
+            }
+        }
+        return -1;
+	}
+
+	// Finds if a material already exists in the renderer, if not, returns -1
+    unsigned int Renderer::FindMaterial(MaterialPtr material)
+    {
+        for (unsigned int i = 0; i < m_materials.size(); i++)
+        {
+            if (m_materials[i]->GetId() == material->GetId())
+            {
+                return i;
+            }
+        }
+        return -1;
+	}
+
+    // Finds if a render unit already exists in a certain drawing data, if not, returns -1
+    unsigned int Renderer::FindRenderUnit(MaterialPtr material, DrawingDataPtr drawingData)
+    {
+        for (unsigned int i = 0; i < drawingData->m_renderUnits.size(); i++)
+        {
+            if (drawingData->m_renderUnits[i]->m_material->GetId() == material->GetId())
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+    // Should be called only once when finished all the textures
+    void Renderer::UploadTextures2D()
+    {
+        ASSERT(m_texture2DHandles.size() < maxTextureCount);
+		ASSERT(!texturesUploaded);
+
         GLCall(glNamedBufferStorage(
-            m_textureBuffer,
-            sizeof(GLuint64) * m_textureHandles.size(),
-            (const void*)m_textureHandles.data(),
+            m_texture2DBuffer,
+            sizeof(GLuint64) * maxTextureCount,
+            (const void*)m_texture2DHandles.data(),
             GL_DYNAMIC_STORAGE_BIT
         ));
-        GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, SSBOType::textures, m_textureBuffer));
+        GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, SSBOType::textures, m_texture2DBuffer));
+		texturesUploaded = true;
     }
+
+    // Should be used after calling UploadTextures()
+    void Renderer::UpdateTextures2D()
+    {
+        ASSERT(m_texture2DHandles.size() < maxTextureCount);
+        
+        GLint size = 0;
+        GLCall(glGetNamedBufferParameteriv(m_texture2DBuffer, GL_BUFFER_SIZE, &size));
+
+        GLCall(glNamedBufferSubData(
+            m_texture2DBuffer,
+            0,
+            sizeof(GLuint64) * m_texture2DHandles.size(),
+            (const void*)m_texture2DHandles.data()
+        ));
+	}
+
 
     void Renderer::Draw()
     {
-        for (auto& drawingData : m_drawingDataMap)
+        //std::cout << "Render units count: " << m_drawingDatas[0]->m_renderUnits.size() << "\n";
+
+        for (DrawingDataPtr drawingData : m_drawingDatas)
         {
-            for (auto& renderUnit : drawingData.second->m_renderUnits)
+			drawingData->m_program->UpdateCameraMatrices();
+            for (RenderUnitPtr renderUnit : drawingData->m_renderUnits)
             {
-                drawingData.second->m_shader->Bind();
-                drawingData.second->m_shader->LoadMaterial(*renderUnit.second.m_material);
-				drawingData.second->m_shader->UpdateCameraMatrices();
-                GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit.second.m_indices->GetCurrentSize()/sizeof(unsigned int), renderUnit.second.m_modelMatricesBuffer->m_data.size()));
+                drawingData->m_program->Bind();
+                drawingData->m_program->LoadMaterial(*renderUnit->m_material);
+
+                // Bind the SSBOs for this specific render unit
+                renderUnit->SubmitData();
+				renderUnit->BindBuffersBase();
+
+                GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit->m_indices->GetCurrentSize()/sizeof(unsigned int), renderUnit->m_modelMatricesBuffer->m_data.size()));
             }
         }
     }
 
     void Renderer::Draw(RenderUnit& renderUnit)
     {
-        renderUnit.m_shader->Bind();
-        renderUnit.m_shader->LoadMaterial(*renderUnit.m_material);
-        renderUnit.m_shader->UpdateCameraMatrices();
+        renderUnit.m_program->Bind();
+        renderUnit.m_program->LoadMaterial(*renderUnit.m_material);
+        renderUnit.m_program->UpdateCameraMatrices();
+        renderUnit.SubmitData();
         GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit.m_indices->GetCurrentSize() / sizeof(unsigned int), renderUnit.m_modelMatricesBuffer->m_data.size()));
     }
 

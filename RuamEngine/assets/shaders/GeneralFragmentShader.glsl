@@ -10,28 +10,38 @@ layout(binding = SSBOType_textures, std430) readonly buffer ssbo3
     sampler2D textures[];
 };
 
+smooth in vec4 frag_pos;
 smooth in vec2 frag_uv;
 flat in int frag_instance;
 
+
 out vec4 final_color;
 
-flat in int frag_texID;
+smooth in vec3 frag_normal;
 
-uniform vec4  u_albedoColor;
-uniform float u_metallic;
-uniform float u_roughness;
-uniform float u_ambientOcclusion;
-uniform float u_emissiveStrength;
-    
-//uniform sampler2D u_albedoMap[32];
-//uniform sampler2D u_normalMap;
-//uniform sampler2D u_metallicMap;
-//uniform sampler2D u_roughnessMap;
-//uniform sampler2D u_AOMap;
-//uniform sampler2D u_emissiveMap;
+//uniform vec4  u_albedoColor;
+uniform float u_diffuse;
+uniform float u_specular;
+uniform float u_reflection;
+uniform float u_shininess;
+
+uniform vec4 u_globalLightColor;
+uniform vec3 u_globalLightPos;
 
 void main()
 {
-    sampler2D tex = textures[frag_texID];
-    final_color = texture(tex, frag_uv);   
+    // sample the textures to get colors
+    vec4 diffuse = texture(textures[int(u_diffuse)], frag_uv);
+    vec4 specular = texture(textures[int(u_specular)], frag_uv);
+    vec4 reflection = texture(textures[int(u_reflection)], frag_uv);
+
+    vec4 lightColor = vec4(u_globalLightColor[0], u_globalLightColor[1], u_globalLightColor[2], u_globalLightColor[3]);
+    
+    vec3 lightPos = vec3(u_globalLightPos[0], u_globalLightPos[1], u_globalLightPos[2]);
+    vec3 lightDir = normalize(vec3(frag_pos) - lightPos);
+    
+    float similarity = dot(lightDir, frag_normal);
+    float intensity = (1.0 - ((similarity + 1.0) * 0.5)) * u_shininess;
+    vec4 intensityVec = vec4(intensity, intensity, intensity, 1.0);
+    final_color = (diffuse * 0.8 + specular * 0.2) * reflection * lightColor * intensityVec;  
 }

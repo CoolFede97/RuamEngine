@@ -1,10 +1,15 @@
 #include "Vec4.h"
+#include "Vec2.h"
+#include "Vec3.h"
 
 Vec4::Vec4(float xP, float yP, float zP, float wP)
     : x(xP), y(yP), z(zP), w(wP) {
 }
 
 Vec4::Vec4(const glm::vec4& v) : Vec4(v.x, v.y, v.z, v.w) {}
+
+Vec4::Vec4(const Vec2& other) : Vec4(other.x, other.y, 0, 0) {}
+Vec4::Vec4(const Vec3& other) : Vec4(other.x, other.y, other.z, 0) {}
 
 Vec4 Vec4::operator+(Vec4 other) const {
     return Vec4(x + other.x, y + other.y, z + other.z, w + other.w);
@@ -16,6 +21,10 @@ Vec4 Vec4::operator-(Vec4 other) const {
 
 Vec4 Vec4::operator*(Vec4 other) const {
     return Vec4(x * other.x, y * other.y, z * other.z, w * other.w);
+}
+
+Vec4 Vec4::operator*(float number) const {
+    return Vec4(x * number, y * number, z * number, w * number);
 }
 
 Vec4 Vec4::operator/(Vec4 other) const {

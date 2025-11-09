@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
 	AudioSystem::init();
 	std::cerr << "vamo\n";
 
-	glm::vec3 listPos = {0, 0, 0};
+	glm::vec3 listPos = {0.0f, 0.0f, 0.0f};
 
 	AL::Listener::setParam(AL_POSITION, listPos);
 	AL::Listener::setParam(AL_VELOCITY, listPos);
@@ -43,8 +43,8 @@ int main(int argc, char* argv[]) {
 	source.generate();
 	std::cerr << "src gen\n";
 
-	glm::vec3 sourcePos = {0, 0, 0};
-	glm::vec3 sourceVel = {0, 0, 0};
+	glm::vec3 sourcePos = {0.0f, 0.0f, 0.0f};
+	glm::vec3 sourceVel = {0.0f, 0.0f, 0.0f};
 
 	source.setParam(AL_PITCH, 1);
 	source.setParam(AL_GAIN, 1);

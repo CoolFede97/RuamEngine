@@ -3,7 +3,7 @@
 //#include "Renderer.h"
 //#include "imgui.h"
 //#include "VertexBufferLayout.h"
-//#include "Texture.h"
+//#include "Texture2D.h"
 //namespace test
 //{
 //

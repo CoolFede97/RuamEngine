@@ -7,8 +7,8 @@
 //#include "VertexBufferLayout.h"
 //#include "IndexBuffer.h" 
 //#include "VertexArray.h"
-//#include "Shader.h"
-//#include "Texture.h"
+//#include "ShaderProgram.h"
+//#include "Texture2D.h"
 //#include "Camera.h"
 //#include "RuamEngine.h"
 //

@@ -1,7 +1,13 @@
 #include "Vec3.h"
 #include <cmath> // Para std::sqrt
+#include "Vec2.h"
+#include "Vec4.h"
 
 Vec3::Vec3(float xP, float yP, float zP) : x(xP), y(yP), z(zP) {}
+Vec3::Vec3(const glm::vec3& v) : Vec3(v.x, v.y, v.z) {}
+
+Vec3::Vec3(const Vec2& other) : Vec3(other.x, other.y, 0.0f) {}
+Vec3::Vec3(const Vec4& other) : Vec3(other.x, other.y, other.z) {}
 
 Vec3 Vec3::operator+(Vec3 other) const {
     return Vec3(x + other.x, y + other.y, z + other.z);
@@ -13,6 +19,10 @@ Vec3 Vec3::operator-(Vec3 other) const {
 
 Vec3 Vec3::operator*(Vec3 other) const {
     return Vec3(x * other.x, y * other.y, z * other.z);
+}
+
+Vec3 Vec3::operator*(float number) const {
+    return Vec3(x * number, y * number, z * number);
 }
 
 Vec3 Vec3::operator/(Vec3 other) const {
@@ -40,6 +50,31 @@ float Vec3::DotProduct(Vec3 other) const {
     Vec3 a = Normalized();
     Vec3 b = other.Normalized();
     return static_cast<float>(a.x * b.x + a.y * b.y + a.z * b.z);
+}
+
+Vec3 Vec3::CrossProduct(Vec3 other) const
+{
+    Vec3 a = Normalized();
+    Vec3 b = other.Normalized();
+
+    Vec3 cross;
+    cross.x = a.y * b.z - a.z * b.y;
+    cross.y = a.z * b.x - a.x * b.z;
+    cross.z = a.x * b.y - a.y * b.x;
+    return cross;
+}
+
+Vec3 Vec3::GetDirectionFromEuler(Vec3 eulerAngles)
+{
+    float pitch = glm::radians(eulerAngles.x);
+    float yaw = glm::radians(eulerAngles.y);
+
+    Vec3 direction;
+    direction.x = cos(pitch) * sin(yaw);
+    direction.y = sin(pitch);
+    direction.z = cos(pitch) * cos(yaw);
+
+    return direction;
 }
 
 Vec3 Vec3::Right() { return Vec3(1, 0, 0); }
@@ -92,6 +127,8 @@ Vec3& Vec3::operator*=(float number) {
     z *= number;
     return *this;
 }
+
+
 
 std::ostream& operator<<(std::ostream& os, const Vec3& v) {
     os << "(" << v.x << ", " << v.y << ", " << v.z << ")";

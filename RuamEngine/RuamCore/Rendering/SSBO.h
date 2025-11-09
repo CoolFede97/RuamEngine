@@ -36,7 +36,7 @@ namespace RuamEngine
 		}
 
 		// Should be used for buffers from the renderer batch
-		void AddBatchData(const std::vector<T>&data)
+		void AddBatchData(const std::vector<T>& data)
 		{
 			m_data.insert(m_data.end(), data.begin(), data.end());
 			m_currentBytes += data.size() * sizeof(T);

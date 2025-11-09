@@ -7,7 +7,7 @@
 #include "DrawingData.h"
 #include "RenderUnit.h"
 #include "Material.h"
-
+#include "Texture2D.h"
 #include <unordered_map>
 #include <cstdint>
 
@@ -85,18 +85,32 @@ namespace RuamEngine
 		static GLFWwindow* GetWindow() { return m_window; }
 		static int WindowShouldClose() { return glfwWindowShouldClose(m_window); }
 
+        static DrawingDataPtr CreateDrawingData(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
+		static ShaderProgramPtr CreateProgram(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
+        static RenderUnitPtr CreateRenderUnit(DrawingDataPtr drawingData, MaterialPtr material);
+		static MaterialPtr CreateMaterial();
+        static unsigned int CreateTexture2D(const std::string& relativeTexturePath);
+		static unsigned int FindTexture2D(const std::string& absoluteTexturePath);
+        static unsigned int FindMaterial(MaterialPtr material);
+        static unsigned int FindRenderUnit(MaterialPtr material, DrawingDataPtr drawingData);
+        static void UpdateTextures2D();
 
         static void Draw();
         static void Draw(RenderUnit& renderUnit);
 
-        static std::unordered_map<Shader::PipelineType, std::unique_ptr<DrawingData>> m_drawingDataMap;
-        static std::vector<TexturePtr> m_textures;
-        static std::vector<GLuint64> m_textureHandles;
+		static std::vector<DrawingDataPtr> m_drawingDatas;
+		static std::vector<ShaderProgramPtr> m_shaderPrograms;
+        static std::vector<MaterialPtr> m_materials;
+        static std::vector<Texture2DPtr> m_textures2D;
+        static std::vector<GLuint64> m_texture2DHandles;
+
+        static std::vector<glm::mat4> matrices;
+
         //static std::vector<uvec2>
     private:
-        static void CreateTexture(const std::string& texturePath);
-        static void UploadTextures();
-        static GLuint m_textureBuffer;
+        static void UploadTextures2D();
+        static bool texturesUploaded;
+        static GLuint m_texture2DBuffer;
         static RendererConfig m_config;
         static GLFWwindow* m_window;
     };

@@ -18,22 +18,23 @@ public:
 	{
 	}
 
-	GLuint textureId = 0;
+public:
+	GLuint materialId = 0;
+private:
+	std::vector<unsigned int> indices = 
+	{
+		0, 1, 2, 2, 3, 0,       // Cara frontal
+		4, 5, 6, 6, 7, 4,       // Cara trasera
+		8, 9,10,10,11, 8,       // Cara izquierda
+		12,13,14,14,15,12,       // Cara derecha
+		16,17,18,18,19,16,       // Cara inferior
+		20,21,22,22,23,20        // Cara superior
+	};
 
+	std::vector<Vertex> cube = Vertex::CreateCube();
 	void render()
 	{
-		RenderUnit& genericUnit = Renderer::m_drawingDataMap[Shader::PipelineType::Generic]->m_renderUnits[Material::MaterialType::Generic];
-		std::vector<Vertex> newCube = Vertex::CreateCube(1);
-		std::vector<unsigned int> newIndices = 
-		{
-			0, 1, 2, 2, 3, 0,       // Cara frontal
-			4, 5, 6, 6, 7, 4,       // Cara trasera
-			8, 9,10,10,11, 8,       // Cara izquierda
-		   12,13,14,14,15,12,       // Cara derecha
-		   16,17,18,18,19,16,       // Cara inferior
-		   20,21,22,22,23,20        // Cara superior
-		};
-
+		RenderUnitPtr genericUnit = Renderer::m_drawingDatas[0]->m_renderUnits[materialId];
 
 		glm::mat4 modelMatrix(1.0f);
 		modelMatrix = glm::translate(modelMatrix, object()->transform().position());
@@ -42,7 +43,7 @@ public:
 		modelMatrix = glm::rotate(modelMatrix, glm::radians(object()->transform().rotation().z), glm::vec3(0.0f, 0.0f, 1.0f));
 		modelMatrix = glm::scale(modelMatrix, object()->transform().scale());
 
-		genericUnit.AddBatchData(newCube, newIndices, { modelMatrix });
+		genericUnit->AddBatchData(cube, indices, { modelMatrix });
 	};
 	
 	

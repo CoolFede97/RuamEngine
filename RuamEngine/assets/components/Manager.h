@@ -14,14 +14,12 @@ public:
 	void render() {
 		ImGuiIO& io = ImGui::GetIO();
 		ImGui::Text("FPS: %.1f", io.Framerate);
-		int i = 0;
-		for (const auto& scene : SceneManager::sceneList()) 
+		for (int i = 0; i < SceneManager::sceneList().size(); i++) 
 		{
 			if (ImGui::Button(std::to_string(i).c_str()))
 			{
 				SceneManager::SetActiveScene(i);
 			}
-			i++;
 		}
 	};
 	void update()

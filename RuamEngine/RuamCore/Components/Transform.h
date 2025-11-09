@@ -19,7 +19,7 @@ public:
 	void setRotation(glm::vec3 new_rot);
 	void setRotation(float x, float y, float z);
 
-	void setScale(glm::vec3 new_pos);
+	void setScale(glm::vec3 new_scale);
 	void setScale(float x, float y, float z);
 
 	void setParent(Transform* parent);

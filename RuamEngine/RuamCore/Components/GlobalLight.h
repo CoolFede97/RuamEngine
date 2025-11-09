@@ -20,16 +20,20 @@ namespace RuamEngine
 	
 	private:
 		static GlobalLight* s_mainLight;
-		float m_color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		Vec4 m_color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		float m_lightOffset = 0.1f;
 	public:
 
 		void SetLightColor(Vec4 color)
 		{
-			m_color[0] = color.x;
-			m_color[1] = color.y;
-			m_color[2] = color.z;
-			m_color[3] = color.w;
-			Renderer::m_drawingDatas[0]->m_program->SetUniform4f("u_globalLightColor", m_color[0], m_color[1], m_color[2], m_color[3]);
+			m_color = color;
+			Renderer::m_drawingDatas[0]->m_program->SetUniform4f("u_globalLightColor", m_color.x, m_color.y, m_color.z, m_color.w);
+		}
+
+		void SetLightOffset(float offset)
+		{
+			m_lightOffset = offset;
+			Renderer::m_drawingDatas[0]->m_program->SetUniform1f("u_lightOffset", m_lightOffset);
 		}
 
 		void update() { Component::update(); };
@@ -37,7 +41,8 @@ namespace RuamEngine
 		{
 			if (!s_mainLight) s_mainLight = this;
 			else if (s_mainLight != this) object()->removeComponent<GlobalLight>(); // PREGUNTARLE A TOMI COMO HACER QUE ESTO BORRE A ¡ESTE! COMPONENTE
-			Renderer::m_drawingDatas[0]->m_program->SetUniform4f("u_globalLightColor", m_color[0], m_color[1], m_color[2], m_color[3]);
+			SetLightColor(m_color);
+			SetLightOffset(m_lightOffset);
 		}
 
 		void render()

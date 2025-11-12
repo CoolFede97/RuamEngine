@@ -24,25 +24,20 @@ void CreateCFSandboxScene()
 	//bag->transform().setRotation(glm::vec3(45.0f, 5.0f, 45.0f));
 	//bag->addComponent<CubeRenderer>()->materialId = 0;
 	
-	Object* bag2 = sandboxScene->newObject();
-	bag2->transform().setPosition(glm::vec3(0.0f, -1.5f, 7.0f));
-	bag2->addComponent<MeshRenderer>()->m_meshPath = "assets/meshes/Nave/Nave.obj";
+	Object* boss = sandboxScene->newObject();
+	boss->transform().setPosition(glm::vec3(0.0f, -1.5f, 7.0f));
+	boss->addComponent<MeshRenderer>()->m_meshPath = "assets/meshes/Nave/Nave.obj";
 	//bag2->addComponent<CubeRenderer>()->materialId = 0;
 	
-	Object* bag = sandboxScene->newObject();
-	bag->transform().setPosition(glm::vec3(0.0f, -1.5f, 15.0f));
-	bag->addComponent<MeshRenderer>()->m_meshPath = "assets/meshes/skyboxes/galaxy/galaxySkybox.obj";
-	bag->transform().setRotation(glm::vec3(180.0f, 0.0, 0.0));
-	bag->transform().setScale(glm::vec3(500.0f, 500.0f, 500.0f));
+	Object* skybox = sandboxScene->newObject();
+	skybox->transform().setPosition(glm::vec3(0.0f, -1.5f, 15.0f));
+	skybox->addComponent<MeshRenderer>()->m_meshPath = "assets/meshes/skyboxes/galaxy/galaxySkybox.obj";
+	skybox->transform().setRotation(glm::vec3(180.0f, 0.0, 0.0));
+	skybox->transform().setScale(glm::vec3(500.0f, 500.0f, 500.0f));
 
-	Object* manager = sandboxScene->newObject();
-	manager->addComponent<Camera>();
-	manager->addComponent<CameraController>();
-	manager->getComponent<CameraController>()->m_speed = 10.5f;
-	manager->getComponent<CameraController>()->m_rotationSpeed = 80.0f;
-	//manager->addComponent<CameraController>();
-	manager->addComponent<Counter>();
-	manager->addComponent<Manager>();
-	//manager->addComponent<AudioSource>("/home/tomy/programming/ce/masmas/RuamEngine/RuamEngine/1 Crumbling Castle.wav");
-	manager->addComponent<Counter>();
+	Object* player = sandboxScene->newObject();
+	player->addComponent<Camera>();
+	player->addComponent<CameraController>();
+	player->getComponent<CameraController>()->m_speed = 10.5f;
+	player->getComponent<CameraController>()->m_rotationSpeed = 80.0f;
 }

@@ -27,7 +27,6 @@ uniform float u_shininess;
 
 uniform vec4 u_globalLightColor;
 uniform vec3 u_globalLightPos;
-uniform float u_lightOffset;
 
 void main()
 {
@@ -42,7 +41,7 @@ void main()
     vec3 lightDir = normalize(vec3(frag_pos) - lightPos);
     
     float similarity = dot(lightDir, frag_normal);
-    float intensity = min(((1.0 - ((similarity + 1.0) * 0.5)) * u_shininess) + u_lightOffset, 1.0);
+    float intensity = (1.0 - ((similarity + 1.0) * 0.5)) * u_shininess;
     vec4 intensityVec = vec4(intensity, intensity, intensity, 1.0);
     final_color = (diffuse * 0.8 + specular * 0.2) * reflection * lightColor * intensityVec;  
 }

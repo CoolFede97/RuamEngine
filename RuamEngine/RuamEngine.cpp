@@ -31,25 +31,12 @@ int main()
 		ImGui_ImplOpenGL3_Init();
 
 		ImGui::StyleColorsDark();
-
-
-		
-		
-		CreateMenuScene();
 		CreateCFSandboxScene();
-
-		
-
-		//SceneManager::SetActiveScene(0);
-
-		// Scene* collisionSandboxScene = CreateCollisionSandboxScene();
 
 		unsigned int frameCount = 0;
 
 		while (!Renderer::WindowShouldClose())
 		{
-			//std::cout << "Frame " << frameCount++  << "###############################################" << "\n";
-
 			// ImGUI
 			ImGui_ImplOpenGL3_NewFrame();
 			ImGui_ImplGlfw_NewFrame();

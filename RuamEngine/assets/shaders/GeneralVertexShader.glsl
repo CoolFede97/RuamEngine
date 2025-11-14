@@ -72,9 +72,9 @@ void main()
     uint realIndex = indices[gl_VertexID];
     mat4 vp = u_projection * u_view;
     vec4 position = vec4(GetPosition(realIndex), 1.0);
-    frag_pos = position;
 	gl_Position = vp * modelTransforms[gl_InstanceID] * position;
+    frag_pos = modelTransforms[gl_InstanceID] * position;
     frag_uv = GetUV(realIndex);
     frag_instance = gl_InstanceID;
-    frag_normal = GetNormal(realIndex);
+    frag_normal = normalize(GetNormal(realIndex));
 };

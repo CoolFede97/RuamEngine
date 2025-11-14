@@ -26,11 +26,12 @@ void CreateCFSandboxScene()
 	
 	Object* bag2 = sandboxScene->newObject();
 	bag2->transform().setPosition(glm::vec3(0.0f, -1.5f, 7.0f));
-	bag2->addComponent<MeshRenderer>()->m_meshPath = "assets/meshes/boss/boss.obj";
+	bag2->addComponent<MeshRenderer>()->SetModel("assets/meshes/boss/boss.obj");
 	//bag2->addComponent<CubeRenderer>()->materialId = 0;
 	
 	Object* bag = sandboxScene->newObject();
-	bag->addComponent<MeshRenderer>()->m_meshPath = "assets/meshes/skyboxes/galaxy/galaxySkybox.obj";
+	bag->addComponent<MeshRenderer>()->SetModel("assets/meshes/skyboxes/galaxy/galaxySkybox.obj");
+	bag->getComponent<MeshRenderer>()->m_model->m_meshes[0].m_material->m_shininess = 1000.0;
 	bag->transform().setRotation(glm::vec3(180.0f, 0.0, 0.0));
 	bag->transform().setScale(glm::vec3(500.0f, 500.0f, 500.0f));
 

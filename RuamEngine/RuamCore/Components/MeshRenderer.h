@@ -17,8 +17,30 @@ class MeshRenderer : public BaseRenderer
 	using BaseRenderer::BaseRenderer;
 public:
 	std::string m_meshPath;
-private:
 	ModelPtr m_model;
+	void SetModel(const std::string& path)
+	{
+		m_meshPath = path;
+		m_model = std::make_shared<Model>(m_meshPath);
+		m_vertices = GetMeshesVertices();
+		m_indices = GetMeshesIndices();
+		Renderer::UpdateTextures2D();
+
+		// Pre-upload geometry once per mesh into the appropriate RenderUnit (vertices + indices).
+		for (Mesh& mesh : m_model->m_meshes)
+		{
+			for (auto& ru : Renderer::m_drawingDatas[0]->m_renderUnits)
+			{
+				if (ru->m_material->GetId() == mesh.m_material->GetId())
+				{
+					ru->AddBatchData(mesh.m_vertices, mesh.m_indices, {});
+					ru->m_staticStorage = true;
+					break;
+				}
+			}
+		}
+	}
+private:
 	std::vector<Vertex> m_vertices;
 	std::vector<unsigned int> m_indices;
 
@@ -104,25 +126,8 @@ private:
 
 	void start()
 	{
-		m_model = std::make_shared<Model>(m_meshPath);
-		m_vertices = GetMeshesVertices();
-		m_indices = GetMeshesIndices();
-		Renderer::UpdateTextures2D();
-
-		// Pre-upload geometry once per mesh into the appropriate RenderUnit (vertices + indices).
-		for (Mesh& mesh : m_model->m_meshes)
-		{
-			for (auto& ru : Renderer::m_drawingDatas[0]->m_renderUnits)
-			{
-				if (ru->m_material->GetId() == mesh.m_material->GetId())
-				{
-					ru->AddBatchData(mesh.m_vertices, mesh.m_indices, {});
-					ru->m_staticStorage = true;
-					break;
-				}
-			}
-		}
 	}
+
 
 	void update()
 	{

@@ -9,7 +9,7 @@
 #include "MeshRenderer.h"
 #include "GlobalLight.h"
 
-// #include "../components/Shooter.h"
+#include "../components/Shooter.h"
 
 void CreateCFSandboxScene()
 {
@@ -25,8 +25,9 @@ void CreateCFSandboxScene()
 
 	Object* boss = sandboxScene->newObject();
 	boss->transform().setPosition(glm::vec3(0.0f, -1.5f, 7.0f));
-	boss->addComponent<MeshRenderer>()->SetModel("assets/meshes/Nave/Nave.obj");
-	// boss->addComponent<Boss>();
+	boss->transform().setScale(glm::vec3(5.0f, 5.0f, 5.0f));
+	boss->addComponent<MeshRenderer>()->SetModel("assets/meshes/boss/boss.obj");
+	boss->addComponent<Boss>();
 
 	Object* skybox = sandboxScene->newObject();
 	skybox->addComponent<MeshRenderer>()->SetModel("assets/meshes/skyboxes/galaxy/galaxySkybox.obj");
@@ -40,9 +41,11 @@ void CreateCFSandboxScene()
 	player->getComponent<CameraController>()->m_speed = 10.5f;
 	player->getComponent<CameraController>()->m_rotationSpeed = 80.0f;
 
-	// player->addComponent<Shooter>();
-	// player->getComponent<Shooter>()->m_bulletSpeed = 10.0f;
-	// player->getComponent<Shooter>()->m_bulletMeshPath = "assets/meshes/boss/boss.obj";
+	Shooter* shooter = player->addComponent<Shooter>();
+
+	shooter->m_bulletSpeed = 10.0f;
+	shooter->m_bulletRadius = 0.4f;
+	shooter->m_bulletMeshPath = "assets/meshes/bullet/bullet.obj";
 
 	Object* manager = sandboxScene->newObject();
 	//manager->addComponent<CameraController>();

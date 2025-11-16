@@ -7,66 +7,8 @@
 #include "glm/glm.hpp"
 #include "MeshRenderer.h"
 
-class Boss : public Component {
-	IMPL_SIMPLE_SERIALIZE(Boss)
-
-	using Component::Component;
-	Boss(const nlohmann::json& j, unsigned int obj_id) : Component(obj_id) {}
-
-	void start() {
-		if (s_instance == nullptr) {
-			s_instance = this;
-		} else if (s_instance != this) {
-			object()->removeComponent<Boss>(); // ESTO EST� MAL
-		}
-	}
-
-	void update()
-	{
-		/*if (m_timeSinceLastShot > m_shootingInterval)
-		{
-			m_timeSinceLastShot = 0;
-			Object* object = SceneManager::ActiveScene()->newObject(0);
-
-			Bullet* bullet = object->addComponent<Bullet>();
-			bullet->speed = 10.0f;
-			bullet->direction = glm::normalize(Shooter::s_instance->object()->transform().position() - object()->transform().position());
-			bullet->radius = 1.0f;
-		}
-		m_timeSinceLastShot += Time::DeltaTime();*/
-	}
-public:
-	static Boss* s_instance;
-protected:
-	float m_shootingSpeed = 0;
-	float m_shootingInterval = 0;
-	float m_timeSinceLastShot = 0;
-};
-REGISTER_COMPONENT(Boss);
-
-class Bullet : public Component {
-	IMPL_SIMPLE_SERIALIZE(Bullet)
-
-	using Component::Component;
-	Bullet(const nlohmann::json& j, unsigned int obj_id) : Component(obj_id) {}
-
-	void start()
-	{
-	}
-
-	void update()
-	{
-		object()->transform().setPosition(object()->transform().position() + m_direction * m_speed * Time::DeltaTime());
-	}
-
-public:
-	float m_radius;
-	float m_speed;
-	glm::vec3 m_direction;
-private:
-};
-
-REGISTER_COMPONENT(Bullet)
+#include "Boss.h"
+#include "Bullet.h"
 
 class Shooter : public Component {
 	IMPL_SIMPLE_SERIALIZE(Shooter)
@@ -81,6 +23,7 @@ class Shooter : public Component {
 		else if (s_instance != this) {
 			object()->removeComponent<Shooter>(); // ESTO EST� MAL
 		}
+		Boss::s_instance->playerTransform = &object()->transform();
 	}
 
 	void update() {

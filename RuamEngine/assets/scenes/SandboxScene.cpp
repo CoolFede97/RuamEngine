@@ -23,11 +23,15 @@ void CreateCFSandboxScene()
 	//bag->transform().setRotation(glm::vec3(45.0f, 5.0f, 45.0f));
 	//bag->addComponent<CubeRenderer>()->materialId = 0;
 
-	Object* boss = sandboxScene->newObject();
-	boss->transform().setPosition(glm::vec3(0.0f, -1.5f, 7.0f));
-	boss->transform().setScale(glm::vec3(5.0f, 5.0f, 5.0f));
-	boss->addComponent<MeshRenderer>()->SetModel("assets/meshes/boss/boss.obj");
-	boss->addComponent<Boss>();
+	Object* bossO = sandboxScene->newObject();
+	bossO->transform().setPosition(glm::vec3(0.0f, -1.5f, 7.0f));
+	bossO->transform().setScale(glm::vec3(5.0f, 5.0f, 5.0f));
+	bossO->addComponent<MeshRenderer>()->SetModel("assets/meshes/boss/boss.obj");
+	Boss* boss = bossO->addComponent<Boss>();
+	boss->m_shootingInterval = 1.0f;
+	boss->m_bulletSpeed = 20.0f;
+	boss->m_bulletRadius = 1.5f;
+	boss->m_bulletMeshPath = "assets/meshes/bullet/bullet.obj";
 
 	Object* skybox = sandboxScene->newObject();
 	skybox->addComponent<MeshRenderer>()->SetModel("assets/meshes/skyboxes/galaxy/galaxySkybox.obj");
@@ -42,7 +46,6 @@ void CreateCFSandboxScene()
 	player->getComponent<CameraController>()->m_rotationSpeed = 80.0f;
 
 	Shooter* shooter = player->addComponent<Shooter>();
-
 	shooter->m_bulletSpeed = 10.0f;
 	shooter->m_bulletRadius = 0.4f;
 	shooter->m_bulletMeshPath = "assets/meshes/bullet/bullet.obj";

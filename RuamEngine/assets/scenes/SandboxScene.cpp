@@ -41,7 +41,6 @@ void CreateCFSandboxScene()
 	player->getComponent<CameraController>()->m_rotationSpeed = 80.0f;
 
 	player->addComponent<Shooter>();
-	std::cout << "player created°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°\n";
 	player->getComponent<Shooter>()->m_bulletSpeed = 10.0f;
 	player->getComponent<Shooter>()->m_bulletMeshPath = "assets/meshes/boss/boss.obj";
 

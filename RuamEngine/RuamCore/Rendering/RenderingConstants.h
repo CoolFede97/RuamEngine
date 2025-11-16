@@ -1,4 +1,5 @@
 #pragma once
+#include "glm/glm.hpp"
 
 namespace RuamEngine
 {
@@ -12,4 +13,3 @@ namespace RuamEngine
 	static const unsigned int maxMat4Size = maxVertexCount * mat4Size;
 	static const unsigned int maxTextureCount = 3000;
 }
-

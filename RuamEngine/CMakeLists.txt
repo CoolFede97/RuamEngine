@@ -352,6 +352,15 @@ add_library(Objects STATIC ${OBJECTS_SRC} ${COMPONENTS_SRC})
 target_include_directories(Objects PUBLIC "${CMAKE_SOURCE_DIR}/RuamCore/Objects" "${CMAKE_SOURCE_DIR}/RuamCore/Components")
 target_link_libraries(Objects PUBLIC Audio RuamUtils Time Scenes)
 
+# ///////////////////////////////////////////////////////////////////////////////////////////////
+
+# Components from assets
+
+file (GLOB COMPONENTS_ASSETS_SRC "${CMAKE_SOURCE_DIR}/assets/components/*.cpp")
+add_library(AssetsComponents STATIC ${COMPONENTS_ASSETS_SRC})
+target_include_directories(AssetsComponents PUBLIC "${CMAKE_SOURCE_DIR}/assets/components")
+target_link_libraries(AssetsComponents PUBLIC Scenes Objects)
+
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -368,7 +377,7 @@ target_include_directories(EventSystem INTERFACE ${CMAKE_SOURCE_DIR}/RuamCore/Ev
 # Linking
 
 target_link_libraries(RuamCore INTERFACE
-    Rendering Maths Time Files Input Objects RuamUtils Scenes Audio EventSystem
+    Rendering Maths Time Files Input Objects RuamUtils Scenes Audio EventSystem AssetsComponents
 )
 
 # -----------------------------------------------------------------------------------------------------

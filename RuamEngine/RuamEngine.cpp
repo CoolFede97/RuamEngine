@@ -1,10 +1,9 @@
-﻿#include <iostream>
+#include <iostream>
 
 #include "RuamEngine.h"
 
 #include "MenuScene.cpp"
 #include "SandboxScene.cpp"
-#include "assets/components/Manager.h"
 #include "assets/scenes/CollisionSandboxScene.cpp"
 
 using namespace RuamEngine;
@@ -45,7 +44,7 @@ int main()
 			glfwPollEvents();
 
 			// Input
-			
+
 			// Time
 			Time::Update();
 

@@ -84,7 +84,9 @@ class Shooter : public Component {
 	}
 
 	void update() {
-		if (Input::GetKeyDown(KeyCode::SpaceBar_Key)) {
+		if (Input::GetKeyDown(KeyCode::SpaceBar_Key))
+		{
+		    std::cout << "HOLA WACHO!\n";
 			Object* object = SceneManager::ActiveScene()->newObject(0);
 
 			Bullet* bullet = object->addComponent<Bullet>();

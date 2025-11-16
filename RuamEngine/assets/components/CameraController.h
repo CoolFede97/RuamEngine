@@ -35,6 +35,7 @@ private:
 		if (Input::GetKeyDown(KeyCode::Left_Arrow)) m_mouseRotation.y += 1;
 		if (Input::GetKeyDown(KeyCode::Right_Arrow)) m_mouseRotation.y -= 1;
 
+
 		object()->transform().rotation() += static_cast<glm::vec3>(m_mouseRotation * Time::DeltaTime() * m_rotationSpeed);
 		//object()->transform().rotation() += static_cast<glm::vec3>(Input::GetMouseDeltaNorm() * Time::DeltaTime() * m_rotationSpeed);
 		object()->transform().rotation().x = std::clamp(object()->transform().rotation().x, -89.0f, 89.0f);
@@ -47,7 +48,7 @@ private:
 		if (Input::GetKeyDown(KeyCode::S_Key)) m_horizontalDirection.z -= 1;
 		if (Input::GetKeyDown(KeyCode::A_Key)) m_horizontalDirection.x -= 1;
 		if (Input::GetKeyDown(KeyCode::D_Key)) m_horizontalDirection.x += 1;
-		
+
 		m_direction = Vec3::GetDirectionFromEuler(object()->transform().rotation());
 		//std::cout << "Direction: " << m_direction << "\n";
 

@@ -11,6 +11,7 @@ class Boss : public Component {
 	IMPL_SIMPLE_SERIALIZE(Boss)
 
 	using Component::Component;
+	Boss(const nlohmann::json& j, unsigned int obj_id) : Component(obj_id) {}
 
 	void start() {
 		if (s_instance == nullptr) {
@@ -47,6 +48,7 @@ class Bullet : public Component {
 	IMPL_SIMPLE_SERIALIZE(Bullet)
 
 	using Component::Component;
+	Bullet(const nlohmann::json& j, unsigned int obj_id) : Component(obj_id) {}
 
 	void start()
 	{
@@ -70,7 +72,7 @@ class Shooter : public Component {
 	IMPL_SIMPLE_SERIALIZE(Shooter)
 
 	using Component::Component;
-
+	Shooter(const nlohmann::json& j, unsigned int obj_id) : Component(obj_id) {}
 	void start()
 	{
 		if (s_instance == nullptr) {
@@ -98,7 +100,7 @@ class Shooter : public Component {
 	}
 
 public:
-	Shooter* s_instance = nullptr;
+	static Shooter* s_instance;
 	float m_bulletSpeed = 0.0f;
 	float m_bulletRadius = 1.0f;
 	std::string m_bulletMeshPath;

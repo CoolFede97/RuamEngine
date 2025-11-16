@@ -9,7 +9,7 @@
 #include "MeshRenderer.h"
 #include "GlobalLight.h"
 
-// #include "../components/Shooter.h"
+#include "../components/Shooter.h"
 
 void CreateCFSandboxScene()
 {
@@ -26,7 +26,7 @@ void CreateCFSandboxScene()
 	Object* boss = sandboxScene->newObject();
 	boss->transform().setPosition(glm::vec3(0.0f, -1.5f, 7.0f));
 	boss->addComponent<MeshRenderer>()->SetModel("assets/meshes/boss/boss.obj");
-	// boss->addComponent<Boss>();
+	boss->addComponent<Boss>();
 	//bag2->addComponent<CubeRenderer>()->materialId = 0;
 
 	Object* skybox = sandboxScene->newObject();
@@ -40,10 +40,10 @@ void CreateCFSandboxScene()
 	player->getComponent<CameraController>()->m_speed = 10.5f;
 	player->getComponent<CameraController>()->m_rotationSpeed = 80.0f;
 
-	// player->addComponent<Shooter>();
-	// std::cout << "player created°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°\n";
-	// player->getComponent<Shooter>()->m_bulletSpeed = 10.0f;
-	// player->getComponent<Shooter>()->m_bulletMeshPath = "assets/meshes/boss/boss.obj";
+	player->addComponent<Shooter>();
+	std::cout << "player created°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°\n";
+	player->getComponent<Shooter>()->m_bulletSpeed = 10.0f;
+	player->getComponent<Shooter>()->m_bulletMeshPath = "assets/meshes/boss/boss.obj";
 
 	Object* manager = sandboxScene->newObject();
 	manager->addComponent<Camera>();

@@ -1,4 +1,4 @@
-﻿# CMakeList.txt : CMake project for RuamEngine, include source and define
+# CMakeList.txt : CMake project for RuamEngine, include source and define
 # project specific logic here.
 #
 cmake_minimum_required (VERSION 3.8...4.1.0)
@@ -6,8 +6,8 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if (POLICY CMP0141)
-  cmake_policy(SET CMP0141 NEW)
-  set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
+    cmake_policy(SET CMP0141 NEW)
+    set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
 # Requerido por Tomy para poder usar lsp
@@ -22,7 +22,6 @@ add_executable (RuamEngine "RuamEngine.cpp" "RuamEngine.h")
 include(FetchContent)
 include(FindOpenGL)
 
-add_subdirectory(CoolFede97)
 add_subdirectory(Santinorua)
 add_subdirectory(Skuerjuan)
 add_subdirectory(Tomyatana)
@@ -65,9 +64,9 @@ FetchContent_MakeAvailable(json)
 
 add_library(Vendor INTERFACE)
 
-target_include_directories(Vendor INTERFACE 
-	${CMAKE_SOURCE_DIR}/vendor/GLM
-	${CMAKE_SOURCE_DIR}/vendor/stb_image
+target_include_directories(Vendor INTERFACE
+ ${CMAKE_SOURCE_DIR}/vendor/GLM
+ ${CMAKE_SOURCE_DIR}/vendor/stb_image
 #   ${CMAKE_SOURCE_DIR}/vendor/IMGUI
 )
 
@@ -120,7 +119,7 @@ set(BUILD_SHARED_LIBS ON)
 # GLM
 
 FetchContent_Populate(
-  glm 
+  glm
   URL https://github.com/g-truc/glm/archive/refs/tags/1.0.1.zip
 )
 add_library(glm INTERFACE)
@@ -169,14 +168,14 @@ FetchContent_MakeAvailable(imgui)
 message("${imgui_SOURCE_DIR}")
 
 # In order to use a library which has cpp and h files, you need to create a library (add_library) and
-# give it a source path (with the cpp files). 
+# give it a source path (with the cpp files).
 file (GLOB IMGUI_SRC "${imgui_SOURCE_DIR}/*.cpp" "${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp" "${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp")
 add_library(ImGui STATIC ${IMGUI_SRC})
-# In this case, the library has #include <AnotherLibrary> in its cpp files, like GLFW or GLEW, so 
+# In this case, the library has #include <AnotherLibrary> in its cpp files, like GLFW or GLEW, so
 # we need to indicate where those glfw.h and glew.h files are.
 target_link_libraries(ImGui PUBLIC glfw glew_s)
 target_include_directories(ImGui PUBLIC "${imgui_SOURCE_DIR}")
-# Lastly, add this new library to the function target_link_directories and also provice the path to 
+# Lastly, add this new library to the function target_link_directories and also provice the path to
 # the h files to the target_include_directories function
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -228,7 +227,7 @@ if (UNIX)
 endif()
 if (WIN32)
     target_link_libraries(Vendor INTERFACE
-        glfw glew_s glm ImGui OpenGL::GL 
+        glfw glew_s glm ImGui OpenGL::GL
     )
 endif()
 ]==========]
@@ -237,7 +236,7 @@ target_compile_definitions(Vendor INTERFACE STB_IMAGE_IMPLEMENTATION)
 target_compile_definitions(Vendor INTERFACE BUILD_WITH_EASY_PROFILER)
 
 target_link_libraries(Vendor INTERFACE
-        glfw glew_s glm ImGui OpenGL::GL nlohmann_json::nlohmann_json dr_libs assimp 
+        glfw glew_s glm ImGui OpenGL::GL nlohmann_json::nlohmann_json dr_libs assimp
 )
 if (LINUX)
     target_link_libraries(Vendor INTERFACE easy_profiler OpenAL::OpenAL)
@@ -245,7 +244,7 @@ else()
     target_link_libraries(Vendor INTERFACE OpenAL::OpenAL)
 endif ()
 
-target_include_directories(Vendor INTERFACE 
+target_include_directories(Vendor INTERFACE
     ${VENDOR_PATH}/stb_image
 )
 
@@ -318,7 +317,7 @@ target_link_libraries(Input PUBLIC Rendering Maths)
 target_include_directories(Input INTERFACE ${CMAKE_SOURCE_DIR}/RuamCore/Input)
 
 
-# /////////////////////////////////////////////////////////////////////////////////////////////// 
+# ///////////////////////////////////////////////////////////////////////////////////////////////
 
 # Utils
 
@@ -334,7 +333,7 @@ add_library(Scenes STATIC ${SCENES_SRC})
 target_include_directories(Scenes PUBLIC "${CMAKE_SOURCE_DIR}/assets/scenes")
 target_link_libraries(Scenes PUBLIC Vendor Maths Rendering Objects)
 
-# /////////////////////////////////////////////////////////////////////////////////////////////// 
+# ///////////////////////////////////////////////////////////////////////////////////////////////
 
 # Audio
 
@@ -379,7 +378,7 @@ target_link_libraries(RuamCore INTERFACE
 # -----------------------------------------------------------------------------------------------------
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET RuamEngine PROPERTY CXX_STANDARD 20)
+    set_property(TARGET RuamEngine PROPERTY CXX_STANDARD 20)
 endif()
 
 target_link_libraries(RuamEngine PUBLIC RuamCore)

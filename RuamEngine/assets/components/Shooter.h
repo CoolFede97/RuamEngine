@@ -5,21 +5,22 @@
 #include "RuamTime.h"
 
 #include "glm/glm.hpp"
+#include "MeshRenderer.h"
 
 class Boss : public Component {
 	IMPL_SIMPLE_SERIALIZE(Boss)
-	
+
 	using Component::Component;
 
 	void start() {
 		if (s_instance == nullptr) {
 			s_instance = this;
 		} else if (s_instance != this) {
-			object()->removeComponent<Boss>(); // ESTO ESTÁ MAL
+			object()->removeComponent<Boss>(); // ESTO ESTï¿½ MAL
 		}
 	}
-	
-	void update() 
+
+	void update()
 	{
 		/*if (m_timeSinceLastShot > m_shootingInterval)
 		{
@@ -30,7 +31,7 @@ class Boss : public Component {
 			bullet->speed = 10.0f;
 			bullet->direction = glm::normalize(Shooter::s_instance->object()->transform().position() - object()->transform().position());
 			bullet->radius = 1.0f;
-		} 
+		}
 		m_timeSinceLastShot += Time::DeltaTime();*/
 	}
 public:
@@ -50,12 +51,12 @@ class Bullet : public Component {
 	void start()
 	{
 	}
-	
-	void update() 
+
+	void update()
 	{
 		object()->transform().setPosition(object()->transform().position() + m_direction * m_speed * Time::DeltaTime());
 	}
-	 
+
 public:
 	float m_radius;
 	float m_speed;
@@ -70,22 +71,22 @@ class Shooter : public Component {
 
 	using Component::Component;
 
-	void start() 
+	void start()
 	{
 		if (s_instance == nullptr) {
 			s_instance = this;
 		}
 		else if (s_instance != this) {
-			object()->removeComponent<Shooter>(); // ESTO ESTÁ MAL
+			object()->removeComponent<Shooter>(); // ESTO ESTï¿½ MAL
 		}
 	}
-	
+
 	void update() {
 		if (Input::GetKeyDown(KeyCode::SpaceBar_Key)) {
 			Object* object = SceneManager::ActiveScene()->newObject(0);
 
 			Bullet* bullet = object->addComponent<Bullet>();
-			
+
 			bullet->object()->transform().position() = s_instance->object()->transform().position();
 
 			bullet->m_speed = m_bulletSpeed;

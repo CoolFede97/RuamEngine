@@ -8,6 +8,7 @@
 #include "MeshRenderer.h"
 
 #include "Bullet.h"
+#include "Shooter.h"
 
 class Boss : public Component {
 	IMPL_SIMPLE_SERIALIZE(Boss)
@@ -32,7 +33,7 @@ class Boss : public Component {
 
 			object->transform().position() = s_instance->object()->transform().position();
 
-			Bullet* bullet = object->addComponent<Bullet>();
+			Bullet* bullet = &object->addComponent<Bullet>([this]() {Shooter::s_instance->take_damage(m_damage);});
 			bullet->m_speed = m_bulletSpeed;
 			bullet->m_direction = glm::normalize(playerTransform->position() - this->object()->transform().position());
 			bullet->m_target = playerTransform;
@@ -43,6 +44,14 @@ class Boss : public Component {
 		}
 		m_timeSinceLastShot += Time::DeltaTime();
 	}
+
+	void take_damage(float damage) {
+		s_instance->m_health -= damage;
+		if (s_instance->m_health <= 0) {
+			object()->destroy();
+		}
+	}
+
 public:
 	static Boss* s_instance;
     Transform* playerTransform;
@@ -50,7 +59,10 @@ public:
 	float m_bulletRadius = 1.0f;
 	float m_shootingInterval = 0;
 	std::string m_bulletMeshPath;
+	float m_health = 100;
+	float m_damage = 10;
 protected:
 	float m_timeSinceLastShot = 0;
 };
+
 REGISTER_COMPONENT(Boss);

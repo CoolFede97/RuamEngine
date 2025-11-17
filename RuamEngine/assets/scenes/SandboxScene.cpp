@@ -10,6 +10,7 @@
 #include "GlobalLight.h"
 
 #include "../components/Shooter.h"
+#include "../components/Boss.h"
 
 void CreateCFSandboxScene()
 {

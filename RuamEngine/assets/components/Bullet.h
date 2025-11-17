@@ -20,12 +20,22 @@ class Bullet : public Component {
 	void update()
 	{
 		object()->transform().setPosition(object()->transform().position() + m_direction * m_speed * Time::DeltaTime());
+		if (glm::length(object()->transform().position() - m_target->position()) <= m_radius)
+		{
+		    std::cout << "Bullet hit target!\n";
+			object()->destroy();
+		}
+		if (object()->transform().position().length() > 800.0f) // Arbitrary large distance to destroy bullet
+		{
+			object()->destroy();
+		}
 	}
 
 public:
 	float m_radius;
 	float m_speed;
 	glm::vec3 m_direction;
+	Transform* m_target;
 private:
 };
 

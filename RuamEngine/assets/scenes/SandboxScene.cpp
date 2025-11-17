@@ -46,6 +46,7 @@ void CreateCFSandboxScene()
 	player->getComponent<CameraController>()->m_rotationSpeed = 80.0f;
 
 	Shooter* shooter = player->addComponent<Shooter>();
+	shooter->m_shootingInterval = 0.3f;
 	shooter->m_bulletSpeed = 10.0f;
 	shooter->m_bulletRadius = 0.4f;
 	shooter->m_bulletMeshPath = "assets/meshes/bullet/bullet.obj";

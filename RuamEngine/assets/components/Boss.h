@@ -35,6 +35,7 @@ class Boss : public Component {
 			Bullet* bullet = object->addComponent<Bullet>();
 			bullet->m_speed = m_bulletSpeed;
 			bullet->m_direction = glm::normalize(playerTransform->position() - this->object()->transform().position());
+			bullet->m_target = playerTransform;
 			bullet->m_radius = m_bulletRadius;
 
 			object->addComponent<MeshRenderer>()->SetModel(m_bulletMeshPath);

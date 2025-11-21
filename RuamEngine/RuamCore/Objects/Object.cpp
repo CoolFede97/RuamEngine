@@ -28,7 +28,7 @@ void Object::setName(const std::string &name) {
 void Object::start() {
 	for (auto &cmp : getComponents()) {
 		if (SceneManager::SceneChange()) break;
-		if (destroy_flag) break;
+		if (m_destroy_flag) break;
 		cmp->start();
     }
 }
@@ -36,21 +36,29 @@ void Object::start() {
 void Object::update() {
 	for (auto &cmp: getComponents()) {
 		if (SceneManager::SceneChange()) continue;
-		if (destroy_flag) break;
+		if (m_destroy_flag) break;
         cmp->update();
     }
 }
 
 void Object::destroy() {
-	destroy_flag = true;
+	m_destroy_flag = true;
 }
 
 bool Object::marked_destruction() const {
-	return destroy_flag;
+	return m_destroy_flag;
+}
+
+void Object::setEnabled(bool status) {
+	m_enabled = status;
+}
+
+bool Object::isEnabled() const {
+	return m_enabled;
 }
 
 Transform &Object::transform() {
-    return m_transform;
+	return m_transform;
 }
 
 std::vector<Component*> Object::getComponents() const {

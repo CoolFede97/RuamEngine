@@ -118,6 +118,10 @@ public:
 
 	void destroy();
 
+	void setEnabled(bool status);
+
+	bool isEnabled() const;
+
 	bool marked_destruction() const;
 
 	Transform& transform();
@@ -130,8 +134,8 @@ private:
 
 	ComponentList m_components;
 
-	bool enabled = true;
-	bool destroy_flag = false;
+	bool m_enabled = true;
+	bool m_destroy_flag = false;
 
 	static const std::string s_default_name;
 };

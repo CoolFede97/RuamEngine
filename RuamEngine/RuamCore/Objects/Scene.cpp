@@ -47,6 +47,7 @@ void Scene::deleteObjectByIdx(unsigned int idx) {
 void Scene::start() {
 	SceneManager::SetSceneChange(false);
 	for (auto& obj : m_objects) {
+		if (!obj->isEnabled()) continue;
 		obj->start();
 	};
 }
@@ -56,7 +57,7 @@ void Scene::update() {
 		start();
 		return;
 	}
-	m_objects.remove_if([](std::unique_ptr<Object>& obj) {return obj->marked_destruction();});
+	m_objects.remove_if([](std::unique_ptr<Object>& obj) {return obj->marked_destruction() || obj == nullptr;});
 	for (auto& obj : m_objects) {
 		if (SceneManager::SceneChange()) {
 			return;
@@ -64,6 +65,7 @@ void Scene::update() {
 		if (obj == nullptr) continue;
 		if (obj->marked_destruction()) continue;
 
+		if (!obj->isEnabled()) continue;
 		obj->update();
 	}
 }

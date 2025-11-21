@@ -9,7 +9,7 @@ namespace RuamEngine
     public:
 
         Material();
-        Vec4 albedoColor = Vec4(1.0f, 1.0f, 1.0f, 1.0f); // blanco por defecto
+        Vec4 baseColor = Vec4(1.0f, 1.0f, 1.0f, 1.0f); // blanco por defecto
         float m_mainTexture = 0.0f;
         float m_diffuseIndex = 0.0f;
         float m_specularIndex = 0.0f;

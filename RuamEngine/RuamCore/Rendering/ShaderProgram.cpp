@@ -23,7 +23,7 @@ namespace RuamEngine
 
 	unsigned int ShaderProgram::CompileShader(unsigned int type, const std::string& source)
 	{
-	
+
 		unsigned int id = glCreateShader(type);
 		const char* src = source.c_str();
 		// The second parameter indicates how many strings will be in the array of the source
@@ -47,7 +47,7 @@ namespace RuamEngine
 		}
 
 		return id;
-	
+
 	}
 
 	unsigned int ShaderProgram::CreateProgram(const std::string& vertexPath, const std::string& fragmentPath)
@@ -99,7 +99,7 @@ namespace RuamEngine
 		GLCall(glDeleteShader(fs));
 
 		return program;
-	}	
+	}
 
 	void ShaderProgram::Bind() const
 	{
@@ -139,7 +139,7 @@ namespace RuamEngine
 	void ShaderProgram::SetUniformTextureSlots(const std::string& name)
 	{
 		std::vector<GLint> samplers = {};
-		for (int i = 0; i < maxTextureSlots; i++)	
+		for (int i = 0; i < maxTextureSlots; i++)
 		{
 			samplers.push_back(i);
 		}
@@ -152,11 +152,11 @@ namespace RuamEngine
 	{
 		Bind();
 
-		//SetUniform4f("u_albedoColor", material.albedoColor.x, material.albedoColor.y, material.albedoColor.z, material.albedoColor.w);
+		SetUniform4f("u_baseColor", material.baseColor.x, material.baseColor.y, material.baseColor.z, material.baseColor.w);
 		SetUniform1f("u_diffuse", material.m_diffuseIndex);
 		SetUniform1f("u_specular", material.m_specularIndex);
 		SetUniform1f("u_shininess", material.m_shininess);
-	}	
+	}
 
 	void ShaderProgram::UpdateCameraMatrices()
 	{
@@ -183,10 +183,9 @@ namespace RuamEngine
 		GLCall(location = glGetUniformLocation(m_rendererId, name.c_str()));
 		if (location == -1)
 			std::cout << "Warning: uniform " << name << " does not exist!\n";
-	
+
 		m_UniformLocationCache[name] = location;
-	
+
 		return location;
 	}
 }
-

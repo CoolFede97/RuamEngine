@@ -17,6 +17,7 @@ void Shooter::start()
 void Shooter::update() {
 	if (Input::GetKeyDown(KeyCode::SpaceBar_Key) && m_timeSinceLastShot > m_shootingInterval)
 	{
+	    if (Boss::s_instance == nullptr) return;
 		m_timeSinceLastShot = 0.0f;
 		Object* object = SceneManager::ActiveScene()->newObject(0);
 

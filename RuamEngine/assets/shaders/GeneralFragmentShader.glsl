@@ -19,7 +19,7 @@ out vec4 final_color;
 
 smooth in vec3 frag_normal;
 
-//uniform vec4  u_albedoColor;
+uniform vec4  u_baseColor;
 uniform float u_diffuse;
 uniform float u_specular;
 uniform float u_reflection;
@@ -37,12 +37,12 @@ void main()
     vec4 reflection = texture(textures[int(u_reflection)], frag_uv);
 
     vec4 lightColor = vec4(u_globalLightColor[0], u_globalLightColor[1], u_globalLightColor[2], u_globalLightColor[3]);
-    
+
     vec3 lightPos = vec3(u_globalLightPos[0], u_globalLightPos[1], u_globalLightPos[2]);
     vec3 lightDir = normalize(vec3(frag_pos) - lightPos);
-    
+
     float similarity = dot(lightDir, frag_normal);
     float intensity = min(((similarity + 1.0) * 0.5) * u_shininess, 1);
     vec4 intensityVec = vec4(intensity, intensity, intensity, 1.0);
-    final_color = (diffuse * 0.8 + specular * 0.2) * reflection * lightColor * intensityVec;  
+    final_color = (u_baseColor * diffuse * 0.8 + specular * 0.2) * reflection * lightColor * intensityVec;
 }

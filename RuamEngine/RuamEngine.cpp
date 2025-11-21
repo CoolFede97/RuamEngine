@@ -5,6 +5,7 @@
 #include "MenuScene.cpp"
 #include "SandboxScene.cpp"
 #include "assets/scenes/CollisionSandboxScene.cpp"
+#include "assets/scenes/WinScene.cpp"
 
 using namespace RuamEngine;
 
@@ -30,8 +31,8 @@ int main()
 		ImGui_ImplOpenGL3_Init();
 
 		ImGui::StyleColorsDark();
+		CreateWinScene();
 		CreateCFSandboxScene();
-
 		unsigned int frameCount = 0;
 
 		while (!Renderer::WindowShouldClose())

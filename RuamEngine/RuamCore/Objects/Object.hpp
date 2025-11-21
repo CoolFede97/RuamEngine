@@ -101,16 +101,17 @@ public:
 		auto pair = m_components.find(typeid(Comp));
 		if (pair == m_components.end()) return;
 		if (pair->second.size() == 0) return;
-		pair->second.pop_back();
+		pair->second.back()->destroy();
 	}
 
 	template<class Comp>
-	void removeComponent(Comp& comp) {
+	void removeComponent(Component& comp) {
 		EASY_FUNCTION("Remove Component")
 		auto pair = m_components.find(typeid(Comp));
 		if (pair == m_components.end()) return;
 		if (pair->second.size() == 0) return;
-		std::remove(pair->second.begin(), pair->second.end(), comp);
+		auto cmp = std::find(pair->second.begin(), pair->second.end(), comp);
+		cmp->get()->destroy();
 	}
 
 	unsigned int id() const;

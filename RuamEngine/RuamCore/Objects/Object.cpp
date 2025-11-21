@@ -40,6 +40,7 @@ void Object::update() {
 	for (auto &cmp: getComponents()) {
 		if (SceneManager::SceneChange()) continue;
 		if (m_destroy_flag) break;
+		if (cmp->destruction_mark()) continue;
         cmp->update();
     }
 }

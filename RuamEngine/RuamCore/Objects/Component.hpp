@@ -65,6 +65,7 @@ public:
 	}
 
 	bool operator==(const Component& other) const;
+	bool operator==(const std::unique_ptr<Component>& other) const;
 
 	unsigned int id() const;
 	Object* object() const;

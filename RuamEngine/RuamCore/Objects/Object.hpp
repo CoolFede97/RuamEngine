@@ -17,6 +17,7 @@ public:
 	Object(const std::string& name) : m_id(s_id_count++), m_name(name), m_transform(m_id) {}
 	Object() : Object(s_default_name) {
 	}
+	~Object();
 
 	using ComponentVector = std::vector<std::unique_ptr<Component>>;
 	using ComponentList = std::map<std::type_index, ComponentVector>;
@@ -117,6 +118,8 @@ public:
 
 	void destroy();
 
+	bool marked_destruction() const;
+
 	Transform& transform();
 
 private:
@@ -126,6 +129,9 @@ private:
 	Transform m_transform;
 
 	ComponentList m_components;
+
+	bool enabled = true;
+	bool destroy_flag = false;
 
 	static const std::string s_default_name;
 };

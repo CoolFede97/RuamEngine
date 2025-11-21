@@ -4,6 +4,15 @@
 unsigned int Object::s_id_count = 0;
 const std::string Object::s_default_name = "Object";
 
+Object::~Object() {
+    for (auto &comp_v: m_components) {
+        for (auto &&comp: comp_v.second) {
+            comp.reset();
+        }
+        comp_v.second.clear();
+    }
+}
+
 unsigned int Object::id() const {
     return m_id;
 }
@@ -19,6 +28,7 @@ void Object::setName(const std::string &name) {
 void Object::start() {
 	for (auto &cmp : getComponents()) {
 		if (SceneManager::SceneChange()) break;
+		if (destroy_flag) break;
 		cmp->start();
     }
 }
@@ -26,17 +36,17 @@ void Object::start() {
 void Object::update() {
 	for (auto &cmp: getComponents()) {
 		if (SceneManager::SceneChange()) continue;
+		if (destroy_flag) break;
         cmp->update();
     }
 }
 
 void Object::destroy() {
-    for (auto &comp_v: m_components) {
-        for (auto &&comp: comp_v.second) {
-            comp.reset();
-        }
-        comp_v.second.clear();
-    }
+	destroy_flag = true;
+}
+
+bool Object::marked_destruction() const {
+	return destroy_flag;
 }
 
 Transform &Object::transform() {

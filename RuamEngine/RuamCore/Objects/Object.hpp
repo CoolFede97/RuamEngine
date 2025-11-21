@@ -104,6 +104,15 @@ public:
 		pair->second.pop_back();
 	}
 
+	template<class Comp>
+	void removeComponent(Comp& comp) {
+		EASY_FUNCTION("Remove Component")
+		auto pair = m_components.find(typeid(Comp));
+		if (pair == m_components.end()) return;
+		if (pair->second.size() == 0) return;
+		std::remove(pair->second.begin(), pair->second.end(), comp);
+	}
+
 	unsigned int id() const;
 	const std::string& name() const;
 	void setName(const std::string& name);

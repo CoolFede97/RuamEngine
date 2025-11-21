@@ -77,11 +77,15 @@ public:
 		};
 	}
 
+	void destroy() { m_destroy = true; }
+	bool destruction_mark() const { return m_destroy; }
+
 protected:
 	const unsigned int m_object_id;
 	const unsigned int m_id;
 	static unsigned int s_id_count;
 	bool m_started = false;
+	bool m_destroy = false;
 };
 
 class BaseRenderer : public Component {

@@ -34,6 +34,9 @@ void Object::start() {
 }
 
 void Object::update() {
+	for (auto& cmp_vec : m_components) {
+		auto tmp = std::remove_if(cmp_vec.second.begin(), cmp_vec.second.end(), [](std::unique_ptr<Component>& cmp){ return cmp->destruction_mark(); });
+	}
 	for (auto &cmp: getComponents()) {
 		if (SceneManager::SceneChange()) continue;
 		if (m_destroy_flag) break;

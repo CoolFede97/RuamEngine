@@ -16,8 +16,10 @@ namespace RuamEngine
 {
 	class GlobalLight : public Component
 	{
+		IMPL_SIMPLE_SERIALIZE(GlobalLight)
 		using Component::Component;
-	
+		GlobalLight(const nlohmann::json& j, unsigned int obj_id) : Component(obj_id) {}
+
 	private:
 		static GlobalLight* s_mainLight;
 		Vec4 m_color = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -37,10 +39,10 @@ namespace RuamEngine
 		}
 
 		void update() { Component::update(); };
-		void start() 
+		void start()
 		{
 			if (!s_mainLight) s_mainLight = this;
-			else if (s_mainLight != this) object()->removeComponent<GlobalLight>(); // PREGUNTARLE A TOMI COMO HACER QUE ESTO BORRE A ¡ESTE! COMPONENTE
+			else if (s_mainLight != this) object()->removeComponent<GlobalLight>(); // PREGUNTARLE A TOMI COMO HACER QUE ESTO BORRE A ï¿½ESTE! COMPONENTE
 			SetLightColor(m_color);
 			//SetLightOffset(m_lightOffset);
 		}
@@ -51,4 +53,5 @@ namespace RuamEngine
 			Renderer::m_drawingDatas[0]->m_program->SetUniform3f("u_globalLightPos", object()->transform().position().x, object()->transform().position().y, object()->transform().position().z);
 		}
 	};
+	REGISTER_COMPONENT(GlobalLight)
 }

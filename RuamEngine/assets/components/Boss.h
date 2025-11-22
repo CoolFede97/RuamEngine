@@ -50,7 +50,7 @@ class Boss : public Component {
 			s_instance->playerTransform = nullptr;
 			s_instance = nullptr;
 			object()->destroy();
-			SceneManager::SetActiveScene(3);
+			SceneManager::SetActiveScene(1);
 		}
 	}
 
@@ -61,7 +61,7 @@ public:
 	float m_bulletRadius = 1.0f;
 	float m_shootingInterval = 0;
 	std::string m_bulletMeshPath;
-	float m_health = 10;
+	float m_health = 100;
 	float m_damage = 10;
 protected:
 	float m_timeSinceLastShot = 0;

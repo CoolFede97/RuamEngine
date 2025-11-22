@@ -31,8 +31,8 @@ int main()
 		ImGui_ImplOpenGL3_Init();
 
 		ImGui::StyleColorsDark();
-		CreateWinScene();
 		CreateCFSandboxScene();
+		CreateWinScene();
 		unsigned int frameCount = 0;
 
 		while (!Renderer::WindowShouldClose())

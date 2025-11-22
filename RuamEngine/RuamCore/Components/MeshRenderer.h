@@ -14,7 +14,9 @@ using namespace RuamEngine;
 
 class MeshRenderer : public BaseRenderer
 {
+    IMPL_SIMPLE_SERIALIZE(MeshRenderer)
 	using BaseRenderer::BaseRenderer;
+	MeshRenderer(const nlohmann::json& j, unsigned int obj_id) : BaseRenderer(obj_id) {}
 public:
 	std::string m_meshPath;
 	ModelPtr m_model;
@@ -97,7 +99,7 @@ private:
 			else localVertices = {};
 			genericUnit.AddBatchData(localVertices, { m_indices[i] }, {});
 		}*/
-		
+
 		//genericUnit.AddBatchData(m_vertices, m_indices, { modelMatrix });
 	};
 
@@ -134,3 +136,4 @@ private:
 		BaseRenderer::update();
 	};
 };
+	REGISTER_COMPONENT(MeshRenderer)

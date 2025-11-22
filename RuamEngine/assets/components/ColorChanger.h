@@ -42,5 +42,4 @@ public:
 
 };
 
-
 REGISTER_COMPONENT(ColorChanger)

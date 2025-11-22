@@ -176,7 +176,7 @@ namespace RuamEngine
 		m_materials.push_back(newMaterial);
 		return newMaterial;
     }
-	
+
     // If the texture already exists, it returns the existing index. Otherwise, it creates a new texture and returns its index.
     unsigned int Renderer::CreateTexture2D(const std::string& relativeTexturePath)
     {
@@ -186,7 +186,7 @@ namespace RuamEngine
             return foundIndex;
 		}
         Texture2DPtr newTex = std::make_shared<Texture2D>(relativeTexturePath);
-        GLuint64 newHandle; 
+        GLuint64 newHandle;
         GLCall(newHandle = glGetTextureHandleARB(newTex->GetId()));
         ASSERT(newHandle != 0);
 
@@ -255,7 +255,7 @@ namespace RuamEngine
     void Renderer::UpdateTextures2D()
     {
         ASSERT(m_texture2DHandles.size() < maxTextureCount);
-        
+
         GLint size = 0;
         GLCall(glGetNamedBufferParameteriv(m_texture2DBuffer, GL_BUFFER_SIZE, &size));
 
@@ -271,7 +271,7 @@ namespace RuamEngine
     void Renderer::Draw()
     {
         //std::cout << "Render units count: " << m_drawingDatas[0]->m_renderUnits.size() << "\n";
-
+        std::cout << "Camera: " << Camera::GetMainCamera()->m_fov << "\n";
         for (DrawingDataPtr drawingData : m_drawingDatas)
         {
 			drawingData->m_program->UpdateCameraMatrices();
@@ -299,4 +299,3 @@ namespace RuamEngine
     }
 
 }
-    

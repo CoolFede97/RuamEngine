@@ -16,10 +16,12 @@ class CameraController : public Component
 {
 	using Component::Component;
 
+	IMPL_SIMPLE_SERIALIZE(CameraController)
 	Vec3 m_direction;
 	Vec3 m_horizontalDirection;
 	Vec2 m_mouseRotation;
 public:
+	CameraController(const nlohmann::json& j, const unsigned int obj_id) : Component(obj_id) {};
 	float m_speed = 0;
 	float m_rotationSpeed = 0;
 private:
@@ -59,3 +61,5 @@ private:
 	};
 	void start() {};
 };
+
+REGISTER_COMPONENT(CameraController)

@@ -14,7 +14,7 @@
 
 void CreateCFSandboxScene()
 {
-	SceneManager::CreateScene(1, "SandboxScene");
+	SceneManager::CreateScene(0, "SandboxScene");
 	auto sandboxScene = SceneManager::ActiveScene();
 
 	Object* light = sandboxScene->newObject();
@@ -32,6 +32,7 @@ void CreateCFSandboxScene()
 	boss->m_shootingInterval = 1.0f;
 	boss->m_bulletSpeed = 20.0f;
 	boss->m_bulletRadius = 1.5f;
+	boss->m_health = 1;
 	boss->m_bulletMeshPath = "assets/meshes/bullet/bullet.obj";
 
 	Object* skybox = sandboxScene->newObject();

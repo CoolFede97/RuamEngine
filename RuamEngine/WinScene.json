@@ -1,5 +1,68 @@
 {
 	"id": 1,
 	"name": "WinScene",
-	"objects": []
+	"objects": [
+		{
+			"components": [
+				{
+					"id": 14,
+					"type": "GlobalLight"
+				}
+			],
+			"idx": 0,
+			"name": "Light"
+		},
+		{
+			"components": [
+				{
+					"id": 16,
+					"type": "MeshRenderer"
+				}
+			],
+			"idx": 1,
+			"name": "Nave"
+		},
+		{
+			"components": [
+				{
+					"id": 19,
+					"type": "ColorChanger"
+				},
+				{
+					"id": 18,
+					"type": "MeshRenderer"
+				}
+			],
+			"idx": 2,
+			"name": "Skybox"
+		},
+		{
+			"components": [
+				{
+					"id": 21,
+					"m_aspect_ratio": 1.3333333730697632,
+					"m_far_plane": 3000.0,
+					"m_fov": 45.0,
+					"m_near_plane": 0.10000000149011612,
+					"type": "Camera"
+				},
+				{
+					"id": 22,
+					"type": "CameraController"
+				}
+			],
+			"idx": 3,
+			"name": "Player"
+		},
+		{
+			"components": [
+				{
+					"id": 24,
+					"type": "Manager"
+				}
+			],
+			"idx": 4,
+			"name": "Manager"
+		}
+	]
 }

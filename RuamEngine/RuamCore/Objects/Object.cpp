@@ -41,7 +41,8 @@ void Object::update() {
 		if (SceneManager::SceneChange()) continue;
 		if (m_destroy_flag) break;
 		if (cmp->destruction_mark()) continue;
-        cmp->update();
+		std::cout << name() << " is updating\n";
+		cmp->update();
     }
 }
 

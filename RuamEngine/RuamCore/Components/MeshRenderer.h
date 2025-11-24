@@ -14,12 +14,18 @@ using namespace RuamEngine;
 
 class MeshRenderer : public BaseRenderer
 {
-    IMPL_SIMPLE_SERIALIZE(MeshRenderer)
-	using BaseRenderer::BaseRenderer;
-	MeshRenderer(const nlohmann::json& j, unsigned int obj_id) : BaseRenderer(obj_id) {}
 public:
 	std::string m_meshPath;
 	ModelPtr m_model;
+	using BaseRenderer::BaseRenderer;
+	MeshRenderer(const nlohmann::json& j, unsigned int obj_id) : BaseRenderer(obj_id)
+	{
+		if (j.contains("m_meshPath"))
+		{
+			SetModel(j["m_meshPath"]);
+		}
+	}
+    // IMPL_SIMPLE_SERIALIZE(MeshRenderer)
 	void SetModel(const std::string& path)
 	{
 		m_meshPath = path;
@@ -55,7 +61,12 @@ private:
 		modelMatrix = glm::rotate(modelMatrix, glm::radians(object()->transform().rotation().z), glm::vec3(0.0f, 0.0f, 1.0f));
 		modelMatrix = glm::scale(modelMatrix, object()->transform().scale());
 
-		if (m_model->m_localToGlobalMaterials.size() == 1)
+        // bool test = m_model == nullptr;
+        // if (test) std::cout << "Model is null\n";
+        // else std::cout << "Model exists\n";
+        //
+
+        if (m_model->m_localToGlobalMaterials.size() == 1)
 		{
 			Mesh mesh = m_model->m_meshes[0];
 			//for (Mesh mesh : m_model->m_meshes)
@@ -89,6 +100,7 @@ private:
 				}
 			}
 		}
+	    std::cout << "Esto se llama?\n";
 		/*for (unsigned int i = 0; i < m_indices.size(); i++)
 		{
 			std::vector<Vertex> localVertices;
@@ -135,5 +147,8 @@ private:
 	{
 		BaseRenderer::update();
 	};
+	public:
+	IMPL_SERIALIZE(MeshRenderer,
+	SER_FIELD(m_meshPath));
 };
 	REGISTER_COMPONENT(MeshRenderer)

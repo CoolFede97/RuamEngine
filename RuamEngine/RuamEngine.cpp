@@ -3,6 +3,7 @@
 #include "RuamEngine.h"
 
 #include "MenuScene.cpp"
+#include "RuamCore/Objects/SceneManager.hpp"
 #include "SandboxScene.cpp"
 #include "assets/scenes/CollisionSandboxScene.cpp"
 #include "assets/scenes/WinScene.cpp"
@@ -31,12 +32,14 @@ int main()
 		ImGui_ImplOpenGL3_Init();
 
 		ImGui::StyleColorsDark();
-		CreateCFSandboxScene();
 		CreateWinScene();
+		CreateCFSandboxScene();
 		unsigned int frameCount = 0;
 
 		while (!Renderer::WindowShouldClose())
 		{
+		    // std::cout << "Frame count: " << frameCount++ << "\n";
+
 			// ImGUI
 			ImGui_ImplOpenGL3_NewFrame();
 			ImGui_ImplGlfw_NewFrame();
@@ -57,19 +60,24 @@ int main()
 			EASY_END_BLOCK;
 
 			EASY_BLOCK("UpdateScene");
+            std::cout << "Frame count: " << frameCount++ << "\n";
 			if (SceneManager::ActiveScene() != nullptr)
 			{
 				SceneManager::ActiveScene()->update();
 			}
 
-			Renderer::EndBatch();
-			Renderer::Draw();
+			if (!SceneManager::SceneChange())
+			{
+    			Renderer::EndBatch();
+    			Renderer::Draw();
+			}
+			else std::cout << "No se llamo a draw porque se acaba de cambiar de escena\n";
 
-			EASY_END_BLOCK;
-			ImGui::Render();
-			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+ 			EASY_END_BLOCK;
+ 			ImGui::Render();
+ 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-			Renderer::EndDraw();
+            Renderer::EndDraw();
 			Input::UpdateInput();
 			glfwPollEvents();
 		}

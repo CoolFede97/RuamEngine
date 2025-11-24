@@ -54,11 +54,13 @@ void Scene::start() {
 
 void Scene::update() {
 	if (SceneManager::SceneChange()) {
+	    std::cout << "Scene change detected\n";
 		start();
 		return;
 	}
 	m_objects.remove_if([](std::unique_ptr<Object>& obj) {return obj->marked_destruction() || obj == nullptr;});
 	for (auto& obj : m_objects) {
+
 		if (SceneManager::SceneChange()) {
 			return;
 		}

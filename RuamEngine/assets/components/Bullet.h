@@ -31,7 +31,7 @@ public:
 	float m_radius;
 	float m_speed;
 	glm::vec3 m_direction;
-	Transform* m_target;
+	glm::vec3 m_target;
 private:
 	std::function<void()> m_callback;
 };

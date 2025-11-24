@@ -27,15 +27,15 @@ namespace RuamEngine
 	{
 		s_mainCamera = this;
 	}
-	
+
 	void Camera::EmptyMainCamera()
 	{
 		s_mainCamera = nullptr;
 	}
 
-	Camera* Camera::GetMainCamera() 
+	Camera* Camera::GetMainCamera()
 	{
-		return s_mainCamera; 
+		return s_mainCamera;
 	}
 
 	Camera::Camera(const nlohmann::json& j, const unsigned int obj_id)

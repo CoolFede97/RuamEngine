@@ -89,6 +89,14 @@ namespace RuamEngine
         }
     }
 
+    void Renderer::ClearRenderUnits()
+    {
+        for (DrawingDataPtr drawingData : m_drawingDatas)
+        {
+            drawingData->m_renderUnits.clear();
+        }
+    }
+
     void Renderer::ClearScreen()
     {
         if (m_config.useClearColor) GLCall(glClear(GL_COLOR_BUFFER_BIT));
@@ -270,10 +278,9 @@ namespace RuamEngine
 
     void Renderer::Draw()
     {
-        //std::cout << "Render units count: " << m_drawingDatas[0]->m_renderUnits.size() << "\n";
-        std::cout << "Camera: " << Camera::GetMainCamera()->m_fov << "\n";
         for (DrawingDataPtr drawingData : m_drawingDatas)
         {
+            // std::cout << "Render units count: " << drawingData->m_renderUnits.size() << "\n";
 			drawingData->m_program->UpdateCameraMatrices();
             for (RenderUnitPtr renderUnit : drawingData->m_renderUnits)
             {

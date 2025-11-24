@@ -1,7 +1,9 @@
 #include "SceneManager.hpp"
 #include "Serial.hpp"
 #include "Camera.h"
-
+#include "Renderer.h"
+#include "../../assets/components/Shooter.h"
+#include "../../assets/components/Boss.h"
 SceneManager::SceneList SceneManager::s_scenes;
 SceneManager::ScenePtr SceneManager::s_active_scene = nullptr;
 bool SceneManager::s_scene_change = false;
@@ -13,11 +15,13 @@ const SceneManager::SceneList& SceneManager::sceneList() {
 void SceneManager::SetActiveScene(const unsigned int id) {
 	if (s_active_scene != nullptr) {
 		Serial::serialise(s_active_scene.get());
-		std::cout << "AAA: " << s_active_scene->getObjects().size();
+		std::cout << "AAA: " << s_active_scene->getObjects().size() << "\n";
 	}
 	RuamEngine::Camera::EmptyMainCamera();
+	std::cout << "Omaeba...\n";
 	s_active_scene.reset(s_scenes[id]());
 	s_scene_change = true;
+
 }
 
 Scene* SceneManager::ActiveScene() {

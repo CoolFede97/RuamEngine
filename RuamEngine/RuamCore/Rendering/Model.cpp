@@ -45,19 +45,19 @@ namespace RuamEngine
 			Vertex vertex;
 
 			glm::vec3 vector;
-			
+
 			vector.x = mesh->mVertices[i].x;
 			vector.y = mesh->mVertices[i].y;
 			vector.z = mesh->mVertices[i].z;
 			vertex.m_position = vector;
 
-			if (mesh->mTextureCoords[0]) 
+			if (mesh->mTextureCoords[0])
 			{
 				vector.x = mesh->mTextureCoords[0][i].x;
 				vector.y = mesh->mTextureCoords[0][i].y;
 				vertex.m_uv = Vec2(vector.x, vector.y);
 			}
-			else vertex.m_uv = {0.0f, 0.0f};	
+			else vertex.m_uv = {0.0f, 0.0f};
 
 			vector.x = mesh->mNormals[i].x;
 			vector.y = mesh->mNormals[i].y;
@@ -65,7 +65,7 @@ namespace RuamEngine
 			vertex.m_normal = vector;
 
 
-			//// Leé esto después Fede
+			//// Leï¿½ esto despuï¿½s Fede
 			//std::cout << "Vertex data: --------\n";
 			//std::cout << "Position: " << vertex.m_position << "\n";
 			//std::cout << "UV: " << vertex.m_uv<< "\n";

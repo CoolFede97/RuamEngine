@@ -23,7 +23,7 @@ namespace RuamEngine
         textures = 3
     };
 
-    // General data 
+    // General data
     struct RendererConfig
     {
         int windowWidth = 640;
@@ -44,13 +44,13 @@ namespace RuamEngine
 		GLenum blendSFactor = GL_SRC_ALPHA;
 		GLenum blendDFactor = GL_ONE_MINUS_SRC_ALPHA;
 
-        
+
     };
 
     class Renderer
     {
     public:
-        
+
         static void Init();
         static void Shutdown();
         static void EndDraw();
@@ -59,14 +59,15 @@ namespace RuamEngine
 		static void EndBatch(RenderUnit& renderUnit);
         static void ClearScreen();
         static void Flush();
-        
+        static void ClearRenderUnits();
+
 		// Setters for RendererConfig
         static void SetWindowSize(int width, int height);
         static void SetWindowTitle(const char* title);
         static void SetClearColor(const glm::vec4& color);
         static void SetDepthTest(bool enable);
         static void SetBlend(bool enable, GLenum sfactor = GL_SRC_ALPHA, GLenum dfactor = GL_ONE_MINUS_SRC_ALPHA);
-       
+
 
 		// Getters for RendererConfig
         static int GetWindowWidth() { return m_config.windowWidth; }

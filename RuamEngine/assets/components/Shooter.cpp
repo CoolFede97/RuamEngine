@@ -5,13 +5,18 @@
 
 void Shooter::start()
 {
-	if (s_instance == nullptr) {
+    std::cout << "Start se llama después de cambiar de escena!\n";
+    if (s_instance == nullptr)
+    {
 		s_instance = this;
 	}
-	else if (s_instance != this) {
+	else if (s_instance != this)
+	{
 		object()->removeComponent<Shooter>(); // ESTO EST� MAL
 	}
+    if (Boss::s_instance != nullptr)
 	Boss::s_instance->playerTransform = &object()->transform();
+	else std::cout << "Error: Boss instance does not exist\n";
 }
 
 void Shooter::update() {
@@ -27,7 +32,7 @@ void Shooter::update() {
 
 		bullet.m_speed = m_bulletSpeed;
 		bullet.m_direction = glm::normalize(Boss::s_instance->object()->transform().position() - s_instance->object()->transform().position());
-		bullet.m_target = &Boss::s_instance->object()->transform();
+		bullet.m_target = Boss::s_instance->object()->transform().position();
 		bullet.m_radius = m_bulletRadius;
 
 		bullet.object()->addComponent<MeshRenderer>()->SetModel(m_bulletMeshPath);

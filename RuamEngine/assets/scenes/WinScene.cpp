@@ -31,12 +31,12 @@ void CreateWinScene()
 	skybox->setName("Skybox");
 	skybox->addComponent<MeshRenderer>()->SetModel("assets/meshes/skyboxes/white/white.obj");
 	skybox->getComponent<MeshRenderer>()->m_model->m_meshes[0].m_material->m_shininess = 1000.0;
-	skybox->addComponent<ColorChanger>()->m_meshes = &skybox->getComponent<MeshRenderer>()->m_model->m_meshes;
+	// skybox->addComponent<ColorChanger>()->m_meshes = &skybox->getComponent<MeshRenderer>()->m_model->m_meshes;
 	skybox->transform().setRotation(glm::vec3(180.0f, 0.0, 0.0));
 	skybox->transform().setScale(glm::vec3(500.0f, 500.0f, 500.0f));
 
 	Object* player = scene->newObject();
-	player->setName("Player");
+	player->setName("Player2");
 	player->addComponent<Camera>();
 	player->addComponent<CameraController>();
 	player->getComponent<CameraController>()->m_speed = 10.5f;

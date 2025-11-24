@@ -16,15 +16,19 @@ namespace RuamEngine
 {
 	class GlobalLight : public Component
 	{
-		IMPL_SIMPLE_SERIALIZE(GlobalLight)
-		using Component::Component;
-		GlobalLight(const nlohmann::json& j, unsigned int obj_id) : Component(obj_id) {}
 
 	private:
 		static GlobalLight* s_mainLight;
 		Vec4 m_color = { 1.0f, 1.0f, 1.0f, 1.0f };
 		float m_lightOffset = 0.1f;
 	public:
+		IMPL_SIMPLE_SERIALIZE(GlobalLight)
+		using Component::Component;
+		GlobalLight(const nlohmann::json& j, unsigned int obj_id) : Component(obj_id) {}
+		~GlobalLight()
+		{
+		    if (s_mainLight == this) s_mainLight = nullptr;
+		}
 
 		void SetLightColor(Vec4 color)
 		{
@@ -37,6 +41,7 @@ namespace RuamEngine
 			m_lightOffset = offset;
 			Renderer::m_drawingDatas[0]->m_program->SetUniform1f("u_lightOffset", m_lightOffset);
 		}
+
 
 		void update() { Component::update(); };
 		void start()

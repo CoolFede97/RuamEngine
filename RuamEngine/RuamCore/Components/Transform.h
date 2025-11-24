@@ -3,6 +3,9 @@
 #include "Component.hpp"
 #include "glm/glm.hpp"
 #include <list>
+// #include "Object.hpp"
+// #include "Serial.hpp"
+
 
 class Transform : public Component {
 public:
@@ -10,7 +13,18 @@ public:
 
 	Transform(unsigned int obj_id);
 	Transform(unsigned int obj_id, glm::vec3 pos);
-
+	Transform(const nlohmann::json& j, const unsigned int obj_id) : Component(obj_id)
+	{
+		// if (j.contains("m_position")) {
+		// 	m_position = j["m_position"];
+		// }
+		// if (j.contains("m_scale")) {
+		// 	m_scale = j["m_scale"];
+		// }
+		// if (j.contains("m_rotation")) {
+		// 	m_rotation = j["m_rotation"];
+		// }
+	};
 	void start();
 	void update();
 
@@ -39,3 +53,4 @@ protected:
 	glm::vec3 m_rotation = glm::vec3(0.0f,0.0f,0.0f);
 	std::list<Transform*> m_children;
 };
+// REGISTER_COMPONENT(Transform)

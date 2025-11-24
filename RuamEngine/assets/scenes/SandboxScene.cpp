@@ -63,4 +63,6 @@ void CreateCFSandboxScene()
 	//manager->addComponent<CameraController>();
 	manager->addComponent<Manager>();
 	//manager->addComponent<AudioSource>("/home/tomy/programming/ce/masmas/RuamEngine/RuamEngine/1 Crumbling Castle.wav");
+
+	Serial::serialise(SceneManager::ActiveScene());
 }

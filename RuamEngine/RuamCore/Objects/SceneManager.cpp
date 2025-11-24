@@ -13,10 +13,10 @@ const SceneManager::SceneList& SceneManager::sceneList() {
 }
 
 void SceneManager::SetActiveScene(const unsigned int id) {
-	if (s_active_scene != nullptr) {
-		Serial::serialise(s_active_scene.get());
-		std::cout << "AAA: " << s_active_scene->getObjects().size() << "\n";
-	}
+	// if (s_active_scene != nullptr) {
+	// 	Serial::serialise(s_active_scene.get());
+	// 	std::cout << "AAA: " << s_active_scene->getObjects().size() << "\n";
+	// }
 	RuamEngine::Camera::EmptyMainCamera();
 	std::cout << "Omaeba...\n";
 	s_active_scene.reset(s_scenes[id]());

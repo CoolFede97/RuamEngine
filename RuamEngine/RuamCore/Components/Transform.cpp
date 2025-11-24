@@ -43,6 +43,18 @@ glm::vec3& Transform::rotation() {
 	return m_rotation;
 }
 
+const glm::vec3& Transform::position() const {
+	return m_position;
+}
+
+const glm::vec3& Transform::scale() const {
+	return m_scale;
+}
+
+const glm::vec3& Transform::rotation() const {
+	return m_rotation;
+}
+
 void Transform::setParent(Transform* parent) {
 	parent->addChild(this);
 }

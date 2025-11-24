@@ -10,7 +10,16 @@
 				}
 			],
 			"idx": 0,
-			"name": "Light"
+			"name": "Light",
+			"transform_position_x": 0.0,
+			"transform_position_y": 80.0,
+			"transform_position_z": 0.0,
+			"transform_rotation_x": 0.0,
+			"transform_rotation_y": 0.0,
+			"transform_rotation_z": 0.0,
+			"transform_scale_x": 1.0,
+			"transform_scale_y": 1.0,
+			"transform_scale_z": 1.0
 		},
 		{
 			"components": [
@@ -21,7 +30,16 @@
 				}
 			],
 			"idx": 1,
-			"name": "Nave"
+			"name": "Nave",
+			"transform_position_x": 0.0,
+			"transform_position_y": 0.0,
+			"transform_position_z": 0.0,
+			"transform_rotation_x": 0.0,
+			"transform_rotation_y": 0.0,
+			"transform_rotation_z": 0.0,
+			"transform_scale_x": 1.0,
+			"transform_scale_y": 1.0,
+			"transform_scale_z": 1.0
 		},
 		{
 			"components": [
@@ -32,7 +50,16 @@
 				}
 			],
 			"idx": 2,
-			"name": "Skybox"
+			"name": "Skybox",
+			"transform_position_x": 0.0,
+			"transform_position_y": 0.0,
+			"transform_position_z": 0.0,
+			"transform_rotation_x": 180.0,
+			"transform_rotation_y": 0.0,
+			"transform_rotation_z": 0.0,
+			"transform_scale_x": 500.0,
+			"transform_scale_y": 500.0,
+			"transform_scale_z": 500.0
 		},
 		{
 			"components": [
@@ -52,7 +79,16 @@
 				}
 			],
 			"idx": 3,
-			"name": "Player2"
+			"name": "Player2",
+			"transform_position_x": 0.0,
+			"transform_position_y": 0.0,
+			"transform_position_z": 0.0,
+			"transform_rotation_x": 0.0,
+			"transform_rotation_y": 0.0,
+			"transform_rotation_z": 0.0,
+			"transform_scale_x": 1.0,
+			"transform_scale_y": 1.0,
+			"transform_scale_z": 1.0
 		},
 		{
 			"components": [
@@ -62,7 +98,16 @@
 				}
 			],
 			"idx": 4,
-			"name": "Manager"
+			"name": "Manager",
+			"transform_position_x": 0.0,
+			"transform_position_y": 0.0,
+			"transform_position_z": 0.0,
+			"transform_rotation_x": 0.0,
+			"transform_rotation_y": 0.0,
+			"transform_rotation_z": 0.0,
+			"transform_scale_x": 1.0,
+			"transform_scale_y": 1.0,
+			"transform_scale_z": 1.0
 		}
 	]
 }

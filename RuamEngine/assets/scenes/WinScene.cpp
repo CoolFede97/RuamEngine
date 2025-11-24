@@ -45,4 +45,5 @@ void CreateWinScene()
 	Object* manager = scene->newObject();
 	manager->setName("Manager");
 	manager->addComponent<Manager>();
+	Serial::serialise(SceneManager::ActiveScene());
 }

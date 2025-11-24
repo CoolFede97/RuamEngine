@@ -45,6 +45,10 @@ public:
 	glm::vec3& scale();
 	glm::vec3& rotation();
 
+	const glm::vec3& position() const;
+	const glm::vec3& scale() const;
+	const glm::vec3& rotation() const;
+
 	Transform* operator[](size_t idx);
 
 protected:

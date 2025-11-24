@@ -136,6 +136,7 @@ public:
 
 	Transform& transform();
 
+	const Transform& transform() const;
 private:
 	unsigned int m_id;
 	static unsigned int s_id_count;

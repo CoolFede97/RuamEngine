@@ -31,7 +31,16 @@ void to_json(json& j, const Object* o) {
 
     j = json{
         {"name", o->name()},
-		{"components", serialisedComponents}
+		{"components", serialisedComponents},
+		{"transform_position_x", o->transform().position().x},
+		{"transform_position_y", o->transform().position().y},
+		{"transform_position_z", o->transform().position().z},
+		{"transform_rotation_x", o->transform().rotation().x},
+		{"transform_rotation_y", o->transform().rotation().y},
+		{"transform_rotation_z", o->transform().rotation().z},
+		{"transform_scale_x", o->transform().scale().x},
+		{"transform_scale_y", o->transform().scale().y},
+		{"transform_scale_z", o->transform().scale().z}
 	};
 }
 
@@ -62,6 +71,9 @@ Scene* Serial::deserialise(const std::string &scene_name) {
 		Object *o = s->newObject(obj["idx"]);
 		std::string objName = obj["name"];
 		o->setName(objName);
+		o->transform().setPosition(obj["transform_position_x"], obj["transform_position_y"], obj["transform_position_z"]);
+		o->transform().setRotation(obj["transform_rotation_x"], obj["transform_rotation_y"], obj["transform_rotation_z"]);
+		o->transform().setScale(obj["transform_scale_x"], obj["transform_scale_y"], obj["transform_scale_z"]);
 		if (obj["components"].is_null()) {
 			continue;
 		}

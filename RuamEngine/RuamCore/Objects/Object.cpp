@@ -66,6 +66,10 @@ Transform &Object::transform() {
 	return m_transform;
 }
 
+const Transform &Object::transform() const {
+	return m_transform;
+}
+
 std::vector<Component*> Object::getComponents() const {
 	std::vector<Component*> comps;
 	for (auto& comp_v : m_components) {

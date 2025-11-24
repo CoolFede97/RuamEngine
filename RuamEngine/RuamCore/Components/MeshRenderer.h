@@ -8,6 +8,7 @@
 #include "Vertex.h"
 #include "RuamTime.h"
 #include <string>
+#include <vector>
 #include "Model.h"
 #include "FileFunctions.h"
 using namespace RuamEngine;
@@ -17,6 +18,7 @@ class MeshRenderer : public BaseRenderer
 public:
 	std::string m_meshPath;
 	ModelPtr m_model;
+
 	using BaseRenderer::BaseRenderer;
 	MeshRenderer(const nlohmann::json& j, unsigned int obj_id) : BaseRenderer(obj_id)
 	{

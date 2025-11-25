@@ -62,7 +62,7 @@ int main()
 			EASY_END_BLOCK;
 
 			EASY_BLOCK("UpdateScene");
-            std::cout << "Frame count: " << frameCount++ << "\n";
+            // std::cout << "Frame count: " << frameCount++ << "\n";
 			if (SceneManager::ActiveScene() != nullptr)
 			{
 				SceneManager::ActiveScene()->update();

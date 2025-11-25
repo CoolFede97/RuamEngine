@@ -12,8 +12,8 @@
 			"idx": 0,
 			"name": "Light",
 			"transform_position_x": 0.0,
-			"transform_position_y": 0.0,
-			"transform_position_z": 100.0,
+			"transform_position_y": 100.0,
+			"transform_position_z": 0.0,
 			"transform_rotation_x": 0.0,
 			"transform_rotation_y": 0.0,
 			"transform_rotation_z": 0.0,
@@ -25,12 +25,12 @@
 			"components": [
 				{
 					"id": 16,
-					"m_meshPath": "assets/meshes/Nave/Nave.obj",
+					"m_meshPath": "assets/meshes/portal/portal.obj",
 					"type": "MeshRenderer"
 				}
 			],
 			"idx": 1,
-			"name": "Nave",
+			"name": "portal",
 			"transform_position_x": 0.0,
 			"transform_position_y": 0.0,
 			"transform_position_z": 0.0,
@@ -45,66 +45,6 @@
 			"components": [
 				{
 					"id": 18,
-					"m_meshPath": "assets/meshes/radio/Radio.obj",
-					"type": "MeshRenderer"
-				}
-			],
-			"idx": 2,
-			"name": "radio",
-			"transform_position_x": 0.0,
-			"transform_position_y": -2.0,
-			"transform_position_z": 0.0,
-			"transform_rotation_x": 90.0,
-			"transform_rotation_y": 0.0,
-			"transform_rotation_z": 0.0,
-			"transform_scale_x": 0.0020000000949949026,
-			"transform_scale_y": 0.0020000000949949026,
-			"transform_scale_z": 0.0020000000949949026
-		},
-		{
-			"components": [
-				{
-					"id": 20,
-					"m_meshPath": "assets/meshes/portal/portal.obj",
-					"type": "MeshRenderer"
-				}
-			],
-			"idx": 3,
-			"name": "portal",
-			"transform_position_x": 0.0,
-			"transform_position_y": -2.0,
-			"transform_position_z": 20.0,
-			"transform_rotation_x": 0.0,
-			"transform_rotation_y": 0.0,
-			"transform_rotation_z": 0.0,
-			"transform_scale_x": 1.0,
-			"transform_scale_y": 1.0,
-			"transform_scale_z": 1.0
-		},
-		{
-			"components": [
-				{
-					"id": 22,
-					"m_meshPath": "assets/meshes/skyboxes/galaxy/galaxySkybox.obj",
-					"type": "MeshRenderer"
-				}
-			],
-			"idx": 4,
-			"name": "Skybox",
-			"transform_position_x": 0.0,
-			"transform_position_y": 0.0,
-			"transform_position_z": 0.0,
-			"transform_rotation_x": 180.0,
-			"transform_rotation_y": 0.0,
-			"transform_rotation_z": 0.0,
-			"transform_scale_x": 500.0,
-			"transform_scale_y": 500.0,
-			"transform_scale_z": 500.0
-		},
-		{
-			"components": [
-				{
-					"id": 24,
 					"m_aspect_ratio": 1.3333333730697632,
 					"m_far_plane": 3000.0,
 					"m_fov": 45.0,
@@ -112,38 +52,19 @@
 					"type": "Camera"
 				},
 				{
-					"id": 25,
+					"id": 19,
 					"m_rotationSpeed": 80.0,
 					"m_speed": 10.5,
 					"type": "CameraController"
 				}
 			],
-			"idx": 5,
+			"idx": 2,
 			"name": "Player2",
-			"transform_position_x": 100.0,
-			"transform_position_y": 30.0,
-			"transform_position_z": 150.0,
-			"transform_rotation_x": 0.0,
-			"transform_rotation_y": 180.0,
-			"transform_rotation_z": 0.0,
-			"transform_scale_x": 1.0,
-			"transform_scale_y": 1.0,
-			"transform_scale_z": 1.0
-		},
-		{
-			"components": [
-				{
-					"id": 27,
-					"type": "Manager"
-				}
-			],
-			"idx": 6,
-			"name": "Manager",
 			"transform_position_x": 0.0,
 			"transform_position_y": 0.0,
 			"transform_position_z": 0.0,
 			"transform_rotation_x": 0.0,
-			"transform_rotation_y": 0.0,
+			"transform_rotation_y": 180.0,
 			"transform_rotation_z": 0.0,
 			"transform_scale_x": 1.0,
 			"transform_scale_y": 1.0,

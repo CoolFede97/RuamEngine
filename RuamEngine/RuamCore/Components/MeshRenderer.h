@@ -102,7 +102,6 @@ private:
 				}
 			}
 		}
-	    std::cout << "Esto se llama?\n";
 		/*for (unsigned int i = 0; i < m_indices.size(); i++)
 		{
 			std::vector<Vertex> localVertices;

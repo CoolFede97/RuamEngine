@@ -18,7 +18,6 @@ void SceneManager::SetActiveScene(const unsigned int id) {
 	// 	std::cout << "AAA: " << s_active_scene->getObjects().size() << "\n";
 	// }
 	RuamEngine::Camera::EmptyMainCamera();
-	std::cout << "Omaeba...\n";
 	s_active_scene.reset(s_scenes[id]());
 	s_scene_change = true;
 

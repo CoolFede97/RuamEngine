@@ -12,8 +12,8 @@
 			"idx": 0,
 			"name": "Light",
 			"transform_position_x": 0.0,
-			"transform_position_y": 100.0,
-			"transform_position_z": 0.0,
+			"transform_position_y": 0.0,
+			"transform_position_z": 100.0,
 			"transform_rotation_x": 0.0,
 			"transform_rotation_y": 0.0,
 			"transform_rotation_z": 0.0,
@@ -44,7 +44,14 @@
 		{
 			"components": [
 				{
-					"id": 34,
+					"id": 18,
+					"m_audio_path": "assets/music/portal_radio.wav",
+					"m_max_volume": 1.0,
+					"m_volume": 1.0,
+					"type": "AudioSource"
+				},
+				{
+					"id": 19,
 					"m_meshPath": "assets/meshes/radio/Radio.obj",
 					"type": "MeshRenderer"
 				}
@@ -64,7 +71,7 @@
 		{
 			"components": [
 				{
-					"id": 36,
+					"id": 21,
 					"m_meshPath": "assets/meshes/portal/portal.obj",
 					"type": "MeshRenderer"
 				},
@@ -75,9 +82,9 @@
 			],
 			"idx": 3,
 			"name": "portal",
-			"transform_position_x": -4.0,
-			"transform_position_y": -2.5999999046325684,
-			"transform_position_z": 35.0,
+			"transform_position_x": 0.0,
+			"transform_position_y": -2.0,
+			"transform_position_z": 20.0,
 			"transform_rotation_x": 0.0,
 			"transform_rotation_y": 0.0,
 			"transform_rotation_z": 0.0,
@@ -88,7 +95,7 @@
 		{
 			"components": [
 				{
-					"id": 39,
+					"id": 23,
 					"m_meshPath": "assets/meshes/skyboxes/galaxy/galaxySkybox.obj",
 					"type": "MeshRenderer"
 				}
@@ -108,25 +115,25 @@
 		{
 			"components": [
 				{
-					"id": 41,
+					"id": 26,
+					"m_rotationSpeed": 80.0,
+					"m_speed": 10.5,
+					"type": "CameraController"
+				},
+				{
+					"id": 25,
 					"m_aspect_ratio": 1.3333333730697632,
 					"m_far_plane": 3000.0,
 					"m_fov": 45.0,
 					"m_near_plane": 0.10000000149011612,
 					"type": "Camera"
-				},
-				{
-					"id": 42,
-					"m_rotationSpeed": 80.0,
-					"m_speed": 10.5,
-					"type": "CameraController"
 				}
 			],
 			"idx": 5,
 			"name": "Player2",
-			"transform_position_x": 50.0,
-			"transform_position_y": 20.0,
-			"transform_position_z": 160.0,
+			"transform_position_x": 100.0,
+			"transform_position_y": 30.0,
+			"transform_position_z": 150.0,
 			"transform_rotation_x": 0.0,
 			"transform_rotation_y": 180.0,
 			"transform_rotation_z": 0.0,
@@ -137,7 +144,7 @@
 		{
 			"components": [
 				{
-					"id": 44,
+					"id": 28,
 					"type": "Manager"
 				}
 			],

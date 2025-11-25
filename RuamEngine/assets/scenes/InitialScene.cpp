@@ -7,6 +7,8 @@
 #include "MeshRenderer.h"
 #include "GlobalLight.h"
 #include "../components/Portal.h"
+#include <AudioSource.h>
+
 #include "../components/Manager.h"
 void CreateInitialScene()
 {
@@ -15,8 +17,11 @@ void CreateInitialScene()
 
 	Object* light = scene->newObject();
 	light->addComponent<GlobalLight>();
-	light->transform().setPosition(glm::vec3(0.0f, 100.0f, 0.0f));
+	light->transform().setPosition(glm::vec3(0.0f, 0.0f, 100.0f));
 	light->setName("Light");
+	//manager->addComponent<SandboxCom>();
+	//bag->transform().setRotation(glm::vec3(45.0f, 5.0f, 45.0f));
+	//bag->addComponent<CubeRenderer>()->materialId = 0;
 
 	Object* nave = scene->newObject();
 	nave->setName("Nave");
@@ -24,6 +29,7 @@ void CreateInitialScene()
 	nave->addComponent<MeshRenderer>()->SetModel("assets/meshes/Nave/Nave.obj");
 
 	Object* radio = scene->newObject();
+	radio->addComponent<AudioSource>("assets/music/portal_radio.wav");
 	radio->setName("radio");
 	radio->transform().setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 	radio->addComponent<MeshRenderer>()->SetModel("assets/meshes/radio/Radio.obj");

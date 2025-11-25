@@ -5,6 +5,7 @@
 #include "Object.hpp"
 #include "Serial.hpp"
 #include <Component.hpp>
+#include "AudioSystem.hpp"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -35,7 +36,10 @@ namespace RuamEngine
 		static void EmptyMainCamera();
 		static Camera* GetMainCamera();
 
-		void update() { Component::update(); };
+		void update() {
+			Component::update();
+			AudioSystem::AL::Listener::setParam(AL_POSITION, object()->transform().position());
+		};
 		void start() { SetAsMainCamera();};
 
 		IMPL_SERIALIZE(Camera,

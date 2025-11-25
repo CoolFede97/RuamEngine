@@ -6,6 +6,7 @@
 #include "Serial.hpp"
 #include "MeshRenderer.h"
 #include "GlobalLight.h"
+#include <AudioSource.h>
 
 #include "../components/Manager.h"
 void CreateInitialScene()
@@ -15,8 +16,11 @@ void CreateInitialScene()
 
 	Object* light = scene->newObject();
 	light->addComponent<GlobalLight>();
-	light->transform().setPosition(glm::vec3(0.0f, 100.0f, 0.0f));
+	light->transform().setPosition(glm::vec3(0.0f, 0.0f, 100.0f));
 	light->setName("Light");
+	//manager->addComponent<SandboxCom>();
+	//bag->transform().setRotation(glm::vec3(45.0f, 5.0f, 45.0f));
+	//bag->addComponent<CubeRenderer>()->materialId = 0;
 
 	Object* nave = scene->newObject();
 	nave->setName("Nave");
@@ -24,6 +28,7 @@ void CreateInitialScene()
 	nave->addComponent<MeshRenderer>()->SetModel("assets/meshes/Nave/Nave.obj");
 
 	Object* radio = scene->newObject();
+	radio->addComponent<AudioSource>("assets/music/portal_radio.wav");
 	radio->setName("radio");
 	radio->transform().setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 	radio->addComponent<MeshRenderer>()->SetModel("assets/meshes/radio/Radio.obj");
@@ -36,7 +41,7 @@ void CreateInitialScene()
 	portal->transform().setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 	portal->addComponent<MeshRenderer>()->SetModel("assets/meshes/portal/portal.obj");
 	portal->transform().setScale(1.0f,1.0f,1.0f);
-	portal->transform().setPosition(glm::vec3(-4.0f, -7.0f, 35.0f));
+	portal->transform().setPosition(glm::vec3(0.0f, -2.0f, 20.0f));
 
 	Object* skybox = scene->newObject();
 	skybox->setName("Skybox");
@@ -47,7 +52,7 @@ void CreateInitialScene()
 	skybox->transform().setScale(glm::vec3(500.0f, 500.0f, 500.0f));
 
 	Object* player = scene->newObject();
-	player->transform().setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+	player->transform().setPosition(glm::vec3(100.0f, 30.0f, 150.0f));
 	player->transform().setRotation(glm::vec3(0.0f, 180, 0.0f));
 	player->setName("Player2");
 	player->addComponent<Camera>();

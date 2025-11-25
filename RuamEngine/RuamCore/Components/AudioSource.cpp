@@ -1,5 +1,6 @@
 #include "AudioSource.h"
 #include "RuamUtils.h"
+#include "Camera.h"
 
 AudioSource::AudioSource(const unsigned int object_id, const std::string& audio) 
 	: m_audio_path(audio), Component(object_id) {
@@ -24,7 +25,8 @@ void AudioSource::start() {
 		m_source.setParam(AL_GAIN, 1);
 		m_source.setParam(AL_POSITION, zero);
 		m_source.setParam(AL_VELOCITY, zero);
-		m_source.setParam(AL_LOOPING, AL_FALSE);
+		m_source.setParam(AL_LOOPING, AL_TRUE);
+		m_source.setParam(AL_SOURCE_RELATIVE, AL_TRUE);
 	} catch (AudioSystem::AL::al_error e) {
 		std::cerr << "Error setting source parameters, " << e.what() << '\n';
 	}
@@ -98,11 +100,23 @@ void AudioSource::stop() {
 	});
 }
 
+void AudioSource::setLooping(bool state) {
+	auto set = (state) ? AL_TRUE : AL_FALSE;
+	m_source.setParam(AL_LOOPING, set); // FIX: CRASHES
+}
+
+bool AudioSource::isLooping() {
+	ALint status = false;
+	m_source.get(AL_LOOPING, &status);
+	return status;
+}
+
 void AudioSource::update() {
 	try {
-		m_source.setParam(AL_POSITION, object()->transform().position()); // FIX: NOT working
+		m_source.setParam(AL_POSITION,
+					RuamEngine::Camera::GetMainCamera()->object()->transform().position() - object()->transform().position()
+					);
 	} catch(AudioSystem::AL::al_error err) {
-
 	}
 }
 

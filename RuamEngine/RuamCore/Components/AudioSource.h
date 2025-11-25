@@ -27,6 +27,9 @@ public:
 	void setVolume(float vol);
 	float volume();
 
+	void setLooping(bool state);
+	bool isLooping();
+
 	IMPL_SERIALIZE(AudioSource,
 				SER_FIELD(m_volume),
 				SER_FIELD(m_max_volume),

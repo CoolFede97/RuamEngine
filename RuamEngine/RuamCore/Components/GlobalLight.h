@@ -14,7 +14,7 @@
 
 namespace RuamEngine
 {
-	class GlobalLight : public Component
+	class GlobalLight : public BaseRenderer
 	{
 
 	private:
@@ -23,8 +23,8 @@ namespace RuamEngine
 		float m_lightOffset = 0.1f;
 	public:
 		IMPL_SIMPLE_SERIALIZE(GlobalLight)
-		using Component::Component;
-		GlobalLight(const nlohmann::json& j, unsigned int obj_id) : Component(obj_id) {}
+		using BaseRenderer::BaseRenderer;
+		GlobalLight(const nlohmann::json& j, unsigned int obj_id) : BaseRenderer(obj_id) {}
 		~GlobalLight()
 		{
 		    if (s_mainLight == this) s_mainLight = nullptr;
@@ -43,7 +43,7 @@ namespace RuamEngine
 		}
 
 
-		void update() { Component::update(); };
+		void update() { BaseRenderer::update(); };
 		void start()
 		{
 			if (!s_mainLight) s_mainLight = this;

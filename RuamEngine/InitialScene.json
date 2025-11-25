@@ -44,14 +44,14 @@
 		{
 			"components": [
 				{
-					"id": 18,
+					"id": 34,
 					"m_audio_path": "assets/music/portal_radio.wav",
 					"m_max_volume": 1.0,
 					"m_volume": 1.0,
 					"type": "AudioSource"
 				},
 				{
-					"id": 19,
+					"id": 35,
 					"m_meshPath": "assets/meshes/radio/Radio.obj",
 					"type": "MeshRenderer"
 				}
@@ -71,20 +71,20 @@
 		{
 			"components": [
 				{
-					"id": 21,
+					"id": 37,
 					"m_meshPath": "assets/meshes/portal/portal.obj",
 					"type": "MeshRenderer"
 				},
 				{
-					"id": 37,
+					"id": 38,
 					"type": "Portal"
 				}
 			],
 			"idx": 3,
 			"name": "portal",
-			"transform_position_x": 0.0,
-			"transform_position_y": -2.0,
-			"transform_position_z": 20.0,
+			"transform_position_x": -4.0,
+			"transform_position_y": -2.5999999046325684,
+			"transform_position_z": 35.0,
 			"transform_rotation_x": 0.0,
 			"transform_rotation_y": 0.0,
 			"transform_rotation_z": 0.0,
@@ -95,7 +95,7 @@
 		{
 			"components": [
 				{
-					"id": 23,
+					"id": 40,
 					"m_meshPath": "assets/meshes/skyboxes/galaxy/galaxySkybox.obj",
 					"type": "MeshRenderer"
 				}
@@ -115,25 +115,25 @@
 		{
 			"components": [
 				{
-					"id": 26,
-					"m_rotationSpeed": 80.0,
-					"m_speed": 10.5,
-					"type": "CameraController"
-				},
-				{
-					"id": 25,
+					"id": 42,
 					"m_aspect_ratio": 1.3333333730697632,
 					"m_far_plane": 3000.0,
 					"m_fov": 45.0,
 					"m_near_plane": 0.10000000149011612,
 					"type": "Camera"
+				},
+				{
+					"id": 43,
+					"m_rotationSpeed": 80.0,
+					"m_speed": 10.5,
+					"type": "CameraController"
 				}
 			],
 			"idx": 5,
 			"name": "Player2",
-			"transform_position_x": 100.0,
-			"transform_position_y": 30.0,
-			"transform_position_z": 150.0,
+			"transform_position_x": 50.0,
+			"transform_position_y": 20.0,
+			"transform_position_z": 160.0,
 			"transform_rotation_x": 0.0,
 			"transform_rotation_y": 180.0,
 			"transform_rotation_z": 0.0,
@@ -144,7 +144,7 @@
 		{
 			"components": [
 				{
-					"id": 28,
+					"id": 45,
 					"type": "Manager"
 				}
 			],

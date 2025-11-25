@@ -37,8 +37,8 @@ public:
 protected:
 	void loadBuffer(std::unique_ptr<Wave>& wave);
 
-	AudioSystem::AL::Source m_source;
 	AudioSystem::AL::Buffer m_buffer;
+	AudioSystem::AL::Source m_source;
 	std::string m_audio_path;
 	std::unique_ptr<Wave> m_wave;
 	float m_volume = 1;

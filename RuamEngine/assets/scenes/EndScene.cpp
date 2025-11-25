@@ -8,9 +8,9 @@
 #include "GlobalLight.h"
 #include "../components/Portal.h"
 #include "../components/Manager.h"
-void CreateInitialScene()
+void CreateEndScene()
 {
-	SceneManager::CreateScene(0, "InitialScene");
+	SceneManager::CreateScene(2, "InitialScene");
 	auto scene = SceneManager::ActiveScene();
 
 	Object* light = scene->newObject();
@@ -49,7 +49,7 @@ void CreateInitialScene()
 	skybox->transform().setScale(glm::vec3(500.0f, 500.0f, 500.0f));
 
 	Object* player = scene->newObject();
-	player->transform().setPosition(glm::vec3(50.0f, 20.0f, 160.0f));
+	player->transform().setPosition(glm::vec3(-4.0f, -2.6f, 33.0f));
 	player->transform().setRotation(glm::vec3(0.0f, 180, 0.0f));
 	player->setName("Player2");
 	player->addComponent<Camera>();

@@ -14,7 +14,7 @@
 
 void CreateCFSandboxScene()
 {
-	SceneManager::CreateScene(0, "SandboxScene");
+	SceneManager::CreateScene(1, "SandboxScene");
 	auto sandboxScene = SceneManager::ActiveScene();
 
 	Object* light = sandboxScene->newObject();

@@ -7,7 +7,7 @@
 #include "SandboxScene.cpp"
 #include "assets/scenes/CollisionSandboxScene.cpp"
 #include "assets/scenes/InitialScene.cpp"
-
+#include "assets/scenes/EndScene.cpp"
 using namespace RuamEngine;
 
 int main()
@@ -33,6 +33,7 @@ int main()
 
 		ImGui::StyleColorsDark();
 
+		CreateEndScene();
 		CreateCFSandboxScene();
 		CreateInitialScene();
 

@@ -50,7 +50,7 @@ public:
 			s_instance->playerTransform = nullptr;
 			s_instance = nullptr;
 			object()->destroy();
-			SceneManager::SetActiveScene(1);
+			SceneManager::SetActiveScene(2);
 		}
 	}
 	using Component::Component;

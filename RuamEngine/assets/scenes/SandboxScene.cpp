@@ -14,13 +14,13 @@
 
 void CreateCFSandboxScene()
 {
-	SceneManager::CreateScene(0, "SandboxScene");
+	SceneManager::CreateScene(1, "SandboxScene");
 	auto sandboxScene = SceneManager::ActiveScene();
 
 	Object* light = sandboxScene->newObject();
 	light->setName("Light");
 	light->addComponent<GlobalLight>();
-	light->transform().setPosition(glm::vec3(0.0f, 0.0f, 80.0f));
+	light->transform().setPosition(glm::vec3(0.0f, 50.0f, 0.0f));
 	//manager->addComponent<SandboxCom>();
 	//bag->transform().setRotation(glm::vec3(45.0f, 5.0f, 45.0f));
 	//bag->addComponent<CubeRenderer>()->materialId = 0;
@@ -39,7 +39,7 @@ void CreateCFSandboxScene()
 
 	Object* skybox = sandboxScene->newObject();
 	skybox->setName("Skybox");
-	skybox->addComponent<MeshRenderer>()->SetModel("assets/meshes/skyboxes/galaxy/galaxySkybox.obj");
+	skybox->addComponent<MeshRenderer>()->SetModel("assets/meshes/skyboxes/hell/hell.obj");
 	skybox->getComponent<MeshRenderer>()->m_model->m_meshes[0].m_material->m_shininess = 1000.0;
 	skybox->transform().setRotation(glm::vec3(180.0f, 0.0, 0.0));
 	skybox->transform().setScale(glm::vec3(500.0f, 500.0f, 500.0f));

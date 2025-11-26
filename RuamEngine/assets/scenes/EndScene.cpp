@@ -7,21 +7,17 @@
 #include "MeshRenderer.h"
 #include "GlobalLight.h"
 #include "../components/Portal.h"
-#include <AudioSource.h>
-
 #include "../components/Manager.h"
-void CreateInitialScene()
+#include "AudioSource.h"
+void CreateEndScene()
 {
-	SceneManager::CreateScene(0, "InitialScene");
+	SceneManager::CreateScene(2, "EndScene");
 	auto scene = SceneManager::ActiveScene();
 
 	Object* light = scene->newObject();
 	light->addComponent<GlobalLight>();
 	light->transform().setPosition(glm::vec3(0.0f, 100.0f, 0.0f));
 	light->setName("Light");
-	//manager->addComponent<SandboxCom>();
-	//bag->transform().setRotation(glm::vec3(45.0f, 5.0f, 45.0f));
-	//bag->addComponent<CubeRenderer>()->materialId = 0;
 
 	Object* nave = scene->newObject();
 	nave->setName("Nave");
@@ -55,13 +51,13 @@ void CreateInitialScene()
 	skybox->transform().setScale(glm::vec3(500.0f, 500.0f, 500.0f));
 
 	Object* player = scene->newObject();
-	player->transform().setPosition(glm::vec3(50.0f, 20.0f, 160.0f));
+	player->transform().setPosition(glm::vec3(-4.0f, 0.0f, 33.0f));
 	player->transform().setRotation(glm::vec3(0.0f, 180, 0.0f));
 	player->setName("Player2");
 	player->addComponent<Camera>();
 	player->addComponent<CameraController>();
 	player->getComponent<CameraController>()->m_speed = 10.5f;
-	player->getComponent<CameraController>()->m_rotationSpeed = 10000.0f;
+	player->getComponent<CameraController>()->m_rotationSpeed = 80.0f;
 
 	Object* manager = scene->newObject();
 	manager->setName("Manager");

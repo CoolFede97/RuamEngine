@@ -35,13 +35,10 @@ private:
 
 		m_mouseRotation = Vec2(0.0f, 0.0f);
 
-		if (Input::GetKeyDown(KeyCode::Down_Arrow)) m_mouseRotation.x -= 1;
-		if (Input::GetKeyDown(KeyCode::Up_Arrow)) m_mouseRotation.x += 1;
-		if (Input::GetKeyDown(KeyCode::Left_Arrow)) m_mouseRotation.y += 1;
-		if (Input::GetKeyDown(KeyCode::Right_Arrow)) m_mouseRotation.y -= 1;
+		Vec2 mouseInput = Input::GetMouseDeltaNorm();
+		m_mouseRotation = Vec2(mouseInput.y, -mouseInput.x);
 
-
-		object()->transform().rotation() += static_cast<glm::vec3>(m_mouseRotation * Time::DeltaTime() * m_rotationSpeed);
+		object()->transform().rotation() += static_cast<glm::vec3>(m_mouseRotation * m_rotationSpeed * Time::DeltaTime());
 		//object()->transform().rotation() += static_cast<glm::vec3>(Input::GetMouseDeltaNorm() * Time::DeltaTime() * m_rotationSpeed);
 		object()->transform().rotation().x = std::clamp(object()->transform().rotation().x, -89.0f, 89.0f);
 		//std::cout << "Rotation variation: " << static_cast<glm::vec3>(Input::GetMouseDeltaNorm() * Time::DeltaTime() * m_rotationSpeed) << "\n";
@@ -62,7 +59,9 @@ private:
 		object()->transform().position() += static_cast<glm::vec3>(left * -m_horizontalDirection.x * Time::DeltaTime() * m_speed);
 
 	};
-	void start() {};
+	void start() {
+		Input::SetCursorMode(MouseDisabled);
+	};
 	IMPL_SERIALIZE(CameraController,
 	SER_FIELD(m_speed),
 	SER_FIELD(m_rotationSpeed))

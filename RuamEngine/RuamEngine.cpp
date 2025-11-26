@@ -47,8 +47,6 @@ int main()
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
 
-			glfwPollEvents();
-
 			// Input
 
 			// Time
@@ -68,6 +66,8 @@ int main()
 				SceneManager::ActiveScene()->update();
 			}
 
+			Input::UpdateInput();
+
 			if (!SceneManager::SceneChange())
 			{
     			Renderer::EndBatch();
@@ -80,7 +80,6 @@ int main()
  			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
             Renderer::EndDraw();
-			Input::UpdateInput();
 			glfwPollEvents();
 		}
 	}

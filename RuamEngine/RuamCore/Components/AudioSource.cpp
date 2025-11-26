@@ -2,6 +2,30 @@
 #include "RuamUtils.h"
 #include "Camera.h"
 
+glm::mat4 eulerAnglesToRotationMatrix(glm::vec3 eulerAngles) {
+    float yaw = eulerAngles.y;
+    float pitch = eulerAngles.x;
+    float roll = eulerAngles.z;
+
+    glm::mat4 rotationYaw = glm::mat4(1.0f);
+    rotationYaw = glm::rotate(rotationYaw, glm::radians(yaw), glm::vec3(0.0f, 1.0f, 0.0f));
+
+    glm::mat4 rotationPitch = glm::mat4(1.0f);
+    rotationPitch = glm::rotate(rotationPitch, glm::radians(pitch), glm::vec3(1.0f, 0.0f, 0.0f));
+
+    glm::mat4 rotationRoll = glm::mat4(1.0f);
+    rotationRoll = glm::rotate(rotationRoll, glm::radians(roll), glm::vec3(0.0f, 0.0f, 1.0f));
+
+    return rotationYaw * rotationPitch * rotationRoll;
+}
+
+glm::vec3 getRelativePosition(glm::vec3 listenerPos, glm::vec3 listenerRot, glm::vec3 sourcePos) {
+    glm::mat4 listenerRotation = eulerAnglesToRotationMatrix(listenerRot);
+
+    glm::vec4 rotatedPos = glm::inverse(listenerRotation) * glm::vec4(sourcePos - listenerPos, 1.0f);
+    return glm::vec3(rotatedPos);
+}
+
 AudioSource::AudioSource(const unsigned int object_id, const std::string& audio) 
 	: m_audio_path(audio), Component(object_id) {
 	EASY_FUNCTION("AudioSource Constructor")
@@ -113,8 +137,9 @@ bool AudioSource::isLooping() {
 
 void AudioSource::update() {
 	try {
+		Transform& cam_trans = RuamEngine::Camera::GetMainCamera()->object()->transform();
 		m_source.setParam(AL_POSITION,
-					RuamEngine::Camera::GetMainCamera()->object()->transform().position() - object()->transform().position()
+					-getRelativePosition(cam_trans.position(), cam_trans.rotation(), object()->transform().position())
 					);
 	} catch(AudioSystem::AL::al_error err) {
 	}

@@ -20,7 +20,7 @@ void CreateCFSandboxScene()
 	Object* light = sandboxScene->newObject();
 	light->setName("Light");
 	light->addComponent<GlobalLight>();
-	light->transform().setPosition(glm::vec3(0.0f, 0.0f, 80.0f));
+	light->transform().setPosition(glm::vec3(0.0f, 50.0f, 0.0f));
 	//manager->addComponent<SandboxCom>();
 	//bag->transform().setRotation(glm::vec3(45.0f, 5.0f, 45.0f));
 	//bag->addComponent<CubeRenderer>()->materialId = 0;

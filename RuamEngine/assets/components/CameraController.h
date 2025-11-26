@@ -10,6 +10,8 @@
 #include "../../RuamCore/Input/KeyCode.h"
 #include "../../RuamCore/Input/Cursor.h"
 #include <algorithm>
+#include "MeshRenderer.h"
+
 using namespace RuamEngine;
 
 class CameraController : public Component
@@ -62,7 +64,19 @@ private:
 		object()->transform().position() += static_cast<glm::vec3>(left * -m_horizontalDirection.x * Time::DeltaTime() * m_speed);
 
 	};
-	void start() {};
+	void start()
+	{
+	    for (auto& obj : SceneManager::ActiveScene()->getObjects())
+        {
+            if (obj->name() == "Skybox")
+            {
+                for (auto mesh : obj->getComponent<MeshRenderer>()->m_model->m_meshes)
+                {
+                    mesh.m_material->m_shininess = 10000.0f;
+                }
+            }
+        }
+	};
 	IMPL_SERIALIZE(CameraController,
 	SER_FIELD(m_speed),
 	SER_FIELD(m_rotationSpeed))

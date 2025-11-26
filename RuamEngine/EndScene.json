@@ -1,11 +1,11 @@
 {
-	"id": 2,
-	"name": "InitialScene",
+	"id": 0,
+	"name": "EndScene",
 	"objects": [
 		{
 			"components": [
 				{
-					"id": 31,
+					"id": 1,
 					"type": "GlobalLight"
 				}
 			],
@@ -24,7 +24,7 @@
 		{
 			"components": [
 				{
-					"id": 33,
+					"id": 3,
 					"m_meshPath": "assets/meshes/Nave/Nave.obj",
 					"type": "MeshRenderer"
 				}
@@ -44,14 +44,14 @@
 		{
 			"components": [
 				{
-					"id": 35,
+					"id": 5,
 					"m_audio_path": "assets/music/portal_radio.wav",
 					"m_max_volume": 1.0,
 					"m_volume": 1.0,
 					"type": "AudioSource"
 				},
 				{
-					"id": 36,
+					"id": 6,
 					"m_meshPath": "assets/meshes/radio/Radio.obj",
 					"type": "MeshRenderer"
 				}
@@ -71,12 +71,12 @@
 		{
 			"components": [
 				{
-					"id": 38,
+					"id": 8,
 					"m_meshPath": "assets/meshes/portal/portal.obj",
 					"type": "MeshRenderer"
 				},
 				{
-					"id": 39,
+					"id": 9,
 					"type": "Portal"
 				}
 			],
@@ -95,7 +95,7 @@
 		{
 			"components": [
 				{
-					"id": 41,
+					"id": 11,
 					"m_meshPath": "assets/meshes/skyboxes/galaxy/galaxySkybox.obj",
 					"type": "MeshRenderer"
 				}
@@ -115,7 +115,7 @@
 		{
 			"components": [
 				{
-					"id": 43,
+					"id": 13,
 					"m_aspect_ratio": 1.3333333730697632,
 					"m_far_plane": 3000.0,
 					"m_fov": 45.0,
@@ -123,7 +123,7 @@
 					"type": "Camera"
 				},
 				{
-					"id": 44,
+					"id": 14,
 					"m_rotationSpeed": 80.0,
 					"m_speed": 10.5,
 					"type": "CameraController"
@@ -131,9 +131,9 @@
 			],
 			"idx": 5,
 			"name": "Player2",
-			"transform_position_x": 50.0,
-			"transform_position_y": 20.0,
-			"transform_position_z": 160.0,
+			"transform_position_x": -4.0,
+			"transform_position_y": 0.0,
+			"transform_position_z": 33.0,
 			"transform_rotation_x": 0.0,
 			"transform_rotation_y": 180.0,
 			"transform_rotation_z": 0.0,
@@ -144,7 +144,7 @@
 		{
 			"components": [
 				{
-					"id": 46,
+					"id": 16,
 					"type": "Manager"
 				}
 			],

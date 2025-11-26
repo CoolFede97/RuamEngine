@@ -8,9 +8,10 @@
 #include "GlobalLight.h"
 #include "../components/Portal.h"
 #include "../components/Manager.h"
+#include "AudioSource.h"
 void CreateEndScene()
 {
-	SceneManager::CreateScene(2, "InitialScene");
+	SceneManager::CreateScene(2, "EndScene");
 	auto scene = SceneManager::ActiveScene();
 
 	Object* light = scene->newObject();
@@ -24,6 +25,7 @@ void CreateEndScene()
 	nave->addComponent<MeshRenderer>()->SetModel("assets/meshes/Nave/Nave.obj");
 
 	Object* radio = scene->newObject();
+	radio->addComponent<AudioSource>("assets/music/portal_radio.wav");
 	radio->setName("radio");
 	radio->transform().setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 	radio->addComponent<MeshRenderer>()->SetModel("assets/meshes/radio/Radio.obj");
@@ -49,7 +51,7 @@ void CreateEndScene()
 	skybox->transform().setScale(glm::vec3(500.0f, 500.0f, 500.0f));
 
 	Object* player = scene->newObject();
-	player->transform().setPosition(glm::vec3(-4.0f, -2.6f, 33.0f));
+	player->transform().setPosition(glm::vec3(-4.0f, 0.0f, 33.0f));
 	player->transform().setRotation(glm::vec3(0.0f, 180, 0.0f));
 	player->setName("Player2");
 	player->addComponent<Camera>();

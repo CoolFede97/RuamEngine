@@ -39,7 +39,7 @@ void CreateCFSandboxScene()
 
 	Object* skybox = sandboxScene->newObject();
 	skybox->setName("Skybox");
-	skybox->addComponent<MeshRenderer>()->SetModel("assets/meshes/skyboxes/galaxy/galaxySkybox.obj");
+	skybox->addComponent<MeshRenderer>()->SetModel("assets/meshes/skyboxes/hell/hell.obj");
 	skybox->getComponent<MeshRenderer>()->m_model->m_meshes[0].m_material->m_shininess = 1000.0;
 	skybox->transform().setRotation(glm::vec3(180.0f, 0.0, 0.0));
 	skybox->transform().setScale(glm::vec3(500.0f, 500.0f, 500.0f));

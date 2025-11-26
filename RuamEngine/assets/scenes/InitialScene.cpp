@@ -17,7 +17,7 @@ void CreateInitialScene()
 
 	Object* light = scene->newObject();
 	light->addComponent<GlobalLight>();
-	light->transform().setPosition(glm::vec3(0.0f, 0.0f, 100.0f));
+	light->transform().setPosition(glm::vec3(0.0f, 100.0f, 0.0f));
 	light->setName("Light");
 	//manager->addComponent<SandboxCom>();
 	//bag->transform().setRotation(glm::vec3(45.0f, 5.0f, 45.0f));

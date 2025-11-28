@@ -1,5 +1,5 @@
 #include "Renderer.h"
-
+#include "FileFunctions.h"
 
 namespace RuamEngine
 {
@@ -210,7 +210,7 @@ namespace RuamEngine
     {
         for (unsigned int i = 0; i < m_textures2D.size(); i++)
         {
-            if (m_textures2D[i]->m_filePath == absoluteTexturePath)
+            if (m_textures2D[i]->GetPath() == absoluteTexturePath)
             {
                 return i;
             }

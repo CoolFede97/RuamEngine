@@ -1,18 +1,20 @@
 #include "Texture2D.h"
 #include "stb_image.h"
+#include "FileFunctions.h"
 
 namespace RuamEngine
 {
 	Texture2D::Texture2D(const std::string& relativePath)
-		: m_filePath(GlobalizePath(relativePath)), m_localBuffer(nullptr)
+		: m_localBuffer(nullptr)
 	{
+	    m_filePath = GlobalizePath(relativePath);
 		GLCall(glCreateTextures(GL_TEXTURE_2D, 1, &m_rendererId));
 
 		stbi_set_flip_vertically_on_load(1);
 
 		m_localBuffer = stbi_load(m_filePath.c_str(), &m_Width, &m_Height, &m_BPP, 4);
 
-		if (m_localBuffer == NULL) 
+		if (m_localBuffer == NULL)
 		{
 			const char* reason = stbi_failure_reason();
 			if (reason) {
@@ -58,9 +60,8 @@ namespace RuamEngine
 		GLCall(glBindTexture(GL_TEXTURE_2D, m_rendererId));
 	}
 
-	void Texture2D::Unbind()
+	void Texture2D::Unbind() const
 	{
 		GLCall(glBindTexture(GL_TEXTURE_2D, 0));
 	}
 }
-

@@ -124,7 +124,7 @@
 				},
 				{
 					"id": 14,
-					"m_rotationSpeed": 80.0,
+					"m_rotationSpeed": 10000.0,
 					"m_speed": 10.5,
 					"type": "CameraController"
 				}

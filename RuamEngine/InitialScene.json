@@ -115,17 +115,7 @@
 		{
 			"components": [
 				{
-<<<<<<< HEAD
-					"id": 26,
-					"m_rotationSpeed": 10000.0,
-					"m_speed": 10.5,
-					"type": "CameraController"
-				},
-				{
-					"id": 25,
-=======
 					"id": 43,
->>>>>>> refs/remotes/origin/dev
 					"m_aspect_ratio": 1.3333333730697632,
 					"m_far_plane": 3000.0,
 					"m_fov": 45.0,
@@ -134,7 +124,7 @@
 				},
 				{
 					"id": 44,
-					"m_rotationSpeed": 80.0,
+					"m_rotationSpeed": 10000.0,
 					"m_speed": 10.5,
 					"type": "CameraController"
 				}

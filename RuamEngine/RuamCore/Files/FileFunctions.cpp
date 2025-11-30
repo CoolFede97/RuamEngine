@@ -1,4 +1,6 @@
 #include "FileFunctions.h"
+#include <string>
+#include <vector>
 
 // This function reads a file and returns its content as a string.
 std::string FileToString(const std::string& absoluteFilePath)
@@ -22,8 +24,18 @@ std::string GlobalizePath(const std::string& relativeFilePath)
 	return std::string(PROJECT_ROOT_DIR) + "/" + relativeFilePath;
 }
 
+std::vector<std::string> GlobalizePaths(const std::vector<std::string>& relativeFilePaths)
+{
+    std::vector<std::string> globalizedPaths;
+    for (auto& path : relativeFilePaths)
+    {
+        globalizedPaths.push_back(GlobalizePath(path));
+    }
+	return globalizedPaths;
+}
+
+
 std::string RelativizePath(const std::string& absoluteFilePath)
 {
 	return std::filesystem::relative(absoluteFilePath, std::string(PROJECT_ROOT_DIR)).string();
 }
-

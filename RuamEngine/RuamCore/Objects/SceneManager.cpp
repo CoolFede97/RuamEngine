@@ -2,8 +2,6 @@
 #include "Serial.hpp"
 #include "Camera.h"
 #include "Renderer.h"
-#include "../../assets/components/Shooter.h"
-#include "../../assets/components/Boss.h"
 SceneManager::SceneList SceneManager::s_scenes;
 SceneManager::ScenePtr SceneManager::s_active_scene = nullptr;
 bool SceneManager::s_scene_change = false;

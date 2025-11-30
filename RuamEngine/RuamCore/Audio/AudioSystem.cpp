@@ -5,6 +5,7 @@ static ALC::Device s_dev;
 static ALC::Context s_ctx;
 
 void init() {
+	std::cout << "AudioSystem called\n";
 	s_dev.open(nullptr);
 	s_ctx.create(s_dev);
 	ALC::MakeContextCurrent(s_ctx);
@@ -30,4 +31,4 @@ ALC::Device device() {
 ALC::Context context() {
 	return s_ctx;
 }
-} 
+}

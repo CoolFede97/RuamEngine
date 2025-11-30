@@ -115,18 +115,18 @@
 		{
 			"components": [
 				{
+					"id": 14,
+					"m_rotationSpeed": 80.0,
+					"m_speed": 10.5,
+					"type": "CameraController"
+				},
+				{
 					"id": 13,
 					"m_aspect_ratio": 1.3333333730697632,
 					"m_far_plane": 3000.0,
 					"m_fov": 45.0,
 					"m_near_plane": 0.10000000149011612,
 					"type": "Camera"
-				},
-				{
-					"id": 14,
-					"m_rotationSpeed": 10000.0,
-					"m_speed": 10.5,
-					"type": "CameraController"
 				}
 			],
 			"idx": 5,

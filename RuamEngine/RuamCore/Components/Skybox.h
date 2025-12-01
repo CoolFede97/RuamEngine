@@ -20,6 +20,8 @@ namespace RuamEngine
 		static Skybox* s_skybox;
 		Cubemap* m_cubemap;
 
+		static std::vector<float> m_skyboxVertices;
+
 	public:
 		Skybox(const nlohmann::json& j, const unsigned int obj_id);
 

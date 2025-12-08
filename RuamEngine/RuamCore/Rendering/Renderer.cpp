@@ -53,7 +53,6 @@ namespace RuamEngine
             //genericLayout.Push<float>(2);
             //genericLayout.Push<float>(1);
             //genericUnit.m_vertexArray->AddBuffer(*genericUnit.m_vertexBuffer, *genericUnit.m_layout);
-
             UploadTextures2D();
         }
 
@@ -248,7 +247,6 @@ namespace RuamEngine
     {
         ASSERT(m_texture2DHandles.size() < maxTextureCount);
 		ASSERT(!texturesUploaded);
-
         GLCall(glNamedBufferStorage(
             m_texture2DBuffer,
             sizeof(GLuint64) * maxTextureCount,

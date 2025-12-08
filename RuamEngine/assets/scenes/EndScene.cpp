@@ -57,7 +57,7 @@ void CreateEndScene()
 	player->addComponent<Camera>();
 	player->addComponent<CameraController>();
 	player->getComponent<CameraController>()->m_speed = 10.5f;
-	player->getComponent<CameraController>()->m_rotationSpeed = 10000.0f;
+	player->getComponent<CameraController>()->m_rotationSpeed = 80.0f;
 
 	Object* manager = scene->newObject();
 	manager->setName("Manager");

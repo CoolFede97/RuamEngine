@@ -41,10 +41,10 @@ private:
 	std::vector<VertexBufferElement> m_Elements;
 
 	//  The stride is the amount of bytes between each vertex in a vertex buffer
-	//  E.G: 
+	//  E.G:
 	//  [
 	//		X   Y   Z   R    G    B
-	//		1,  2,  3,  255, 255, 255, 
+	//		1,  2,  3,  255, 255, 255,
 	//		4,  5,  6,  254, 254, 254
 	//  ]
 	// There, the stride would be 6 * 4 bytes, since we have 6 floats, and each float is 4 bytes.

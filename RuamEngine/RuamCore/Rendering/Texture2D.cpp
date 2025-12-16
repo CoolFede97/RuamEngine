@@ -30,7 +30,6 @@ namespace RuamEngine
 
 		GLCall(glTextureStorage2D(m_rendererId, 1, GL_RGBA8, m_Width, m_Height));
 		GLCall(glTextureSubImage2D(m_rendererId, 0, 0, 0, m_Width, m_Height, GL_RGBA, GL_UNSIGNED_BYTE, m_localBuffer));
-		glGenerateTextureMipmap(m_rendererId);
 		// Turns around the texture, so that it is up-side down
 		// We do this because OpenGL expects textures (0,0) position to be at the bottom-left corner,
 		// not at the top-left corner.

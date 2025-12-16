@@ -13,6 +13,9 @@ endif()
 # Requerido por Tomy para poder usar lsp
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# Para que no se traten las warnings como errores
+add_compile_options(-Wno-error=array-bounds)
+
 project ("RuamEngine")
 
 # Add source to this project's executable.

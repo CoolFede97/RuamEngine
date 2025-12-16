@@ -10,6 +10,7 @@
 #include "Texture2D.h"
 #include <unordered_map>
 #include <cstdint>
+#include <vector>
 
 namespace RuamEngine
 {
@@ -91,6 +92,8 @@ namespace RuamEngine
         static RenderUnitPtr CreateRenderUnit(DrawingDataPtr drawingData, MaterialPtr material);
 		static MaterialPtr CreateMaterial();
         static unsigned int CreateTexture2D(const std::string& relativeTexturePath);
+        static unsigned int CreateCubemap(const std::vector<std::string>& relativeTexturePaths);
+        static unsigned int FindCubemap(const std::vector<std::string>& relativeTexturePaths);
 		static unsigned int FindTexture2D(const std::string& absoluteTexturePath);
         static unsigned int FindMaterial(MaterialPtr material);
         static unsigned int FindRenderUnit(MaterialPtr material, DrawingDataPtr drawingData);
@@ -103,7 +106,9 @@ namespace RuamEngine
 		static std::vector<ShaderProgramPtr> m_shaderPrograms;
         static std::vector<MaterialPtr> m_materials;
         static std::vector<Texture2DPtr> m_textures2D;
+        static std::vector<TexturePtr> m_texturesCubemap;
         static std::vector<GLuint64> m_texture2DHandles;
+        static std::vector<GLuint64> m_cubemapHandles;
 
         static std::vector<glm::mat4> matrices;
 
@@ -112,6 +117,7 @@ namespace RuamEngine
         static void UploadTextures2D();
         static bool texturesUploaded;
         static GLuint m_texture2DBuffer;
+        static GLuint m_cubemapBuffer;
         static RendererConfig m_config;
         static GLFWwindow* m_window;
     };

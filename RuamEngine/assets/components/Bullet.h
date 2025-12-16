@@ -20,9 +20,8 @@ class Bullet : public Component {
 
 	Bullet(const nlohmann::json& j, unsigned int obj_id) : Component(obj_id) {}
 
-	void start() override
+	void start()
 	{
-
 	}
 
 	void update();

@@ -299,7 +299,9 @@ namespace RuamEngine
         renderUnit.m_program->Bind();
         renderUnit.m_program->LoadMaterial(*renderUnit.m_material);
         renderUnit.m_program->UpdateCameraMatrices();
-        renderUnit.SubmitData();
+
+        // Is something doesn't work when this line functions is called due to an exceeded amount of data in a batch (which is okay to happen, may be the solution is to uncomment the line below)
+        // renderUnit.SubmitData();
         GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit.m_indices->GetCurrentSize() / sizeof(unsigned int), renderUnit.m_modelMatricesBuffer->m_data.size()));
     }
 

@@ -33,21 +33,19 @@ namespace RuamEngine
             else
             {
                 std::cout << "Cubemap texture at path: " << m_filePaths[i] << " was loaded succesfully" << "\n";
+                GLCall(glTextureStorage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 1, GL_RGBA8, m_widths[i], m_heights[i]));
+        		GLCall(glTextureSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, 0, 0, m_widths[i], m_heights[i], GL_RGBA, GL_UNSIGNED_BYTE, m_localBuffers[i]));
             }
-
-            GLCall(glTextureStorage2D(m_rendererId, 1, GL_RGBA8, m_widths[i], m_heights[i]));
-    		GLCall(glTextureSubImage2D(m_rendererId, 0, 0, 0, m_widths[i], m_heights[i], GL_RGBA, GL_UNSIGNED_BYTE, m_localBuffers[i]));
-    		glGenerateTextureMipmap(m_rendererId);
 
             ASSERT(m_localBuffers[i]);
             stbi_image_free(m_localBuffers[i]);
         }
 
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+        glTexParameteri(m_rendererId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(m_rendererId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(m_rendererId, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(m_rendererId, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(m_rendererId, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
     }
 
     void Cubemap::Bind(unsigned int slot) const

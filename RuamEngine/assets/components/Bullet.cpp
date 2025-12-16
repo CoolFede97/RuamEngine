@@ -13,7 +13,7 @@ void Bullet::update()
 			if (m_isPlayerBullet && Boss::s_instance!= nullptr) object()->destroy();
 			// MOSTRARLE A TOMI POR QUE ESTO ES PELIGROSO!!!
 		}
-		if (object()->transform().position().length() > 200.0f) // Arbitrary large distance to destroy bullet
+		if (object()->transform().position().length() > 800.0f) // Arbitrary large distance to destroy bullet
 		{
 			object()->destroy();
 		}

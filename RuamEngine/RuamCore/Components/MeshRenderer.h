@@ -39,7 +39,7 @@ public:
 		// Pre-upload geometry once per mesh into the appropriate RenderUnit (vertices + indices).
 		for (Mesh& mesh : m_model->m_meshes)
 		{
-			for (auto& ru : Renderer::m_drawingDatas[0]->m_renderUnits)
+			for (auto& ru : Renderer::m_drawingDatas[ShaderProgramType::general]->m_renderUnits)
 			{
 				if (ru->m_material->GetId() == mesh.m_material->GetId())
 				{

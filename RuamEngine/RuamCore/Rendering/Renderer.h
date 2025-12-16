@@ -26,6 +26,11 @@ namespace RuamEngine
         cubemaps = 4
     };
 
+    enum ShaderProgramType
+    {
+        general = 0
+    };
+
     // General data
     struct RendererConfig
     {
@@ -89,11 +94,11 @@ namespace RuamEngine
 		static GLFWwindow* GetWindow() { return m_window; }
 		static int WindowShouldClose() { return glfwWindowShouldClose(m_window); }
 
-        static DrawingDataPtr CreateDrawingData(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
+        static DrawingDataPtr CreateDrawingData(GLuint type, const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
 		static ShaderProgramPtr CreateProgram(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
         static RenderUnitPtr CreateRenderUnit(DrawingDataPtr drawingData, MaterialPtr material);
 		static MaterialPtr CreateMaterial();
-        static unsigned int CreateTexture(const TexturePtr texture);
+        static unsigned int RegisterTexture(const TexturePtr texture);
         static unsigned int FindMaterial(MaterialPtr material);
         static unsigned int FindRenderUnit(MaterialPtr material, DrawingDataPtr drawingData);
         static void UpdateTextures();
@@ -102,7 +107,7 @@ namespace RuamEngine
         static void Draw();
         static void Draw(RenderUnit& renderUnit);
 
-		static std::vector<DrawingDataPtr> m_drawingDatas;
+		static std::map<GLuint, DrawingDataPtr> m_drawingDatas;
 		static std::vector<ShaderProgramPtr> m_shaderPrograms;
         static std::vector<MaterialPtr> m_materials;
         static std::vector<TexturePtr> m_textures;

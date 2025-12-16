@@ -119,7 +119,7 @@ namespace RuamEngine
 				{
 					std::string absoluteModelPath = std::filesystem::path(m_path).parent_path().string();
 					std::string relativeDiffusePath = RelativizePath(absoluteModelPath) + "/" + assimpPath;
-					meshMaterial->m_diffuseIndex = Renderer::CreateTexture(std::make_shared<Texture2D>(relativeDiffusePath));
+					meshMaterial->m_diffuseIndex = Renderer::RegisterTexture(std::make_shared<Texture2D>(relativeDiffusePath));
 				}
 			}
 
@@ -135,7 +135,7 @@ namespace RuamEngine
 				{
 					std::string absoluteModelPath = std::filesystem::path(m_path).parent_path().string();
 					std::string relativeSpecularPath = RelativizePath(absoluteModelPath) + "/" + assimpPath;
-					meshMaterial->m_specularIndex = Renderer::CreateTexture(std::make_shared<Texture2D>(relativeSpecularPath));
+					meshMaterial->m_specularIndex = Renderer::RegisterTexture(std::make_shared<Texture2D>(relativeSpecularPath));
 				}
 			}
 
@@ -151,7 +151,7 @@ namespace RuamEngine
 				{
 					std::string absoluteModelPath = std::filesystem::path(m_path).parent_path().string();
 					std::string relativeReflectionPath = RelativizePath(absoluteModelPath) + "/" + assimpPath;
-					meshMaterial->m_reflectionIndex = Renderer::CreateTexture(std::make_shared<Texture2D>(relativeReflectionPath));
+					meshMaterial->m_reflectionIndex = Renderer::RegisterTexture(std::make_shared<Texture2D>(relativeReflectionPath));
 				}
 			}
 		}

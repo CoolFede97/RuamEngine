@@ -5,6 +5,8 @@ namespace RuamEngine
 
 	unsigned int DrawingData::s_instanceIdCount = 0;
 
+
+
 	void DrawingData::SubmitData()
 	{
 		for (RenderUnitPtr renderUnit : m_renderUnits)
@@ -36,5 +38,3 @@ namespace RuamEngine
 	}
 
 }
-
-

@@ -8,7 +8,7 @@ namespace RuamEngine
     RendererConfig Renderer::m_config;
     GLFWwindow* Renderer::m_window = nullptr;
     std::vector<ShaderProgramPtr> Renderer::m_shaderPrograms;
-	std::vector<DrawingDataPtr> Renderer::m_drawingDatas;
+	std::map<GLuint, DrawingDataPtr> Renderer::m_drawingDatas;
 	std::vector<MaterialPtr> Renderer::m_materials;
     std::vector<TexturePtr> Renderer::m_textures;
     std::map<GLenum, std::vector<GLuint64>> Renderer::m_handlesByType;
@@ -51,9 +51,9 @@ namespace RuamEngine
             {
                 GLCall(glCreateBuffers(1, &m_buffersByType[type]));
             }
-			CreateTexture(std::make_shared<Texture2D>("assets/sprites/defaultSprite.png"));
+			RegisterTexture(std::make_shared<Texture2D>("assets/sprites/defaultSprite.png"));
 
-			DrawingDataPtr basicDrawingData = CreateDrawingData("assets/shaders/GeneralVertexShader.glsl", "assets/shaders/GeneralFragmentShader.glsl");
+			DrawingDataPtr basicDrawingData = CreateDrawingData(ShaderProgramType::general, "assets/shaders/GeneralVertexShader.glsl", "assets/shaders/GeneralFragmentShader.glsl");
 
             UploadTextures();
         }
@@ -73,7 +73,7 @@ namespace RuamEngine
     }
     void Renderer::EndBatch()
     {
-        for (DrawingDataPtr drawingData : m_drawingDatas)
+        for (auto& [type,drawingData] : m_drawingDatas)
         {
             drawingData->SubmitData();
         }
@@ -84,7 +84,7 @@ namespace RuamEngine
     }
     void Renderer::Flush()
     {
-        for (DrawingDataPtr drawingData : m_drawingDatas)
+        for (auto& [type,drawingData] : m_drawingDatas)
         {
             drawingData->Flush();
         }
@@ -92,7 +92,7 @@ namespace RuamEngine
 
     void Renderer::ClearRenderUnits()
     {
-        for (DrawingDataPtr drawingData : m_drawingDatas)
+        for (auto& [type,drawingData] : m_drawingDatas)
         {
             drawingData->m_renderUnits.clear();
         }
@@ -146,12 +146,12 @@ namespace RuamEngine
         }
     }
 
-    DrawingDataPtr Renderer::CreateDrawingData(const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
+    DrawingDataPtr Renderer::CreateDrawingData(GLuint type, const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
     {
 		ShaderProgramPtr newProgram = Renderer::CreateProgram(vertexShaderPath, fragmentShaderPath);
         m_shaderPrograms.push_back(newProgram);
         DrawingDataPtr newDrawingData = std::make_unique<DrawingData>();
-        m_drawingDatas.push_back(newDrawingData);
+        m_drawingDatas[type] = newDrawingData;
         newDrawingData->m_program = newProgram;
         return newDrawingData;
 	}
@@ -187,7 +187,7 @@ namespace RuamEngine
     }
 
     // If the texture already exists, it returns the existing index. Otherwise, it creates a new texture and returns its index.
-    unsigned int Renderer::CreateTexture(TexturePtr texture)
+    unsigned int Renderer::RegisterTexture(TexturePtr texture)
     {
 
         for (unsigned int i = 0; i < m_textures.size(); i++)
@@ -284,7 +284,7 @@ namespace RuamEngine
 
     void Renderer::Draw()
     {
-        for (DrawingDataPtr drawingData : m_drawingDatas)
+        for (auto& [type,drawingData] : m_drawingDatas)
         {
             // std::cout << "Render units count: " << drawingData->m_renderUnits.size() << "\n";
 			drawingData->m_program->UpdateCameraMatrices();

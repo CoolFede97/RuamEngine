@@ -3,9 +3,9 @@
 #extension GL_ARB_bindless_texture : require
 #extension GL_ARB_gpu_shader_int64 : enable
 
-const int SSBOType_textures = 3;
+const int SSBOType_textures2D = 3;
 
-layout(binding = SSBOType_textures, std430) readonly buffer ssbo3
+layout(binding = SSBOType_textures2D, std430) readonly buffer ssbo3
 {
     sampler2D textures[];
 };
@@ -14,12 +14,11 @@ smooth in vec4 frag_pos;
 smooth in vec2 frag_uv;
 flat in int frag_instance;
 
-
 out vec4 final_color;
 
 smooth in vec3 frag_normal;
 
-uniform vec4  u_baseColor;
+uniform vec4 u_baseColor;
 uniform float u_diffuse;
 uniform float u_specular;
 uniform float u_reflection;

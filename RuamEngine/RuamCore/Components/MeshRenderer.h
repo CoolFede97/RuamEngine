@@ -34,7 +34,7 @@ public:
 		m_model = std::make_shared<Model>(m_meshPath);
 		m_vertices = GetMeshesVertices();
 		m_indices = GetMeshesIndices();
-		Renderer::UpdateTextures2D();
+		Renderer::UpdateTextureType(GL_TEXTURE_2D);
 
 		// Pre-upload geometry once per mesh into the appropriate RenderUnit (vertices + indices).
 		for (Mesh& mesh : m_model->m_meshes)

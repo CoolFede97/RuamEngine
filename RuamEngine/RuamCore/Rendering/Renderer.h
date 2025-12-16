@@ -7,6 +7,7 @@
 #include "DrawingData.h"
 #include "RenderUnit.h"
 #include "Material.h"
+#include "Texture.h"
 #include "Texture2D.h"
 #include <unordered_map>
 #include <cstdint>
@@ -21,7 +22,8 @@ namespace RuamEngine
         vertices = 0,
         indices = 1,
         modelMatrices = 2,
-        textures = 3
+        textures2D = 3,
+        cubemaps = 4
     };
 
     // General data
@@ -91,13 +93,11 @@ namespace RuamEngine
 		static ShaderProgramPtr CreateProgram(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
         static RenderUnitPtr CreateRenderUnit(DrawingDataPtr drawingData, MaterialPtr material);
 		static MaterialPtr CreateMaterial();
-        static unsigned int CreateTexture2D(const std::string& relativeTexturePath);
-        static unsigned int CreateCubemap(const std::vector<std::string>& relativeTexturePaths);
-        static unsigned int FindCubemap(const std::vector<std::string>& relativeTexturePaths);
-		static unsigned int FindTexture2D(const std::string& absoluteTexturePath);
+        static unsigned int CreateTexture(const TexturePtr texture);
         static unsigned int FindMaterial(MaterialPtr material);
         static unsigned int FindRenderUnit(MaterialPtr material, DrawingDataPtr drawingData);
-        static void UpdateTextures2D();
+        static void UpdateTextures();
+        static void UpdateTextureType(GLenum type);
 
         static void Draw();
         static void Draw(RenderUnit& renderUnit);
@@ -105,19 +105,19 @@ namespace RuamEngine
 		static std::vector<DrawingDataPtr> m_drawingDatas;
 		static std::vector<ShaderProgramPtr> m_shaderPrograms;
         static std::vector<MaterialPtr> m_materials;
-        static std::vector<Texture2DPtr> m_textures2D;
-        static std::vector<TexturePtr> m_texturesCubemap;
-        static std::vector<GLuint64> m_texture2DHandles;
-        static std::vector<GLuint64> m_cubemapHandles;
+        static std::vector<TexturePtr> m_textures;
+
+        static std::map<GLenum, std::vector<GLuint64>> m_handlesByType;
+        static std::map<GLenum, GLuint> m_buffersByType;
+        static std::map<GLenum, int> m_bindingsByType;
 
         static std::vector<glm::mat4> matrices;
 
         //static std::vector<uvec2>
     private:
-        static void UploadTextures2D();
+        static void UploadTextures();
+        static void UploadTextureType(GLenum type);
         static bool texturesUploaded;
-        static GLuint m_texture2DBuffer;
-        static GLuint m_cubemapBuffer;
         static RendererConfig m_config;
         static GLFWwindow* m_window;
     };

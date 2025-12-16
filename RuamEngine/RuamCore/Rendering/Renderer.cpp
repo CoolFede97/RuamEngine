@@ -1,16 +1,19 @@
 #include "Renderer.h"
 #include "FileFunctions.h"
+#include "RenderingCore.h"
+#include <memory>
 
 namespace RuamEngine
 {
     RendererConfig Renderer::m_config;
     GLFWwindow* Renderer::m_window = nullptr;
-    GLuint Renderer::m_texture2DBuffer = 0;
     std::vector<ShaderProgramPtr> Renderer::m_shaderPrograms;
 	std::vector<DrawingDataPtr> Renderer::m_drawingDatas;
 	std::vector<MaterialPtr> Renderer::m_materials;
-    std::vector<Texture2DPtr> Renderer::m_textures2D;
-    std::vector<GLuint64> Renderer::m_texture2DHandles;
+    std::vector<TexturePtr> Renderer::m_textures;
+    std::map<GLenum, std::vector<GLuint64>> Renderer::m_handlesByType;
+    std::map<GLenum, GLuint> Renderer::m_buffersByType;
+    std::map<GLenum, int> Renderer::m_bindingsByType;
 
     std::vector<glm::mat4> Renderer::matrices = {};
 
@@ -41,19 +44,18 @@ namespace RuamEngine
 
 
         {
-            GLCall(glCreateBuffers(1, &m_texture2DBuffer));
-			CreateTexture2D("assets/sprites/defaultSprite.png");
+            m_bindingsByType[GL_TEXTURE_2D] = SSBOType::textures2D;
+            m_bindingsByType[GL_TEXTURE_CUBE_MAP] = SSBOType::cubemaps;
+
+            for (auto& [type, binding] : m_bindingsByType)
+            {
+                GLCall(glCreateBuffers(1, &m_buffersByType[type]));
+            }
+			CreateTexture(std::make_shared<Texture2D>("assets/sprites/defaultSprite.png"));
 
 			DrawingDataPtr basicDrawingData = CreateDrawingData("assets/shaders/GeneralVertexShader.glsl", "assets/shaders/GeneralFragmentShader.glsl");
-			/*MaterialPtr genericMaterial = CreateMaterial();
-			RenderUnitPtr genericRenderUnit = CreateRenderUnit(basicDrawingData, genericMaterial);
-            VertexBufferLayout& genericLayout = *genericRenderUnit->m_layout;*/
-            //genericLayout.Reset();
-            //genericLayout.Push<float>(3);
-            //genericLayout.Push<float>(2);
-            //genericLayout.Push<float>(1);
-            //genericUnit.m_vertexArray->AddBuffer(*genericUnit.m_vertexBuffer, *genericUnit.m_layout);
-            UploadTextures2D();
+
+            UploadTextures();
         }
 
     }
@@ -185,37 +187,26 @@ namespace RuamEngine
     }
 
     // If the texture already exists, it returns the existing index. Otherwise, it creates a new texture and returns its index.
-    unsigned int Renderer::CreateTexture2D(const std::string& relativeTexturePath)
+    unsigned int Renderer::CreateTexture(TexturePtr texture)
     {
-		unsigned int foundIndex = FindTexture2D(GlobalizePath(relativeTexturePath));
-        if (foundIndex != -1)
+
+        for (unsigned int i = 0; i < m_textures.size(); i++)
         {
-            return foundIndex;
-		}
-        Texture2DPtr newTex = std::make_shared<Texture2D>(relativeTexturePath);
+            if (texture->GetPath() == m_textures[i]->GetPath()) return i;
+        }
+
         GLuint64 newHandle;
-        GLCall(newHandle = glGetTextureHandleARB(newTex->GetId()));
+        GLCall(newHandle = glGetTextureHandleARB(texture->GetId()));
         ASSERT(newHandle != 0);
 
         GLCall(glMakeTextureHandleResidentARB(newHandle));
 
-        m_texture2DHandles.push_back(newHandle);
-        m_textures2D.push_back(newTex);
-        return m_texture2DHandles.size()-1;
+        GLenum type = texture->GetType();
+        m_handlesByType[type].push_back(newHandle);
+        m_textures.push_back(texture);
+        // UpdateTextureType(type);
+        return m_handlesByType[type].size()-1;
     }
-
-	// Returns -1 if not found, otherwise it returns the index in the vector of Texture2Ds
-    unsigned int Renderer::FindTexture2D(const std::string& absoluteTexturePath)
-    {
-        for (unsigned int i = 0; i < m_textures2D.size(); i++)
-        {
-            if (m_textures2D[i]->GetPath() == absoluteTexturePath)
-            {
-                return i;
-            }
-        }
-        return -1;
-	}
 
 	// Finds if a material already exists in the renderer, if not, returns -1
     unsigned int Renderer::FindMaterial(MaterialPtr material)
@@ -243,33 +234,50 @@ namespace RuamEngine
         return -1;
     }
     // Should be called only once when finished all the textures
-    void Renderer::UploadTextures2D()
+    void Renderer::UploadTextures()
     {
-        ASSERT(m_texture2DHandles.size() < maxTextureCount);
+        std::cout << "Buffer of textures 2D: " <<m_buffersByType[GL_TEXTURE_CUBE_MAP] << "\n";
+        for (auto& [type, handles] : m_handlesByType)
+        {
+            UploadTextureType(type);
+        }
+        texturesUploaded = true;
+    }
+
+    void Renderer::UploadTextureType(GLenum type)
+    {
+        ASSERT(m_handlesByType[type].size() < maxTextureCountPerType);
 		ASSERT(!texturesUploaded);
         GLCall(glNamedBufferStorage(
-            m_texture2DBuffer,
-            sizeof(GLuint64) * maxTextureCount,
-            (const void*)m_texture2DHandles.data(),
+            m_buffersByType[type],
+            sizeof(GLuint64) * maxTextureCountPerType,
+            (const void*)m_handlesByType[type].data(),
             GL_DYNAMIC_STORAGE_BIT
         ));
-        GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, SSBOType::textures, m_texture2DBuffer));
-		texturesUploaded = true;
+        GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, m_bindingsByType[type], m_buffersByType[type]));
     }
 
     // Should be used after calling UploadTextures()
-    void Renderer::UpdateTextures2D()
+    void Renderer::UpdateTextures()
     {
-        ASSERT(m_texture2DHandles.size() < maxTextureCount);
+        for (auto& [type, handles] : m_handlesByType)
+        {
+            UpdateTextureType(type);
+        }
+	}
+
+	void Renderer::UpdateTextureType(GLenum type)
+	{
+	    ASSERT(m_handlesByType[type].size() < maxTextureCountPerType);
 
         GLint size = 0;
-        GLCall(glGetNamedBufferParameteriv(m_texture2DBuffer, GL_BUFFER_SIZE, &size));
+        GLCall(glGetNamedBufferParameteriv(m_buffersByType[type], GL_BUFFER_SIZE, &size));
 
         GLCall(glNamedBufferSubData(
-            m_texture2DBuffer,
+            m_buffersByType[type],
             0,
-            sizeof(GLuint64) * m_texture2DHandles.size(),
-            (const void*)m_texture2DHandles.data()
+            sizeof(GLuint64) * m_handlesByType[type].size(),
+            (const void*)m_handlesByType[type].data()
         ));
 	}
 

@@ -19,44 +19,24 @@ namespace RuamEngine
 
 	private:
 		static GlobalLight* s_mainLight;
-		Vec4 m_color = { 1.0f, 1.0f, 1.0f, 1.0f };
-		float m_lightOffset = 0.1f;
+		static Vec4 m_color;
+		static float m_lightOffset;
 	public:
 		IMPL_SIMPLE_SERIALIZE(GlobalLight)
 		using BaseRenderer::BaseRenderer;
 		GlobalLight(const nlohmann::json& j, unsigned int obj_id) : BaseRenderer(obj_id) {}
-		~GlobalLight()
-		{
-		    if (s_mainLight == this) s_mainLight = nullptr;
-		}
+		~GlobalLight();
+		static void SetLightColor(Vec4 color);
 
-		void SetLightColor(Vec4 color)
-		{
-			m_color = color;
-			Renderer::m_drawingDatas[0]->m_program->SetUniform4f("u_globalLightColor", m_color.x, m_color.y, m_color.z, m_color.w);
-		}
+		static void SetLightOffset(float offset);
 
-		void SetLightOffset(float offset)
-		{
-			m_lightOffset = offset;
-			Renderer::m_drawingDatas[0]->m_program->SetUniform1f("u_lightOffset", m_lightOffset);
-		}
+		void update(){};
+		void start();
 
+		void render(){};
 
-		void update() { BaseRenderer::update(); };
-		void start()
-		{
-			if (!s_mainLight) s_mainLight = this;
-			else if (s_mainLight != this) object()->removeComponent<GlobalLight>(); // PREGUNTARLE A TOMI COMO HACER QUE ESTO BORRE A �ESTE! COMPONENTE
-			SetLightColor(m_color);
-			//SetLightOffset(m_lightOffset);
-		}
+		static void LoadLightSettings(ShaderProgramPtr program);
 
-		void render()
-		{
-			Renderer::m_drawingDatas[0]->m_program->Bind();
-			Renderer::m_drawingDatas[0]->m_program->SetUniform3f("u_globalLightPos", object()->transform().position().x, object()->transform().position().y, object()->transform().position().z);
-		}
 	};
 	REGISTER_COMPONENT(GlobalLight)
 }

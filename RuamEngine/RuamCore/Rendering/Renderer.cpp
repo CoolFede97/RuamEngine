@@ -1,6 +1,8 @@
 #include "Renderer.h"
 #include "FileFunctions.h"
+#include "GlobalLight.h"
 #include "RenderingCore.h"
+#include "ShaderProgram.h"
 #include <memory>
 
 namespace RuamEngine
@@ -295,8 +297,10 @@ namespace RuamEngine
 			drawingData->m_program->UpdateCameraMatrices();
             for (RenderUnitPtr renderUnit : drawingData->m_renderUnits)
             {
-                drawingData->m_program->Bind();
-                drawingData->m_program->LoadMaterial(*renderUnit->m_material);
+                ShaderProgramPtr program = drawingData->m_program;
+                program->Bind();
+                GlobalLight::LoadLightSettings(program);
+                program->LoadMaterial(*renderUnit->m_material);
 
                 // Bind the SSBOs for this specific render unit
                 renderUnit->SubmitData();

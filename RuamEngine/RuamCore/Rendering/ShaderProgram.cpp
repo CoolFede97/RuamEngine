@@ -156,6 +156,7 @@ namespace RuamEngine
 		SetUniform1f("u_diffuse", material.m_diffuseIndex);
 		SetUniform1f("u_specular", material.m_specularIndex);
 		SetUniform1f("u_shininess", material.m_shininess);
+		SetUniform1f("u_cubemap", material.m_cubemap);
 	}
 
 	void ShaderProgram::UpdateCameraMatrices()

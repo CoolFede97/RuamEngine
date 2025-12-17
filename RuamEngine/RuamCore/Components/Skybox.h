@@ -1,5 +1,7 @@
 #pragma once
 
+#include "RenderUnit.h"
+#include "Renderer.h"
 #include "SceneManager.hpp"
 #include "Scene.hpp"
 #include "Object.hpp"
@@ -18,18 +20,22 @@ namespace RuamEngine
 		using Component::Component;
 
 		static Skybox* s_skybox;
-		Cubemap* m_cubemap;
+		static GLuint m_cubemap;
 
-		static std::vector<float> m_skyboxVertices;
+		static std::vector<Vertex> m_vertices;
+		static std::vector<unsigned int> m_indices;
+
+		static MaterialPtr m_material;
+		static RenderUnitPtr m_renderUnit;
 
 	public:
 		Skybox(const nlohmann::json& j, const unsigned int obj_id);
 
 		static Skybox* GetSkybox() {return s_skybox; }
 		static void SetSkybox(std::vector<std::string> paths);
-
 		void update();
 		void start();
+		void render();
 
 		//IMPL_SERIALIZE(Skybox,
 		// SER_FIELD(m_cubemap)

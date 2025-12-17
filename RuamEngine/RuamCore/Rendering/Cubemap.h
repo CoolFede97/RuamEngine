@@ -24,6 +24,7 @@ namespace RuamEngine
 		std::vector<int> GetWidth() const { return m_widths; }
 		std::vector<int> GetHeight() const { return m_heights; }
 		std::vector<std::string> GetPaths() const { return m_filePaths; }
+		std::string GetPath() const;
 	};
 	using CubemapPtr = std::shared_ptr<Cubemap>;
 }

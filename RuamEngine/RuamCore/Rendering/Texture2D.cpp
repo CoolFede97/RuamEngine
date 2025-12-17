@@ -1,4 +1,5 @@
 #include "Texture2D.h"
+#define STB_IMAGE_STATIC
 #include "stb_image.h"
 #include "FileFunctions.h"
 

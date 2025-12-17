@@ -2,6 +2,7 @@
 #include "DebugUtils.h"
 #include "FileFunctions.h"
 #include "OpenGLUtils.h"
+#define STB_IMAGE_STATIC
 #include "stb_image.h"
 #include "RenderingCore.h"
 
@@ -18,6 +19,11 @@ namespace RuamEngine
 
         for (unsigned int i = 0; i < relativePaths.size(); i++)
         {
+            m_widths.push_back(0);
+            m_heights.push_back(0);
+            m_BPPs.push_back(0);
+            m_localBuffers.push_back(0);
+
             m_localBuffers[i] = stbi_load(m_filePaths[i].c_str(), &m_widths[i], &m_heights[i], &m_BPPs[i], 4);
 
             if (m_localBuffers[i] == nullptr)
@@ -33,11 +39,16 @@ namespace RuamEngine
             else
             {
                 std::cout << "Cubemap texture at path: " << m_filePaths[i] << " was loaded succesfully" << "\n";
-                GLCall(glTextureStorage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 1, GL_RGBA8, m_widths[i], m_heights[i]));
-        		GLCall(glTextureSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, 0, 0, m_widths[i], m_heights[i], GL_RGBA, GL_UNSIGNED_BYTE, m_localBuffers[i]));
             }
 
             ASSERT(m_localBuffers[i]);
+        }
+
+        GLCall(glTextureStorage2D(m_rendererId, 1, GL_RGBA8, m_widths[0], m_heights[0]));
+
+        for (unsigned int i = 0; i < relativePaths.size(); i++)
+        {
+            GLCall(glTextureSubImage3D(m_rendererId, 0, 0, 0, i, m_widths[i], m_heights[i], 1, GL_RGBA, GL_UNSIGNED_BYTE, m_localBuffers[i]));
             stbi_image_free(m_localBuffers[i]);
         }
 
@@ -60,5 +71,15 @@ namespace RuamEngine
     Cubemap::~Cubemap()
     {
         GLCall(glDeleteTextures(1, &m_rendererId));
+    }
+
+    std::string Cubemap::GetPath() const
+    {
+        std::string finalPath = "";
+        for (std::string path : m_filePaths)
+        {
+            finalPath += path + " ";
+        }
+        return finalPath;
     }
 }

@@ -10,7 +10,7 @@ namespace RuamEngine
     std::vector<ShaderProgramPtr> Renderer::m_shaderPrograms;
 	std::map<GLuint, DrawingDataPtr> Renderer::m_drawingDatas;
 	std::vector<MaterialPtr> Renderer::m_materials;
-    std::vector<TexturePtr> Renderer::m_textures;
+    std::map<GLenum, std::vector<TexturePtr>> Renderer::m_texturesByType;
     std::map<GLenum, std::vector<GLuint64>> Renderer::m_handlesByType;
     std::map<GLenum, GLuint> Renderer::m_buffersByType;
     std::map<GLenum, int> Renderer::m_bindingsByType;
@@ -52,8 +52,13 @@ namespace RuamEngine
                 GLCall(glCreateBuffers(1, &m_buffersByType[type]));
             }
 			RegisterTexture(std::make_shared<Texture2D>("assets/sprites/defaultSprite.png"));
-
-			DrawingDataPtr basicDrawingData = CreateDrawingData(ShaderProgramType::general, "assets/shaders/GeneralVertexShader.glsl", "assets/shaders/GeneralFragmentShader.glsl");
+			std::vector<std::string> skyboxes =
+			{
+			"assets/sprites/skybox.png","assets/sprites/skybox.png","assets/sprites/skybox.png","assets/sprites/skybox.png","assets/sprites/skybox.png","assets/sprites/skybox.png"
+			};
+			RegisterTexture(std::make_shared<Cubemap>(skyboxes));
+			DrawingDataPtr basicDrawingData = CreateDrawingData(ShaderProgramType::general, "RuamCore/Rendering/Shaders/GeneralVertexShader.glsl", "RuamCore/Rendering/Shaders/GeneralFragmentShader.glsl");
+			DrawingDataPtr skyboxDrawingData = CreateDrawingData(ShaderProgramType::skybox, "RuamCore/Rendering/Shaders/SkyboxVertexShader.glsl", "RuamCore/Rendering/Shaders/SkyboxFragmentShader.glsl");
 
             UploadTextures();
         }
@@ -189,10 +194,11 @@ namespace RuamEngine
     // If the texture already exists, it returns the existing index. Otherwise, it creates a new texture and returns its index.
     unsigned int Renderer::RegisterTexture(TexturePtr texture)
     {
+        GLenum type = texture->GetType();
 
-        for (unsigned int i = 0; i < m_textures.size(); i++)
+        for (unsigned int i = 0; i < m_texturesByType[type].size(); i++)
         {
-            if (texture->GetPath() == m_textures[i]->GetPath()) return i;
+            if (texture->GetPath() == m_texturesByType[type][i]->GetPath()) return i;
         }
 
         GLuint64 newHandle;
@@ -201,9 +207,8 @@ namespace RuamEngine
 
         GLCall(glMakeTextureHandleResidentARB(newHandle));
 
-        GLenum type = texture->GetType();
         m_handlesByType[type].push_back(newHandle);
-        m_textures.push_back(texture);
+        m_texturesByType[type].push_back(texture);
         // UpdateTextureType(type);
         return m_handlesByType[type].size()-1;
     }

@@ -1,6 +1,6 @@
 #version 450 core
 
-#extension GL_ARB_bindless_texture : require    
+#extension GL_ARB_bindless_texture : require
 #extension GL_ARB_gpu_shader_int64 : enable
 
 const int SSBOType_vertices = 0;
@@ -9,14 +9,14 @@ const int SSBOType_modelMatrices = 2;
 
 struct VertexData
 {
-	float position[3];
-	float uv[2];
+    float position[3];
+    float uv[2];
     float normal[3];
 };
 
 layout(binding = SSBOType_vertices, std430) readonly buffer ssbo0
 {
-	VertexData data[];
+    VertexData data[];
 };
 
 layout(binding = SSBOType_indices, std430) readonly buffer ssbo1
@@ -26,38 +26,34 @@ layout(binding = SSBOType_indices, std430) readonly buffer ssbo1
 
 layout(binding = SSBOType_modelMatrices, std430) readonly buffer ssbo2
 {
-	mat4 modelTransforms[];
+    mat4 modelTransforms[];
 };
-
 
 uniform mat4 u_view;
 uniform mat4 u_projection;
 
-vec3 GetPosition(uint index) 
+vec3 GetPosition(uint index)
 {
-    return vec3
-    (
-        data[index].position[0], 
-        data[index].position[1], 
+    return vec3(
+        data[index].position[0],
+        data[index].position[1],
         data[index].position[2]
     );
 }
 
-vec2 GetUV(uint index) 
+vec2 GetUV(uint index)
 {
-    return vec2
-    (
-        data[index].uv[0], 
+    return vec2(
+        data[index].uv[0],
         data[index].uv[1]
     );
 }
 
-vec3 GetNormal(uint index) 
+vec3 GetNormal(uint index)
 {
-    return vec3
-    (
-        data[index].normal[0], 
-        data[index].normal[1], 
+    return vec3(
+        data[index].normal[0],
+        data[index].normal[1],
         data[index].normal[2]
     );
 }
@@ -72,7 +68,7 @@ void main()
     uint realIndex = indices[gl_VertexID];
     mat4 vp = u_projection * u_view;
     vec4 position = vec4(GetPosition(realIndex), 1.0);
-	gl_Position = vp * modelTransforms[gl_InstanceID] * position;
+    gl_Position = vp * modelTransforms[gl_InstanceID] * position;
     frag_pos = modelTransforms[gl_InstanceID] * position;
     frag_uv = GetUV(realIndex);
     frag_instance = gl_InstanceID;

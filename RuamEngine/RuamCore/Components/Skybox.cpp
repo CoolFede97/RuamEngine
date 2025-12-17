@@ -1,64 +1,48 @@
 #include "Skybox.h"
 #include "Cubemap.h"
+#include "Renderer.h"
+#include <memory>
 
 namespace RuamEngine
 {
     Skybox* Skybox::s_skybox = nullptr;
+    GLuint Skybox::m_cubemap = 0;
+    MaterialPtr Skybox::m_material = nullptr;
+    RenderUnitPtr Skybox::m_renderUnit = nullptr;
 
-    std::vector<float> Skybox::m_skyboxVertices =
-    {
-        // Back face (positive Z)
-        -1.0f, -1.0f,  1.0f,  // Bottom-left
-        1.0f,  1.0f,  1.0f,  // Top-right
-        1.0f, -1.0f,  1.0f,  // Bottom-right
-        1.0f,  1.0f,  1.0f,  // Top-right
-        -1.0f, -1.0f,  1.0f,  // Bottom-left
-        -1.0f,  1.0f,  1.0f,  // Top-left
 
-        // Front face (negative Z)
-        -1.0f, -1.0f, -1.0f,  // Bottom-left
-        1.0f, -1.0f, -1.0f,  // Bottom-right
-        1.0f,  1.0f, -1.0f,  // Top-right
-        1.0f,  1.0f, -1.0f,  // Top-right
-        -1.0f,  1.0f, -1.0f,  // Top-left
-        -1.0f, -1.0f, -1.0f,  // Bottom-left
+    std::vector<Vertex> Skybox::m_vertices = Vertex::CreateCube();
 
-        // Left face (negative X)
-        -1.0f,  1.0f,  1.0f,  // Top-right
-        -1.0f,  1.0f, -1.0f,  // Top-left
-        -1.0f, -1.0f, -1.0f,  // Bottom-left
-        -1.0f, -1.0f, -1.0f,  // Bottom-left
-        -1.0f, -1.0f,  1.0f,  // Bottom-right
-        -1.0f,  1.0f,  1.0f,  // Top-right
+    std::vector<unsigned int> Skybox::m_indices = {
+        // Back (+Z)
+        4, 6, 5,
+        6, 4, 7,
 
-        // Right face (positive X)
-        1.0f,  1.0f,  1.0f,  // Top-left
-        1.0f, -1.0f, -1.0f,  // Bottom-right
-        1.0f,  1.0f, -1.0f,  // Top-right
-        1.0f, -1.0f, -1.0f,  // Bottom-right
-        1.0f,  1.0f,  1.0f,  // Top-left
-        1.0f, -1.0f,  1.0f,  // Bottom-left
+        // Front (-Z)
+        0, 1, 2,
+        2, 3, 0,
 
-        // Top face (positive Y)
-        -1.0f,  1.0f, -1.0f,  // Top-left
-        1.0f,  1.0f,  1.0f,  // Bottom-right
-        1.0f,  1.0f, -1.0f,  // Top-right
-        1.0f,  1.0f,  1.0f,  // Bottom-right
-        -1.0f,  1.0f, -1.0f,  // Top-left
-        -1.0f,  1.0f,  1.0f,  // Bottom-left
+        // Left (-X)
+        0, 3, 7,
+        7, 4, 0,
 
-        // Bottom face (negative Y)
-        -1.0f, -1.0f, -1.0f,  // Top-right
-        1.0f, -1.0f, -1.0f,  // Top-left
-        1.0f, -1.0f,  1.0f,  // Bottom-left
-        1.0f, -1.0f,  1.0f,  // Bottom-left
-        -1.0f, -1.0f,  1.0f,  // Bottom-right
-        -1.0f, -1.0f, -1.0f   // Top-right
+        // Right (+X)
+        1, 5, 6,
+        6, 2, 1,
+
+        // Top (+Y)
+        3, 2, 6,
+        6, 7, 3,
+
+        // Bottom (-Y)
+        0, 4, 5,
+        5, 1, 0
     };
+
 
     void Skybox::SetSkybox(std::vector<std::string> paths)
     {
-        s_skybox->m_cubemap = new Cubemap(paths);
+        s_skybox->m_cubemap = Renderer::RegisterTexture(std::make_shared<Cubemap>(paths));
     }
 
     void Skybox::update()
@@ -66,9 +50,21 @@ namespace RuamEngine
         Component::update();
     }
 
+    void Skybox::render()
+    {
+
+    }
+
     void Skybox::start()
     {
         if (s_skybox == nullptr) s_skybox = this;
 		else if (s_skybox != this) object()->removeComponent<Skybox>();
+
+        m_material = Renderer::CreateMaterial();
+        m_renderUnit = Renderer::CreateRenderUnit(Renderer::m_drawingDatas[ShaderProgramType::skybox], m_material);
+
+        m_renderUnit->AddBatchData(m_vertices, m_indices, {glm::mat4(1.0f)});
+
+        m_material->m_cubemap = m_cubemap;
     }
 }

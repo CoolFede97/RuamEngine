@@ -9,6 +9,7 @@
 #include "Material.h"
 #include "Texture.h"
 #include "Texture2D.h"
+#include "Cubemap.h"
 #include <unordered_map>
 #include <cstdint>
 #include <vector>
@@ -28,7 +29,8 @@ namespace RuamEngine
 
     enum ShaderProgramType
     {
-        general = 0
+        general = 0,
+        skybox = 1
     };
 
     // General data
@@ -110,7 +112,7 @@ namespace RuamEngine
 		static std::map<GLuint, DrawingDataPtr> m_drawingDatas;
 		static std::vector<ShaderProgramPtr> m_shaderPrograms;
         static std::vector<MaterialPtr> m_materials;
-        static std::vector<TexturePtr> m_textures;
+        static std::map<GLenum, std::vector<TexturePtr>> m_texturesByType;
 
         static std::map<GLenum, std::vector<GLuint64>> m_handlesByType;
         static std::map<GLenum, GLuint> m_buffersByType;

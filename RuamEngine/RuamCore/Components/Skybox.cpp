@@ -1,6 +1,7 @@
 #include "Skybox.h"
 #include "Cubemap.h"
 #include "Renderer.h"
+#include "RenderingCore.h"
 #include <memory>
 
 namespace RuamEngine
@@ -52,7 +53,6 @@ namespace RuamEngine
 
     void Skybox::render()
     {
-
     }
 
     void Skybox::start()
@@ -62,7 +62,8 @@ namespace RuamEngine
 
         m_material = Renderer::CreateMaterial();
         m_renderUnit = Renderer::CreateRenderUnit(Renderer::m_drawingDatas[ShaderProgramType::skybox], m_material);
-
+        m_renderUnit->m_staticPosition = true;
+        m_renderUnit->m_staticStorage = true;
         m_renderUnit->AddBatchData(m_vertices, m_indices, {glm::mat4(1.0f)});
 
         m_material->m_cubemap = m_cubemap;

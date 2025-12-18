@@ -25,7 +25,6 @@ namespace RuamEngine
 		if (!s_mainLight) s_mainLight = this;
 		else if (s_mainLight != this) object()->removeComponent<GlobalLight>(); // PREGUNTARLE A TOMI COMO HACER QUE ESTO BORRE A �ESTE! COMPONENTE
 		SetLightColor(m_color);
-		//SetLightOffset(m_lightOffset);
 	}
 
 	void GlobalLight::LoadLightSettings(ShaderProgramPtr program)

@@ -13,6 +13,12 @@ namespace RuamEngine
     : m_localBuffers({})
     {
         m_filePaths = GlobalizePaths(relativePaths);
+
+        for (std::string path : m_filePaths)
+        {
+            m_filePath += path + "|-|";
+        }
+
         GLCall(glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &m_rendererId));
 
         stbi_set_flip_vertically_on_load(1);
@@ -71,15 +77,5 @@ namespace RuamEngine
     Cubemap::~Cubemap()
     {
         GLCall(glDeleteTextures(1, &m_rendererId));
-    }
-
-    std::string Cubemap::GetPath() const
-    {
-        std::string finalPath = "";
-        for (std::string path : m_filePaths)
-        {
-            finalPath += path + " ";
-        }
-        return finalPath;
     }
 }

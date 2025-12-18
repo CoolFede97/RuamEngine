@@ -21,7 +21,7 @@ namespace RuamEngine
         virtual GLuint GetId() const { return m_rendererId; }
         virtual GLenum GetType() const = 0;
 
-        std::string GetPath() const { return m_filePath; }
+        virtual std::string GetPath() const { return m_filePath; }
         GLuint64 GetHandle() const { return m_handle; }
 
     };

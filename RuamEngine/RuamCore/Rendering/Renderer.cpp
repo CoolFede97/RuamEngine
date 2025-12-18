@@ -37,7 +37,11 @@ namespace RuamEngine
 
         ASSERT(glewInit() == GLEW_OK);
 
-        if (m_config.depthTest) GLCall(glEnable(GL_DEPTH_TEST));
+        if (m_config.depthTest)
+        {
+            GLCall(glEnable(GL_DEPTH_TEST));
+            GLCall(glDepthFunc(GL_LEQUAL));
+        }
         if (m_config.blend)
         {
             GLCall(glEnable(GL_BLEND));
@@ -53,16 +57,19 @@ namespace RuamEngine
             {
                 GLCall(glCreateBuffers(1, &m_buffersByType[type]));
             }
-			RegisterTexture(std::make_shared<Texture2D>("assets/sprites/defaultSprite.png"));
+
+
+			DrawingDataPtr basicDrawingData = CreateDrawingData(ShaderProgramType::general, "RuamCore/Rendering/Shaders/GeneralVertexShader.glsl", "RuamCore/Rendering/Shaders/GeneralFragmentShader.glsl");
+			DrawingDataPtr skyboxDrawingData = CreateDrawingData(ShaderProgramType::skybox, "RuamCore/Rendering/Shaders/SkyboxVertexShader.glsl", "RuamCore/Rendering/Shaders/SkyboxFragmentShader.glsl");
+
+            UploadTextures();
+
+            RegisterTexture(std::make_shared<Texture2D>("assets/sprites/defaultSprite.png"));
 			std::vector<std::string> skyboxes =
 			{
 			"assets/sprites/skybox.png","assets/sprites/skybox.png","assets/sprites/skybox.png","assets/sprites/skybox.png","assets/sprites/skybox.png","assets/sprites/skybox.png"
 			};
 			RegisterTexture(std::make_shared<Cubemap>(skyboxes));
-			DrawingDataPtr basicDrawingData = CreateDrawingData(ShaderProgramType::general, "RuamCore/Rendering/Shaders/GeneralVertexShader.glsl", "RuamCore/Rendering/Shaders/GeneralFragmentShader.glsl");
-			DrawingDataPtr skyboxDrawingData = CreateDrawingData(ShaderProgramType::skybox, "RuamCore/Rendering/Shaders/SkyboxVertexShader.glsl", "RuamCore/Rendering/Shaders/SkyboxFragmentShader.glsl");
-
-            UploadTextures();
         }
 
     }
@@ -211,7 +218,7 @@ namespace RuamEngine
 
         m_handlesByType[type].push_back(newHandle);
         m_texturesByType[type].push_back(texture);
-        // UpdateTextureType(type);
+        UpdateTextureType(type);
         return m_handlesByType[type].size()-1;
     }
 
@@ -244,7 +251,7 @@ namespace RuamEngine
     void Renderer::UploadTextures()
     {
         std::cout << "Buffer of textures 2D: " <<m_buffersByType[GL_TEXTURE_CUBE_MAP] << "\n";
-        for (auto& [type, handles] : m_handlesByType)
+        for (auto& [type, buffer] : m_buffersByType)
         {
             UploadTextureType(type);
         }
@@ -300,6 +307,7 @@ namespace RuamEngine
                 ShaderProgramPtr program = drawingData->m_program;
                 program->Bind();
                 GlobalLight::LoadLightSettings(program);
+
                 program->LoadMaterial(*renderUnit->m_material);
 
                 // Bind the SSBOs for this specific render unit

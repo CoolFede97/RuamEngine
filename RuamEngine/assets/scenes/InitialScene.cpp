@@ -6,6 +6,7 @@
 #include "Serial.hpp"
 #include "MeshRenderer.h"
 #include "GlobalLight.h"
+#include "Skybox.h"
 #include "../components/Portal.h"
 #include <AudioSource.h>
 
@@ -48,11 +49,13 @@ void CreateInitialScene()
 
 	Object* skybox = scene->newObject();
 	skybox->setName("Skybox");
-	skybox->addComponent<MeshRenderer>()->SetModel("assets/meshes/skyboxes/galaxy/galaxySkybox.obj");
-	skybox->getComponent<MeshRenderer>()->m_model->m_meshes[0].m_material->m_shininess = 1000.0;
-	// skybox->addComponent<ColorChanger>()->m_meshes = &skybox->getComponent<MeshRenderer>()->m_model->m_meshes;
-	skybox->transform().setRotation(glm::vec3(180.0f, 0.0, 0.0));
-	skybox->transform().setScale(glm::vec3(500.0f, 500.0f, 500.0f));
+	skybox->transform().setScale(glm::vec3(50,50,50));
+	skybox->addComponent<Skybox>();
+	// skybox->addComponent<MeshRenderer>()->SetModel("assets/meshes/skyboxes/galaxy/galaxySkybox.obj");
+	// skybox->getComponent<MeshRenderer>()->m_model->m_meshes[0].m_material->m_shininess = 1000.0;
+	// // skybox->addComponent<ColorChanger>()->m_meshes = &skybox->getComponent<MeshRenderer>()->m_model->m_meshes;
+	// skybox->transform().setRotation(glm::vec3(180.0f, 0.0, 0.0));
+	// skybox->transform().setScale(glm::vec3(500.0f, 500.0f, 500.0f));
 
 	Object* player = scene->newObject();
 	player->transform().setPosition(glm::vec3(50.0f, 20.0f, 160.0f));

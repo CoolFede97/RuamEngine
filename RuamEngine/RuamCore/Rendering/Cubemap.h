@@ -9,11 +9,13 @@ namespace RuamEngine
 	class Cubemap : public Texture
 	{
 	private:
-		std::vector<int> m_widths, m_heights, m_BPPs; // Bits per pixel
+		int m_faceLength, m_BPP; //The dimensions of each side are expected to be the same. BPP means bits per pixel
+		// In case the cubemap is created with 6 individual textures, this member will have 6 elements.
 		std::vector<std::string> m_filePaths;
 	public:
 		std::vector<unsigned char*> m_localBuffers;
 		Cubemap(const std::vector<std::string>& relativePaths); // Relative paths from the project root directory
+		Cubemap(const std::string& relativePath); // Relative path from the project root directory
 		~Cubemap();
 
 		void Bind(unsigned int slot = 0) const override;
@@ -21,8 +23,7 @@ namespace RuamEngine
 
 		GLenum GetType() const override { return GL_TEXTURE_CUBE_MAP; }
 
-		std::vector<int> GetWidth() const { return m_widths; }
-		std::vector<int> GetHeight() const { return m_heights; }
+		int GetFaceLength() const { return m_faceLength; }
 		std::vector<std::string> GetPaths() const { return m_filePaths; }
 	};
 	using CubemapPtr = std::shared_ptr<Cubemap>;

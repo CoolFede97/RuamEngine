@@ -96,23 +96,37 @@ namespace RuamEngine
 		static GLFWwindow* GetWindow() { return m_window; }
 		static int WindowShouldClose() { return glfwWindowShouldClose(m_window); }
 
+		// Creators
         static DrawingDataPtr CreateDrawingData(GLuint type, const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
 		static ShaderProgramPtr CreateProgram(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
         static RenderUnitPtr CreateRenderUnit(DrawingDataPtr drawingData, MaterialPtr material);
 		static MaterialPtr CreateMaterial();
-        static unsigned int RegisterTexture(const TexturePtr texture);
+
+		// Finders
         static unsigned int FindMaterial(MaterialPtr material);
         static unsigned int FindRenderUnit(MaterialPtr material, DrawingDataPtr drawingData);
-        static void UpdateTextures();
-        static void UpdateTextureType(GLenum type);
 
+		static unsigned int RegisterTexture(const TexturePtr texture);
+        static void UnregisterTexture(unsigned int textureIndex, GLenum type);
+        static void DestroyMaterial(unsigned int materialId);
+        static void DestroyRenderUnit(RenderUnitPtr renderUnit, DrawingDataPtr drawingData);
+        static void DestroyShaderProgram(unsigned int programId);
+
+		static void UpdateTextures();
+        static void UpdateTextureType(GLenum type);
+    private:
+        static void UploadTextures();
+        static void UploadTextureType(GLenum type);
+
+    public:
         static void Draw();
         static void Draw(RenderUnit& renderUnit);
 
 		static std::map<GLuint, DrawingDataPtr> m_drawingDatas;
-		static std::vector<ShaderProgramPtr> m_shaderPrograms;
-        static std::vector<MaterialPtr> m_materials;
+		static std::map<unsigned int, ShaderProgramPtr> m_shaderPrograms;
+        static std::map<unsigned int, MaterialPtr> m_materials;
         static std::map<GLenum, std::vector<TexturePtr>> m_texturesByType;
+        static std::unordered_map<std::string, TexturePtr> m_texturesCache;
 
         static std::map<GLenum, std::vector<GLuint64>> m_handlesByType;
         static std::map<GLenum, GLuint> m_buffersByType;
@@ -122,8 +136,6 @@ namespace RuamEngine
 
         //static std::vector<uvec2>
     private:
-        static void UploadTextures();
-        static void UploadTextureType(GLenum type);
         static bool texturesUploaded;
         static RendererConfig m_config;
         static GLFWwindow* m_window;

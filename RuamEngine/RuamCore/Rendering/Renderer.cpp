@@ -3,15 +3,18 @@
 #include "GlobalLight.h"
 #include "RenderingCore.h"
 #include "ShaderProgram.h"
+#include <algorithm>
+#include <iterator>
 #include <memory>
 
 namespace RuamEngine
 {
     RendererConfig Renderer::m_config;
     GLFWwindow* Renderer::m_window = nullptr;
-    std::vector<ShaderProgramPtr> Renderer::m_shaderPrograms;
+    std::map<unsigned int, ShaderProgramPtr> Renderer::m_shaderPrograms;
 	std::map<GLuint, DrawingDataPtr> Renderer::m_drawingDatas;
-	std::vector<MaterialPtr> Renderer::m_materials;
+	std::map<unsigned int, MaterialPtr> Renderer::m_materials;
+	std::unordered_map<std::string, TexturePtr> Renderer::m_texturesCache;
     std::map<GLenum, std::vector<TexturePtr>> Renderer::m_texturesByType;
     std::map<GLenum, std::vector<GLuint64>> Renderer::m_handlesByType;
     std::map<GLenum, GLuint> Renderer::m_buffersByType;
@@ -160,10 +163,11 @@ namespace RuamEngine
         }
     }
 
+
+    // Creators -------------------------------------------------------------
     DrawingDataPtr Renderer::CreateDrawingData(GLuint type, const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
     {
 		ShaderProgramPtr newProgram = Renderer::CreateProgram(vertexShaderPath, fragmentShaderPath);
-        m_shaderPrograms.push_back(newProgram);
         DrawingDataPtr newDrawingData = std::make_unique<DrawingData>();
         m_drawingDatas[type] = newDrawingData;
         newDrawingData->m_program = newProgram;
@@ -173,7 +177,7 @@ namespace RuamEngine
     ShaderProgramPtr Renderer::CreateProgram(const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
     {
         ShaderProgramPtr newProgram = std::make_shared<ShaderProgram>(vertexShaderPath, fragmentShaderPath);
-        m_shaderPrograms.push_back(newProgram);
+        m_shaderPrograms[newProgram->GetInstanceId()] = newProgram;
 		return newProgram;
     }
 
@@ -196,9 +200,11 @@ namespace RuamEngine
     MaterialPtr Renderer::CreateMaterial()
     {
 		MaterialPtr newMaterial = std::make_shared<Material>();
-		m_materials.push_back(newMaterial);
+		m_materials[newMaterial->GetId()] = newMaterial;
 		return newMaterial;
     }
+
+    // Registrations -------------------------------------------------------------
 
     // If the texture already exists, it returns the existing index. Otherwise, it creates a new texture and returns its index.
     unsigned int Renderer::RegisterTexture(TexturePtr texture)
@@ -222,16 +228,67 @@ namespace RuamEngine
         return m_handlesByType[type].size()-1;
     }
 
+    void Renderer::UnregisterTexture(unsigned int textureIndex, GLenum type)
+    {
+        if (textureIndex >= m_texturesByType[type].size())
+        {
+            std::cout << "Warning: trying to unregister invalid texture of index " << textureIndex << "\n";
+            return;
+        }
+
+        GLuint64 handle = m_handlesByType[type][textureIndex];
+        GLCall(glMakeTextureHandleNonResidentARB(handle));
+
+        m_texturesByType[type][textureIndex] = nullptr;
+        m_handlesByType[type][textureIndex] = 0;
+
+        UpdateTextureType(type);
+    }
+
+    // Destructions -------------------------------------------------------------
+
+    void Renderer::DestroyMaterial(unsigned int materialId)
+    {
+        auto it = m_materials.find(materialId);
+        if (it != m_materials.end())
+        {
+            m_materials.erase(it);
+            std::cout << "Material with id " << materialId << " was destroyed successfully\n";
+        }
+        else std::cout << "Warning: Couldn't find Material of id " << materialId << ", and couldn't destroy it as a consequence\n";
+    }
+
+    void Renderer::DestroyRenderUnit(RenderUnitPtr renderUnit, DrawingDataPtr drawingData)
+    {
+        auto& units = drawingData->m_renderUnits;
+        auto it = std::find(units.begin(), units.end(), renderUnit);
+
+        if (it != units.end())
+        {
+            units.erase(it);
+            std::cout << "A Render Unit was destroyed successfully\n";
+        }
+        else std::cout << "Warning: Couldn't find render unit and therefore couldn't destroy it\n";
+    }
+
+    void Renderer::DestroyShaderProgram(unsigned int programId)
+    {
+        auto it = m_shaderPrograms.find(programId);
+        if (it != m_shaderPrograms.end())
+        {
+            m_shaderPrograms.erase(programId);
+            std::cout << "Shader Program with id " << programId << " was destroyed successfully\n";
+        }
+        else std::cout << "Couldn't find shader program of id " << programId << " and therefore couldn't destroy it\n";
+    }
+
+    // Finders -------------------------------------------------------------
+
 	// Finds if a material already exists in the renderer, if not, returns -1
     unsigned int Renderer::FindMaterial(MaterialPtr material)
     {
-        for (unsigned int i = 0; i < m_materials.size(); i++)
-        {
-            if (m_materials[i]->GetId() == material->GetId())
-            {
-                return i;
-            }
-        }
+        auto it = m_materials.find(material->GetId());
+        if (it != m_materials.end()) return it->first;
         return -1;
 	}
 

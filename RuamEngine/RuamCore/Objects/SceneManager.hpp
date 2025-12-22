@@ -12,17 +12,22 @@ public:
 
 	static const SceneList& sceneList();
 
-	static void SetActiveScene(unsigned int id);
+	static void SetActiveScene();
+	static void EnqueueSceneChange(unsigned int id);
+	static void ApplyPendingSceneChange();
+
 	static Scene* ActiveScene();
 
 	static void AddScene(unsigned int id, const std::string& scene);
+
+	static void AddSceneCreator(unsigned int id, std::function<Scene*()> sceneCreator);
 
 	static void RemoveScene(int id);
 
 	static ScenePtr EmptyScene();
 
 	static void CreateScene(unsigned int id, const std::string &name);
-	static bool StartScene(unsigned int id, const std::string& name);
+	// static bool StartScene(unsigned int id, const std::string& name);
 
 	static bool SceneChange();
 
@@ -32,4 +37,6 @@ private:
 	static SceneList s_scenes;
 	static ScenePtr s_active_scene;
 	static bool s_scene_change;
+	static bool s_has_pending_scene;
+	static unsigned int s_pending_scene_id;
 };

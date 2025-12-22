@@ -34,6 +34,16 @@ std::vector<std::string> GlobalizePaths(const std::vector<std::string>& relative
 	return globalizedPaths;
 }
 
+std::string UnifyPaths(const std::vector<std::string>& relativePaths)
+{
+    std::string unifiedPath = "";
+    for (unsigned int i = 0; i < relativePaths.size(); i++)
+    {
+        unifiedPath+=relativePaths[i];
+        if (i!=relativePaths.size()-1) unifiedPath += "|-|";
+    }
+    return unifiedPath;
+}
 
 std::string RelativizePath(const std::string& absoluteFilePath)
 {

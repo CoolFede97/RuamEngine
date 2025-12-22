@@ -16,4 +16,6 @@ std::string GlobalizePath(const std::string& relativeFilePath);
 
 std::vector<std::string> GlobalizePaths(const std::vector<std::string>& relativeFilePaths);
 
+std::string UnifyPaths(const std::vector<std::string>& relativePaths);
+
 std::string RelativizePath(const std::string& absoluteFilePath);

@@ -54,6 +54,7 @@ void Scene::start() {
 
 void Scene::update() {
 	if (SceneManager::SceneChange()) {
+		SceneManager::SetSceneChange(false);
 	    std::cout << "Scene change detected\n";
 		start();
 		return;

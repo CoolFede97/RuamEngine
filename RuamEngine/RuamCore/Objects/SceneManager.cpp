@@ -4,32 +4,44 @@
 #include "Renderer.h"
 SceneManager::SceneList SceneManager::s_scenes;
 SceneManager::ScenePtr SceneManager::s_active_scene = nullptr;
-bool SceneManager::s_scene_change = false;
-
+bool SceneManager::s_has_pending_scene = false;
+unsigned int SceneManager::s_pending_scene_id = -1;
 const SceneManager::SceneList& SceneManager::sceneList() {
 	return s_scenes;
 }
 
-void SceneManager::SetActiveScene(const unsigned int id) {
-	// if (s_active_scene != nullptr) {
-	// 	Serial::serialise(s_active_scene.get());
-	// 	std::cout << "AAA: " << s_active_scene->getObjects().size() << "\n";
-	// }
+void SceneManager::SetActiveScene()
+{
 	RuamEngine::Camera::EmptyMainCamera();
-	s_active_scene.reset(s_scenes[id]());
-	s_scene_change = true;
+	s_active_scene.reset(s_scenes[s_pending_scene_id]());
+}
 
+void SceneManager::EnqueueSceneChange(unsigned int id)
+{
+	if (s_has_pending_scene) return;
+	s_pending_scene_id = id;
+	s_has_pending_scene = true;
+}
+
+void SceneManager::ApplyPendingSceneChange()
+{
+	if (s_has_pending_scene) SetActiveScene();
 }
 
 Scene* SceneManager::ActiveScene() {
 	return s_active_scene.get();
 }
 
-void SceneManager::AddScene(const unsigned int id, const std::string& scene) {
+// void SceneManager::AddScene(const unsigned int id, const std::string& scene) {
 
-	s_scenes[id] = [scene]() {
-		return Serial::deserialise(scene);
-	};
+// 	s_scenes[id] = [scene]() {
+// 		return Serial::deserialise(scene);
+// 	};
+// }
+
+void SceneManager::AddSceneCreator(unsigned int id, std::function<Scene*()> sceneCreator)
+{
+	s_scenes[id] = sceneCreator;
 }
 
 void SceneManager::RemoveScene(const int id) {
@@ -40,31 +52,33 @@ SceneManager::ScenePtr SceneManager::EmptyScene() {
 	return std::move(std::make_unique<Scene>());
 }
 
-void SceneManager::CreateScene(const unsigned int id, const std::string& name) {
-	Scene *s = new Scene(name);
-	Serial::serialise(s);
-	AddScene(id, name);
-	SetActiveScene(id);
-	delete s;
-}
+// void SceneManager::CreateScene(const unsigned int id, const std::string& name) {
+// 	Scene *s = new Scene(name);
+// 	Serial::serialise(s);
+// 	AddScene(id, name);
+// 	RuamEngine::Camera::EmptyMainCamera();
+// 	s_active_scene.reset(s_scenes[id]());
+// 	s_has_pending_scene = true;
+// 	delete s;
+// }
 
-bool SceneManager::StartScene(const unsigned int id, const std::string& name) {
-	auto s = Serial::deserialise(name);
-	bool ret = s == nullptr;
-	if (ret){
-		CreateScene(id, name);
-	}
-	else {
-		AddScene(id, name);
-		SetActiveScene(id);
-	}
-	delete s;
-	return ret;
-}
+// bool SceneManager::StartScene(const unsigned int id, const std::string& name) {
+// 	auto s = Serial::deserialise(name);
+// 	bool ret = s == nullptr;
+// 	if (ret){
+// 		CreateScene(id, name);
+// 	}
+// 	else {
+// 		AddScene(id, name);
+// 		SetActiveScene(id);
+// 	}
+// 	delete s;
+// 	return ret;
+// }
 bool SceneManager::SceneChange() {
-	return s_scene_change;
+	return s_has_pending_scene;
 }
 
 void SceneManager::SetSceneChange(bool state) {
-	s_scene_change = state;
+	s_has_pending_scene = state;
 }

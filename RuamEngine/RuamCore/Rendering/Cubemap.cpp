@@ -14,10 +14,8 @@ namespace RuamEngine
     {
         m_filePaths = GlobalizePaths(relativePaths);
 
-        for (std::string path : m_filePaths)
-        {
-            m_filePath += path + "|-|";
-        }
+        std::string unifiedPath = UnifyPaths(relativePaths);
+        m_filePath = unifiedPath;
 
         GLCall(glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &m_rendererId));
 

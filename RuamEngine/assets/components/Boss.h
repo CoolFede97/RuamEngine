@@ -37,7 +37,9 @@ class Boss : public Component {
 			bullet->m_target = playerTransform->position();
 			bullet->m_radius = m_bulletRadius;
 
-			object->addComponent<MeshRenderer>()->SetModel(m_bulletMeshPath);
+
+			bullet->object()->addComponent<MeshRenderer>()->m_shaderProgramType = ShaderProgramType::general;
+			bullet->object()->getComponent<MeshRenderer>()->SetModel(m_bulletMeshPath);
 		}
 		m_timeSinceLastShot += Time::DeltaTime();
 	}
@@ -50,7 +52,7 @@ public:
 			s_instance->playerTransform = nullptr;
 			s_instance = nullptr;
 			object()->destroy();
-			SceneManager::SetActiveScene(2);
+			SceneManager::EnqueueSceneChange(2);
 		}
 	}
 	using Component::Component;

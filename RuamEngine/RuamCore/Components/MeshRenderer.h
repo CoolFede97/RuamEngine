@@ -1,5 +1,7 @@
 #pragma once
 
+#include "RenderUnit.h"
+#include "ResourceManager.h"
 #include "SceneManager.hpp"
 #include "Scene.hpp"
 #include "Object.hpp"
@@ -18,6 +20,8 @@ class MeshRenderer : public BaseRenderer
 public:
 	std::string m_meshPath;
 	ModelPtr m_model;
+	ShaderProgramType m_shaderProgramType;
+	RenderUnitPtr m_renderUnit;
 
 	using BaseRenderer::BaseRenderer;
 	MeshRenderer(const nlohmann::json& j, unsigned int obj_id) : BaseRenderer(obj_id)
@@ -27,24 +31,45 @@ public:
 			SetModel(j["m_meshPath"]);
 		}
 	}
-    // IMPL_SIMPLE_SERIALIZE(MeshRenderer)
-	void SetModel(const std::string& path)
+
+	~MeshRenderer()
 	{
-		m_meshPath = path;
-		m_model = std::make_shared<Model>(m_meshPath);
-		m_vertices = GetMeshesVertices();
-		m_indices = GetMeshesIndices();
+		if (!m_meshPath.empty())
+		{
+			ResourceManager::UnloadModel(m_meshPath, m_shaderProgramType);
+			m_myRenderUnits.clear();
+		}
+	}
+
+    // IMPL_SIMPLE_SERIALIZE(MeshRenderer)
+	void SetModel(const std::string& relativePath)
+	{
+	    if (!m_meshPath.empty() && m_model!=nullptr)
+		{
+			ResourceManager::UnloadModel(relativePath, m_shaderProgramType);
+
+			for (auto& ruPtr : m_myRenderUnits)
+			{
+				Renderer::DestroyRenderUnit(ruPtr, ruPtr->m_drawingData);
+			}
+			m_myRenderUnits.clear();
+		}
+
+		m_meshPath = relativePath;
+		m_model = ResourceManager::LoadModel(m_meshPath, m_shaderProgramType);
 		Renderer::UpdateTextureType(GL_TEXTURE_2D);
 
 		// Pre-upload geometry once per mesh into the appropriate RenderUnit (vertices + indices).
 		for (Mesh& mesh : m_model->m_meshes)
 		{
-			for (auto& ru : Renderer::m_drawingDatas[ShaderProgramType::general]->m_renderUnits)
+			for (auto& ru : Renderer::m_drawingDatas[m_shaderProgramType]->m_renderUnits)
 			{
 				if (ru->m_material->GetId() == mesh.m_material->GetId())
 				{
+					if (ru->m_indices->GetCurrentSize()>0) return; // If the current size is bigger than 0, it means that the model data is already loaded
 					ru->AddBatchData(mesh.m_vertices, mesh.m_indices, {});
 					ru->m_staticStorage = true;
+					m_myRenderUnits.push_back(ru);
 					break;
 				}
 			}
@@ -53,6 +78,7 @@ public:
 private:
 	std::vector<Vertex> m_vertices;
 	std::vector<unsigned int> m_indices;
+	std::vector<RenderUnitPtr> m_myRenderUnits;
 
 	void render()
 	{
@@ -102,42 +128,7 @@ private:
 				}
 			}
 		}
-		/*for (unsigned int i = 0; i < m_indices.size(); i++)
-		{
-			std::vector<Vertex> localVertices;
-			if (i<m_vertices.size())
-			{
-				localVertices = { m_vertices[i] };
-			}
-			else localVertices = {};
-			genericUnit.AddBatchData(localVertices, { m_indices[i] }, {});
-		}*/
-
-		//genericUnit.AddBatchData(m_vertices, m_indices, { modelMatrix });
 	};
-
-	std::vector<Vertex> GetMeshesVertices()
-	{
-		std::vector<Vertex> allVertices;
-		for (const Mesh& mesh : m_model->m_meshes)
-		{
-			allVertices.insert(allVertices.end(), mesh.m_vertices.begin(), mesh.m_vertices.end());
-		}
-		return allVertices;
-	}
-
-	std::vector<unsigned int> GetMeshesIndices()
-	{
-		std::vector<unsigned int> allIndices;
-		for (const Mesh& mesh : m_model->m_meshes)
-		{
-			for (unsigned int index : mesh.m_indices)
-			{
-				allIndices.push_back(index);
-			}
-		}
-		return allIndices;
-	}
 
 	void start()
 	{

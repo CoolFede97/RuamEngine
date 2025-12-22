@@ -19,7 +19,7 @@ public:
 			if (ImGui::Button(std::to_string(i).c_str()))
 			{
 				std::cout << "Escena cambiada wacho\n";
-				SceneManager::SetActiveScene(i);
+				SceneManager::EnqueueSceneChange(i);
 			}
 		}
 	};

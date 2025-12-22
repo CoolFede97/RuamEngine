@@ -2,7 +2,7 @@
 
 #include "RuamEngine.h"
 
-#include "MenuScene.cpp"
+// #include "MenuScene.cpp"
 #include "RuamCore/Objects/SceneManager.hpp"
 #include "SandboxScene.cpp"
 #include "assets/scenes/CollisionSandboxScene.cpp"
@@ -33,15 +33,19 @@ int main()
 
 		ImGui::StyleColorsDark();
 
+		SceneManager::AddSceneCreator(2, CreateEndScene);
+		SceneManager::AddSceneCreator(1, CreateCFSandboxScene);
+		SceneManager::AddSceneCreator(0, CreateInitialScene);
 
-		CreateEndScene();
-		CreateCFSandboxScene();
-		CreateInitialScene();
+		SceneManager::EnqueueSceneChange(0);
 
 		unsigned int frameCount = 0;
 
 		while (!Renderer::WindowShouldClose())
 		{
+
+			SceneManager::ApplyPendingSceneChange();
+
 		    // std::cout << "Frame count: " << frameCount++ << "\n";
 
 			// ImGUI

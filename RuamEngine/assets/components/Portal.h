@@ -31,7 +31,7 @@ namespace RuamEngine
 		    if (Camera::GetMainCamera() == nullptr) return;
 			if (glm::length(Camera::GetMainCamera()->object()->transform().position() - object()->transform().position()) < 1.5f)
 			{
-			    SceneManager::SetActiveScene(1);
+			    SceneManager::EnqueueSceneChange(1);
 			}
 		}
 		void start()

@@ -10,6 +10,7 @@
 #include "Texture.h"
 #include "Texture2D.h"
 #include "Cubemap.h"
+#include "Model.h"
 #include <unordered_map>
 #include <cstdint>
 #include <vector>
@@ -115,8 +116,8 @@ namespace RuamEngine
 		static void UpdateTextures();
         static void UpdateTextureType(GLenum type);
     private:
-        static void UploadTextures();
-        static void UploadTextureType(GLenum type);
+        static void AllocateTextureTypes();
+        static void AllocateTextureType(GLenum type);
 
     public:
         static void Draw();

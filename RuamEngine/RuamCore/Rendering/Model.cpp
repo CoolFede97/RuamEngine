@@ -6,9 +6,11 @@ namespace RuamEngine
 	unsigned int Model::s_idCount = 0;
 
 	Model::Model(std::string path)
-		: m_path(GlobalizePath(path)), m_id(s_idCount++)
+		: m_path(GlobalizePath(path)), m_instanceId(s_idCount++)
 	{
 		LoadModel(m_path);
+		m_vertices = GetMeshesVertices();
+		m_indices = GetMeshesIndices();
 	}
 	void Model::LoadModel(std::string path)
 	{
@@ -161,5 +163,26 @@ namespace RuamEngine
 	std::vector<Texture2D> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
 	{
 		return std::vector<Texture2D>();
+	}
+	std::vector<Vertex> Model::GetMeshesVertices()
+	{
+		std::vector<Vertex> allVertices;
+		for (const Mesh& mesh : m_meshes)
+		{
+			allVertices.insert(allVertices.end(), mesh.m_vertices.begin(), mesh.m_vertices.end());
+		}
+		return allVertices;
+	}
+	std::vector<unsigned int> Model::GetMeshesIndices()
+	{
+		std::vector<unsigned int> allIndices;
+		for (const Mesh& mesh : m_meshes)
+		{
+			for (unsigned int index : mesh.m_indices)
+			{
+				allIndices.push_back(index);
+			}
+		}
+		return allIndices;
 	}
 }

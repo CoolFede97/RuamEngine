@@ -45,4 +45,3 @@ private:
 	static const std::string s_default_name;
 };
 using ScenePtr = std::shared_ptr<Scene>;
-

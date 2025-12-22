@@ -2,6 +2,7 @@
 
 #include "Boss.h"
 #include "Bullet.h"
+#include "Renderer.h"
 
 void Shooter::start()
 {
@@ -35,7 +36,8 @@ void Shooter::update() {
 		bullet.m_target = Boss::s_instance->object()->transform().position();
 		bullet.m_radius = m_bulletRadius;
 
-		bullet.object()->addComponent<MeshRenderer>()->SetModel(m_bulletMeshPath);
+		bullet.object()->addComponent<MeshRenderer>()->m_shaderProgramType = ShaderProgramType::general;
+		bullet.object()->getComponent<MeshRenderer>()->SetModel(m_bulletMeshPath);
 	}
 	m_timeSinceLastShot += Time::DeltaTime();
 }

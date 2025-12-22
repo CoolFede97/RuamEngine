@@ -1,8 +1,10 @@
 #include "Object.hpp"
 #include "Component.hpp"
+#include "Renderer.h"
 #include "Scene.hpp"
 #include "SceneManager.hpp"
 #include "../components/Manager.h"
+#include "Skybox.h"
 #include "../components/Counter.h"
 #include "../components/CameraController.h"
 #include "Serial.hpp"
@@ -12,10 +14,9 @@
 #include "../components/Shooter.h"
 #include "../components/Boss.h"
 
-void CreateCFSandboxScene()
+Scene* CreateCFSandboxScene()
 {
-	SceneManager::CreateScene(1, "SandboxScene");
-	auto sandboxScene = SceneManager::ActiveScene();
+	Scene* sandboxScene = new Scene(1, "SandboxScene");
 
 	Object* light = sandboxScene->newObject();
 	light->setName("Light");
@@ -29,7 +30,9 @@ void CreateCFSandboxScene()
 	bossO->setName("Boss");
 	bossO->transform().setPosition(glm::vec3(0.0f, -1.5f, 7.0f));
 	bossO->transform().setScale(glm::vec3(5.0f, 5.0f, 5.0f));
-	bossO->addComponent<MeshRenderer>()->SetModel("assets/meshes/boss/boss.obj");
+	MeshRenderer* bossRenderer = bossO->addComponent<MeshRenderer>();
+	bossRenderer->m_shaderProgramType = ShaderProgramType::general;
+	bossRenderer->SetModel("assets/meshes/boss/boss.obj");
 	Boss* boss = bossO->addComponent<Boss>();
 	boss->m_shootingInterval = 1.0f;
 	boss->m_bulletSpeed = 20.0f;
@@ -37,12 +40,10 @@ void CreateCFSandboxScene()
 	boss->m_health = 1;
 	boss->m_bulletMeshPath = "assets/meshes/bullet/bullet.obj";
 
-	Object* skybox = sandboxScene->newObject();
-	skybox->setName("Skybox");
-	skybox->addComponent<MeshRenderer>()->SetModel("assets/meshes/skyboxes/hell/hell.obj");
-	skybox->getComponent<MeshRenderer>()->m_model->m_meshes[0].m_material->m_shininess = 1000.0;
-	skybox->transform().setRotation(glm::vec3(180.0f, 0.0, 0.0));
-	skybox->transform().setScale(glm::vec3(500.0f, 500.0f, 500.0f));
+	// Object* skybox = sandboxScene->newObject();
+	// skybox->setName("Skybox");
+	// skybox->transform().setScale(glm::vec3(50,50,50));
+	// skybox->addComponent<Skybox>();
 
 	Object* player = sandboxScene->newObject();
 	player->setName("Player");
@@ -64,5 +65,7 @@ void CreateCFSandboxScene()
 	manager->addComponent<Manager>();
 	//manager->addComponent<AudioSource>("/home/tomy/programming/ce/masmas/RuamEngine/RuamEngine/1 Crumbling Castle.wav");
 
-	Serial::serialise(SceneManager::ActiveScene());
+	// Serial::serialise(SceneManager::ActiveScene());
+
+	return sandboxScene;
 }

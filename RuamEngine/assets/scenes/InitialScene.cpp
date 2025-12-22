@@ -1,5 +1,6 @@
 #include "Object.hpp"
 #include "Component.hpp"
+#include "Renderer.h"
 #include "Scene.hpp"
 #include "SceneManager.hpp"
 #include "../components/CameraController.h"
@@ -11,29 +12,29 @@
 #include <AudioSource.h>
 
 #include "../components/Manager.h"
-void CreateInitialScene()
+Scene* CreateInitialScene()
 {
-	SceneManager::CreateScene(0, "InitialScene");
-	auto scene = SceneManager::ActiveScene();
+	auto scene = new Scene(0, "InitialScene");
 
 	Object* light = scene->newObject();
 	light->addComponent<GlobalLight>();
 	light->transform().setPosition(glm::vec3(0.0f, 100.0f, 0.0f));
 	light->setName("Light");
-	//manager->addComponent<SandboxCom>();
-	//bag->transform().setRotation(glm::vec3(45.0f, 5.0f, 45.0f));
-	//bag->addComponent<CubeRenderer>()->materialId = 0;
 
 	Object* nave = scene->newObject();
 	nave->setName("Nave");
 	nave->transform().setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-	nave->addComponent<MeshRenderer>()->SetModel("assets/meshes/Nave/Nave.obj");
+	MeshRenderer* naveRenderer = nave->addComponent<MeshRenderer>();
+	naveRenderer->m_shaderProgramType = ShaderProgramType::general;
+	naveRenderer->SetModel("assets/meshes/Nave/Nave.obj");
 
 	Object* radio = scene->newObject();
 	radio->addComponent<AudioSource>("assets/music/portal_radio.wav");
 	radio->setName("radio");
 	radio->transform().setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-	radio->addComponent<MeshRenderer>()->SetModel("assets/meshes/radio/Radio.obj");
+	MeshRenderer* radioRenderer = radio->addComponent<MeshRenderer>();
+	radioRenderer->m_shaderProgramType = ShaderProgramType::general;
+	radioRenderer->SetModel("assets/meshes/radio/Radio.obj");
 	radio->transform().setScale(0.002f, 0.002f, 0.002f);
 	radio->transform().setPosition(glm::vec3(0.0f, -2.0f, 0.0f));
 	radio->transform().setRotation(glm::vec3(90.0f, 0.0f, 0.0f));
@@ -41,7 +42,9 @@ void CreateInitialScene()
 	Object* portal = scene->newObject();
 	portal->setName("portal");
 	portal->transform().setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-	portal->addComponent<MeshRenderer>()->SetModel("assets/meshes/portal/portal.obj");
+	MeshRenderer* portalRenderer = portal->addComponent<MeshRenderer>();
+	portalRenderer->m_shaderProgramType = ShaderProgramType::general;
+	portalRenderer->SetModel("assets/meshes/portal/portal.obj");
 	portal->transform().setScale(1.0f,1.0f,1.0f);
 	portal->transform().setPosition(glm::vec3(-4.0f, -2.6f, 35.0f));
 
@@ -69,5 +72,7 @@ void CreateInitialScene()
 	Object* manager = scene->newObject();
 	manager->setName("Manager");
 	manager->addComponent<Manager>();
-	Serial::serialise(SceneManager::ActiveScene());
+	// Serial::serialise(SceneManager::ActiveScene());
+	std::cout << "SE RTTERMINO D ECRREAR LA ESCENA PA\n";
+	return scene;
 }

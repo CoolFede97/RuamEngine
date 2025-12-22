@@ -1,9 +1,13 @@
 #include "Renderer.h"
 #include "FileFunctions.h"
 #include "GlobalLight.h"
+#include "RenderUnit.h"
+#include "RenderingConstants.h"
 #include "RenderingCore.h"
+#include "ResourceManager.h"
 #include "ShaderProgram.h"
 #include <algorithm>
+#include <cstddef>
 #include <iterator>
 #include <memory>
 
@@ -60,19 +64,12 @@ namespace RuamEngine
             {
                 GLCall(glCreateBuffers(1, &m_buffersByType[type]));
             }
-
-
 			DrawingDataPtr basicDrawingData = CreateDrawingData(ShaderProgramType::general, "RuamCore/Rendering/Shaders/GeneralVertexShader.glsl", "RuamCore/Rendering/Shaders/GeneralFragmentShader.glsl");
 			DrawingDataPtr skyboxDrawingData = CreateDrawingData(ShaderProgramType::skybox, "RuamCore/Rendering/Shaders/SkyboxVertexShader.glsl", "RuamCore/Rendering/Shaders/SkyboxFragmentShader.glsl");
 
-            UploadTextures();
+            AllocateTextureTypes();
 
-            RegisterTexture(std::make_shared<Texture2D>("assets/sprites/defaultSprite.png"));
-			std::vector<std::string> skyboxes =
-			{
-			"assets/sprites/skybox.png","assets/sprites/skybox.png","assets/sprites/skybox.png","assets/sprites/skybox.png","assets/sprites/skybox.png","assets/sprites/skybox.png"
-			};
-			RegisterTexture(std::make_shared<Cubemap>(skyboxes));
+            ResourceManager::Init();
         }
 
     }
@@ -211,6 +208,12 @@ namespace RuamEngine
     {
         GLenum type = texture->GetType();
 
+        if (m_handlesByType[type].size() >= maxTextureCountPerType)
+        {
+            std::cerr << "ERROR: Max texture limit of type " << type << " reached. The limit is " << maxTextureCountPerType << "\n";
+            return 0;
+        }
+
         for (unsigned int i = 0; i < m_texturesByType[type].size(); i++)
         {
             if (texture->GetPath() == m_texturesByType[type][i]->GetPath()) return i;
@@ -304,25 +307,25 @@ namespace RuamEngine
         }
         return -1;
     }
-    // Should be called only once when finished all the textures
-    void Renderer::UploadTextures()
+    // Should be called before loading any textures (before any UpdateTextures/UpdateTextureType call)
+    void Renderer::AllocateTextureTypes()
     {
         std::cout << "Buffer of textures 2D: " <<m_buffersByType[GL_TEXTURE_CUBE_MAP] << "\n";
         for (auto& [type, buffer] : m_buffersByType)
         {
-            UploadTextureType(type);
+            AllocateTextureType(type);
         }
         texturesUploaded = true;
     }
 
-    void Renderer::UploadTextureType(GLenum type)
+    void Renderer::AllocateTextureType(GLenum type)
     {
         ASSERT(m_handlesByType[type].size() < maxTextureCountPerType);
 		ASSERT(!texturesUploaded);
         GLCall(glNamedBufferStorage(
             m_buffersByType[type],
             sizeof(GLuint64) * maxTextureCountPerType,
-            (const void*)m_handlesByType[type].data(),
+            NULL,
             GL_DYNAMIC_STORAGE_BIT
         ));
         GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, m_bindingsByType[type], m_buffersByType[type]));

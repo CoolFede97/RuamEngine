@@ -11,7 +11,7 @@
 #include "../../RuamCore/Input/KeyCode.h"
 #include "../../RuamCore/Input/Cursor.h"
 #include <algorithm>
-#include "MeshRenderer.h"
+#include "ModelRenderer.h"
 
 using namespace RuamEngine;
 
@@ -83,7 +83,7 @@ private:
      //    {
      //        if (obj->name() == "Skybox")
      //        {
-     //            for (auto mesh : obj->getComponent<MeshRenderer>()->m_model->m_meshes)
+     //            for (auto mesh : obj->getComponent<ModelRenderer>()->m_model->m_meshes)
      //            {
      //                mesh.m_material->m_shininess = 10000.0f;
      //            }

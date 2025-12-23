@@ -105,7 +105,7 @@ namespace RuamEngine
 
 		// Finders
         static unsigned int FindMaterial(MaterialPtr material);
-        static unsigned int FindRenderUnit(MaterialPtr material, DrawingDataPtr drawingData);
+        static RenderUnitPtr GetRenderUnit(MaterialPtr material, DrawingDataPtr drawingData);
 
 		static unsigned int RegisterTexture(const TexturePtr texture);
         static void UnregisterTexture(unsigned int textureIndex, GLenum type);

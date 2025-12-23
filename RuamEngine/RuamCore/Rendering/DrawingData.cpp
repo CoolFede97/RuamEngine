@@ -9,7 +9,7 @@ namespace RuamEngine
 
 	void DrawingData::SubmitData()
 	{
-		for (RenderUnitPtr renderUnit : m_renderUnits)
+		for (auto& [materialId, renderUnit] : m_renderUnits)
 		{
 			renderUnit->SubmitData();
 		}
@@ -22,7 +22,7 @@ namespace RuamEngine
 
 	void DrawingData::Flush()
 	{
-		for (RenderUnitPtr renderUnit: m_renderUnits)
+		for (auto& [materialId, renderUnit] : m_renderUnits)
 		{
 			renderUnit->Flush();
 		}

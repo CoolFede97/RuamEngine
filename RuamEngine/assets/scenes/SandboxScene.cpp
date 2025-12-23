@@ -8,7 +8,7 @@
 #include "../components/Counter.h"
 #include "../components/CameraController.h"
 #include "Serial.hpp"
-#include "MeshRenderer.h"
+#include "ModelRenderer.h"
 #include "GlobalLight.h"
 
 #include "../components/Shooter.h"
@@ -30,7 +30,7 @@ Scene* CreateCFSandboxScene()
 	bossO->setName("Boss");
 	bossO->transform().setPosition(glm::vec3(0.0f, -1.5f, 7.0f));
 	bossO->transform().setScale(glm::vec3(5.0f, 5.0f, 5.0f));
-	MeshRenderer* bossRenderer = bossO->addComponent<MeshRenderer>();
+	ModelRenderer* bossRenderer = bossO->addComponent<ModelRenderer>();
 	bossRenderer->m_shaderProgramType = ShaderProgramType::general;
 	bossRenderer->SetModel("assets/meshes/boss/boss.obj");
 	Boss* boss = bossO->addComponent<Boss>();

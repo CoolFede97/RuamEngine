@@ -36,8 +36,8 @@ void Shooter::update() {
 		bullet.m_target = Boss::s_instance->object()->transform().position();
 		bullet.m_radius = m_bulletRadius;
 
-		bullet.object()->addComponent<MeshRenderer>()->m_shaderProgramType = ShaderProgramType::general;
-		bullet.object()->getComponent<MeshRenderer>()->SetModel(m_bulletMeshPath);
+		bullet.object()->addComponent<ModelRenderer>()->m_shaderProgramType = ShaderProgramType::general;
+		bullet.object()->getComponent<ModelRenderer>()->SetModel(m_bulletMeshPath);
 	}
 	m_timeSinceLastShot += Time::DeltaTime();
 }

@@ -102,8 +102,6 @@ namespace RuamEngine
 			m_localToGlobalMaterials.emplace(mesh->mMaterialIndex, meshMaterial);
 		}
 
-		RenderUnitPtr newRenderUnit = Renderer::CreateRenderUnit(Renderer::m_drawingDatas[0],  meshMaterial);
-
 		if (mesh->mMaterialIndex >= 0)
 		{
 			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];

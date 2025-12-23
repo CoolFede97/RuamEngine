@@ -4,7 +4,7 @@
 #include "SceneManager.hpp"
 #include "../components/CameraController.h"
 #include "Serial.hpp"
-#include "MeshRenderer.h"
+#include "ModelRenderer.h"
 #include "GlobalLight.h"
 #include "Skybox.h"
 #include "../components/Portal.h"
@@ -22,7 +22,7 @@ Scene* CreateEndScene()
 	Object* nave = scene->newObject();
 	nave->setName("Nave");
 	nave->transform().setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-	MeshRenderer* naveRenderer = nave->addComponent<MeshRenderer>();
+	ModelRenderer* naveRenderer = nave->addComponent<ModelRenderer>();
 	naveRenderer->m_shaderProgramType = ShaderProgramType::general;
 	naveRenderer->SetModel("assets/meshes/Nave/Nave.obj");
 
@@ -30,7 +30,7 @@ Scene* CreateEndScene()
 	radio->addComponent<AudioSource>("assets/music/portal_radio.wav");
 	radio->setName("radio");
 	radio->transform().setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-	MeshRenderer* radioRenderer = radio->addComponent<MeshRenderer>();
+	ModelRenderer* radioRenderer = radio->addComponent<ModelRenderer>();
 	radioRenderer->m_shaderProgramType = ShaderProgramType::general;
 	radioRenderer->SetModel("assets/meshes/radio/Radio.obj");
 	radio->transform().setScale(0.002f, 0.002f, 0.002f);
@@ -40,7 +40,7 @@ Scene* CreateEndScene()
 	Object* portal = scene->newObject();
 	portal->setName("portal");
 	portal->transform().setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-	MeshRenderer* portalRenderer = portal->addComponent<MeshRenderer>();
+	ModelRenderer* portalRenderer = portal->addComponent<ModelRenderer>();
 	portalRenderer->m_shaderProgramType = ShaderProgramType::general;
 	portalRenderer->SetModel("assets/meshes/portal/portal.obj");
 	portal->transform().setScale(1.0f,1.0f,1.0f);
@@ -52,9 +52,9 @@ Scene* CreateEndScene()
 	skybox->setName("Skybox");
 	skybox->transform().setScale(glm::vec3(50,50,50));
 	skybox->addComponent<Skybox>();
-	// skybox->addComponent<MeshRenderer>()->SetModel("assets/meshes/skyboxes/galaxy/galaxySkybox.obj");
-	// skybox->getComponent<MeshRenderer>()->m_model->m_meshes[0].m_material->m_shininess = 1000.0;
-	// // skybox->addComponent<ColorChanger>()->m_meshes = &skybox->getComponent<MeshRenderer>()->m_model->m_meshes;
+	// skybox->addComponent<ModelRenderer>()->SetModel("assets/meshes/skyboxes/galaxy/galaxySkybox.obj");
+	// skybox->getComponent<ModelRenderer>()->m_model->m_meshes[0].m_material->m_shininess = 1000.0;
+	// // skybox->addComponent<ColorChanger>()->m_meshes = &skybox->getComponent<ModelRenderer>()->m_model->m_meshes;
 	// skybox->transform().setRotation(glm::vec3(180.0f, 0.0, 0.0));
 	// skybox->transform().setScale(glm::vec3(500.0f, 500.0f, 500.0f));
 

@@ -181,16 +181,16 @@ namespace RuamEngine
     // If the render unit already exists, it returns the existing index. Otherwise, it creates a new render unit and returns its index.
     RenderUnitPtr Renderer::CreateRenderUnit(DrawingDataPtr drawingData, MaterialPtr material)
     {
-		unsigned int foundIndex = FindRenderUnit(material, drawingData);
-        if (foundIndex != -1)
+		RenderUnitPtr ru = GetRenderUnit(material, drawingData);
+        if (ru != nullptr)
         {
-            return drawingData->m_renderUnits[foundIndex];
+            return ru;
         }
         RenderUnitPtr newRenderUnit = std::make_shared<RenderUnit>();
 		newRenderUnit->m_material = material;
 		newRenderUnit->m_drawingData = drawingData;
 		newRenderUnit->m_program = drawingData->m_program;
-        drawingData->m_renderUnits.push_back(newRenderUnit);
+        drawingData->m_renderUnits[material->GetId()] = newRenderUnit;
         return newRenderUnit;
 	}
 
@@ -263,8 +263,9 @@ namespace RuamEngine
 
     void Renderer::DestroyRenderUnit(RenderUnitPtr renderUnit, DrawingDataPtr drawingData)
     {
+    	unsigned int materialId = renderUnit->m_material->GetId();
         auto& units = drawingData->m_renderUnits;
-        auto it = std::find(units.begin(), units.end(), renderUnit);
+        auto it = units.find(materialId);
 
         if (it != units.end())
         {
@@ -295,17 +296,14 @@ namespace RuamEngine
         return -1;
 	}
 
-    // Finds if a render unit already exists in a certain drawing data, if not, returns -1
-    unsigned int Renderer::FindRenderUnit(MaterialPtr material, DrawingDataPtr drawingData)
+    // Finds if a render unit already exists in a certain drawing data, if not, returns nullptr
+    RenderUnitPtr Renderer::GetRenderUnit(MaterialPtr material, DrawingDataPtr drawingData)
     {
-        for (unsigned int i = 0; i < drawingData->m_renderUnits.size(); i++)
-        {
-            if (drawingData->m_renderUnits[i]->m_material->GetId() == material->GetId())
-            {
-                return i;
-            }
-        }
-        return -1;
+    	unsigned int materialId = material->GetId();
+     	auto units = drawingData->m_renderUnits;
+    	auto it = units.find(materialId);
+     	if (it != units.end()) return it->second;
+      else return nullptr;
     }
     // Should be called before loading any textures (before any UpdateTextures/UpdateTextureType call)
     void Renderer::AllocateTextureTypes()
@@ -362,8 +360,12 @@ namespace RuamEngine
         {
             // std::cout << "Render units count: " << drawingData->m_renderUnits.size() << "\n";
 			drawingData->m_program->UpdateCameraMatrices();
-            for (RenderUnitPtr renderUnit : drawingData->m_renderUnits)
+            for (auto& [materialId, renderUnit] : drawingData->m_renderUnits)
             {
+            	// The vertex array is useless and doesn't contain any information since I use SSBOs to pass the data into the shader.
+             	// It's just there in order to satisfy OpenGL because it need to have one bound
+           		renderUnit->m_vertexArray->Bind();
+
                 ShaderProgramPtr program = drawingData->m_program;
                 program->Bind();
                 GlobalLight::LoadLightSettings(program);

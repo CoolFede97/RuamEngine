@@ -49,7 +49,7 @@ namespace RuamEngine
 
 	Texture2D::~Texture2D()
 	{
-		std::cout << "Texture2D Destroyed!\n";
+		std::cout << "Texture2D at path " << m_filePath << " Destroyed!\n";
 		GLCall(glDeleteTextures(1, &m_rendererId));
 	}
 

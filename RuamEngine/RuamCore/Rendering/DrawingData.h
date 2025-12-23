@@ -17,7 +17,7 @@ namespace RuamEngine
         DrawingData();
         ~DrawingData();
         ShaderProgramPtr m_program = nullptr;
-        std::vector<RenderUnitPtr> m_renderUnits = {};
+        std::map<unsigned int, RenderUnitPtr> m_renderUnits = {};
 
         void SubmitData();
         void SubmitData(RenderUnit& renderUnit);

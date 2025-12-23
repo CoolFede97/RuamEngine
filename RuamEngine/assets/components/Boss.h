@@ -5,7 +5,7 @@
 #include "RuamTime.h"
 
 #include "glm/glm.hpp"
-#include "MeshRenderer.h"
+#include "ModelRenderer.h"
 
 #include "Bullet.h"
 #include "Shooter.h"
@@ -38,8 +38,8 @@ class Boss : public Component {
 			bullet->m_radius = m_bulletRadius;
 
 
-			bullet->object()->addComponent<MeshRenderer>()->m_shaderProgramType = ShaderProgramType::general;
-			bullet->object()->getComponent<MeshRenderer>()->SetModel(m_bulletMeshPath);
+			bullet->object()->addComponent<ModelRenderer>()->m_shaderProgramType = ShaderProgramType::general;
+			bullet->object()->getComponent<ModelRenderer>()->SetModel(m_bulletMeshPath);
 		}
 		m_timeSinceLastShot += Time::DeltaTime();
 	}

@@ -77,10 +77,10 @@ namespace RuamEngine
         	std::set<RenderUnitPtr> unitsToDestroy;
          	for (Mesh mesh : it->second.model->m_meshes)
 			{
-				int index = Renderer::FindRenderUnit(mesh.m_material, drawingData);
-				if (index !=-1)
+				RenderUnitPtr ru = Renderer::GetRenderUnit(mesh.m_material, drawingData);
+				if (ru != nullptr)
 				{
-					unitsToDestroy.insert(drawingData->m_renderUnits[index]);
+					unitsToDestroy.insert(ru);
 				}
 			}
 			for (auto& ru : unitsToDestroy)
@@ -96,10 +96,15 @@ namespace RuamEngine
 		}
 		if (noMoreReferences) m_modelCache.erase(it);
     }
-    // ModelPtr ResourceManager::GetModel(const std::string& relativePath)
-    // {
-
-    // }
+    ModelPtr ResourceManager::GetModel(const std::string& relativePath)
+    {
+	   	auto it = m_modelCache.find(relativePath);
+	    if (it != m_modelCache.end())
+	    {
+	        return it->second.model;
+	    }
+		return nullptr;
+    }
 
 
     unsigned int ResourceManager::RegisterTextureInRenderer(TexturePtr texture)

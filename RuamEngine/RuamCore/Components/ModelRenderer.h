@@ -15,7 +15,7 @@
 #include "FileFunctions.h"
 using namespace RuamEngine;
 
-class MeshRenderer : public BaseRenderer
+class ModelRenderer : public BaseRenderer
 {
 public:
 	std::string m_meshPath;
@@ -24,7 +24,7 @@ public:
 	RenderUnitPtr m_renderUnit;
 
 	using BaseRenderer::BaseRenderer;
-	MeshRenderer(const nlohmann::json& j, unsigned int obj_id) : BaseRenderer(obj_id)
+	ModelRenderer(const nlohmann::json& j, unsigned int obj_id) : BaseRenderer(obj_id)
 	{
 		if (j.contains("m_meshPath"))
 		{
@@ -32,7 +32,7 @@ public:
 		}
 	}
 
-	~MeshRenderer()
+	~ModelRenderer()
 	{
 		if (!m_meshPath.empty())
 		{
@@ -41,7 +41,7 @@ public:
 		}
 	}
 
-    // IMPL_SIMPLE_SERIALIZE(MeshRenderer)
+    // IMPL_SIMPLE_SERIALIZE(ModelRenderer)
 	void SetModel(const std::string& relativePath)
 	{
 	    if (!m_meshPath.empty() && m_model!=nullptr)
@@ -62,17 +62,18 @@ public:
 		// Pre-upload geometry once per mesh into the appropriate RenderUnit (vertices + indices).
 		for (Mesh& mesh : m_model->m_meshes)
 		{
-			for (auto& ru : Renderer::m_drawingDatas[m_shaderProgramType]->m_renderUnits)
+			DrawingDataPtr drawingData =  Renderer::m_drawingDatas[m_shaderProgramType];
+			RenderUnitPtr ru = Renderer::GetRenderUnit(mesh.m_material, drawingData);
+			if (ru == nullptr)
 			{
-				if (ru->m_material->GetId() == mesh.m_material->GetId())
-				{
-					if (ru->m_indices->GetCurrentSize()>0) return; // If the current size is bigger than 0, it means that the model data is already loaded
-					ru->AddBatchData(mesh.m_vertices, mesh.m_indices, {});
-					ru->m_staticStorage = true;
-					m_myRenderUnits.push_back(ru);
-					break;
-				}
+				ru = Renderer::CreateRenderUnit(drawingData, mesh.m_material);
 			}
+
+			auto mat = std::find(ru->m_meshesRegistered.begin(), ru->m_meshesRegistered.end(), mesh.m_material->GetId());
+			if (mat != ru->m_meshesRegistered.end()) continue; // If the current size is bigger than 0, it means that the model data is already loaded
+			ru->AddBatchData(mesh.m_vertices, mesh.m_indices, {});
+			ru->m_staticStorage = true;
+			m_myRenderUnits.push_back(ru);
 		}
 	}
 private:
@@ -89,17 +90,10 @@ private:
 		modelMatrix = glm::rotate(modelMatrix, glm::radians(object()->transform().rotation().z), glm::vec3(0.0f, 0.0f, 1.0f));
 		modelMatrix = glm::scale(modelMatrix, object()->transform().scale());
 
-        // bool test = m_model == nullptr;
-        // if (test) std::cout << "Model is null\n";
-        // else std::cout << "Model exists\n";
-        //
-
         if (m_model->m_localToGlobalMaterials.size() == 1)
 		{
 			Mesh mesh = m_model->m_meshes[0];
-			//for (Mesh mesh : m_model->m_meshes)
-			//{
-				for (auto& ru : Renderer::m_drawingDatas[0]->m_renderUnits)
+				for (auto& [materialId, ru] : Renderer::m_drawingDatas[m_shaderProgramType]->m_renderUnits)
 				{
 					if (ru->m_material->GetId() == mesh.m_material->GetId())
 					{
@@ -108,13 +102,12 @@ private:
 						return;
 					}
 				}
-			//}
 		}
 
 		std::vector<unsigned int> renderUnitsUsed = {};
 		for (Mesh mesh : m_model->m_meshes)
 		{
-			for (auto& ru : Renderer::m_drawingDatas[0]->m_renderUnits)
+			for (auto& [materialId, ru] : Renderer::m_drawingDatas[m_shaderProgramType]->m_renderUnits)
 			{
 				if (ru->m_material->GetId() == mesh.m_material->GetId())
 				{
@@ -140,7 +133,7 @@ private:
 		BaseRenderer::update();
 	};
 	public:
-	IMPL_SERIALIZE(MeshRenderer,
+	IMPL_SERIALIZE(ModelRenderer,
 	SER_FIELD(m_meshPath));
 };
-	REGISTER_COMPONENT(MeshRenderer)
+	REGISTER_COMPONENT(ModelRenderer)

@@ -19,18 +19,17 @@ namespace RuamEngine
 
 	    // This shader must be the same as the drawingData that contains this renderUnit
 	    DrawingDataPtr m_drawingData = nullptr;
-		ShaderProgramPtr m_program = nullptr;   
+		ShaderProgramPtr m_program = nullptr;
         MaterialPtr m_material = nullptr;
         VertexArrayPtr m_vertexArray = std::make_unique<VertexArray>();
         SSBOPointer<Vertex> m_vertices = std::make_unique<SSBO<Vertex>>(maxVertexCount, GL_DYNAMIC_STORAGE_BIT);
         SSBOPointer<unsigned int> m_indices = std::make_unique<SSBO<unsigned int>>(maxIndexCount, GL_DYNAMIC_STORAGE_BIT);
         SSBOPointer<glm::mat4> m_modelMatricesBuffer = std::make_unique<SSBO<glm::mat4>>(maxVertexCount, GL_DYNAMIC_STORAGE_BIT);
-        VertexBufferLayoutPtr m_layout = std::make_unique<VertexBufferLayout>();
-        IndexBufferPtr m_indexBuffer = std::make_unique<IndexBuffer>(maxIndexCount, GL_DYNAMIC_DRAW);
-        
+    	std::vector<unsigned int> m_meshesRegistered;
+
 		bool m_staticStorage = false;
 		bool m_staticPosition = false;
-        
+
         void SubmitData();
 		void BindBuffersBase();
 

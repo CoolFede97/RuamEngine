@@ -6,13 +6,15 @@
 
 class Scene {
 public:
-    Scene() : m_id(s_id_count++), m_name(s_default_name) {}
+    Scene() : m_id(s_id_count++), m_name(s_default_name) {std::cout << "SCENE " << m_name << " WITH ID " << m_id << " CREATED\n";;}
 
-    Scene(const int id) : m_id(id), m_name(s_default_name) {}
+    Scene(const int id) : m_id(id), m_name(s_default_name) {std::cout << "SCENE " << m_name << " WITH ID " << m_id << " CREATED\n";;}
 
-    Scene(const std::string& name) : m_id(s_id_count++), m_name(name) {}
+    Scene(const std::string& name) : m_id(s_id_count++), m_name(name) {std::cout << "SCENE " << m_name << " WITH ID " << m_id << " CREATED\n";;}
 
-    Scene(const int id, const std::string& name) : m_id(id), m_name(name) {}
+    Scene(const int id, const std::string& name) : m_id(id), m_name(name) {std::cout << "SCENE " << m_name << " WITH ID " << m_id << " CREATED\n";;}
+
+    ~Scene() {std::cout << "SCENE " << m_name << " WITH ID " << id() << " DESTROYED\n";}
 
 	unsigned int id() const {
 	    return m_id;

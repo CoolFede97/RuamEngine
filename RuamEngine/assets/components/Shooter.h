@@ -5,7 +5,7 @@
 #include "RuamTime.h"
 
 #include "glm/glm.hpp"
-#include "MeshRenderer.h"
+#include "ModelRenderer.h"
 
 class Shooter : public Component {
 

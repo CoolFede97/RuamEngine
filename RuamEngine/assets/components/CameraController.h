@@ -33,18 +33,6 @@ public:
 private:
 	void update()
 	{
-		if (Input::GetKeyDown(KeyCode::SpaceBar_Key))
-		{
-			std::list<const Object*> objects = SceneManager::ActiveScene()->getObjects();
-			for (const Object* obj : objects)
-			{
-				if (obj->name()=="Nave")
-				{
-					SceneManager::ActiveScene()->deleteObjectByIdx(obj->id());
-					// std::cout << "El ID de la nave es: " << obj->id() << "\n";
-				}
-			}
-		}
 		if (Input::GetKeyDown(KeyCode::LeftShift_Key)) m_speed = 25.0f;
 		else m_speed = 10.0f;
 

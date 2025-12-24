@@ -1,4 +1,5 @@
 #include "Model.h"
+#include "ResourceManager.h"
 #include "Vec3.h"
 #include <memory>
 namespace RuamEngine
@@ -37,7 +38,7 @@ namespace RuamEngine
 			ProcessNode(node->mChildren[i], scene);
 		}
 	}
-	Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
+	MeshPtr Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 	{
 		std::vector<Vertex> vertices;
 		std::vector<unsigned int> indices;
@@ -92,13 +93,14 @@ namespace RuamEngine
 			if (pair.first == mesh->mMaterialIndex)
 			{
 				meshMaterial = pair.second;
+				ResourceManager::GetMaterial(pair.second->GetId());
 				materialFound = true;
 				break;
 			}
 		}
 		if (!materialFound)
 		{
-			meshMaterial = Renderer::CreateMaterial();
+			meshMaterial = ResourceManager::CreateMaterial();
 			m_localToGlobalMaterials.emplace(mesh->mMaterialIndex, meshMaterial);
 		}
 
@@ -156,7 +158,7 @@ namespace RuamEngine
 			}
 		}
 		else std::cout << "No materials\n";
-		return Mesh(vertices, indices, meshMaterial);
+		return std::make_shared<Mesh>(vertices, indices, meshMaterial);
 	}
 	std::vector<Texture2D> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
 	{
@@ -165,18 +167,18 @@ namespace RuamEngine
 	std::vector<Vertex> Model::GetMeshesVertices()
 	{
 		std::vector<Vertex> allVertices;
-		for (const Mesh& mesh : m_meshes)
+		for (MeshPtr mesh : m_meshes)
 		{
-			allVertices.insert(allVertices.end(), mesh.m_vertices.begin(), mesh.m_vertices.end());
+			allVertices.insert(allVertices.end(), mesh->m_vertices.begin(), mesh->m_vertices.end());
 		}
 		return allVertices;
 	}
 	std::vector<unsigned int> Model::GetMeshesIndices()
 	{
 		std::vector<unsigned int> allIndices;
-		for (const Mesh& mesh : m_meshes)
+		for (MeshPtr mesh : m_meshes)
 		{
-			for (unsigned int index : mesh.m_indices)
+			for (unsigned int index : mesh->m_indices)
 			{
 				allIndices.push_back(index);
 			}

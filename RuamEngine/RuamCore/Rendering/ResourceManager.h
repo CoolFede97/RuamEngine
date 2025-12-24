@@ -86,15 +86,22 @@ namespace RuamEngine
         static TexturePtr GetTexture(const std::string& relativePath);
         static TexturePtr GetTexture(const std::vector<std::string>& relativePaths);
 
+        static unsigned int RegisterTextureInRenderer(TexturePtr texture);
+        static void UnregisterTextureInRenderer(unsigned int textureIndex, GLenum type);
+
         // Model handling ---------------------------------------------------------------------------------
         static ModelPtr LoadModel(const std::string& relativePath, ShaderProgramType shaderProgramType);
         static void UnloadModel(const std::string& relativePath, ShaderProgramType shaderProgramType);
         static ModelPtr GetModel(const std::string& relativePath);
 
-        static unsigned int RegisterTextureInRenderer(TexturePtr texture);
-        static void UnregisterTextureInRenderer(unsigned int textureIndex, GLenum type);
+        // Material handling ---------------------------------------------------------------------------------
+        static MaterialPtr CreateMaterial();
+        static void DestroyMaterial(unsigned int materialId);
+        static MaterialPtr GetMaterial(unsigned int materialId);
+
         static void DestroyRenderUnitInRenderer(RenderUnitPtr renderUnit, DrawingDataPtr drawingData);
-    private:
+
+        private:
 
         struct TextureEntry
         {
@@ -106,11 +113,17 @@ namespace RuamEngine
         struct ModelEntry
         {
         	ModelPtr model;
-         	std::map<ShaderProgramType, int> refCount;
+         	std::unordered_map<ShaderProgramType, int> refCount;
         };
 
-        static std::unordered_map<unsigned int, MaterialPtr> m_materials;
+        struct MaterialEntry
+        {
+        	MaterialPtr material;
+         	int refCount = 0;
+        };
+
         static std::unordered_map<std::string, TextureEntry> m_textureCache;
         static std::unordered_map<std::string, ModelEntry> m_modelCache;
+        static std::unordered_map<unsigned int, MaterialEntry> m_materialCache;
     };
 }

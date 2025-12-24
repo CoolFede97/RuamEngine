@@ -19,7 +19,7 @@ namespace RuamEngine
 	{
 	public:
 		Model(std::string path);
-		std::vector<Mesh> m_meshes;
+		std::vector<MeshPtr> m_meshes;
 		std::unordered_map<unsigned int, MaterialPtr> m_localToGlobalMaterials = {};
 	private:
 		std::string m_path;
@@ -29,7 +29,7 @@ namespace RuamEngine
 		std::vector<unsigned int> m_indices;
 		void LoadModel(std::string path);
 		void ProcessNode(aiNode* node, const aiScene* scene);
-		Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
+		MeshPtr ProcessMesh(aiMesh* mesh, const aiScene* scene);
 		std::vector<Texture2D> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 		std::vector<Vertex> GetMeshesVertices();
 		std::vector<unsigned int> GetMeshesIndices();

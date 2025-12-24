@@ -15,14 +15,14 @@ namespace RuamEngine
 {
     RendererConfig Renderer::m_config;
     GLFWwindow* Renderer::m_window = nullptr;
-    std::map<unsigned int, ShaderProgramPtr> Renderer::m_shaderPrograms;
-	std::map<GLuint, DrawingDataPtr> Renderer::m_drawingDatas;
-	std::map<unsigned int, MaterialPtr> Renderer::m_materials;
+    std::unordered_map<unsigned int, ShaderProgramPtr> Renderer::m_shaderPrograms;
+	std::unordered_map<GLuint, DrawingDataPtr> Renderer::m_drawingDatas;
+	std::unordered_map<unsigned int, MaterialPtr> Renderer::m_materials;
 	std::unordered_map<std::string, TexturePtr> Renderer::m_texturesCache;
-    std::map<GLenum, std::vector<TexturePtr>> Renderer::m_texturesByType;
-    std::map<GLenum, std::vector<GLuint64>> Renderer::m_handlesByType;
-    std::map<GLenum, GLuint> Renderer::m_buffersByType;
-    std::map<GLenum, int> Renderer::m_bindingsByType;
+    std::unordered_map<GLenum, std::vector<TexturePtr>> Renderer::m_texturesByType;
+    std::unordered_map<GLenum, std::vector<GLuint64>> Renderer::m_handlesByType;
+    std::unordered_map<GLenum, GLuint> Renderer::m_buffersByType;
+    std::unordered_map<GLenum, int> Renderer::m_bindingsByType;
 
     std::vector<glm::mat4> Renderer::matrices = {};
 

@@ -7,7 +7,7 @@
 #include <set>
 namespace RuamEngine
 {
-    std::unordered_map<unsigned int, MaterialPtr> ResourceManager::m_materials;
+    std::unordered_map<unsigned int, ResourceManager::MaterialEntry> ResourceManager::m_materialCache;
     std::unordered_map<std::string, ResourceManager::TextureEntry> ResourceManager::m_textureCache;
     std::unordered_map<std::string, ResourceManager::ModelEntry> ResourceManager::m_modelCache;
 
@@ -75,9 +75,9 @@ namespace RuamEngine
         {
        		DrawingDataPtr drawingData = Renderer::m_drawingDatas[shaderProgramType];
         	std::set<RenderUnitPtr> unitsToDestroy;
-         	for (Mesh mesh : it->second.model->m_meshes)
+         	for (MeshPtr mesh : it->second.model->m_meshes)
 			{
-				RenderUnitPtr ru = Renderer::GetRenderUnit(mesh.m_material, drawingData);
+				RenderUnitPtr ru = Renderer::GetRenderUnit(mesh->m_material, drawingData);
 				if (ru != nullptr)
 				{
 					unitsToDestroy.insert(ru);
@@ -106,6 +106,44 @@ namespace RuamEngine
 		return nullptr;
     }
 
+    // Material handling ---------------------------------------------------------------------------------
+
+    MaterialPtr ResourceManager::CreateMaterial()
+    {
+   		MaterialPtr newMaterial = std::make_shared<Material>();
+     	MaterialEntry newEntry;
+     	newEntry.material = newMaterial;
+     	newEntry.refCount++;
+		m_materialCache[newMaterial->GetId()] = newEntry;
+		return newMaterial;
+    }
+    void ResourceManager::DestroyMaterial(unsigned int materialId)
+    {
+    	auto it = m_materialCache.find(materialId);
+     	if (it == m_materialCache.end())
+		{
+			std::cout << "Warning: There is not such a material with id " << materialId << " to destroy\n";
+            return;
+		}
+      	it->second.refCount--;
+
+       	if (it->second.refCount<=0)
+        {
+       		m_materialCache.erase(materialId);
+        }
+
+    }
+    MaterialPtr ResourceManager::GetMaterial(unsigned int materialId)
+    {
+   		auto it = m_materialCache.find(materialId);
+    	if (it == m_materialCache.end())
+		{
+			std::cout << "Warning: There is not such a material with id " << materialId << " to destroy\n";
+           return nullptr;
+		}
+     	it->second.refCount++;
+    	return it->second.material;
+    }
 
     unsigned int ResourceManager::RegisterTextureInRenderer(TexturePtr texture)
     {

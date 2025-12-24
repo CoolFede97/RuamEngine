@@ -123,15 +123,15 @@ namespace RuamEngine
         static void Draw();
         static void Draw(RenderUnit& renderUnit);
 
-		static std::map<GLuint, DrawingDataPtr> m_drawingDatas;
-		static std::map<unsigned int, ShaderProgramPtr> m_shaderPrograms;
-        static std::map<unsigned int, MaterialPtr> m_materials;
-        static std::map<GLenum, std::vector<TexturePtr>> m_texturesByType;
+		static std::unordered_map<GLuint, DrawingDataPtr> m_drawingDatas;
+		static std::unordered_map<unsigned int, ShaderProgramPtr> m_shaderPrograms;
+		static std::unordered_map<unsigned int, MaterialPtr> m_materials;
+		static std::unordered_map<GLenum, std::vector<TexturePtr>> m_texturesByType;
         static std::unordered_map<std::string, TexturePtr> m_texturesCache;
 
-        static std::map<GLenum, std::vector<GLuint64>> m_handlesByType;
-        static std::map<GLenum, GLuint> m_buffersByType;
-        static std::map<GLenum, int> m_bindingsByType;
+        static std::unordered_map<GLenum, std::vector<GLuint64>> m_handlesByType;
+        static std::unordered_map<GLenum, GLuint> m_buffersByType;
+        static std::unordered_map<GLenum, int> m_bindingsByType;
 
         static std::vector<glm::mat4> matrices;
 

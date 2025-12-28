@@ -107,7 +107,7 @@ namespace RuamEngine
         static unsigned int FindMaterial(MaterialPtr material);
         static RenderUnitPtr GetRenderUnit(MaterialPtr material, DrawingDataPtr drawingData);
 
-		static unsigned int RegisterTexture(const TexturePtr texture);
+		static unsigned int RegisterTexture(const TextureSPtr& texture);
         static void UnregisterTexture(unsigned int textureIndex, GLenum type);
         static void DestroyMaterial(unsigned int materialId);
         static void DestroyRenderUnit(RenderUnitPtr renderUnit, DrawingDataPtr drawingData);
@@ -125,9 +125,8 @@ namespace RuamEngine
 
 		static std::unordered_map<GLuint, DrawingDataPtr> m_drawingDatas;
 		static std::unordered_map<unsigned int, ShaderProgramPtr> m_shaderPrograms;
-		static std::unordered_map<unsigned int, MaterialPtr> m_materials;
-		static std::unordered_map<GLenum, std::vector<TexturePtr>> m_texturesByType;
-        static std::unordered_map<std::string, TexturePtr> m_texturesCache;
+		static std::unordered_map<GLenum, std::vector<TextureSPtr>> m_texturesByType;
+        static std::unordered_map<std::string, TextureSPtr> m_texturesCache;
 
         static std::unordered_map<GLenum, std::vector<GLuint64>> m_handlesByType;
         static std::unordered_map<GLenum, GLuint> m_buffersByType;

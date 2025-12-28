@@ -32,7 +32,7 @@ namespace RuamEngine
 		Skybox(const nlohmann::json& j, const unsigned int obj_id);
 
 		static Skybox* GetSkybox() {return s_skybox; }
-		static void SetSkybox(std::vector<std::string> paths);
+		static void SetSkybox(std::vector<std::string>& paths);
 		void update();
 		void start();
 		void render();

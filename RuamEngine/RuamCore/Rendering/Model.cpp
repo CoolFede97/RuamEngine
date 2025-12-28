@@ -13,7 +13,7 @@ namespace RuamEngine
 		m_vertices = GetMeshesVertices();
 		m_indices = GetMeshesIndices();
 	}
-	void Model::LoadModel(std::string path)
+	void Model::LoadModel(std::string& path)
 	{
 		Assimp::Importer importer;
 		const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate);
@@ -121,7 +121,7 @@ namespace RuamEngine
 				{
 					std::string absoluteModelPath = std::filesystem::path(m_path).parent_path().string();
 					std::string relativeDiffusePath = RelativizePath(absoluteModelPath) + "/" + assimpPath;
-					meshMaterial->m_diffuseIndex = Renderer::RegisterTexture(std::make_shared<Texture2D>(relativeDiffusePath));
+					meshMaterial->m_diffuseIndex = ResourceManager::LoadTexture<Texture2D>(relativeDiffusePath).lock()->GetRendererIndex();
 				}
 			}
 
@@ -137,7 +137,7 @@ namespace RuamEngine
 				{
 					std::string absoluteModelPath = std::filesystem::path(m_path).parent_path().string();
 					std::string relativeSpecularPath = RelativizePath(absoluteModelPath) + "/" + assimpPath;
-					meshMaterial->m_specularIndex = Renderer::RegisterTexture(std::make_shared<Texture2D>(relativeSpecularPath));
+					meshMaterial->m_specularIndex = ResourceManager::LoadTexture<Texture2D>(relativeSpecularPath).lock()->GetRendererIndex();
 				}
 			}
 
@@ -153,21 +153,21 @@ namespace RuamEngine
 				{
 					std::string absoluteModelPath = std::filesystem::path(m_path).parent_path().string();
 					std::string relativeReflectionPath = RelativizePath(absoluteModelPath) + "/" + assimpPath;
-					meshMaterial->m_reflectionIndex = Renderer::RegisterTexture(std::make_shared<Texture2D>(relativeReflectionPath));
+					meshMaterial->m_reflectionIndex = ResourceManager::LoadTexture<Texture2D>(relativeReflectionPath).lock()->GetRendererIndex();
 				}
 			}
 		}
 		else std::cout << "No materials\n";
 		return std::make_shared<Mesh>(vertices, indices, meshMaterial);
 	}
-	std::vector<Texture2D> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
-	{
-		return std::vector<Texture2D>();
-	}
+	// std::vector<Texture2D> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string& typeName)
+	// {
+	// 	return std::vector<Texture2D>();
+	// }
 	std::vector<Vertex> Model::GetMeshesVertices()
 	{
 		std::vector<Vertex> allVertices;
-		for (MeshPtr mesh : m_meshes)
+		for (const MeshPtr& mesh : m_meshes)
 		{
 			allVertices.insert(allVertices.end(), mesh->m_vertices.begin(), mesh->m_vertices.end());
 		}
@@ -176,7 +176,7 @@ namespace RuamEngine
 	std::vector<unsigned int> Model::GetMeshesIndices()
 	{
 		std::vector<unsigned int> allIndices;
-		for (MeshPtr mesh : m_meshes)
+		for (const MeshPtr& mesh : m_meshes)
 		{
 			for (unsigned int index : mesh->m_indices)
 			{

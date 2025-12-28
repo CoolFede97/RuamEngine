@@ -22,7 +22,7 @@ namespace RuamEngine
 
         // Textures handling ---------------------------------------------------------------------------------
         template <typename T>
-        static TexturePtr LoadTexture(const std::string& relativePath)
+        static TextureWPtr LoadTexture(const std::string& relativePath)
         {
             auto it = m_textureCache.find(relativePath);
             if (it != m_textureCache.end())
@@ -31,11 +31,12 @@ namespace RuamEngine
                 return it->second.texture;
             }
 
-            TexturePtr newTexture = std::make_shared<T>(relativePath);
-            unsigned int rendererIdx = RegisterTextureInRenderer(newTexture);
+            TextureSPtr newTexture = std::make_shared<T>(relativePath);
+            unsigned int rendererIndex = RegisterTextureInRenderer(newTexture);
+            newTexture->SetRendererIndex(rendererIndex);
 
             TextureEntry newEntry;
-            newEntry.rendererIndex = rendererIdx;
+            newEntry.rendererIndex = rendererIndex;
             newEntry.texture = newTexture;
             newEntry.refCount = 1;
 
@@ -43,7 +44,7 @@ namespace RuamEngine
             return newTexture;
         }
         template <typename T>
-        static TexturePtr LoadTexture(const std::vector<std::string>& relativePaths)
+        static TextureWPtr LoadTexture(const std::vector<std::string>& relativePaths)
         {
             std::string unifiedPath = UnifyPaths(relativePaths);
             auto it = m_textureCache.find(unifiedPath);
@@ -53,7 +54,7 @@ namespace RuamEngine
                 return it->second.texture;
             }
 
-            TexturePtr newTexture = std::make_shared<T>(relativePaths);
+            TextureSPtr newTexture = std::make_shared<T>(relativePaths);
             unsigned int rendererIdx = RegisterTextureInRenderer(newTexture);
 
             TextureEntry newEntry;
@@ -83,10 +84,10 @@ namespace RuamEngine
             }
 
         }
-        static TexturePtr GetTexture(const std::string& relativePath);
-        static TexturePtr GetTexture(const std::vector<std::string>& relativePaths);
+        static TextureWPtr GetTexture(const std::string& relativePath);
+        static TextureWPtr GetTexture(const std::vector<std::string>& relativePaths);
 
-        static unsigned int RegisterTextureInRenderer(TexturePtr texture);
+        static unsigned int RegisterTextureInRenderer(TextureSPtr texture);
         static void UnregisterTextureInRenderer(unsigned int textureIndex, GLenum type);
 
         // Model handling ---------------------------------------------------------------------------------
@@ -105,7 +106,7 @@ namespace RuamEngine
 
         struct TextureEntry
         {
-            TexturePtr texture;
+            TextureSPtr texture;
             int refCount = 0;
             unsigned int rendererIndex = 0; // No the OpenGL ID, but the index in the Renderer vector
         };

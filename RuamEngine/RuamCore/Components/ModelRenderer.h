@@ -60,7 +60,7 @@ public:
 		Renderer::UpdateTextureType(GL_TEXTURE_2D);
 
 		// Pre-upload geometry once per mesh into the appropriate RenderUnit (vertices + indices).
-		for (MeshPtr mesh : m_model->m_meshes)
+		for (const MeshPtr& mesh : m_model->m_meshes)
 		{
 			DrawingDataPtr drawingData =  Renderer::m_drawingDatas[m_shaderProgramType];
 			RenderUnitPtr ru = Renderer::GetRenderUnit(mesh->m_material, drawingData);
@@ -105,7 +105,7 @@ private:
 		}
 
 		std::vector<unsigned int> renderUnitsUsed = {};
-		for (MeshPtr mesh : m_model->m_meshes)
+		for (const MeshPtr& mesh : m_model->m_meshes)
 		{
 			for (auto& [materialId, ru] : Renderer::m_drawingDatas[m_shaderProgramType]->m_renderUnits)
 			{

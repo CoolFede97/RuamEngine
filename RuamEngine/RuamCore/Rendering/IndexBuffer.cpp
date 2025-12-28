@@ -31,7 +31,7 @@ namespace RuamEngine
     // y todavía no se puso la información en el Buffer, se va a intentar dibujar con la posible información
     // faltante
 
-    void IndexBuffer::AddBatchData(const std::vector<unsigned int> data)
+    void IndexBuffer::AddBatchData(const std::vector<unsigned int>& data)
     {
         m_indexData.insert(m_indexData.end(), data.begin(), data.end());
         m_currentBytes += data.size() * sizeof(unsigned int);

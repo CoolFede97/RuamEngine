@@ -7,14 +7,14 @@ namespace RuamEngine
 	{
 		if (m_vertices->GetCurrentSize() > 0)
 		{
-			if (!m_staticStorage || !m_uploaded) 
+			if (!m_staticStorage || !m_uploaded)
 			{
 				m_vertices->SubmitData();
 			}
 		}
 		if (m_indices->GetCurrentSize() > 0)
 		{
-			if (!m_staticStorage || !m_uploaded) 
+			if (!m_staticStorage || !m_uploaded)
 			{
 				m_indices->SubmitData();
 			}

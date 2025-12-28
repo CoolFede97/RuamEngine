@@ -24,20 +24,20 @@ namespace RuamEngine
     // Texture handling ---------------------------------------------------------------------------------
 
     // Returns nullptr if the texture is not found
-    TexturePtr ResourceManager::GetTexture(const std::string &relativePath)
+    TextureWPtr ResourceManager::GetTexture(const std::string &relativePath)
     {
         auto it = m_textureCache.find(relativePath);
         if (it != m_textureCache.end()) return it->second.texture;
-        return nullptr;
+        return {};
     }
 
     // Returns nullptr if the texture is not found
-    TexturePtr ResourceManager::GetTexture(const std::vector<std::string>& relativePaths)
+    TextureWPtr ResourceManager::GetTexture(const std::vector<std::string>& relativePaths)
     {
         std::string unifiedPath = UnifyPaths(relativePaths);
         auto it = m_textureCache.find(unifiedPath);
         if (it != m_textureCache.end()) return it->second.texture;
-        return nullptr;
+        return {};
     }
 
     // Model handling ---------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ namespace RuamEngine
         {
        		DrawingDataPtr drawingData = Renderer::m_drawingDatas[shaderProgramType];
         	std::set<RenderUnitPtr> unitsToDestroy;
-         	for (MeshPtr mesh : it->second.model->m_meshes)
+         	for (const MeshPtr& mesh : it->second.model->m_meshes)
 			{
 				RenderUnitPtr ru = Renderer::GetRenderUnit(mesh->m_material, drawingData);
 				if (ru != nullptr)
@@ -145,7 +145,7 @@ namespace RuamEngine
     	return it->second.material;
     }
 
-    unsigned int ResourceManager::RegisterTextureInRenderer(TexturePtr texture)
+    unsigned int ResourceManager::RegisterTextureInRenderer(TextureSPtr texture)
     {
         return Renderer::RegisterTexture(texture);
     }

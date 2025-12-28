@@ -17,7 +17,7 @@ namespace RuamEngine
     }
 
     // Después hacer que si la data supera la capacidad del Buffer (por más que esté vacío), se actualice el buffer y que tire advertencia
-    void VertexBuffer::AddBatchData(const std::vector<float> data, unsigned int size)
+    void VertexBuffer::AddBatchData(const std::vector<float>& data, unsigned int size)
     {
         m_vertexData.insert(m_vertexData.end(), data.begin(), data.end());
         m_currentBytes += size;

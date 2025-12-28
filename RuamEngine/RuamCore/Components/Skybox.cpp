@@ -2,6 +2,7 @@
 #include "Cubemap.h"
 #include "Renderer.h"
 #include "RenderingCore.h"
+#include "ResourceManager.h"
 #include <memory>
 
 namespace RuamEngine
@@ -41,7 +42,7 @@ namespace RuamEngine
     };
 
 
-    void Skybox::SetSkybox(std::vector<std::string> paths)
+    void Skybox::SetSkybox(std::vector<std::string>& paths)
     {
         s_skybox->m_cubemap = Renderer::RegisterTexture(std::make_shared<Cubemap>(paths));
     }
@@ -60,7 +61,7 @@ namespace RuamEngine
         if (s_skybox == nullptr) s_skybox = this;
 		else if (s_skybox != this) object()->removeComponent<Skybox>();
 
-        m_material = Renderer::CreateMaterial();
+        m_material = ResourceManager::CreateMaterial();
         m_renderUnit = Renderer::CreateRenderUnit(Renderer::m_drawingDatas[ShaderProgramType::skybox], m_material);
         m_renderUnit->m_staticPosition = true;
         m_renderUnit->m_staticStorage = true;

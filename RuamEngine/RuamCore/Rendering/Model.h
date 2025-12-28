@@ -27,10 +27,10 @@ namespace RuamEngine
 		static unsigned int s_idCount;
 		std::vector<Vertex> m_vertices;
 		std::vector<unsigned int> m_indices;
-		void LoadModel(std::string path);
+		void LoadModel(std::string& path);
 		void ProcessNode(aiNode* node, const aiScene* scene);
 		MeshPtr ProcessMesh(aiMesh* mesh, const aiScene* scene);
-		std::vector<Texture2D> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
+		// std::vector<Texture2D> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string& typeName);
 		std::vector<Vertex> GetMeshesVertices();
 		std::vector<unsigned int> GetMeshesIndices();
 	};

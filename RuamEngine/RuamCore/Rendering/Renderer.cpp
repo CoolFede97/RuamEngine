@@ -17,9 +17,8 @@ namespace RuamEngine
     GLFWwindow* Renderer::m_window = nullptr;
     std::unordered_map<unsigned int, ShaderProgramPtr> Renderer::m_shaderPrograms;
 	std::unordered_map<GLuint, DrawingDataPtr> Renderer::m_drawingDatas;
-	std::unordered_map<unsigned int, MaterialPtr> Renderer::m_materials;
-	std::unordered_map<std::string, TexturePtr> Renderer::m_texturesCache;
-    std::unordered_map<GLenum, std::vector<TexturePtr>> Renderer::m_texturesByType;
+	std::unordered_map<std::string, TextureSPtr> Renderer::m_texturesCache;
+    std::unordered_map<GLenum, std::vector<TextureSPtr>> Renderer::m_texturesByType;
     std::unordered_map<GLenum, std::vector<GLuint64>> Renderer::m_handlesByType;
     std::unordered_map<GLenum, GLuint> Renderer::m_buffersByType;
     std::unordered_map<GLenum, int> Renderer::m_bindingsByType;
@@ -194,17 +193,17 @@ namespace RuamEngine
         return newRenderUnit;
 	}
 
-    MaterialPtr Renderer::CreateMaterial()
-    {
-		MaterialPtr newMaterial = std::make_shared<Material>();
-		m_materials[newMaterial->GetId()] = newMaterial;
-		return newMaterial;
-    }
+  //   MaterialPtr Renderer::CreateMaterial()
+  //   {
+		// MaterialPtr newMaterial = std::make_shared<Material>();
+		// m_materials[newMaterial->GetId()] = newMaterial;
+		// return newMaterial;
+  //   }
 
     // Registrations -------------------------------------------------------------
 
     // If the texture already exists, it returns the existing index. Otherwise, it creates a new texture and returns its index.
-    unsigned int Renderer::RegisterTexture(TexturePtr texture)
+    unsigned int Renderer::RegisterTexture(const TextureSPtr& texture)
     {
         GLenum type = texture->GetType();
 
@@ -220,7 +219,7 @@ namespace RuamEngine
         }
 
         GLuint64 newHandle;
-        GLCall(newHandle = glGetTextureHandleARB(texture->GetId()));
+        GLCall(newHandle = glGetTextureHandleARB(texture->GetRendererId()));
         ASSERT(newHandle != 0);
 
         GLCall(glMakeTextureHandleResidentARB(newHandle));
@@ -250,16 +249,16 @@ namespace RuamEngine
 
     // Destructions -------------------------------------------------------------
 
-    void Renderer::DestroyMaterial(unsigned int materialId)
-    {
-        auto it = m_materials.find(materialId);
-        if (it != m_materials.end())
-        {
-            m_materials.erase(it);
-            std::cout << "Material with id " << materialId << " was destroyed successfully\n";
-        }
-        else std::cout << "Warning: Couldn't find Material of id " << materialId << ", and couldn't destroy it as a consequence\n";
-    }
+    // void Renderer::DestroyMaterial(unsigned int materialId)
+    // {
+    //     auto it = m_materials.find(materialId);
+    //     if (it != m_materials.end())
+    //     {
+    //         m_materials.erase(it);
+    //         std::cout << "Material with id " << materialId << " was destroyed successfully\n";
+    //     }
+    //     else std::cout << "Warning: Couldn't find Material of id " << materialId << ", and couldn't destroy it as a consequence\n";
+    // }
 
     void Renderer::DestroyRenderUnit(RenderUnitPtr renderUnit, DrawingDataPtr drawingData)
     {
@@ -287,14 +286,6 @@ namespace RuamEngine
     }
 
     // Finders -------------------------------------------------------------
-
-	// Finds if a material already exists in the renderer, if not, returns -1
-    unsigned int Renderer::FindMaterial(MaterialPtr material)
-    {
-        auto it = m_materials.find(material->GetId());
-        if (it != m_materials.end()) return it->first;
-        return -1;
-	}
 
     // Finds if a render unit already exists in a certain drawing data, if not, returns nullptr
     RenderUnitPtr Renderer::GetRenderUnit(MaterialPtr material, DrawingDataPtr drawingData)

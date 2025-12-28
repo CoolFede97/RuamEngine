@@ -19,7 +19,7 @@ namespace RuamEngine
 
 		void Bind() const;
 		void Unbind() const;
-		void AddBatchData(const std::vector<unsigned int> data);
+		void AddBatchData(const std::vector<unsigned int>& data);
 		void SetSubData(const unsigned int* data, unsigned int offset, unsigned int size);
 		void SetData(const unsigned int* data);
 

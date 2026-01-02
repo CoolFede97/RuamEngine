@@ -1,27 +1,33 @@
 #include "Mesh.h"
+#include "Material.h"
 #include "ResourceManager.h"
 #include "ResourceManager.h"
+#include "RuamUtils.h"
 #include <algorithm>
+#include <memory>
 
 namespace RuamEngine
 {
-	Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, MaterialPtr material)
-		: m_vertices(vertices), m_indices(indices), m_material(material)
-	{
+	unsigned int Mesh::s_instanceCount = 0;
 
+	Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, MaterialWPtr material)
+		: m_vertices(vertices), m_indices(indices), m_material(material), m_instanceId(s_instanceCount++)
+	{
+		if (!material.lock()) ResourceManager::GetMaterial(material.lock()->GetId());
 	}
 
 	Mesh::~Mesh()
 	{
-		ResourceManager::DestroyMaterial(m_material->GetId());
+		ResourceManager::DestroyMaterial(m_material.lock()->GetId());
 	}
 
 	Mesh::Mesh(const Mesh& other)
 	: m_vertices(other.m_vertices), m_indices(other.m_indices)
 	{
-		if (other.m_material)
+		MaterialSPtr otherSharedMaterial = GetShared(other.m_material);
+		if (otherSharedMaterial)
 		{
-			m_material = ResourceManager::GetMaterial(other.m_material->GetId());
+			m_material = ResourceManager::GetMaterial(otherSharedMaterial->GetId());
 		}
 	}
 
@@ -30,11 +36,14 @@ namespace RuamEngine
 		if (this == &other) std::cerr << "Warning: A mesh is being created and assigned to itself\n";
 		else
 		{
-			if (m_material) ResourceManager::DestroyMaterial(m_material->GetId());
+			MaterialSPtr thisSharedMaterial = GetShared(m_material);
+			MaterialSPtr otherSharedMaterial = GetShared(other.m_material);
+
+			if (thisSharedMaterial) ResourceManager::DestroyMaterial(thisSharedMaterial->GetId());
 				m_vertices = other.m_vertices;
 				m_indices = other.m_indices;
 
-			if (other.m_material) m_material = ResourceManager::GetMaterial(other.m_material->GetId());
+			if (otherSharedMaterial) m_material = ResourceManager::GetMaterial(otherSharedMaterial->GetId());
 		}
 		return *this;
 	}
@@ -43,19 +52,20 @@ namespace RuamEngine
 	: m_vertices(std::move(other.m_vertices)), m_indices(std::move(other.m_indices)),
 		m_material(std::move(other.m_material))
 	{
-		other.m_material = nullptr;
+		other.m_material = {};
 	}
 
 	Mesh& Mesh::operator=(Mesh&& other) noexcept
 	{
 		if (this != &other)
 		{
-			if (m_material) ResourceManager::DestroyMaterial(m_material->GetId());
+			MaterialSPtr sharedMaterial = GetShared(m_material);
+			if (sharedMaterial) ResourceManager::DestroyMaterial(sharedMaterial->GetId());
 			m_vertices = std::move(other.m_vertices);
 			m_indices = std::move(other.m_indices);
 			m_material = std::move(other.m_material);
 
-			other.m_material = nullptr;
+			other.m_material = {};
 		}
 		return *this;
 	}

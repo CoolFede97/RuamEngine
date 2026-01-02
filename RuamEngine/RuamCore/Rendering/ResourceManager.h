@@ -40,7 +40,7 @@ namespace RuamEngine
             newEntry.texture = newTexture;
             newEntry.refCount = 1;
 
-            m_textureCache[relativePath] = newEntry;
+            m_textureCache[newTexture->GetPath()] = newEntry;
             return newTexture;
         }
         template <typename T>
@@ -91,16 +91,16 @@ namespace RuamEngine
         static void UnregisterTextureInRenderer(unsigned int textureIndex, GLenum type);
 
         // Model handling ---------------------------------------------------------------------------------
-        static ModelPtr LoadModel(const std::string& relativePath, ShaderProgramType shaderProgramType);
+        static ModelWPtr LoadModel(const std::string& relativePath, ShaderProgramType shaderProgramType);
         static void UnloadModel(const std::string& relativePath, ShaderProgramType shaderProgramType);
-        static ModelPtr GetModel(const std::string& relativePath);
+        static ModelWPtr GetModel(const std::string& relativePath);
 
         // Material handling ---------------------------------------------------------------------------------
-        static MaterialPtr CreateMaterial();
+        static MaterialWPtr CreateMaterial();
         static void DestroyMaterial(unsigned int materialId);
-        static MaterialPtr GetMaterial(unsigned int materialId);
+        static MaterialWPtr GetMaterial(unsigned int materialId);
 
-        static void DestroyRenderUnitInRenderer(RenderUnitPtr renderUnit, DrawingDataPtr drawingData);
+        static void DestroyRenderUnitInRenderer(RenderUnitSPtr renderUnit, DrawingDataSPtr drawingData);
 
         private:
 
@@ -113,13 +113,13 @@ namespace RuamEngine
 
         struct ModelEntry
         {
-        	ModelPtr model;
+        	ModelSPtr model;
          	std::unordered_map<ShaderProgramType, int> refCount;
         };
 
         struct MaterialEntry
         {
-        	MaterialPtr material;
+        	MaterialSPtr material;
          	int refCount = 0;
         };
 

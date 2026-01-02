@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 #include "Mesh.h"
 #include <string>
@@ -19,8 +20,8 @@ namespace RuamEngine
 	{
 	public:
 		Model(std::string path);
-		std::vector<MeshPtr> m_meshes;
-		std::unordered_map<unsigned int, MaterialPtr> m_localToGlobalMaterials = {};
+		std::vector<MeshSPtr> m_meshes;
+		std::unordered_map<unsigned int, MaterialWPtr> m_localToGlobalMaterials = {};
 	private:
 		std::string m_path;
 		unsigned int m_instanceId;
@@ -29,10 +30,11 @@ namespace RuamEngine
 		std::vector<unsigned int> m_indices;
 		void LoadModel(std::string& path);
 		void ProcessNode(aiNode* node, const aiScene* scene);
-		MeshPtr ProcessMesh(aiMesh* mesh, const aiScene* scene);
+		MeshSPtr ProcessMesh(aiMesh* mesh, const aiScene* scene);
 		// std::vector<Texture2D> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string& typeName);
 		std::vector<Vertex> GetMeshesVertices();
 		std::vector<unsigned int> GetMeshesIndices();
 	};
-	using ModelPtr = std::shared_ptr<Model>;
+	using ModelSPtr = std::shared_ptr<Model>;
+	using ModelWPtr = std::weak_ptr<Model>;
 }

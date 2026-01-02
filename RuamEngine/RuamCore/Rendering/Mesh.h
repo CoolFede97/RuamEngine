@@ -8,7 +8,7 @@ namespace RuamEngine
 	class Mesh
 	{
 	public:
-		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, MaterialPtr material);
+		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, MaterialWPtr material);
 		~Mesh();
 
 		Mesh(const Mesh& other);
@@ -21,7 +21,13 @@ namespace RuamEngine
 
 		std::vector<Vertex> m_vertices;
 		std::vector<unsigned int> m_indices;
-		MaterialPtr m_material;
+		MaterialWPtr m_material;
+
+		unsigned int GetInstanceId() const { return m_instanceId; }
+	private:
+		unsigned int m_instanceId;
+		static unsigned int s_instanceCount;
 	};
-	using MeshPtr = std::shared_ptr<Mesh>;
+	using MeshSPtr = std::shared_ptr<Mesh>;
+	using MeshWPtr = std::weak_ptr<Mesh>;
 }

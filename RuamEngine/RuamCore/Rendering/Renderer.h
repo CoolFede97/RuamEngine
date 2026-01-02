@@ -98,19 +98,19 @@ namespace RuamEngine
 		static int WindowShouldClose() { return glfwWindowShouldClose(m_window); }
 
 		// Creators
-        static DrawingDataPtr CreateDrawingData(GLuint type, const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
-		static ShaderProgramPtr CreateProgram(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
-        static RenderUnitPtr CreateRenderUnit(DrawingDataPtr drawingData, MaterialPtr material);
-		static MaterialPtr CreateMaterial();
+        static DrawingDataSPtr CreateDrawingData(GLuint type, const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
+		static ShaderProgramSPtr CreateProgram(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
+        static RenderUnitSPtr CreateRenderUnit(DrawingDataSPtr drawingData, MaterialWPtr material);
+		static MaterialWPtr CreateMaterial();
 
 		// Finders
-        static unsigned int FindMaterial(MaterialPtr material);
-        static RenderUnitPtr GetRenderUnit(MaterialPtr material, DrawingDataPtr drawingData);
+        static unsigned int FindMaterial(MaterialWPtr material);
+        static RenderUnitSPtr GetRenderUnit(MaterialWPtr material, DrawingDataSPtr drawingData);
 
 		static unsigned int RegisterTexture(const TextureSPtr& texture);
         static void UnregisterTexture(unsigned int textureIndex, GLenum type);
         static void DestroyMaterial(unsigned int materialId);
-        static void DestroyRenderUnit(RenderUnitPtr renderUnit, DrawingDataPtr drawingData);
+        static void DestroyRenderUnit(RenderUnitSPtr renderUnit, DrawingDataSPtr drawingData);
         static void DestroyShaderProgram(unsigned int programId);
 
 		static void UpdateTextures();
@@ -123,9 +123,10 @@ namespace RuamEngine
         static void Draw();
         static void Draw(RenderUnit& renderUnit);
 
-		static std::unordered_map<GLuint, DrawingDataPtr> m_drawingDatas;
-		static std::unordered_map<unsigned int, ShaderProgramPtr> m_shaderPrograms;
+		static std::unordered_map<GLuint, DrawingDataSPtr> m_drawingDatas;
+		static std::unordered_map<unsigned int, ShaderProgramSPtr> m_shaderPrograms;
 		static std::unordered_map<GLenum, std::vector<TextureSPtr>> m_texturesByType;
+		static std::unordered_map<GLenum, std::vector<unsigned int>> m_textureFreeIndexesByType;
         static std::unordered_map<std::string, TextureSPtr> m_texturesCache;
 
         static std::unordered_map<GLenum, std::vector<GLuint64>> m_handlesByType;

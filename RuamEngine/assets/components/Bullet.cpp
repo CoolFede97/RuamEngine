@@ -8,7 +8,6 @@ void Bullet::update()
 
 		if (glm::length(object()->transform().position() - m_target) <= m_radius)
 		{
-			std::cout << "Bullet hit target!\n";
 			m_callback();
 			if (m_isPlayerBullet && Boss::s_instance!= nullptr) object()->destroy();
 			// MOSTRARLE A TOMI POR QUE ESTO ES PELIGROSO!!!

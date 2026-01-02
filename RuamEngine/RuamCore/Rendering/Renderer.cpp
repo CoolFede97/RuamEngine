@@ -15,10 +15,11 @@ namespace RuamEngine
 {
     RendererConfig Renderer::m_config;
     GLFWwindow* Renderer::m_window = nullptr;
-    std::unordered_map<unsigned int, ShaderProgramPtr> Renderer::m_shaderPrograms;
-	std::unordered_map<GLuint, DrawingDataPtr> Renderer::m_drawingDatas;
+    std::unordered_map<unsigned int, ShaderProgramSPtr> Renderer::m_shaderPrograms;
+	std::unordered_map<GLuint, DrawingDataSPtr> Renderer::m_drawingDatas;
 	std::unordered_map<std::string, TextureSPtr> Renderer::m_texturesCache;
     std::unordered_map<GLenum, std::vector<TextureSPtr>> Renderer::m_texturesByType;
+    std::unordered_map<GLenum, std::vector<unsigned int>> Renderer::m_textureFreeIndexesByType;
     std::unordered_map<GLenum, std::vector<GLuint64>> Renderer::m_handlesByType;
     std::unordered_map<GLenum, GLuint> Renderer::m_buffersByType;
     std::unordered_map<GLenum, int> Renderer::m_bindingsByType;
@@ -63,8 +64,8 @@ namespace RuamEngine
             {
                 GLCall(glCreateBuffers(1, &m_buffersByType[type]));
             }
-			DrawingDataPtr basicDrawingData = CreateDrawingData(ShaderProgramType::general, "RuamCore/Rendering/Shaders/GeneralVertexShader.glsl", "RuamCore/Rendering/Shaders/GeneralFragmentShader.glsl");
-			DrawingDataPtr skyboxDrawingData = CreateDrawingData(ShaderProgramType::skybox, "RuamCore/Rendering/Shaders/SkyboxVertexShader.glsl", "RuamCore/Rendering/Shaders/SkyboxFragmentShader.glsl");
+			DrawingDataSPtr basicDrawingData = CreateDrawingData(ShaderProgramType::general, "RuamCore/Rendering/Shaders/GeneralVertexShader.glsl", "RuamCore/Rendering/Shaders/GeneralFragmentShader.glsl");
+			DrawingDataSPtr skyboxDrawingData = CreateDrawingData(ShaderProgramType::skybox, "RuamCore/Rendering/Shaders/SkyboxVertexShader.glsl", "RuamCore/Rendering/Shaders/SkyboxFragmentShader.glsl");
 
             AllocateTextureTypes();
 
@@ -161,35 +162,35 @@ namespace RuamEngine
 
 
     // Creators -------------------------------------------------------------
-    DrawingDataPtr Renderer::CreateDrawingData(GLuint type, const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
+    DrawingDataSPtr Renderer::CreateDrawingData(GLuint type, const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
     {
-		ShaderProgramPtr newProgram = Renderer::CreateProgram(vertexShaderPath, fragmentShaderPath);
-        DrawingDataPtr newDrawingData = std::make_unique<DrawingData>();
+		ShaderProgramSPtr newProgram = Renderer::CreateProgram(vertexShaderPath, fragmentShaderPath);
+        DrawingDataSPtr newDrawingData = std::make_unique<DrawingData>();
         m_drawingDatas[type] = newDrawingData;
         newDrawingData->m_program = newProgram;
         return newDrawingData;
 	}
 
-    ShaderProgramPtr Renderer::CreateProgram(const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
+    ShaderProgramSPtr Renderer::CreateProgram(const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
     {
-        ShaderProgramPtr newProgram = std::make_shared<ShaderProgram>(vertexShaderPath, fragmentShaderPath);
+        ShaderProgramSPtr newProgram = std::make_shared<ShaderProgram>(vertexShaderPath, fragmentShaderPath);
         m_shaderPrograms[newProgram->GetInstanceId()] = newProgram;
 		return newProgram;
     }
 
     // If the render unit already exists, it returns the existing index. Otherwise, it creates a new render unit and returns its index.
-    RenderUnitPtr Renderer::CreateRenderUnit(DrawingDataPtr drawingData, MaterialPtr material)
+    RenderUnitSPtr Renderer::CreateRenderUnit(DrawingDataSPtr drawingData, MaterialWPtr material)
     {
-		RenderUnitPtr ru = GetRenderUnit(material, drawingData);
+		RenderUnitSPtr ru = GetRenderUnit(material, drawingData);
         if (ru != nullptr)
         {
             return ru;
         }
-        RenderUnitPtr newRenderUnit = std::make_shared<RenderUnit>();
+        RenderUnitSPtr newRenderUnit = std::make_shared<RenderUnit>();
 		newRenderUnit->m_material = material;
 		newRenderUnit->m_drawingData = drawingData;
 		newRenderUnit->m_program = drawingData->m_program;
-        drawingData->m_renderUnits[material->GetId()] = newRenderUnit;
+        drawingData->m_renderUnits[material.lock()->GetId()] = newRenderUnit;
         return newRenderUnit;
 	}
 
@@ -212,9 +213,9 @@ namespace RuamEngine
             std::cerr << "ERROR: Max texture limit of type " << type << " reached. The limit is " << maxTextureCountPerType << "\n";
             return 0;
         }
-
         for (unsigned int i = 0; i < m_texturesByType[type].size(); i++)
         {
+         	if (m_texturesByType[type][i]==nullptr) continue;
             if (texture->GetPath() == m_texturesByType[type][i]->GetPath()) return i;
         }
 
@@ -224,10 +225,23 @@ namespace RuamEngine
 
         GLCall(glMakeTextureHandleResidentARB(newHandle));
 
-        m_handlesByType[type].push_back(newHandle);
-        m_texturesByType[type].push_back(texture);
+        unsigned int index;
+
+        if (m_textureFreeIndexesByType[type].size()>0)
+        {
+        	index = m_textureFreeIndexesByType[type][0];
+	        m_handlesByType[type][m_textureFreeIndexesByType[type][0]] = newHandle;
+	        m_texturesByType[type][m_textureFreeIndexesByType[type][0]] = texture;
+			m_textureFreeIndexesByType[type].erase(m_textureFreeIndexesByType[type].begin());
+        }
+        else
+        {
+		    m_handlesByType[type].push_back(newHandle);
+		    m_texturesByType[type].push_back(texture);
+			index = m_handlesByType[type].size()-1;
+        }
         UpdateTextureType(type);
-        return m_handlesByType[type].size()-1;
+        return index;
     }
 
     void Renderer::UnregisterTexture(unsigned int textureIndex, GLenum type)
@@ -243,6 +257,7 @@ namespace RuamEngine
 
         m_texturesByType[type][textureIndex] = nullptr;
         m_handlesByType[type][textureIndex] = 0;
+        m_textureFreeIndexesByType[type].push_back(textureIndex);
 
         UpdateTextureType(type);
     }
@@ -260,9 +275,9 @@ namespace RuamEngine
     //     else std::cout << "Warning: Couldn't find Material of id " << materialId << ", and couldn't destroy it as a consequence\n";
     // }
 
-    void Renderer::DestroyRenderUnit(RenderUnitPtr renderUnit, DrawingDataPtr drawingData)
+    void Renderer::DestroyRenderUnit(RenderUnitSPtr renderUnit, DrawingDataSPtr drawingData)
     {
-    	unsigned int materialId = renderUnit->m_material->GetId();
+    	unsigned int materialId = renderUnit->m_material.lock()->GetId();
         auto& units = drawingData->m_renderUnits;
         auto it = units.find(materialId);
 
@@ -288,9 +303,9 @@ namespace RuamEngine
     // Finders -------------------------------------------------------------
 
     // Finds if a render unit already exists in a certain drawing data, if not, returns nullptr
-    RenderUnitPtr Renderer::GetRenderUnit(MaterialPtr material, DrawingDataPtr drawingData)
+    RenderUnitSPtr Renderer::GetRenderUnit(MaterialWPtr material, DrawingDataSPtr drawingData)
     {
-    	unsigned int materialId = material->GetId();
+    	unsigned int materialId = material.lock()->GetId();
      	auto units = drawingData->m_renderUnits;
     	auto it = units.find(materialId);
      	if (it != units.end()) return it->second;
@@ -357,15 +372,25 @@ namespace RuamEngine
              	// It's just there in order to satisfy OpenGL because it need to have one bound
            		renderUnit->m_vertexArray->Bind();
 
-                ShaderProgramPtr program = drawingData->m_program;
+                ShaderProgramSPtr program = drawingData->m_program;
                 program->Bind();
                 GlobalLight::LoadLightSettings(program);
 
-                program->LoadMaterial(*renderUnit->m_material);
+                program->LoadMaterial(*renderUnit->m_material.lock());
 
                 // Bind the SSBOs for this specific render unit
                 renderUnit->SubmitData();
 				renderUnit->BindBuffersBase();
+
+				 // DEBUG: Print info
+	            // unsigned int indexCount = renderUnit->m_indices->GetCurrentSize()/sizeof(unsigned int);
+	            // unsigned int instanceCount = renderUnit->m_modelMatricesBuffer->m_data.size();
+
+	            // if (instanceCount > 1) {  // Solo para objetos instanciados
+	            //     std::cout << "Drawing: " << indexCount << " indices × "
+	            //               << instanceCount << " instances = "
+	            //               << (indexCount * instanceCount) << " total draw calls\n";
+	            // }
 
                 GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit->m_indices->GetCurrentSize()/sizeof(unsigned int), renderUnit->m_modelMatricesBuffer->m_data.size()));
             }
@@ -375,7 +400,7 @@ namespace RuamEngine
     void Renderer::Draw(RenderUnit& renderUnit)
     {
         renderUnit.m_program->Bind();
-        renderUnit.m_program->LoadMaterial(*renderUnit.m_material);
+        renderUnit.m_program->LoadMaterial(*renderUnit.m_material.lock());
         renderUnit.m_program->UpdateCameraMatrices();
 
         // Is something doesn't work when this line functions is called due to an exceeded amount of data in a batch (which is okay to happen, may be the solution is to uncomment the line below)

@@ -38,7 +38,7 @@ namespace RuamEngine
 			ProcessNode(node->mChildren[i], scene);
 		}
 	}
-	MeshPtr Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
+	MeshSPtr Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 	{
 		std::vector<Vertex> vertices;
 		std::vector<unsigned int> indices;
@@ -85,23 +85,23 @@ namespace RuamEngine
 			for (unsigned int j = 0; j < face.mNumIndices; j++) indices.push_back(face.mIndices[j]);
 		}
 
-		MaterialPtr meshMaterial = nullptr;
+		MaterialSPtr sharedMeshMaterial = nullptr;
 
 		bool materialFound = false;
 		for (auto& pair : m_localToGlobalMaterials)
 		{
 			if (pair.first == mesh->mMaterialIndex)
 			{
-				meshMaterial = pair.second;
-				ResourceManager::GetMaterial(pair.second->GetId());
+				sharedMeshMaterial = pair.second.lock();
+				ResourceManager::GetMaterial(sharedMeshMaterial->GetId());
 				materialFound = true;
 				break;
 			}
 		}
 		if (!materialFound)
 		{
-			meshMaterial = ResourceManager::CreateMaterial();
-			m_localToGlobalMaterials.emplace(mesh->mMaterialIndex, meshMaterial);
+			sharedMeshMaterial = ResourceManager::CreateMaterial().lock();
+			m_localToGlobalMaterials.emplace(mesh->mMaterialIndex, sharedMeshMaterial);
 		}
 
 		if (mesh->mMaterialIndex >= 0)
@@ -121,7 +121,8 @@ namespace RuamEngine
 				{
 					std::string absoluteModelPath = std::filesystem::path(m_path).parent_path().string();
 					std::string relativeDiffusePath = RelativizePath(absoluteModelPath) + "/" + assimpPath;
-					meshMaterial->m_diffuseIndex = ResourceManager::LoadTexture<Texture2D>(relativeDiffusePath).lock()->GetRendererIndex();
+					sharedMeshMaterial->m_diffuseTexture = ResourceManager::LoadTexture<Texture2D>(relativeDiffusePath);
+					sharedMeshMaterial->m_diffuseIndex = sharedMeshMaterial->m_diffuseTexture.lock()->GetRendererIndex();
 				}
 			}
 
@@ -137,7 +138,8 @@ namespace RuamEngine
 				{
 					std::string absoluteModelPath = std::filesystem::path(m_path).parent_path().string();
 					std::string relativeSpecularPath = RelativizePath(absoluteModelPath) + "/" + assimpPath;
-					meshMaterial->m_specularIndex = ResourceManager::LoadTexture<Texture2D>(relativeSpecularPath).lock()->GetRendererIndex();
+					sharedMeshMaterial->m_specularTexture = ResourceManager::LoadTexture<Texture2D>(relativeSpecularPath);
+					sharedMeshMaterial->m_specularIndex = sharedMeshMaterial->m_specularTexture.lock()->GetRendererIndex();
 				}
 			}
 
@@ -153,21 +155,19 @@ namespace RuamEngine
 				{
 					std::string absoluteModelPath = std::filesystem::path(m_path).parent_path().string();
 					std::string relativeReflectionPath = RelativizePath(absoluteModelPath) + "/" + assimpPath;
-					meshMaterial->m_reflectionIndex = ResourceManager::LoadTexture<Texture2D>(relativeReflectionPath).lock()->GetRendererIndex();
+					sharedMeshMaterial->m_reflectionTexture = ResourceManager::LoadTexture<Texture2D>(relativeReflectionPath);
+					sharedMeshMaterial->m_reflectionIndex = sharedMeshMaterial->m_reflectionTexture.lock()->GetRendererIndex();
 				}
 			}
 		}
 		else std::cout << "No materials\n";
-		return std::make_shared<Mesh>(vertices, indices, meshMaterial);
+		return std::make_shared<Mesh>(vertices, indices, sharedMeshMaterial);
 	}
-	// std::vector<Texture2D> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string& typeName)
-	// {
-	// 	return std::vector<Texture2D>();
-	// }
+
 	std::vector<Vertex> Model::GetMeshesVertices()
 	{
 		std::vector<Vertex> allVertices;
-		for (const MeshPtr& mesh : m_meshes)
+		for (const MeshSPtr& mesh : m_meshes)
 		{
 			allVertices.insert(allVertices.end(), mesh->m_vertices.begin(), mesh->m_vertices.end());
 		}
@@ -176,7 +176,7 @@ namespace RuamEngine
 	std::vector<unsigned int> Model::GetMeshesIndices()
 	{
 		std::vector<unsigned int> allIndices;
-		for (const MeshPtr& mesh : m_meshes)
+		for (const MeshSPtr& mesh : m_meshes)
 		{
 			for (unsigned int index : mesh->m_indices)
 			{

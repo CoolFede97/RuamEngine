@@ -25,8 +25,8 @@ namespace RuamEngine
 		static std::vector<Vertex> m_vertices;
 		static std::vector<unsigned int> m_indices;
 
-		static MaterialPtr m_material;
-		static RenderUnitPtr m_renderUnit;
+		static MaterialWPtr m_material;
+		static RenderUnitSPtr m_renderUnit;
 
 	public:
 		Skybox(const nlohmann::json& j, const unsigned int obj_id);

@@ -27,7 +27,7 @@ namespace RuamEngine
 		SetLightColor(m_color);
 	}
 
-	void GlobalLight::LoadLightSettings(ShaderProgramPtr program)
+	void GlobalLight::LoadLightSettings(ShaderProgramSPtr program)
 	{
 	    program->SetUniform4f("u_globalLightColor", m_color.x, m_color.y, m_color.z, m_color.w);
 		program->SetUniform1f("u_lightOffset", m_lightOffset);

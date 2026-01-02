@@ -4,7 +4,7 @@
 #include "Vertex.h"
 
 namespace RuamEngine
-{	
+{
 	template<typename T>
 	class SSBO
 	{
@@ -48,7 +48,7 @@ namespace RuamEngine
 			ASSERT(m_data.size() * sizeof(T) <= m_maxBytes);
 			GLCall(glNamedBufferSubData(m_id, 0, m_data.size()*sizeof(T), m_data.data()));
 		}
-	
+
 		// Puts the data from m_data into the actual SSBO
 		void BindBufferBase(const int& binding)
 		{
@@ -69,4 +69,3 @@ namespace RuamEngine
 	template<typename T>
 	using SSBOPointer = std::unique_ptr<SSBO<T>>;
 }
-

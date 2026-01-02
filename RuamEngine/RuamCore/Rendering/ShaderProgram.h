@@ -51,7 +51,5 @@ namespace RuamEngine
 		static GLint maxTextureSlots;
 	};
 
-	using ShaderProgramPtr = std::shared_ptr<ShaderProgram>;
+	using ShaderProgramSPtr = std::shared_ptr<ShaderProgram>;
 }
-
-

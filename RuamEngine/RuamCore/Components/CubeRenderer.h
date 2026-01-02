@@ -21,7 +21,7 @@ public:
 public:
 	GLuint materialId = 0;
 private:
-	std::vector<unsigned int> indices = 
+	std::vector<unsigned int> indices =
 	{
 		0, 1, 2, 2, 3, 0,       // Cara frontal
 		4, 5, 6, 6, 7, 4,       // Cara trasera
@@ -34,7 +34,7 @@ private:
 	std::vector<Vertex> cube = Vertex::CreateCube();
 	void render()
 	{
-		RenderUnitPtr genericUnit = Renderer::m_drawingDatas[0]->m_renderUnits[materialId];
+		RenderUnitSPtr genericUnit = Renderer::m_drawingDatas[0]->m_renderUnits[materialId];
 
 		glm::mat4 modelMatrix(1.0f);
 		modelMatrix = glm::translate(modelMatrix, object()->transform().position());
@@ -45,8 +45,8 @@ private:
 
 		genericUnit->AddBatchData(cube, indices, { modelMatrix });
 	};
-	
-	
+
+
 	void start()
 	{
 	}

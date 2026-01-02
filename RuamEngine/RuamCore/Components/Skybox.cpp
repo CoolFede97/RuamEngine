@@ -9,8 +9,8 @@ namespace RuamEngine
 {
     Skybox* Skybox::s_skybox = nullptr;
     GLuint Skybox::m_cubemap = 0;
-    MaterialPtr Skybox::m_material = nullptr;
-    RenderUnitPtr Skybox::m_renderUnit = nullptr;
+    MaterialWPtr Skybox::m_material = {};
+    RenderUnitSPtr Skybox::m_renderUnit = nullptr;
 
 
     std::vector<Vertex> Skybox::m_vertices = Vertex::CreateCube();
@@ -67,6 +67,6 @@ namespace RuamEngine
         m_renderUnit->m_staticStorage = true;
         m_renderUnit->AddBatchData(m_vertices, m_indices, {glm::mat4(1.0f)});
 
-        m_material->m_cubemap = m_cubemap;
+        m_material.lock()->m_cubemap = m_cubemap;
     }
 }

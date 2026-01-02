@@ -29,7 +29,7 @@ Scene* CreateInitialScene()
 	naveRenderer->SetModel("assets/meshes/Nave/Nave.obj");
 
 	Object* radio = scene->newObject();
-	radio->addComponent<AudioSource>("assets/music/portal_radio.wav");
+	// radio->addComponent<AudioSource>("assets/music/portal_radio.wav");
 	radio->setName("radio");
 	radio->transform().setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 	ModelRenderer* radioRenderer = radio->addComponent<ModelRenderer>();

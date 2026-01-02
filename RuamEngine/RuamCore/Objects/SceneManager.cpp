@@ -13,6 +13,7 @@ const SceneManager::SceneList& SceneManager::sceneList() {
 void SceneManager::SetActiveScene()
 {
 	RuamEngine::Camera::EmptyMainCamera();
+	s_active_scene = nullptr;
 	s_active_scene.reset(s_scenes[s_pending_scene_id]());
 }
 

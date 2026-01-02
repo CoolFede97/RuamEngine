@@ -35,7 +35,7 @@ namespace RuamEngine
 
 		void render(){};
 
-		static void LoadLightSettings(ShaderProgramPtr program);
+		static void LoadLightSettings(ShaderProgramSPtr program);
 
 	};
 	REGISTER_COMPONENT(GlobalLight)

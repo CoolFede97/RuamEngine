@@ -3,6 +3,7 @@
 #include "Model.h"
 #include "RenderUnit.h"
 #include "Renderer.h"
+#include "RuamUtils.h"
 #include <memory>
 #include <set>
 namespace RuamEngine
@@ -42,7 +43,7 @@ namespace RuamEngine
 
     // Model handling ---------------------------------------------------------------------------------
 
-    ModelPtr ResourceManager::LoadModel(const std::string& relativePath, ShaderProgramType shaderProgramType)
+    ModelWPtr ResourceManager::LoadModel(const std::string& relativePath, ShaderProgramType shaderProgramType)
     {
         auto it = m_modelCache.find(relativePath);
         if (it != m_modelCache.end())
@@ -51,7 +52,7 @@ namespace RuamEngine
             return it->second.model;
         }
 
-        ModelPtr newModel = std::make_shared<Model>(relativePath);
+        ModelSPtr newModel = std::make_shared<Model>(relativePath);
 
         ModelEntry newEntry;
         newEntry.refCount[shaderProgramType]++;
@@ -73,19 +74,29 @@ namespace RuamEngine
 
 		if (it->second.refCount[shaderProgramType] <=0)
         {
-       		DrawingDataPtr drawingData = Renderer::m_drawingDatas[shaderProgramType];
-        	std::set<RenderUnitPtr> unitsToDestroy;
-         	for (const MeshPtr& mesh : it->second.model->m_meshes)
+       		DrawingDataSPtr drawingData = Renderer::m_drawingDatas[shaderProgramType];
+        	std::set<RenderUnitSPtr> unitsToDestroy;
+         	std::set<std::string> texturesToDestroy;
+         	for (const MeshSPtr& mesh : it->second.model->m_meshes)
 			{
-				RenderUnitPtr ru = Renderer::GetRenderUnit(mesh->m_material, drawingData);
+				RenderUnitSPtr ru = Renderer::GetRenderUnit(mesh->m_material, drawingData);
 				if (ru != nullptr)
 				{
 					unitsToDestroy.insert(ru);
+
 				}
+				MaterialSPtr mat = GetShared(mesh->m_material);
+				if (auto diffuseTex = mat->m_diffuseTexture.lock()) texturesToDestroy.insert(diffuseTex->GetPath());
+				if (auto specularTex = mat->m_specularTexture.lock()) texturesToDestroy.insert(specularTex->GetPath());
+				if (auto reflectionTex = mat->m_reflectionTexture.lock()) texturesToDestroy.insert(reflectionTex->GetPath());
 			}
 			for (auto& ru : unitsToDestroy)
 			{
            		DestroyRenderUnitInRenderer(ru, drawingData);
+			}
+			for (auto& path : texturesToDestroy)
+			{
+				UnloadTexture<Texture2D>(path);
 			}
         }
 
@@ -96,21 +107,21 @@ namespace RuamEngine
 		}
 		if (noMoreReferences) m_modelCache.erase(it);
     }
-    ModelPtr ResourceManager::GetModel(const std::string& relativePath)
+    ModelWPtr ResourceManager::GetModel(const std::string& relativePath)
     {
 	   	auto it = m_modelCache.find(relativePath);
 	    if (it != m_modelCache.end())
 	    {
 	        return it->second.model;
 	    }
-		return nullptr;
+		return {};
     }
 
     // Material handling ---------------------------------------------------------------------------------
 
-    MaterialPtr ResourceManager::CreateMaterial()
+    MaterialWPtr ResourceManager::CreateMaterial()
     {
-   		MaterialPtr newMaterial = std::make_shared<Material>();
+   		MaterialSPtr newMaterial = std::make_shared<Material>();
      	MaterialEntry newEntry;
      	newEntry.material = newMaterial;
      	newEntry.refCount++;
@@ -133,13 +144,13 @@ namespace RuamEngine
         }
 
     }
-    MaterialPtr ResourceManager::GetMaterial(unsigned int materialId)
+    MaterialWPtr ResourceManager::GetMaterial(unsigned int materialId)
     {
    		auto it = m_materialCache.find(materialId);
     	if (it == m_materialCache.end())
 		{
 			std::cout << "Warning: There is not such a material with id " << materialId << " to destroy\n";
-           return nullptr;
+           return {};
 		}
      	it->second.refCount++;
     	return it->second.material;
@@ -154,7 +165,7 @@ namespace RuamEngine
     {
         Renderer::UnregisterTexture(textureIndex, type);
     }
-    void ResourceManager::DestroyRenderUnitInRenderer(RenderUnitPtr renderUnit, DrawingDataPtr drawingData)
+    void ResourceManager::DestroyRenderUnitInRenderer(RenderUnitSPtr renderUnit, DrawingDataSPtr drawingData)
     {
         Renderer::DestroyRenderUnit(renderUnit, drawingData);
     }

@@ -2,6 +2,7 @@
 
 #include "glm/glm.hpp"
 #include <iostream>
+#include <typeinfo>
 
 #if defined(_WIN32)
 #define ASSERT(x) do {if(!(x)) __debugbreak();} while(false)
@@ -21,6 +22,15 @@ inline std::ostream& operator<<(std::ostream& os, const glm::vec3& vec) {
 }
 inline std::ostream& operator<<(std::ostream& os, const glm::vec4& vec) {
 	return os << '(' << vec.x << ", " << vec.y << ", " << vec.z << ", " << vec.w << ')';
+}
+
+template <typename T>
+void PrintType(T* ptr) {
+    if (!ptr) {
+        std::cout << "nullptr\n";
+        return;
+    }
+    std::cout << typeid(*ptr).name() << '\n';
 }
 
 #ifdef linux

@@ -10,7 +10,7 @@ using namespace RuamEngine;
 class SandboxCom : public BaseRenderer
 {
 	using BaseRenderer::BaseRenderer;
-	
+
 	int gridSide = 1; // k*k grid
 	float padding = 0.01f;
 	float screenX = 2.0f;
@@ -24,7 +24,7 @@ class SandboxCom : public BaseRenderer
 	// It's called in update
 	void render()
 	{
-		//RenderUnitPtr genericUnit = Renderer::m_drawingDatas[0]->m_renderUnits[0];
+		//RenderUnitSPtr genericUnit = Renderer::m_drawingDatas[0]->m_renderUnits[0];
 		////genericUnit.m_vertexArray->Bind();
 
 		////genericUnit.m_shader->Bind();
@@ -33,7 +33,7 @@ class SandboxCom : public BaseRenderer
 		//for (int row = 0; row < gridSide; row++)
 		//{
 		//	for (int col = 0; col < gridSide; col++)
-		//	{				
+		//	{
 		//		std::vector<Vertex> newQuad = Vertex::CreateQuad
 		//		(
 		//			quadWidth,
@@ -41,7 +41,7 @@ class SandboxCom : public BaseRenderer
 		//			row * (screenY / gridSide - 0.5f * padding) + row * padding + quadHeight / 2 - screenY / 2,
 		//			1.0f
 		//		);
-		//		
+		//
 		//		std::vector<unsigned int> newIndices =
 		//		{
 		//			indexCount + 0, indexCount + 1, indexCount + 2,indexCount + 2, indexCount + 3, indexCount + 0
@@ -51,11 +51,11 @@ class SandboxCom : public BaseRenderer
 		//		{
 		//			indexCount = 0;
 		//		}
-		//		
+		//
 		//	}
 		//}
 	};
-	void update() 
+	void update()
 	{
 		render();
 	};

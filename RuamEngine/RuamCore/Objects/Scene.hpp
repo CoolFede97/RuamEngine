@@ -6,11 +6,11 @@
 
 class Scene {
 public:
-    Scene() : m_id(s_id_count++), m_name(s_default_name) {std::cout << "SCENE " << m_name << " WITH ID " << m_id << " CREATED\n";;}
+    Scene() : m_id(s_instanceCount++), m_name(s_defaultName) {std::cout << "SCENE " << m_name << " WITH ID " << m_id << " CREATED\n";;}
 
-    Scene(const int id) : m_id(id), m_name(s_default_name) {std::cout << "SCENE " << m_name << " WITH ID " << m_id << " CREATED\n";;}
+    Scene(const int id) : m_id(id), m_name(s_defaultName) {std::cout << "SCENE " << m_name << " WITH ID " << m_id << " CREATED\n";;}
 
-    Scene(const std::string& name) : m_id(s_id_count++), m_name(name) {std::cout << "SCENE " << m_name << " WITH ID " << m_id << " CREATED\n";;}
+    Scene(const std::string& name) : m_id(s_instanceCount++), m_name(name) {std::cout << "SCENE " << m_name << " WITH ID " << m_id << " CREATED\n";;}
 
     Scene(const int id, const std::string& name) : m_id(id), m_name(name) {std::cout << "SCENE " << m_name << " WITH ID " << m_id << " CREATED\n";;}
 
@@ -20,7 +20,8 @@ public:
 	    return m_id;
     }
 
-	const std::string& name() const;
+	const std::string& name() const { return m_name; }
+    std::string name() { return m_name; }
 
     Object* newObject(); //Maybe should need a name?
     Object* newObject(unsigned int idx);
@@ -33,7 +34,6 @@ public:
     void deleteObjectByIdx(unsigned int idx);
     void deleteObjectById(unsigned int idx);
 
-    std::string name() { return m_name; }
 
 	void start();
 	void update();
@@ -42,8 +42,8 @@ private:
     std::list<std::unique_ptr<Object>> m_objects;
 	const std::string m_name;
     const unsigned int m_id;
-    static unsigned int s_id_count;
+    static unsigned int s_instanceCount;
 
-	static const std::string s_default_name;
+	static const std::string s_defaultName;
 };
-using ScenePtr = std::shared_ptr<Scene>;
+using SceneSPtr = std::shared_ptr<Scene>;

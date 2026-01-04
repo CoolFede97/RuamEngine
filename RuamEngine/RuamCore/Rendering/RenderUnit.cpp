@@ -3,38 +3,38 @@
 
 namespace RuamEngine
 {
-	void RenderUnit::SubmitData()
+	void RenderUnit::submitData()
 	{
-		if (m_vertices->GetCurrentSize() > 0)
+		if (m_vertices->currentSize() > 0)
 		{
 			if (!m_staticStorage || !m_uploaded)
 			{
-				m_vertices->SubmitData();
+				m_vertices->submitData();
 			}
 		}
-		if (m_indices->GetCurrentSize() > 0)
+		if (m_indices->currentSize() > 0)
 		{
 			if (!m_staticStorage || !m_uploaded)
 			{
-				m_indices->SubmitData();
+				m_indices->submitData();
 			}
 		}
-		if (m_modelMatricesBuffer->GetCurrentSize() > 0)
+		if (m_modelMatricesBuffer->currentSize() > 0)
 		{
-			m_modelMatricesBuffer->SubmitData();
+			m_modelMatricesBuffer->submitData();
 		}
 
-		if (m_staticStorage && !m_uploaded && (m_vertices->GetCurrentSize() > 0 || m_indices->GetCurrentSize() > 0))
+		if (m_staticStorage && !m_uploaded && (m_vertices->currentSize() > 0 || m_indices->currentSize() > 0))
 		{
 			m_uploaded = true;
 		}
 	}
 
-	void RenderUnit::BindBuffersBase()
+	void RenderUnit::bindBuffersBase()
 	{
-		m_vertices->BindBufferBase(SSBOType::vertices);
-		m_indices->BindBufferBase(SSBOType::indices);
-		m_modelMatricesBuffer->BindBufferBase(SSBOType::modelMatrices);
+		m_vertices->bindBufferBase(SSBOType::vertices);
+		m_indices->bindBufferBase(SSBOType::indices);
+		m_modelMatricesBuffer->bindBufferBase(SSBOType::modelMatrices);
 	}
 
 	/*bool RenderUnit::AddBatchData(const std::vector<Vertex> vertices, unsigned int vertexDataSize, const std::vector<unsigned int> indices, unsigned int indexDataSize)
@@ -54,11 +54,11 @@ namespace RuamEngine
 		return fullBatch;
 	}*/
 
-	bool RenderUnit::AddBatchData(const std::vector<Vertex>& vertices, std::vector<unsigned int> indices, const std::vector<glm::mat4>& modelMatrices)
+	bool RenderUnit::addBatchData(const std::vector<Vertex>& vertices, std::vector<unsigned int> indices, const std::vector<glm::mat4>& modelMatrices)
 	{
-		ASSERT(vertices.size() * sizeof(Vertex) <= m_vertices->GetMaxSize());
-		ASSERT(indices.size() * sizeof(unsigned int) <= m_indices->GetMaxSize());
-		ASSERT(modelMatrices.size() * mat4Size <= m_modelMatricesBuffer->GetMaxSize());
+		ASSERT(vertices.size() * sizeof(Vertex) <= m_vertices->maxSize());
+		ASSERT(indices.size() * sizeof(unsigned int) <= m_indices->maxSize());
+		ASSERT(modelMatrices.size() * mat4Size <= m_modelMatricesBuffer->maxSize());
 
 		for (unsigned int i = 0; i < indices.size() ; i++)
 		{
@@ -67,44 +67,44 @@ namespace RuamEngine
 		m_indexCount += indices.size();
 		bool fullBatch = false;
 
-		if (m_vertices->GetCurrentSize() + vertices.size() * sizeof(Vertex) > m_vertices->GetMaxSize())
+		if (m_vertices->currentSize() + vertices.size() * sizeof(Vertex) > m_vertices->maxSize())
 		{
-			SubmitData();
-			BindBuffersBase();
+			submitData();
+			bindBuffersBase();
 			Renderer::Draw(*this);
-			Flush();
+			flush();
 			fullBatch = true;
 		}
 
-		m_vertices->AddBatchData(vertices);
-		m_indices->AddBatchData(indices);
-		m_modelMatricesBuffer->AddBatchData(modelMatrices);
+		m_vertices->addBatchData(vertices);
+		m_indices->addBatchData(indices);
+		m_modelMatricesBuffer->addBatchData(modelMatrices);
 		return fullBatch;
 	}
 
-	bool RenderUnit::AddModelMatrix(const std::vector<glm::mat4>& modelMatrices)
+	bool RenderUnit::addModelMatrix(const std::vector<glm::mat4>& modelMatrices)
 	{
-		ASSERT(modelMatrices.size() * mat4Size <= m_modelMatricesBuffer->GetMaxSize());
+		ASSERT(modelMatrices.size() * mat4Size <= m_modelMatricesBuffer->maxSize());
 		bool fullBatch = false;
-		if (m_modelMatricesBuffer->GetCurrentSize() + modelMatrices.size() * mat4Size > m_modelMatricesBuffer->GetMaxSize())
+		if (m_modelMatricesBuffer->currentSize() + modelMatrices.size() * mat4Size > m_modelMatricesBuffer->maxSize())
 		{
-			SubmitData();
+			submitData();
 			Renderer::Draw(*this);
-			Flush();
+			flush();
 			fullBatch = true;
 		}
-		m_modelMatricesBuffer->AddBatchData(modelMatrices);
+		m_modelMatricesBuffer->addBatchData(modelMatrices);
 		return fullBatch;
 	}
 
-	void RenderUnit::Flush()
+	void RenderUnit::flush()
 	{
-		if (!m_staticPosition) m_modelMatricesBuffer->Flush();
+		if (!m_staticPosition) m_modelMatricesBuffer->flush();
 		if (!m_staticStorage)
 		{
 			m_indexCount = 0;
-			m_vertices->Flush();
-			m_indices->Flush();
+			m_vertices->flush();
+			m_indices->flush();
 		}
 	}
 

@@ -4,16 +4,16 @@
 #include <memory>
 namespace RuamEngine
 {
-	unsigned int Model::s_idCount = 0;
+	unsigned int Model::s_instanceCount = 0;
 
 	Model::Model(std::string path)
-		: m_path(GlobalizePath(path)), m_instanceId(s_idCount++)
+		: m_path(GlobalizePath(path)), m_instanceId(s_instanceCount++)
 	{
-		LoadModel(m_path);
-		m_vertices = GetMeshesVertices();
-		m_indices = GetMeshesIndices();
+		loadModel(m_path);
+		m_vertices = meshesVertices();
+		m_indices = meshesIndices();
 	}
-	void Model::LoadModel(std::string& path)
+	void Model::loadModel(std::string& path)
 	{
 		Assimp::Importer importer;
 		const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate);
@@ -22,23 +22,23 @@ namespace RuamEngine
 			std::cout << "ERROR::ASSIMP::" << importer.GetErrorString() << "\n";
 			return;
 		}
-		ProcessNode(scene->mRootNode, scene);
+		processNode(scene->mRootNode, scene);
 	}
-	void Model::ProcessNode(aiNode* node, const aiScene* scene)
+	void Model::processNode(aiNode* node, const aiScene* scene)
 	{
 
 		for (unsigned int i = 0; i < node->mNumMeshes; i++)
 		{
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-			m_meshes.push_back(ProcessMesh(mesh, scene));
+			m_meshes.push_back(processMesh(mesh, scene));
 		}
 
 		for (unsigned int i = 0; i < node->mNumChildren; i++)
 		{
-			ProcessNode(node->mChildren[i], scene);
+			processNode(node->mChildren[i], scene);
 		}
 	}
-	MeshSPtr Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
+	MeshSPtr Model::processMesh(aiMesh* mesh, const aiScene* scene)
 	{
 		std::vector<Vertex> vertices;
 		std::vector<unsigned int> indices;
@@ -93,7 +93,7 @@ namespace RuamEngine
 			if (pair.first == mesh->mMaterialIndex)
 			{
 				sharedMeshMaterial = pair.second.lock();
-				ResourceManager::GetMaterial(sharedMeshMaterial->GetId());
+				ResourceManager::GetMaterial(sharedMeshMaterial->id());
 				materialFound = true;
 				break;
 			}
@@ -122,7 +122,7 @@ namespace RuamEngine
 					std::string absoluteModelPath = std::filesystem::path(m_path).parent_path().string();
 					std::string relativeDiffusePath = RelativizePath(absoluteModelPath) + "/" + assimpPath;
 					sharedMeshMaterial->m_diffuseTexture = ResourceManager::LoadTexture<Texture2D>(relativeDiffusePath);
-					sharedMeshMaterial->m_diffuseIndex = sharedMeshMaterial->m_diffuseTexture.lock()->GetRendererIndex();
+					sharedMeshMaterial->m_diffuseIndex = sharedMeshMaterial->m_diffuseTexture.lock()->rendererIndex();
 				}
 			}
 
@@ -139,7 +139,7 @@ namespace RuamEngine
 					std::string absoluteModelPath = std::filesystem::path(m_path).parent_path().string();
 					std::string relativeSpecularPath = RelativizePath(absoluteModelPath) + "/" + assimpPath;
 					sharedMeshMaterial->m_specularTexture = ResourceManager::LoadTexture<Texture2D>(relativeSpecularPath);
-					sharedMeshMaterial->m_specularIndex = sharedMeshMaterial->m_specularTexture.lock()->GetRendererIndex();
+					sharedMeshMaterial->m_specularIndex = sharedMeshMaterial->m_specularTexture.lock()->rendererIndex();
 				}
 			}
 
@@ -156,7 +156,7 @@ namespace RuamEngine
 					std::string absoluteModelPath = std::filesystem::path(m_path).parent_path().string();
 					std::string relativeReflectionPath = RelativizePath(absoluteModelPath) + "/" + assimpPath;
 					sharedMeshMaterial->m_reflectionTexture = ResourceManager::LoadTexture<Texture2D>(relativeReflectionPath);
-					sharedMeshMaterial->m_reflectionIndex = sharedMeshMaterial->m_reflectionTexture.lock()->GetRendererIndex();
+					sharedMeshMaterial->m_reflectionIndex = sharedMeshMaterial->m_reflectionTexture.lock()->rendererIndex();
 				}
 			}
 		}
@@ -164,7 +164,7 @@ namespace RuamEngine
 		return std::make_shared<Mesh>(vertices, indices, sharedMeshMaterial);
 	}
 
-	std::vector<Vertex> Model::GetMeshesVertices()
+	std::vector<Vertex> Model::meshesVertices()
 	{
 		std::vector<Vertex> allVertices;
 		for (const MeshSPtr& mesh : m_meshes)
@@ -173,7 +173,7 @@ namespace RuamEngine
 		}
 		return allVertices;
 	}
-	std::vector<unsigned int> Model::GetMeshesIndices()
+	std::vector<unsigned int> Model::meshesIndices()
 	{
 		std::vector<unsigned int> allIndices;
 		for (const MeshSPtr& mesh : m_meshes)

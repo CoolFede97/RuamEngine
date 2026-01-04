@@ -26,16 +26,16 @@ namespace RuamEngine
 		using BaseRenderer::BaseRenderer;
 		GlobalLight(const nlohmann::json& j, unsigned int obj_id) : BaseRenderer(obj_id) {}
 		~GlobalLight();
-		static void SetLightColor(Vec4 color);
+		static void setLightColor(Vec4 color);
 
-		static void SetLightOffset(float offset);
+		static void setLightOffset(float offset);
 
 		void update(){};
 		void start();
 
 		void render(){};
 
-		static void LoadLightSettings(ShaderProgramSPtr program);
+		static void loadLightSettings(ShaderProgramSPtr program);
 
 	};
 	REGISTER_COMPONENT(GlobalLight)

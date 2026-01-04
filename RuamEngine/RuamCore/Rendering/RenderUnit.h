@@ -4,12 +4,14 @@
 #include "ShaderProgram.h"
 #include "RenderingElements.h"
 #include "RenderingConstants.h"
+#include <memory>
 
 namespace RuamEngine
 {
     class ShaderProgram;
     class DrawingData;
 	using DrawingDataSPtr = std::shared_ptr<DrawingData>;
+	using DrawingDataWPtr = std::weak_ptr<DrawingData>;
 
     class RenderUnit
     {
@@ -18,10 +20,10 @@ namespace RuamEngine
         RenderUnit();
 
 	    // This shader must be the same as the drawingData that contains this renderUnit
-	    DrawingDataSPtr m_drawingData = nullptr;
+	    DrawingDataWPtr m_drawingData = {};
 		ShaderProgramSPtr m_program = nullptr;
         MaterialWPtr m_material = {};
-        VertexArrayPtr m_vertexArray = std::make_unique<VertexArray>();
+        VertexArrayUPtr m_vertexArray = std::make_unique<VertexArray>();
         SSBOPointer<Vertex> m_vertices = std::make_unique<SSBO<Vertex>>(maxVertexCount, GL_DYNAMIC_STORAGE_BIT);
         SSBOPointer<unsigned int> m_indices = std::make_unique<SSBO<unsigned int>>(maxIndexCount, GL_DYNAMIC_STORAGE_BIT);
         SSBOPointer<glm::mat4> m_modelMatricesBuffer = std::make_unique<SSBO<glm::mat4>>(maxVertexCount, GL_DYNAMIC_STORAGE_BIT);
@@ -30,13 +32,13 @@ namespace RuamEngine
 		bool m_staticStorage = false;
 		bool m_staticPosition = false;
 
-        void SubmitData();
-		void BindBuffersBase();
+        void submitData();
+		void bindBuffersBase();
 
         //bool AddBatchData(const std::vector<Vertex> vertices, unsigned int vertexDataSize, const std::vector<unsigned int> indices, unsigned int indexDataSize);
-        bool AddBatchData(const std::vector<Vertex>& vertices, std::vector<unsigned int> indices, const std::vector<glm::mat4>& modelMatrices);
-        bool AddModelMatrix(const std::vector<glm::mat4>& modelMatrices);
-        void Flush();
+        bool addBatchData(const std::vector<Vertex>& vertices, std::vector<unsigned int> indices, const std::vector<glm::mat4>& modelMatrices);
+        bool addModelMatrix(const std::vector<glm::mat4>& modelMatrices);
+        void flush();
     private:
         unsigned int m_indexCount = 0;
         bool m_uploaded = false;

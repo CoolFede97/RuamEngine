@@ -17,19 +17,19 @@ namespace RuamEngine
 		IndexBuffer(unsigned int maxCount, unsigned int usage);
 		~IndexBuffer();
 
-		void Bind() const;
-		void Unbind() const;
-		void AddBatchData(const std::vector<unsigned int>& data);
-		void SetSubData(const unsigned int* data, unsigned int offset, unsigned int size);
-		void SetData(const unsigned int* data);
+		void bind() const;
+		void unbind() const;
+		void addBatchData(const std::vector<unsigned int>& data);
+		void setSubData(const unsigned int* data, unsigned int offset, unsigned int size);
+		void setData(const unsigned int* data);
 
 		// Puts the data from m_indexData into the actual buffer
-		void SubmitData();
-	
-		void Flush();
-		unsigned int GetIndexCount() const { return m_currentBytes/sizeof(unsigned int); }
-		unsigned int GetCurrentSize() const { return m_currentBytes; }
-		unsigned int GetMaxSize() const { return m_maxBytes; }
+		void submitData();
+
+		void flush();
+		unsigned int indexCount() const { return m_currentBytes/sizeof(unsigned int); }
+		unsigned int CcrrentSize() const { return m_currentBytes; }
+		unsigned int maxSize() const { return m_maxBytes; }
 	};
 
 	using IndexBufferPtr = std::unique_ptr<IndexBuffer>;

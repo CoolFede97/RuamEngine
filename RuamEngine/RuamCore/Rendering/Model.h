@@ -25,15 +25,15 @@ namespace RuamEngine
 	private:
 		std::string m_path;
 		unsigned int m_instanceId;
-		static unsigned int s_idCount;
+		static unsigned int s_instanceCount;
 		std::vector<Vertex> m_vertices;
 		std::vector<unsigned int> m_indices;
-		void LoadModel(std::string& path);
-		void ProcessNode(aiNode* node, const aiScene* scene);
-		MeshSPtr ProcessMesh(aiMesh* mesh, const aiScene* scene);
+		void loadModel(std::string& path);
+		void processNode(aiNode* node, const aiScene* scene);
+		MeshSPtr processMesh(aiMesh* mesh, const aiScene* scene);
 		// std::vector<Texture2D> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string& typeName);
-		std::vector<Vertex> GetMeshesVertices();
-		std::vector<unsigned int> GetMeshesIndices();
+		std::vector<Vertex> meshesVertices();
+		std::vector<unsigned int> meshesIndices();
 	};
 	using ModelSPtr = std::shared_ptr<Model>;
 	using ModelWPtr = std::weak_ptr<Model>;

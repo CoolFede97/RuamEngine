@@ -29,10 +29,10 @@ namespace RuamEngine
 		float m_fov = 45.0f;
 		float m_aspect_ratio = 800.0f/600.0f;
 
-		glm::mat4 GetProjectionMatrix();
-		glm::mat4 GetViewMatrix();
+		glm::mat4 projectionMatrix();
+		glm::mat4 viewMatrix();
 
-		void SetAsMainCamera();
+		void setAsMainCamera();
 		static void EmptyMainCamera();
 		static Camera* GetMainCamera();
 
@@ -40,7 +40,7 @@ namespace RuamEngine
 			Component::update();
 			AudioSystem::AL::Listener::setParam(AL_POSITION, object()->transform().position());
 		};
-		void start() { SetAsMainCamera();};
+		void start() { setAsMainCamera();};
 
 		IMPL_SERIALIZE(Camera,
 				 SER_FIELD(m_near_plane),

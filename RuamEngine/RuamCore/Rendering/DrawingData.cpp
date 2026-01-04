@@ -7,24 +7,24 @@ namespace RuamEngine
 
 
 
-	void DrawingData::SubmitData()
+	void DrawingData::submitData()
 	{
 		for (auto& [materialId, renderUnit] : m_renderUnits)
 		{
-			renderUnit->SubmitData();
+			renderUnit->submitData();
 		}
 	}
 
-	void DrawingData::SubmitData(RenderUnit& renderUnit)
+	void DrawingData::submitData(RenderUnit& renderUnit)
 	{
-		renderUnit.SubmitData();
+		renderUnit.submitData();
 	}
 
-	void DrawingData::Flush()
+	void DrawingData::flush()
 	{
 		for (auto& [materialId, renderUnit] : m_renderUnits)
 		{
-			renderUnit->Flush();
+			renderUnit->flush();
 		}
 	}
 

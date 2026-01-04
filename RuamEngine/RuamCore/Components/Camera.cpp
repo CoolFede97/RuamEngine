@@ -4,11 +4,11 @@ namespace RuamEngine
 {
 	Camera* Camera::s_mainCamera = nullptr;
 
-	glm::mat4 Camera::GetProjectionMatrix()
+	glm::mat4 Camera::projectionMatrix()
 	{
 		return glm::perspective(glm::radians(m_fov), m_aspect_ratio, m_near_plane, m_far_plane);
 	}
-	glm::mat4 Camera::GetViewMatrix()
+	glm::mat4 Camera::viewMatrix()
 	{
 		glm::vec3 pos = object()->transform().position();
 		glm::vec3 eulerRadians = glm::radians(object()->transform().rotation());
@@ -24,7 +24,7 @@ namespace RuamEngine
 		direction = glm::normalize(direction);
 		return glm::lookAt(pos, pos + direction, m_up);
 	};
-	void Camera::SetAsMainCamera()
+	void Camera::setAsMainCamera()
 	{
 		s_mainCamera = this;
 	}

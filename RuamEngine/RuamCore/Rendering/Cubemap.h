@@ -18,13 +18,13 @@ namespace RuamEngine
 		Cubemap(const std::string& relativePath); // Relative path from the project root directory
 		~Cubemap();
 
-		void Bind(unsigned int slot = 0) const override;
-		void Unbind() const override;
+		void bind(unsigned int slot = 0) const override;
+		void unbind() const override;
 
-		GLenum GetType() const override { return GL_TEXTURE_CUBE_MAP; }
+		GLenum texType() const override { return GL_TEXTURE_CUBE_MAP; }
 
-		int GetFaceLength() const { return m_faceLength; }
-		std::vector<std::string> GetPaths() const { return m_filePaths; }
+		int faceLength() const { return m_faceLength; }
+		std::vector<std::string> paths() const { return m_filePaths; }
 	};
 	using CubemapPtr = std::shared_ptr<Cubemap>;
 }

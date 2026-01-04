@@ -32,7 +32,7 @@ Scene* CreateCFSandboxScene()
 	bossO->transform().setScale(glm::vec3(5.0f, 5.0f, 5.0f));
 	ModelRenderer* bossRenderer = bossO->addComponent<ModelRenderer>();
 	bossRenderer->m_shaderProgramType = ShaderProgramType::general;
-	bossRenderer->SetModel("assets/meshes/boss/boss.obj");
+	bossRenderer->setModel("assets/meshes/boss/boss.obj");
 	Boss* boss = bossO->addComponent<Boss>();
 	boss->m_shootingInterval = 1.0f;
 	boss->m_bulletSpeed = 20.0f;

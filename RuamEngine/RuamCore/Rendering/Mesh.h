@@ -23,9 +23,9 @@ namespace RuamEngine
 		std::vector<unsigned int> m_indices;
 		MaterialWPtr m_material;
 
-		unsigned int GetInstanceId() const { return m_instanceId; }
+		unsigned int id() const { return m_id; }
 	private:
-		unsigned int m_instanceId;
+		unsigned int m_id; // Instance id
 		static unsigned int s_instanceCount;
 	};
 	using MeshSPtr = std::shared_ptr<Mesh>;

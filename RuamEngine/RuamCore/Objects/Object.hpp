@@ -14,8 +14,8 @@
 
 class Object {
 public:
-	Object(const std::string& name) : m_id(s_id_count++), m_name(name), m_transform(m_id) {}
-	Object() : Object(s_default_name) {
+	Object(const std::string& name) : m_id(s_instanceCount++), m_name(name), m_transform(m_id) {}
+	Object() : Object(s_defaultName) {
 	}
 	~Object();
 
@@ -132,21 +132,21 @@ public:
 
 	bool isEnabled() const;
 
-	bool marked_destruction() const;
+	bool destroyFlag() const;
 
 	Transform& transform();
 
 	const Transform& transform() const;
 private:
 	unsigned int m_id;
-	static unsigned int s_id_count;
+	static unsigned int s_instanceCount;
     std::string m_name;
 	Transform m_transform;
 
 	ComponentList m_components;
 
 	bool m_enabled = true;
-	bool m_destroy_flag = false;
+	bool m_destroyFlag = false;
 
-	static const std::string s_default_name;
+	static const std::string s_defaultName;
 };

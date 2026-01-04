@@ -55,22 +55,22 @@ public:
 		: m_Stride(0) {}
 
 
-	void Reset()
+	void reset()
 	{
 		m_Stride = 0;
 		m_Elements.clear();
 	}
 
 	template<typename T>
-	void Push(unsigned int count)
+	void push(unsigned int count)
 	{
 		static_assert(sizeof(T) == 0, "Unsupported Type!");
 		//std::runtime	_error();
 	}
 
 
-	inline const std::vector<VertexBufferElement> GetElements() const& { return m_Elements; }
-	inline unsigned int GetStride() const { return m_Stride; }
+	inline const std::vector<VertexBufferElement> elements() const& { return m_Elements; }
+	inline unsigned int stride() const { return m_Stride; }
 };
 
-using VertexBufferLayoutPtr = std::shared_ptr<VertexBufferLayout>;
+using VertexBufferLayoutSPtr = std::shared_ptr<VertexBufferLayout>;

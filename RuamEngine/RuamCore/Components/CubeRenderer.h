@@ -31,7 +31,7 @@ private:
 		20,21,22,22,23,20        // Cara superior
 	};
 
-	std::vector<Vertex> cube = Vertex::CreateCube();
+	std::vector<Vertex> cube = Vertex::createCube();
 	void render()
 	{
 		RenderUnitSPtr genericUnit = Renderer::m_drawingDatas[0]->m_renderUnits[materialId];
@@ -43,7 +43,7 @@ private:
 		modelMatrix = glm::rotate(modelMatrix, glm::radians(object()->transform().rotation().z), glm::vec3(0.0f, 0.0f, 1.0f));
 		modelMatrix = glm::scale(modelMatrix, object()->transform().scale());
 
-		genericUnit->AddBatchData(cube, indices, { modelMatrix });
+		genericUnit->addBatchData(cube, indices, { modelMatrix });
 	};
 
 

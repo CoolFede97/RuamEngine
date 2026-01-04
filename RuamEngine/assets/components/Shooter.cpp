@@ -37,7 +37,7 @@ void Shooter::update() {
 		bullet.m_radius = m_bulletRadius;
 
 		bullet.object()->addComponent<ModelRenderer>()->m_shaderProgramType = ShaderProgramType::general;
-		bullet.object()->getComponent<ModelRenderer>()->SetModel(m_bulletMeshPath);
+		bullet.object()->getComponent<ModelRenderer>()->setModel(m_bulletMeshPath);
 	}
 	m_timeSinceLastShot += Time::DeltaTime();
 }

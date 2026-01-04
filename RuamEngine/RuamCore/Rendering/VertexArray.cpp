@@ -6,7 +6,7 @@ namespace RuamEngine
 	VertexArray::VertexArray()
 	{
 		GLCall(glGenVertexArrays(1, &m_id));
-		Bind();
+		bind();
 	}
 
 	VertexArray::~VertexArray()
@@ -22,10 +22,10 @@ namespace RuamEngine
 
 	//	// The offset is the amount of bytes from the first component of the vertex to a particular one
 
-	//	//  E.G: 
+	//	//  E.G:
 	//	//  [
 	//	//		X   Y   Z   R    G    B
-	//	//		1,  2,  3,  255, 255, 255, 
+	//	//		1,  2,  3,  255, 255, 255,
 	//	//		4,  5,  6,  254, 254, 254
 	//	//  ]
 	//	//  There, the offset of the position component would be 0 because it is the first component of the vertex
@@ -39,7 +39,7 @@ namespace RuamEngine
 	//		GLCall(glEnableVertexAttribArray(i));
 	//		GLCall(glVertexAttribPointer
 	//		(
-	//			i, 
+	//			i,
 	//			element.count,
 	//			element.type,
 	//			element.normalized,
@@ -50,14 +50,13 @@ namespace RuamEngine
 	//	}
 	//}
 
-	void VertexArray::Bind() const
+	void VertexArray::bind() const
 	{
 		glBindVertexArray(m_id);
 	}
 
-	void VertexArray::Unbind() const
+	void VertexArray::unbind() const
 	{
 		glBindVertexArray(0);
 	}
 }
-

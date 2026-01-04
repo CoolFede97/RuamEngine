@@ -10,9 +10,9 @@ namespace RuamEngine
 
 
 	ShaderProgram::ShaderProgram(const std::string& vertexPath, const std::string& fragmentPath)
-		: m_vFilePath(GlobalizePath(vertexPath)), m_fFilePath(GlobalizePath(fragmentPath)), m_instanceId(s_idInstanceCount++), m_rendererId(0)
+		: m_vFilePath(GlobalizePath(vertexPath)), m_fFilePath(GlobalizePath(fragmentPath)), m_instanceId(s_idInstanceCount++), m_glName(0)
 	{
-		m_rendererId = CreateProgram(vertexPath, fragmentPath);
+		m_glName = createProgram(vertexPath, fragmentPath);
 		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureSlots);
 	}
 
@@ -21,7 +21,7 @@ namespace RuamEngine
 		std::cout << "Shader Destroyed!\n";
 	}
 
-	unsigned int ShaderProgram::CompileShader(unsigned int type, const std::string& source)
+	unsigned int ShaderProgram::compileShader(unsigned int type, const std::string& source)
 	{
 
 		unsigned int id = glCreateShader(type);
@@ -50,11 +50,11 @@ namespace RuamEngine
 
 	}
 
-	unsigned int ShaderProgram::CreateProgram(const std::string& vertexPath, const std::string& fragmentPath)
+	unsigned int ShaderProgram::createProgram(const std::string& vertexPath, const std::string& fragmentPath)
 	{
 		unsigned int program = glCreateProgram();
-		unsigned int vs = CompileShader(GL_VERTEX_SHADER, RelativeFileToString(vertexPath));
-		unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, RelativeFileToString(fragmentPath));
+		unsigned int vs = compileShader(GL_VERTEX_SHADER, RelativeFileToString(vertexPath));
+		unsigned int fs = compileShader(GL_FRAGMENT_SHADER, RelativeFileToString(fragmentPath));
 
 		// A program is a group of glsl that can run on the GPU
 		GLCall(glAttachShader(program, vs));
@@ -101,87 +101,87 @@ namespace RuamEngine
 		return program;
 	}
 
-	void ShaderProgram::Bind() const
+	void ShaderProgram::bind() const
 	{
-		GLCall(glUseProgram(m_rendererId));
+		GLCall(glUseProgram(m_glName));
 	}
 
-	void ShaderProgram::Unbind() const
+	void ShaderProgram::unbind() const
 	{
 		GLCall(glUseProgram(0));
 	}
 
-	void ShaderProgram::SetUniform1i(const std::string& name, int value)
+	void ShaderProgram::setUniform1i(const std::string& name, int value)
 	{
-		GLCall(glUniform1i(GetUniformLocation(name), value));
+		GLCall(glUniform1i(getUniformLocation(name), value));
 	}
 
-	void ShaderProgram::SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3)
+	void ShaderProgram::setUniform4f(const std::string& name, float v0, float v1, float v2, float v3)
 	{
-		GLCall(glUniform4f(GetUniformLocation(name), v0, v1, v2, v3));
+		GLCall(glUniform4f(getUniformLocation(name), v0, v1, v2, v3));
 	}
 
-	void ShaderProgram::SetUniform3f(const std::string& name, float v0, float v1, float v2)
+	void ShaderProgram::setUniform3f(const std::string& name, float v0, float v1, float v2)
 	{
-		GLCall(glUniform3f(GetUniformLocation(name), v0, v1, v2));
+		GLCall(glUniform3f(getUniformLocation(name), v0, v1, v2));
 	}
 
-	void ShaderProgram::SetUniform1f(const std::string& name, float value)
+	void ShaderProgram::setUniform1f(const std::string& name, float value)
 	{
-		GLCall(glUniform1f(GetUniformLocation(name), value));
+		GLCall(glUniform1f(getUniformLocation(name), value));
 	}
 
-	void ShaderProgram::SetUniformMat4f(const std::string& name, glm::mat4 matrix)
+	void ShaderProgram::setUniformMat4f(const std::string& name, glm::mat4 matrix)
 	{
-		GLCall(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &matrix[0][0]));
+		GLCall(glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, &matrix[0][0]));
 	}
 
-	void ShaderProgram::SetUniformTextureSlots(const std::string& name)
+	void ShaderProgram::setUniformTextureSlots(const std::string& name)
 	{
 		std::vector<GLint> samplers = {};
 		for (int i = 0; i < maxTextureSlots; i++)
 		{
 			samplers.push_back(i);
 		}
-		Bind();
-		auto loc = GetUniformLocation(name);
+		bind();
+		auto loc = getUniformLocation(name);
 		GLCall(glUniform1iv(loc, maxTextureSlots, samplers.data()));
 	}
 
-	void ShaderProgram::LoadMaterial(const Material& material)
+	void ShaderProgram::loadMaterial(const Material& material)
 	{
-		Bind();
+		bind();
 
-		SetUniform4f("u_baseColor", material.baseColor.x, material.baseColor.y, material.baseColor.z, material.baseColor.w);
-		SetUniform1f("u_diffuse", material.m_diffuseIndex);
-		SetUniform1f("u_specular", material.m_specularIndex);
-		SetUniform1f("u_shininess", material.m_shininess);
-		SetUniform1f("u_cubemap", material.m_cubemap);
+		setUniform4f("u_baseColor", material.baseColor.x, material.baseColor.y, material.baseColor.z, material.baseColor.w);
+		setUniform1f("u_diffuse", material.m_diffuseIndex);
+		setUniform1f("u_specular", material.m_specularIndex);
+		setUniform1f("u_shininess", material.m_shininess);
+		setUniform1f("u_cubemap", material.m_cubemap);
 	}
 
-	void ShaderProgram::UpdateCameraMatrices()
+	void ShaderProgram::updateCameraMatrices()
 	{
 		if (Camera::GetMainCamera() == nullptr)
 		{
 			//std::cout << "Not camera set!\n";
-			SetUniformMat4f("u_view", glm::mat4(0.0f));
-			SetUniformMat4f("u_projection", glm::mat4(0.0f));
+			setUniformMat4f("u_view", glm::mat4(0.0f));
+			setUniformMat4f("u_projection", glm::mat4(0.0f));
 			return;
 		}
-		Bind();
-		SetUniformMat4f("u_view", Camera::GetMainCamera()->GetViewMatrix());
-		SetUniformMat4f("u_projection", Camera::GetMainCamera()->GetProjectionMatrix());
+		bind();
+		setUniformMat4f("u_view", Camera::GetMainCamera()->viewMatrix());
+		setUniformMat4f("u_projection", Camera::GetMainCamera()->projectionMatrix());
 	}
 
-	int ShaderProgram::GetUniformLocation(const std::string& name)
+	int ShaderProgram::getUniformLocation(const std::string& name)
 	{
 		if (m_UniformLocationCache.find(name) != m_UniformLocationCache.end())
 			return m_UniformLocationCache[name];
 
-		Bind();
+		bind();
 
 		int location;
-		GLCall(location = glGetUniformLocation(m_rendererId, name.c_str()));
+		GLCall(location = glGetUniformLocation(m_glName, name.c_str()));
 		if (location == -1)
 			std::cout << "Warning: uniform " << name << " does not exist!\n";
 

@@ -11,14 +11,14 @@ namespace RuamEngine
 	unsigned int Mesh::s_instanceCount = 0;
 
 	Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, MaterialWPtr material)
-		: m_vertices(vertices), m_indices(indices), m_material(material), m_instanceId(s_instanceCount++)
+		: m_vertices(vertices), m_indices(indices), m_material(material), m_id(s_instanceCount++)
 	{
-		if (!material.lock()) ResourceManager::GetMaterial(material.lock()->GetId());
+		if (!material.lock()) ResourceManager::GetMaterial(material.lock()->id());
 	}
 
 	Mesh::~Mesh()
 	{
-		ResourceManager::DestroyMaterial(m_material.lock()->GetId());
+		ResourceManager::DestroyMaterial(m_material.lock()->id());
 	}
 
 	Mesh::Mesh(const Mesh& other)
@@ -27,7 +27,7 @@ namespace RuamEngine
 		MaterialSPtr otherSharedMaterial = GetShared(other.m_material);
 		if (otherSharedMaterial)
 		{
-			m_material = ResourceManager::GetMaterial(otherSharedMaterial->GetId());
+			m_material = ResourceManager::GetMaterial(otherSharedMaterial->id());
 		}
 	}
 
@@ -39,11 +39,11 @@ namespace RuamEngine
 			MaterialSPtr thisSharedMaterial = GetShared(m_material);
 			MaterialSPtr otherSharedMaterial = GetShared(other.m_material);
 
-			if (thisSharedMaterial) ResourceManager::DestroyMaterial(thisSharedMaterial->GetId());
+			if (thisSharedMaterial) ResourceManager::DestroyMaterial(thisSharedMaterial->id());
 				m_vertices = other.m_vertices;
 				m_indices = other.m_indices;
 
-			if (otherSharedMaterial) m_material = ResourceManager::GetMaterial(otherSharedMaterial->GetId());
+			if (otherSharedMaterial) m_material = ResourceManager::GetMaterial(otherSharedMaterial->id());
 		}
 		return *this;
 	}
@@ -60,7 +60,7 @@ namespace RuamEngine
 		if (this != &other)
 		{
 			MaterialSPtr sharedMaterial = GetShared(m_material);
-			if (sharedMaterial) ResourceManager::DestroyMaterial(sharedMaterial->GetId());
+			if (sharedMaterial) ResourceManager::DestroyMaterial(sharedMaterial->id());
 			m_vertices = std::move(other.m_vertices);
 			m_indices = std::move(other.m_indices);
 			m_material = std::move(other.m_material);

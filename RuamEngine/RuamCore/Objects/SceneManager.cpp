@@ -13,6 +13,8 @@ const SceneManager::SceneList& SceneManager::sceneList() {
 void SceneManager::SetActiveScene()
 {
 	RuamEngine::Camera::EmptyMainCamera();
+	// This is the order. First nullptr and then reset.
+	// This is because otherwise the new objects of the new scene are created before the previous scene's objects are destroyed
 	s_active_scene = nullptr;
 	s_active_scene.reset(s_scenes[s_pending_scene_id]());
 }

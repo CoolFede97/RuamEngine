@@ -4,11 +4,11 @@
 #include "Vertex.h"
 
 namespace RuamEngine
-{	
+{
 	class VertexBuffer
 	{
 	private:
-		unsigned int m_id;
+		unsigned int m_glName;
 		unsigned int m_maxBytes = 0;
 		unsigned int m_currentBytes = 0;
 		unsigned int m_usage = GL_STATIC_DRAW;
@@ -19,27 +19,26 @@ namespace RuamEngine
 		~VertexBuffer();
 
 		// Should be used for buffers from the renderer batch
-		void AddBatchData(const std::vector<float>& data, unsigned int size);
+		void addBatchData(const std::vector<float>& data, unsigned int size);
 
 		// Shouldn't be used when using batch rendering
-		void SetSubData(const void* data, unsigned int offset, unsigned int size);
-	
+		void setSubData(const void* data, unsigned int offset, unsigned int size);
+
 		// Shouldn't be used when using batch rendering
-		void SetData(const void* data);
-	
+		void setData(const void* data);
+
 		// Puts the data from m_vertexData into the actual buffer
-		void SubmitData();
+		void submitData();
 
-		void Flush();
+		void flush();
 
-		void Bind() const; 
-		void Unbind() const;
-		unsigned int GetID() const { return m_id; }
-		unsigned int GetCurrentSize() const { return m_currentBytes; }
-		unsigned int GetMaxSize() const { return m_maxBytes; }
+		void bind() const;
+		void unbind() const;
+		unsigned int glName() const { return m_glName; }
+		unsigned int currentSize() const { return m_currentBytes; }
+		unsigned int maxSize() const { return m_maxBytes; }
 
 	};
 
 	using VertexBufferPtr = std::unique_ptr<VertexBuffer>;
 }
-

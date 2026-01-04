@@ -30,7 +30,7 @@ public:
 	{
 		if (j.contains("m_meshPath"))
 		{
-			SetModel(j["m_meshPath"]);
+			setModel(j["m_meshPath"]);
 		}
 	}
 
@@ -44,7 +44,7 @@ public:
 	}
 
     // IMPL_SIMPLE_SERIALIZE(ModelRenderer)
-	void SetModel(const std::string& relativePath)
+	void setModel(const std::string& relativePath)
 	{
 	    if (!m_meshPath.empty() && m_model.lock())
 		{
@@ -52,7 +52,7 @@ public:
 
 			for (auto& [matId, ruPtr] : m_cachedRenderUnits)
 			{
-				Renderer::DestroyRenderUnit(ruPtr.lock(), ruPtr.lock()->m_drawingData);
+				Renderer::DestroyRenderUnit(ruPtr.lock(), ruPtr.lock()->m_drawingData.lock());
 			}
 			m_cachedRenderUnits.clear();
 		}
@@ -71,12 +71,12 @@ public:
 				ru = Renderer::CreateRenderUnit(drawingData, mesh->m_material);
 			}
 
-			m_cachedRenderUnits[mesh->m_material.lock()->GetId()] = ru;
-			auto meshId = std::find(ru->m_meshesRegistered.begin(), ru->m_meshesRegistered.end(), mesh->GetInstanceId());
+			m_cachedRenderUnits[mesh->m_material.lock()->id()] = ru;
+			auto meshId = std::find(ru->m_meshesRegistered.begin(), ru->m_meshesRegistered.end(), mesh->id());
 			if (meshId != ru->m_meshesRegistered.end()) continue;
-			ru->AddBatchData(mesh->m_vertices, mesh->m_indices, {});
+			ru->addBatchData(mesh->m_vertices, mesh->m_indices, {});
 			ru->m_staticStorage = true;
-			ru->m_meshesRegistered.push_back(mesh->GetInstanceId());
+			ru->m_meshesRegistered.push_back(mesh->id());
 		}
 	}
 private:
@@ -98,11 +98,11 @@ private:
         if (modelShared->m_localToGlobalMaterials.size() == 1)
 		{
 			MeshSPtr mesh = modelShared->m_meshes[0];
-			RenderUnitSPtr ru = m_cachedRenderUnits[mesh->m_material.lock()->GetId()].lock();
+			RenderUnitSPtr ru = m_cachedRenderUnits[mesh->m_material.lock()->id()].lock();
 			if (ru != nullptr)
 			{
 				Renderer::matrices.push_back(modelMatrix);
-				ru->m_modelMatricesBuffer->AddBatchData({ modelMatrix });
+				ru->m_modelMatricesBuffer->addBatchData({ modelMatrix });
 				return;
 			}
 		}
@@ -111,14 +111,14 @@ private:
 		auto renderUnits = Renderer::m_drawingDatas[m_shaderProgramType]->m_renderUnits;
 		for (const MeshSPtr& mesh : m_model.lock()->m_meshes)
 		{
-			RenderUnitSPtr ru = m_cachedRenderUnits[mesh->m_material.lock()->GetId()].lock();
+			RenderUnitSPtr ru = m_cachedRenderUnits[mesh->m_material.lock()->id()].lock();
 
 			MaterialSPtr ruSharedMaterial = GetShared(ru->m_material);
-			std::vector<unsigned int>::iterator usedRU = std::find(renderUnitsUsed.begin(), renderUnitsUsed.end(), ruSharedMaterial->GetId());
+			std::vector<unsigned int>::iterator usedRU = std::find(renderUnitsUsed.begin(), renderUnitsUsed.end(), ruSharedMaterial->id());
 			if (usedRU == renderUnitsUsed.end())
 			{
-				ru->m_modelMatricesBuffer->AddBatchData({ modelMatrix });
-				renderUnitsUsed.push_back(ruSharedMaterial->GetId());
+				ru->m_modelMatricesBuffer->addBatchData({ modelMatrix });
+				renderUnitsUsed.push_back(ruSharedMaterial->id());
 			}
 		}
 	};

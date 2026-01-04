@@ -89,18 +89,18 @@ namespace RuamEngine
     {
         for (auto& [type,drawingData] : m_drawingDatas)
         {
-            drawingData->SubmitData();
+            drawingData->submitData();
         }
     }
     void Renderer::EndBatch(RenderUnit& renderUnit)
     {
-        renderUnit.SubmitData();
+        renderUnit.submitData();
     }
     void Renderer::Flush()
     {
         for (auto& [type,drawingData] : m_drawingDatas)
         {
-            drawingData->Flush();
+            drawingData->flush();
         }
     }
 
@@ -174,7 +174,7 @@ namespace RuamEngine
     ShaderProgramSPtr Renderer::CreateProgram(const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
     {
         ShaderProgramSPtr newProgram = std::make_shared<ShaderProgram>(vertexShaderPath, fragmentShaderPath);
-        m_shaderPrograms[newProgram->GetInstanceId()] = newProgram;
+        m_shaderPrograms[newProgram->instanceId()] = newProgram;
 		return newProgram;
     }
 
@@ -190,7 +190,7 @@ namespace RuamEngine
 		newRenderUnit->m_material = material;
 		newRenderUnit->m_drawingData = drawingData;
 		newRenderUnit->m_program = drawingData->m_program;
-        drawingData->m_renderUnits[material.lock()->GetId()] = newRenderUnit;
+        drawingData->m_renderUnits[material.lock()->id()] = newRenderUnit;
         return newRenderUnit;
 	}
 
@@ -206,7 +206,7 @@ namespace RuamEngine
     // If the texture already exists, it returns the existing index. Otherwise, it creates a new texture and returns its index.
     unsigned int Renderer::RegisterTexture(const TextureSPtr& texture)
     {
-        GLenum type = texture->GetType();
+        GLenum type = texture->texType();
 
         if (m_handlesByType[type].size() >= maxTextureCountPerType)
         {
@@ -216,11 +216,11 @@ namespace RuamEngine
         for (unsigned int i = 0; i < m_texturesByType[type].size(); i++)
         {
          	if (m_texturesByType[type][i]==nullptr) continue;
-            if (texture->GetPath() == m_texturesByType[type][i]->GetPath()) return i;
+            if (texture->path() == m_texturesByType[type][i]->path()) return i;
         }
 
         GLuint64 newHandle;
-        GLCall(newHandle = glGetTextureHandleARB(texture->GetRendererId()));
+        GLCall(newHandle = glGetTextureHandleARB(texture->glName()));
         ASSERT(newHandle != 0);
 
         GLCall(glMakeTextureHandleResidentARB(newHandle));
@@ -277,7 +277,7 @@ namespace RuamEngine
 
     void Renderer::DestroyRenderUnit(RenderUnitSPtr renderUnit, DrawingDataSPtr drawingData)
     {
-    	unsigned int materialId = renderUnit->m_material.lock()->GetId();
+    	unsigned int materialId = renderUnit->m_material.lock()->id();
         auto& units = drawingData->m_renderUnits;
         auto it = units.find(materialId);
 
@@ -305,7 +305,7 @@ namespace RuamEngine
     // Finds if a render unit already exists in a certain drawing data, if not, returns nullptr
     RenderUnitSPtr Renderer::GetRenderUnit(MaterialWPtr material, DrawingDataSPtr drawingData)
     {
-    	unsigned int materialId = material.lock()->GetId();
+    	unsigned int materialId = material.lock()->id();
      	auto units = drawingData->m_renderUnits;
     	auto it = units.find(materialId);
      	if (it != units.end()) return it->second;
@@ -365,47 +365,45 @@ namespace RuamEngine
         for (auto& [type,drawingData] : m_drawingDatas)
         {
             // std::cout << "Render units count: " << drawingData->m_renderUnits.size() << "\n";
-			drawingData->m_program->UpdateCameraMatrices();
+			drawingData->m_program->updateCameraMatrices();
             for (auto& [materialId, renderUnit] : drawingData->m_renderUnits)
             {
             	// The vertex array is useless and doesn't contain any information since I use SSBOs to pass the data into the shader.
              	// It's just there in order to satisfy OpenGL because it need to have one bound
-           		renderUnit->m_vertexArray->Bind();
+           		renderUnit->m_vertexArray->bind();
 
                 ShaderProgramSPtr program = drawingData->m_program;
-                program->Bind();
-                GlobalLight::LoadLightSettings(program);
+                program->bind();
+                GlobalLight::loadLightSettings(program);
 
-                program->LoadMaterial(*renderUnit->m_material.lock());
+                program->loadMaterial(*renderUnit->m_material.lock());
 
                 // Bind the SSBOs for this specific render unit
-                renderUnit->SubmitData();
-				renderUnit->BindBuffersBase();
+                renderUnit->submitData();
+				renderUnit->bindBuffersBase();
 
-				 // DEBUG: Print info
-	            // unsigned int indexCount = renderUnit->m_indices->GetCurrentSize()/sizeof(unsigned int);
-	            // unsigned int instanceCount = renderUnit->m_modelMatricesBuffer->m_data.size();
-
-	            // if (instanceCount > 1) {  // Solo para objetos instanciados
-	            //     std::cout << "Drawing: " << indexCount << " indices × "
-	            //               << instanceCount << " instances = "
-	            //               << (indexCount * instanceCount) << " total draw calls\n";
-	            // }
-
-                GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit->m_indices->GetCurrentSize()/sizeof(unsigned int), renderUnit->m_modelMatricesBuffer->m_data.size()));
+                GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit->m_indices->currentSize()/sizeof(unsigned int), renderUnit->m_modelMatricesBuffer->m_data.size()));
             }
         }
     }
 
     void Renderer::Draw(RenderUnit& renderUnit)
     {
-        renderUnit.m_program->Bind();
-        renderUnit.m_program->LoadMaterial(*renderUnit.m_material.lock());
-        renderUnit.m_program->UpdateCameraMatrices();
+    	// The vertex array is useless and doesn't contain any information since I use SSBOs to pass the data into the shader.
+    	// It's just there in order to satisfy OpenGL because it need to have one bound
+     	renderUnit.m_vertexArray->bind();
 
-        // Is something doesn't work when this line functions is called due to an exceeded amount of data in a batch (which is okay to happen, may be the solution is to uncomment the line below)
-        // renderUnit.SubmitData();
-        GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit.m_indices->GetCurrentSize() / sizeof(unsigned int), renderUnit.m_modelMatricesBuffer->m_data.size()));
+		ShaderProgramSPtr program = renderUnit.m_drawingData.lock()->m_program;
+		program->bind();
+		GlobalLight::loadLightSettings(program);
+
+		program->loadMaterial(*renderUnit.m_material.lock());
+
+		// Bind the SSBOs for this specific render unit
+		renderUnit.submitData();
+		renderUnit.bindBuffersBase();
+
+		GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit.m_indices->currentSize()/sizeof(unsigned int), renderUnit.m_modelMatricesBuffer->m_data.size()));
     }
 
 }

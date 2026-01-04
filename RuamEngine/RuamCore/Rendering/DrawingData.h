@@ -19,15 +19,16 @@ namespace RuamEngine
         ShaderProgramSPtr m_program = nullptr;
         std::map<unsigned int, RenderUnitSPtr> m_renderUnits = {}; // The key is the material id
 
-        void SubmitData();
-        void SubmitData(RenderUnit& renderUnit);
-		void Flush();
+        void submitData();
+        void submitData(RenderUnit& renderUnit);
+		void flush();
 
-		unsigned int GetInstanceId() const { return m_instanceId; }
+		unsigned int instanceId() const { return m_instanceId; }
     private:
 		unsigned int m_instanceId;
 		static unsigned int s_instanceIdCount;
     };
     using DrawingDataSPtr = std::shared_ptr<DrawingData>;
+    using DrawingDataWPtr = std::weak_ptr<DrawingData>;
 
 }

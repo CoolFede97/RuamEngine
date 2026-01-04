@@ -57,12 +57,7 @@ public:
 	}
 
 	virtual void start() {};
-	virtual void update() {
-		/*if (!m_started) {
-			start();
-			m_started = true;
-		}//*/
-	}
+	virtual void update() {};
 
 	bool operator==(const Component& other) const;
 	bool operator==(const std::unique_ptr<Component>& other) const;
@@ -78,15 +73,17 @@ public:
 		};
 	}
 
-	void destroy() { m_destroy = true; }
-	bool destruction_mark() const { return m_destroy; }
+	void destroy() { m_destroyFlag = true; }
+	bool destroyFlag() const { return m_destroyFlag; }
+	bool startedFlag() const { return m_startedFlag; }
+	void markStartedFlag() { m_startedFlag = true; }
 
 protected:
 	const unsigned int m_object_id;
 	const unsigned int m_id;
 	static unsigned int s_id_count;
-	bool m_started = false;
-	bool m_destroy = false;
+	bool m_startedFlag = false;
+	bool m_destroyFlag = false;
 };
 
 class BaseRenderer : public Component {

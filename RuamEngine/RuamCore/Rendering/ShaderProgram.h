@@ -22,27 +22,27 @@ namespace RuamEngine
 		ShaderProgram(const std::string& vertexPath, const std::string& fragmentPath);
 		~ShaderProgram();
 
-		void Bind() const;
-		void Unbind() const;
+		void bind() const;
+		void unbind() const;
 
 		// Set Uniforms
-		void SetUniform1i(const std::string& name, int value);
-		void SetUniform1f(const std::string& name, float value);
-		void SetUniform3f(const std::string& name, float v0, float v1, float v2);
-		void SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
-		void SetUniformMat4f(const std::string& name, glm::mat4 matrix);
-		void SetUniformTextureSlots(const std::string& name);
-		void LoadMaterial(const Material& material);
-		void UpdateCameraMatrices();
-		unsigned int GetMaxTexturesCapacity() { return  maxTextureSlots; }
-		unsigned int GetInstanceId() const { return m_instanceId; }
-		unsigned int GetRendererID() const { return m_rendererId; }
+		void setUniform1i(const std::string& name, int value);
+		void setUniform1f(const std::string& name, float value);
+		void setUniform3f(const std::string& name, float v0, float v1, float v2);
+		void setUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
+		void setUniformMat4f(const std::string& name, glm::mat4 matrix);
+		void setUniformTextureSlots(const std::string& name);
+		void loadMaterial(const Material& material);
+		void updateCameraMatrices();
+		unsigned int maxTexturesCapacity() { return  maxTextureSlots; }
+		unsigned int instanceId() const { return m_instanceId; }
+		unsigned int rendererID() const { return m_glName; }
 
 	private:
-		unsigned int CompileShader(unsigned int type, const std::string& source);
-		unsigned int CreateProgram(const std::string& vertexShader, const std::string& fragmentShader);
-		int GetUniformLocation(const std::string& name);
-		unsigned int m_rendererId;
+		unsigned int compileShader(unsigned int type, const std::string& source);
+		unsigned int createProgram(const std::string& vertexShader, const std::string& fragmentShader);
+		int getUniformLocation(const std::string& name);
+		unsigned int m_glName;
 		unsigned int m_instanceId;
 		unsigned int static s_idInstanceCount;
 		std::unordered_map<std::string, int> m_UniformLocationCache;

@@ -5,67 +5,46 @@ namespace RuamEngine
 {
     VertexBuffer::VertexBuffer(unsigned int maxSize, unsigned int usage)
     {
-        GLCall(glGenBuffers(1, &m_id));
+        GLCall(glGenBuffers(1, &m_glName));
 	    m_maxBytes = maxSize;
 	    m_usage = usage;
-	    SetData(nullptr);
+	    setData(nullptr);
     }
 
-    VertexBuffer::~VertexBuffer() 
+    VertexBuffer::~VertexBuffer()
     {
-        GLCall(glDeleteBuffers(1, &m_id));
+        GLCall(glDeleteBuffers(1, &m_glName));
     }
 
-    // DespuÈs hacer que si la data supera la capacidad del Buffer (por m·s que estÈ vacÌo), se actualice el buffer y que tire advertencia
-    void VertexBuffer::AddBatchData(const std::vector<float>& data, unsigned int size)
+    // Despu√©s hacer que si la data supera la capacidad del Buffer (por m√°s que est√© vac√≠o), se actualice el buffer y que tire advertencia
+    void VertexBuffer::addBatchData(const std::vector<float>& data, unsigned int size)
     {
         m_vertexData.insert(m_vertexData.end(), data.begin(), data.end());
         m_currentBytes += size;
     }
 
-    void VertexBuffer::SetSubData(const void* data, unsigned int offset, unsigned int size)
+    void VertexBuffer::setSubData(const void* data, unsigned int offset, unsigned int size)
     {
         ASSERT(offset + size <= maxVertexSize * maxVertexCount);
 
-        Bind();
+        bind();
 
         GLCall(glBufferSubData(GL_ARRAY_BUFFER, offset, size, data));
     }
 
-    void VertexBuffer::SetData(const void* data)
+    void VertexBuffer::setData(const void* data)
     {
-        Bind();
+        bind();
         GLCall(glBufferData(GL_ARRAY_BUFFER, m_vertexData.size() * sizeof(float), data, m_usage));
     }
 
     // Puts the data from m_vertexData into the actual buffer
-    void VertexBuffer::SubmitData()
+    void VertexBuffer::submitData()
     {
 
-        Bind();
-        
+        bind();
+
         GLCall(glBufferData(GL_ARRAY_BUFFER, m_vertexData.size() * sizeof(float), m_vertexData.data(), m_usage));
-	
-    }
 
-    void VertexBuffer::Flush()
-    {
-        m_vertexData.clear();
-        m_currentBytes = 0;
-        Bind();
-
-
-        GLCall(glBufferData(GL_ARRAY_BUFFER, 0, nullptr, m_usage));
-    
-    }
-
-    void VertexBuffer::Bind() const
-    {
-        GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_id));
-    }
-
-    void VertexBuffer::Unbind() const
-    {
-        GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
     }
 }

@@ -13,7 +13,7 @@ namespace RuamEngine
     RenderUnitSPtr Skybox::m_renderUnit = nullptr;
 
 
-    std::vector<Vertex> Skybox::m_vertices = Vertex::CreateCube();
+    std::vector<Vertex> Skybox::m_vertices = Vertex::createCube();
 
     std::vector<unsigned int> Skybox::m_indices = {
         // Back (+Z)
@@ -65,7 +65,7 @@ namespace RuamEngine
         m_renderUnit = Renderer::CreateRenderUnit(Renderer::m_drawingDatas[ShaderProgramType::skybox], m_material);
         m_renderUnit->m_staticPosition = true;
         m_renderUnit->m_staticStorage = true;
-        m_renderUnit->AddBatchData(m_vertices, m_indices, {glm::mat4(1.0f)});
+        m_renderUnit->addBatchData(m_vertices, m_indices, {glm::mat4(1.0f)});
 
         m_material.lock()->m_cubemap = m_cubemap;
     }

@@ -17,7 +17,7 @@ namespace RuamEngine
         std::string unifiedPath = UnifyPaths(relativePaths);
         m_filePath = unifiedPath;
 
-        GLCall(glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &m_rendererId));
+        GLCall(glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &m_glName));
 
         stbi_set_flip_vertically_on_load(1);
 
@@ -43,19 +43,19 @@ namespace RuamEngine
             ASSERT(m_localBuffers[i]);
         }
 
-        GLCall(glTextureStorage2D(m_rendererId, 1, GL_RGBA8, m_faceLength, m_faceLength));
+        GLCall(glTextureStorage2D(m_glName, 1, GL_RGBA8, m_faceLength, m_faceLength));
 
         for (unsigned int i = 0; i < relativePaths.size(); i++)
         {
-            GLCall(glTextureSubImage3D(m_rendererId, 0, 0, 0, i, m_faceLength, m_faceLength, 1, GL_RGBA, GL_UNSIGNED_BYTE, m_localBuffers[i]));
+            GLCall(glTextureSubImage3D(m_glName, 0, 0, 0, i, m_faceLength, m_faceLength, 1, GL_RGBA, GL_UNSIGNED_BYTE, m_localBuffers[i]));
             stbi_image_free(m_localBuffers[i]);
         }
 
-        glTexParameteri(m_rendererId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(m_rendererId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(m_rendererId, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(m_rendererId, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(m_rendererId, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+        glTexParameteri(m_glName, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(m_glName, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(m_glName, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(m_glName, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(m_glName, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
     }
 
     Cubemap::Cubemap(const std::string& relativePath)
@@ -63,7 +63,7 @@ namespace RuamEngine
         m_filePaths.push_back(GlobalizePath(relativePath));
         m_filePath = m_filePaths[0];
 
-        GLCall(glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &m_rendererId));
+        GLCall(glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &m_glName));
 
         stbi_set_flip_vertically_on_load(1);
 
@@ -97,7 +97,7 @@ namespace RuamEngine
 
         m_faceLength = faceWidth;
 
-        GLCall(glTextureStorage2D(m_rendererId, 1, GL_RGBA8, m_faceLength, m_faceLength));
+        GLCall(glTextureStorage2D(m_glName, 1, GL_RGBA8, m_faceLength, m_faceLength));
 
         struct FacePosition
         {
@@ -141,31 +141,31 @@ namespace RuamEngine
                 }
             }
 
-            GLCall(glTextureSubImage3D(m_rendererId, 0, 0, 0, i, m_faceLength, m_faceLength, 1, GL_RGBA, GL_UNSIGNED_BYTE, faceData));
+            GLCall(glTextureSubImage3D(m_glName, 0, 0, 0, i, m_faceLength, m_faceLength, 1, GL_RGBA, GL_UNSIGNED_BYTE, faceData));
 
             delete[] faceData;
         }
 
         stbi_image_free(m_localBuffers[0]);
 
-        glTexParameteri(m_rendererId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(m_rendererId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(m_rendererId, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(m_rendererId, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(m_rendererId, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+        glTexParameteri(m_glName, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(m_glName, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(m_glName, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(m_glName, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(m_glName, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
     }
 
-    void Cubemap::Bind(unsigned int slot) const
+    void Cubemap::bind(unsigned int slot) const
     {
         GLCall(glActiveTexture(GL_TEXTURE0 + slot));
-        GLCall(glBindTexture(GL_TEXTURE_CUBE_MAP, m_rendererId));
+        GLCall(glBindTexture(GL_TEXTURE_CUBE_MAP, m_glName));
     }
-    void Cubemap::Unbind() const
+    void Cubemap::unbind() const
     {
         GLCall(glBindTexture(GL_TEXTURE_CUBE_MAP, 0));
     }
     Cubemap::~Cubemap()
     {
-        GLCall(glDeleteTextures(1, &m_rendererId));
+        GLCall(glDeleteTextures(1, &m_glName));
     }
 }

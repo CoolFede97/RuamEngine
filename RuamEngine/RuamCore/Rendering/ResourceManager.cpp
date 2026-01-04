@@ -86,9 +86,9 @@ namespace RuamEngine
 
 				}
 				MaterialSPtr mat = GetShared(mesh->m_material);
-				if (auto diffuseTex = mat->m_diffuseTexture.lock()) texturesToDestroy.insert(diffuseTex->GetPath());
-				if (auto specularTex = mat->m_specularTexture.lock()) texturesToDestroy.insert(specularTex->GetPath());
-				if (auto reflectionTex = mat->m_reflectionTexture.lock()) texturesToDestroy.insert(reflectionTex->GetPath());
+				if (auto diffuseTex = mat->m_diffuseTexture.lock()) texturesToDestroy.insert(diffuseTex->path());
+				if (auto specularTex = mat->m_specularTexture.lock()) texturesToDestroy.insert(specularTex->path());
+				if (auto reflectionTex = mat->m_reflectionTexture.lock()) texturesToDestroy.insert(reflectionTex->path());
 			}
 			for (auto& ru : unitsToDestroy)
 			{
@@ -125,7 +125,7 @@ namespace RuamEngine
      	MaterialEntry newEntry;
      	newEntry.material = newMaterial;
      	newEntry.refCount++;
-		m_materialCache[newMaterial->GetId()] = newEntry;
+		m_materialCache[newMaterial->id()] = newEntry;
 		return newMaterial;
     }
     void ResourceManager::DestroyMaterial(unsigned int materialId)

@@ -33,14 +33,14 @@ namespace RuamEngine
 
             TextureSPtr newTexture = std::make_shared<T>(relativePath);
             unsigned int rendererIndex = RegisterTextureInRenderer(newTexture);
-            newTexture->SetRendererIndex(rendererIndex);
+            newTexture->setRendererIndex(rendererIndex);
 
             TextureEntry newEntry;
             newEntry.rendererIndex = rendererIndex;
             newEntry.texture = newTexture;
             newEntry.refCount = 1;
 
-            m_textureCache[newTexture->GetPath()] = newEntry;
+            m_textureCache[newTexture->path()] = newEntry;
             return newTexture;
         }
         template <typename T>
@@ -79,7 +79,7 @@ namespace RuamEngine
 
             if (it->second.refCount <=0)
             {
-                UnregisterTextureInRenderer(it->second.rendererIndex, it->second.texture->GetType());
+                UnregisterTextureInRenderer(it->second.rendererIndex, it->second.texture->texType());
                 m_textureCache.erase(it);
             }
 

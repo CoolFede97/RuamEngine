@@ -6,7 +6,7 @@
 #include "SceneManager.hpp"
 #include "Scene.hpp"
 #include "Component.hpp"
-#include "Object.hpp"
+#include "Entity.hpp"
 
 #include "Input.h"
 #include "imgui.h"

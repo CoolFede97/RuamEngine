@@ -23,7 +23,7 @@ namespace RuamEngine
 	void GlobalLight::start()
 	{
 		if (!s_mainLight) s_mainLight = this;
-		else if (s_mainLight != this) object()->removeComponent<GlobalLight>(); // PREGUNTARLE A TOMI COMO HACER QUE ESTO BORRE A �ESTE! COMPONENTE
+		else if (s_mainLight != this) entity()->removeComponent<GlobalLight>(); // PREGUNTARLE A TOMI COMO HACER QUE ESTO BORRE A �ESTE! COMPONENTE
 		setLightColor(m_color);
 	}
 
@@ -31,6 +31,6 @@ namespace RuamEngine
 	{
 	    program->setUniform4f("u_globalLightColor", m_color.x, m_color.y, m_color.z, m_color.w);
 		program->setUniform1f("u_lightOffset", m_lightOffset);
-		program->setUniform3f("u_globalLightPos", s_mainLight->object()->transform().position().x, s_mainLight->object()->transform().position().y, s_mainLight->object()->transform().position().z);
+		program->setUniform3f("u_globalLightPos", s_mainLight->entity()->transform().position().x, s_mainLight->entity()->transform().position().y, s_mainLight->entity()->transform().position().z);
 	}
 }

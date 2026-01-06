@@ -10,8 +10,8 @@ namespace RuamEngine
 	}
 	glm::mat4 Camera::viewMatrix()
 	{
-		glm::vec3 pos = object()->transform().position();
-		glm::vec3 eulerRadians = glm::radians(object()->transform().rotation());
+		glm::vec3 pos = entity()->transform().position();
+		glm::vec3 eulerRadians = glm::radians(entity()->transform().rotation());
 		glm::vec3 direction;
 
 		float pitch = eulerRadians.x;

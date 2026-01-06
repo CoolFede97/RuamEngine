@@ -20,7 +20,7 @@
 
 //     void start() {
 //         size = 1.0f;
-//         originPos = object()->transform().position();
+//         originPos = entity()->transform().position();
 //         verticesPos[0] = originPos + glm::vec3(-size / 2.0f, size / 2.0f, -size / 2.0f);
 //         verticesPos[1] = originPos + glm::vec3(-size / 2.0f, -size / 2.0f, -size / 2.0f);
 //         verticesPos[2] = originPos + glm::vec3(size / 2.0f, size / 2.0f, -size / 2.0f);

@@ -36,7 +36,7 @@ int main()
 		SceneManager::AddSceneCreator(2, CreateEndScene);
 		SceneManager::AddSceneCreator(1, CreateCFSandboxScene);
 		SceneManager::AddSceneCreator(0, CreateInitialScene);
-
+		// SceneManager::AddSceneCreator(3, CreateSandboxScene);
 		SceneManager::EnqueueSceneChange(0);
 
 		unsigned int frameCount = 0;
@@ -46,7 +46,7 @@ int main()
 
 			SceneManager::ApplyPendingSceneChange();
 
-		    // std::cout << "Frame count: " << frameCount++ << "\n";
+		    std::cout << "Frame count: " << frameCount++ << "\n";
 
 			// ImGUI
 			ImGui_ImplOpenGL3_NewFrame();

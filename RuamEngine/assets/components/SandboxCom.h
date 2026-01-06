@@ -2,8 +2,11 @@
 
 #include "Component.hpp"
 #include "Renderer.h"
+#include "Scene.hpp"
+#include "SceneManager.hpp"
 #include "Vertex.h"
 #include "SSBO.h"
+#include "SandboxCom2.h"
 
 using namespace RuamEngine;
 
@@ -11,52 +14,24 @@ class SandboxCom : public BaseRenderer
 {
 	using BaseRenderer::BaseRenderer;
 
-	int gridSide = 1; // k*k grid
-	float padding = 0.01f;
-	float screenX = 2.0f;
-	float screenY = 2.0f;
+	void start()
+	{
+		Entity* newEntity = SceneManager::ActiveScene()->createEntity();
+		std::cout << "START: SANDBOXCOM 1 UNO!\n";
+		std::cout << "JUST CREATED COMPONENTS SIZE: " << SceneManager::ActiveScene()->m_justCreatedComponents.size() << "\n";
+		newEntity->addComponent<SandboxCom2>();
+		std::cout << "JUST CREATED COMPONENTS SIZE: " << SceneManager::ActiveScene()->m_justCreatedComponents.size() << "\n";
 
-	float quadWidth = screenX / gridSide - padding / 2;
-	float quadHeight = screenY / gridSide - padding / 2;
+	}
 
-	unsigned int indexCount = 0;
-
-	// It's called in update
 	void render()
 	{
-		//RenderUnitSPtr genericUnit = Renderer::m_drawingDatas[0]->m_renderUnits[0];
-		////genericUnit.m_vertexArray->Bind();
 
-		////genericUnit.m_shader->Bind();
-		//
-		//indexCount = 0;
-		//for (int row = 0; row < gridSide; row++)
-		//{
-		//	for (int col = 0; col < gridSide; col++)
-		//	{
-		//		std::vector<Vertex> newQuad = Vertex::CreateQuad
-		//		(
-		//			quadWidth,
-		//			col * (screenX / gridSide - 0.5f * padding) + col * padding + quadWidth / 2 - screenX / 2,
-		//			row * (screenY / gridSide - 0.5f * padding) + row * padding + quadHeight / 2 - screenY / 2,
-		//			1.0f
-		//		);
-		//
-		//		std::vector<unsigned int> newIndices =
-		//		{
-		//			indexCount + 0, indexCount + 1, indexCount + 2,indexCount + 2, indexCount + 3, indexCount + 0
-		//		};
-		//		indexCount += 4;
-		//		if (genericUnit.AddBatchData(newQuad, newIndices, { glm::mat4(1.0f) }))
-		//		{
-		//			indexCount = 0;
-		//		}
-		//
-		//	}
-		//}
 	};
 	void update()
 	{
-		render();
+		std::cout << "UPDATE EN SANDBOX 1 UNO!\n";
+		BaseRenderer::update();
+
 	};
 };

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Object.hpp"
+#include "Entity.hpp"
 #include "../../RuamCore/Input/Input.h"
 #include "RuamTime.h"
 

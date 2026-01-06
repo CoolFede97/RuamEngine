@@ -2,7 +2,7 @@
 
 #include "SceneManager.hpp"
 #include "Scene.hpp"
-#include "Object.hpp"
+#include "Entity.hpp"
 #include <Component.hpp>
 
 #include "ShaderProgram.h"
@@ -29,7 +29,7 @@ namespace RuamEngine
 		void update()
 		{
 		    if (Camera::GetMainCamera() == nullptr) return;
-			if (glm::length(Camera::GetMainCamera()->object()->transform().position() - object()->transform().position()) < 1.5f)
+			if (glm::length(Camera::GetMainCamera()->entity()->transform().position() - entity()->transform().position()) < 1.5f)
 			{
 			    SceneManager::EnqueueSceneChange(1);
 			}

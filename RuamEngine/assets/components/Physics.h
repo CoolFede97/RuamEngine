@@ -19,7 +19,7 @@
 //     bool isGrounded = false;
 
 //     void update() {
-//         object().transform().position() = object().transform().position() + velocity;
+//         entity().transform().position() = entity().transform().position() + velocity;
 //         if (useGravity && !isGrounded) {
 //             velocity += gravity * Time::DeltaTime();
 //         }

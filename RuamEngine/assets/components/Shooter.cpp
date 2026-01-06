@@ -13,10 +13,10 @@ void Shooter::start()
 	}
 	else if (s_instance != this)
 	{
-		object()->removeComponent<Shooter>(); // ESTO EST� MAL
+		entity()->removeComponent<Shooter>(); // ESTO EST� MAL
 	}
     if (Boss::s_instance != nullptr)
-	Boss::s_instance->playerTransform = &object()->transform();
+	Boss::s_instance->playerTransform = &entity()->transform();
 	else std::cout << "Error: Boss instance does not exist\n";
 }
 
@@ -25,19 +25,19 @@ void Shooter::update() {
 	{
 	    if (Boss::s_instance == nullptr) return;
 		m_timeSinceLastShot = 0.0f;
-		Object* object = SceneManager::ActiveScene()->newObject(0);
+		Entity* entity = SceneManager::ActiveScene()->createEntity(0);
 
-		Bullet& bullet = object->addComponent<Bullet>([this]() {Boss::s_instance->take_damage(m_damage);});
+		Bullet& bullet = entity->addComponent<Bullet>([this]() {Boss::s_instance->take_damage(m_damage);});
 
-		bullet.object()->transform().position() = s_instance->object()->transform().position();
+		bullet.entity()->transform().position() = s_instance->entity()->transform().position();
 
 		bullet.m_speed = m_bulletSpeed;
-		bullet.m_direction = glm::normalize(Boss::s_instance->object()->transform().position() - s_instance->object()->transform().position());
-		bullet.m_target = Boss::s_instance->object()->transform().position();
+		bullet.m_direction = glm::normalize(Boss::s_instance->entity()->transform().position() - s_instance->entity()->transform().position());
+		bullet.m_target = Boss::s_instance->entity()->transform().position();
 		bullet.m_radius = m_bulletRadius;
 
-		bullet.object()->addComponent<ModelRenderer>()->m_shaderProgramType = ShaderProgramType::general;
-		bullet.object()->getComponent<ModelRenderer>()->setModel(m_bulletMeshPath);
+		bullet.entity()->addComponent<ModelRenderer>()->m_shaderProgramType = ShaderProgramType::general;
+		bullet.entity()->getComponent<ModelRenderer>()->setModel(m_bulletMeshPath);
 	}
 	m_timeSinceLastShot += Time::DeltaTime();
 }

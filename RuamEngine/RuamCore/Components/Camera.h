@@ -2,7 +2,7 @@
 
 #include "SceneManager.hpp"
 #include "Scene.hpp"
-#include "Object.hpp"
+#include "Entity.hpp"
 #include "Serial.hpp"
 #include <Component.hpp>
 #include "AudioSystem.hpp"
@@ -38,7 +38,7 @@ namespace RuamEngine
 
 		void update() {
 			Component::update();
-			AudioSystem::AL::Listener::setParam(AL_POSITION, object()->transform().position());
+			AudioSystem::AL::Listener::setParam(AL_POSITION, entity()->transform().position());
 		};
 		void start() { setAsMainCamera();};
 

@@ -1,4 +1,4 @@
-#include "Object.hpp"
+#include "Entity.hpp"
 #include "Component.hpp"
 #include "Scene.hpp"
 #include "SceneManager.hpp"
@@ -14,9 +14,9 @@ void CreateCollisionSandboxScene()
 {
     // SceneManager::CreateScene(2, "CollisionSandboxScene");
     // auto collisionSandboxScene = SceneManager::ActiveScene();
-    // Object* manager = collisionSandboxScene->newObject();
-    // Object* cube = collisionSandboxScene->newObject();
-    // Object* camera = collisionSandboxScene->newObject();
+    // Entity* manager = collisionSandboxScene->createEntity();
+    // Entity* cube = collisionSandboxScene->createEntity();
+    // Entity* camera = collisionSandboxScene->createEntity();
     // cube->addComponent<CubeRenderer>();
     // manager->addComponent<Manager>();
     // camera->addComponent<Camera>();

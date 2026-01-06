@@ -1,4 +1,4 @@
-#include "Object.hpp"
+#include "Entity.hpp"
 #include "Component.hpp"
 #include "Renderer.h"
 #include "Scene.hpp"
@@ -13,12 +13,25 @@
 
 #include "../components/Shooter.h"
 #include "../components/Boss.h"
+#include "../components/SandboxCom.h"
+
+Scene* CreateSandboxScene()
+{
+	Scene* sandboxScene = new Scene(3, "SandboxScene");
+	SceneManager::SetActiveScene(sandboxScene);
+
+	Entity* newEntity = sandboxScene->createEntity();
+	newEntity->addComponent<SandboxCom>();
+
+	return sandboxScene;
+}
 
 Scene* CreateCFSandboxScene()
 {
 	Scene* sandboxScene = new Scene(1, "SandboxScene");
+	SceneManager::SetActiveScene(sandboxScene);
 
-	Object* light = sandboxScene->newObject();
+	Entity* light = sandboxScene->createEntity();
 	light->setName("Light");
 	light->addComponent<GlobalLight>();
 	light->transform().setPosition(glm::vec3(0.0f, 50.0f, 0.0f));
@@ -26,7 +39,7 @@ Scene* CreateCFSandboxScene()
 	//bag->transform().setRotation(glm::vec3(45.0f, 5.0f, 45.0f));
 	//bag->addComponent<CubeRenderer>()->materialId = 0;
 
-	Object* bossO = sandboxScene->newObject();
+	Entity* bossO = sandboxScene->createEntity();
 	bossO->setName("Boss");
 	bossO->transform().setPosition(glm::vec3(0.0f, -1.5f, 7.0f));
 	bossO->transform().setScale(glm::vec3(5.0f, 5.0f, 5.0f));
@@ -40,12 +53,12 @@ Scene* CreateCFSandboxScene()
 	boss->m_health = 1;
 	boss->m_bulletMeshPath = "assets/meshes/bullet/bullet.obj";
 
-	// Object* skybox = sandboxScene->newObject();
+	// Object* skybox = sandboxScene->createGo();
 	// skybox->setName("Skybox");
 	// skybox->transform().setScale(glm::vec3(50,50,50));
 	// skybox->addComponent<Skybox>();
 
-	Object* player = sandboxScene->newObject();
+	Entity* player = sandboxScene->createEntity();
 	player->setName("Player");
 	player->transform().setPosition(0.0f, 0.0f, -50.0f);
 	player->addComponent<Camera>();
@@ -59,7 +72,7 @@ Scene* CreateCFSandboxScene()
 	shooter->m_bulletRadius = 0.4f;
 	shooter->m_bulletMeshPath = "assets/meshes/bullet/bullet.obj";
 
-	Object* manager = sandboxScene->newObject();
+	Entity* manager = sandboxScene->createEntity();
 	manager->setName("Manager");
 	//manager->addComponent<CameraController>();
 	manager->addComponent<Manager>();

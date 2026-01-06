@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Component.hpp"
-#include "Object.hpp"
+#include "Entity.hpp"
 #include "Renderer.h"
 #include "SceneManager.hpp"
 #include "Vertex.h"
@@ -44,11 +43,11 @@ private:
 		if (Input::GetKeyDown(KeyCode::Right_Arrow)) m_mouseRotation.y -= 1;
 
 
-		object()->transform().rotation() += static_cast<glm::vec3>(m_mouseRotation * Time::DeltaTime() * m_rotationSpeed);
-		//object()->transform().rotation() += static_cast<glm::vec3>(Input::GetMouseDeltaNorm() * Time::DeltaTime() * m_rotationSpeed);
-		object()->transform().rotation().x = std::clamp(object()->transform().rotation().x, -89.0f, 89.0f);
+		entity()->transform().rotation() += static_cast<glm::vec3>(m_mouseRotation * Time::DeltaTime() * m_rotationSpeed);
+		//entity()->transform().rotation() += static_cast<glm::vec3>(Input::GetMouseDeltaNorm() * Time::DeltaTime() * m_rotationSpeed);
+		entity()->transform().rotation().x = std::clamp(entity()->transform().rotation().x, -89.0f, 89.0f);
 		//std::cout << "Rotation variation: " << static_cast<glm::vec3>(Input::GetMouseDeltaNorm() * Time::DeltaTime() * m_rotationSpeed) << "\n";
-		//std::cout << "Rotation: " << object()->transform().rotation() << "\n";
+		//std::cout << "Rotation: " << entity()->transform().rotation() << "\n";
 		//std::cout << "Normal variation: " << Input::GetMouseDeltaNorm() << "\n";
 
 		m_horizontalDirection = {0, 0, 0};
@@ -57,12 +56,12 @@ private:
 		if (Input::GetKeyDown(KeyCode::A_Key)) m_horizontalDirection.x -= 1;
 		if (Input::GetKeyDown(KeyCode::D_Key)) m_horizontalDirection.x += 1;
 
-		m_direction = Vec3::GetDirectionFromEuler(object()->transform().rotation());
+		m_direction = Vec3::GetDirectionFromEuler(entity()->transform().rotation());
 		//std::cout << "Direction: " << m_direction << "\n";
 
 		Vec3 left = Vec3::Up().CrossProduct(m_direction).Normalized();
-		object()->transform().position() += static_cast<glm::vec3>(m_direction * m_horizontalDirection.z * Time::DeltaTime() * m_speed);
-		object()->transform().position() += static_cast<glm::vec3>(left * -m_horizontalDirection.x * Time::DeltaTime() * m_speed);
+		entity()->transform().position() += static_cast<glm::vec3>(m_direction * m_horizontalDirection.z * Time::DeltaTime() * m_speed);
+		entity()->transform().position() += static_cast<glm::vec3>(left * -m_horizontalDirection.x * Time::DeltaTime() * m_speed);
 
 	};
 	void start()

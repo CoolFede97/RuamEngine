@@ -4,7 +4,7 @@
 #include "Renderer.h"
 #include "SceneManager.hpp"
 #include "Scene.hpp"
-#include "Object.hpp"
+#include "Entity.hpp"
 #include "Serial.hpp"
 #include <Component.hpp>
 #include "AudioSystem.hpp"

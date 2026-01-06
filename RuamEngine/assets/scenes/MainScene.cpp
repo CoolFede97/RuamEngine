@@ -4,7 +4,7 @@
 //{
 //	/*Scene* scene = new Scene();
 //
-//	Object& manager = scene->newObject();*/
+//	Object& manager = scene->createGo();*/
 //
 //
 //}

@@ -2,7 +2,7 @@
 
 #include "SceneManager.hpp"
 #include "Scene.hpp"
-#include "Object.hpp"
+#include "Entity.hpp"
 #include <Component.hpp>
 
 #include "ShaderProgram.h"

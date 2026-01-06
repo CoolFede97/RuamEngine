@@ -10,18 +10,21 @@
 
 #include <iostream>
 
-class Counter : public Component {
-public:
-	using Component::Component;
-	Counter(const nlohmann::json& j, int obj_id) : Component(obj_id) {};
-	void start() {
-		std::cout << "HOADA\n";
-	}
+namespace RuamEngine
+{
+	class Counter : public Component {
+	public:
+		using Component::Component;
+		Counter(const nlohmann::json& j, int obj_id) : Component(obj_id) {};
+		void start() {
+			std::cout << "HOADA\n";
+		}
 
-	void update() {
-	}
+		void update() {
+		}
 
-	IMPL_SIMPLE_SERIALIZE(Counter)
-};
+		IMPL_SIMPLE_SERIALIZE(Counter)
+	};
 
-REGISTER_COMPONENT(Counter)
+	REGISTER_COMPONENT(Counter)
+}

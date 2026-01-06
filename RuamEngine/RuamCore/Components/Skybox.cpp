@@ -59,7 +59,7 @@ namespace RuamEngine
     void Skybox::start()
     {
         if (s_skybox == nullptr) s_skybox = this;
-		else if (s_skybox != this) object()->removeComponent<Skybox>();
+		else if (s_skybox != this) entity()->removeComponent<Skybox>();
 
         m_material = ResourceManager::CreateMaterial();
         m_renderUnit = Renderer::CreateRenderUnit(Renderer::m_drawingDatas[ShaderProgramType::skybox], m_material);

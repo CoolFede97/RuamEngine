@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Object.hpp"
+#include "Entity.hpp"
 #include "../../RuamCore/Input/Input.h"
 #include "RuamTime.h"
 
@@ -18,7 +18,7 @@ class Boss : public Component {
 		}
 	    else if (s_instance != this)
 		{
-			object()->removeComponent<Boss>(); // ESTO EST� MAL
+			entity()->removeComponent<Boss>(); // ESTO EST� MAL
 		}
 	}
 
@@ -27,19 +27,19 @@ class Boss : public Component {
 		if (m_timeSinceLastShot > m_shootingInterval)
 		{
 			m_timeSinceLastShot = 0;
-			Object* object = SceneManager::ActiveScene()->newObject(0);
+			Entity* entity = SceneManager::ActiveScene()->createEntity(0);
 
-			object->transform().position() = s_instance->object()->transform().position();
+			entity->transform().position() = s_instance->entity()->transform().position();
 
-			Bullet* bullet = &object->addComponent<Bullet>([this]() {Shooter::s_instance->take_damage(m_damage);});
+			Bullet* bullet = &entity->addComponent<Bullet>([this]() {Shooter::s_instance->take_damage(m_damage);});
 			bullet->m_speed = m_bulletSpeed;
-			bullet->m_direction = glm::normalize(playerTransform->position() - this->object()->transform().position());
+			bullet->m_direction = glm::normalize(playerTransform->position() - this->entity()->transform().position());
 			bullet->m_target = playerTransform->position();
 			bullet->m_radius = m_bulletRadius;
 
 
-			bullet->object()->addComponent<ModelRenderer>()->m_shaderProgramType = ShaderProgramType::general;
-			bullet->object()->getComponent<ModelRenderer>()->setModel(m_bulletMeshPath);
+			bullet->entity()->addComponent<ModelRenderer>()->m_shaderProgramType = ShaderProgramType::general;
+			bullet->entity()->getComponent<ModelRenderer>()->setModel(m_bulletMeshPath);
 		}
 		m_timeSinceLastShot += Time::DeltaTime();
 	}
@@ -51,7 +51,7 @@ public:
 		if (s_instance->m_health <= 0) {
 			s_instance->playerTransform = nullptr;
 			s_instance = nullptr;
-			object()->destroy();
+			entity()->destroy();
 			SceneManager::EnqueueSceneChange(2);
 		}
 	}

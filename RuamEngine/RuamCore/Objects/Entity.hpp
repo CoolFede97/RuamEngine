@@ -1,0 +1,204 @@
+#pragma once
+
+#include <vector>
+#include <memory>
+#include <map>
+#include <typeindex>
+#include <string>
+#include <algorithm>
+
+#include "Component.hpp"
+#include "Transform.h"
+
+#include "RuamUtils.h"
+
+namespace RuamEngine
+{
+
+	class Entity {
+	public:
+		Entity(const std::string& name) : m_id(s_instanceCount++), m_name(name), m_transform(m_id) {}
+		Entity() : Entity(s_defaultName) {
+		}
+		~Entity();
+
+		using ComponentVector = std::vector<std::unique_ptr<Component>>;
+		using ComponentListMap = std::map<std::type_index, ComponentVector>;
+
+		void addCompToJustCreatedComponents(std::type_index tidx);
+
+		template<class Comp>
+		Comp* addComponent() {
+			EASY_FUNCTION("Add Component");
+			std::unique_ptr<Comp> comp = std::make_unique<Comp>(m_id);
+			const std::type_index tidx = typeid(Comp);
+			if (m_components.count(tidx) <= 0) m_components.insert({tidx, ComponentVector()});
+
+			m_components[tidx].push_back(std::move(comp));
+			addCompToJustCreatedComponents(tidx);
+
+			return dynamic_cast<Comp*>(m_components[tidx].back().get());
+		}
+
+		template<class Comp, typename... Args>
+		Comp& addComponent(Args&&... args) {
+			EASY_FUNCTION("Add Component args")
+			std::unique_ptr<Comp> comp = std::make_unique<Comp>(m_id, std::forward<Args>(args...)...);
+			const std::type_index tidx = typeid(Comp);
+			if (m_components.count(tidx) <= 0) m_components.insert({tidx, ComponentVector()});
+
+			m_components[tidx].push_back(std::move(comp));
+			addCompToJustCreatedComponents(tidx);
+
+			return *dynamic_cast<Comp*>(m_components[tidx].back().get());
+		}
+
+		template<class Comp>
+		Comp& addComponent(const nlohmann::json& j) {
+			EASY_FUNCTION("Add Component args")
+			std::unique_ptr<Comp> comp = std::make_unique<Comp>(j);
+			const std::type_index tidx = typeid(Comp);
+			if (m_components.count(tidx) > 0) m_components.insert({tidx, ComponentVector()});
+
+			m_components[tidx].push_back(std::move(comp));
+			addCompToJustCreatedComponents(tidx);
+
+			return *dynamic_cast<Comp*>(m_components[tidx].back().get());
+		}
+
+		template<class Comp>
+		Component* addComponentPtr(const nlohmann::json& j) {
+			EASY_FUNCTION("Add Component args")
+			std::unique_ptr<Comp> comp = std::make_unique<Comp>(j, m_id);
+			const std::type_index tidx = typeid(Comp);
+			if (m_components.count(tidx) > 0) m_components.insert({tidx, ComponentVector()});
+
+			m_components[tidx].push_back(std::move(comp));
+			addCompToJustCreatedComponents(tidx);
+
+			return m_components[tidx].back().get();
+		}
+
+
+		// Returns ptr because a ref can't be null
+		// Returned pointer is non-owning
+		// TODO: Find if there's a better way
+		template<class Comp>
+		Comp* getComponent() const {
+			EASY_FUNCTION("Get Component")
+			auto pair = m_components.find(typeid(Comp));
+			if (pair == m_components.end()) {
+				return nullptr;
+			}
+			if (pair->second.size() == 0) {
+				return nullptr;
+			}
+			return dynamic_cast<Comp*>(pair->second.front().get());
+		}
+
+
+		std::vector<Component*> getComponents() const;
+		bool operator==(const Entity& obj) {
+			return this->m_id == obj.m_id;
+		}
+
+		template<class Comp>
+		std::vector<Comp*> getComponentsOfType() const
+		{
+			std::vector<Component*> comps;
+			auto pair = m_components.find(typeid(Comp));
+			for (auto& cmp : pair->second)
+			{
+				comps.push_back(cmp.get());
+			}
+			return comps;
+		}
+
+		std::map<unsigned int, std::map<std::type_index, std::vector<Component*>>>& justCreatedComponents();
+
+		template <class Comp>
+		void removeComponentInJustCreatedComponents()
+		{
+			auto& justCreatedObjects = justCreatedComponents();
+
+			auto idIt = justCreatedObjects.find(m_id);
+			if (idIt == justCreatedObjects.end()) return;
+
+			auto compType = idIt->second.find(typeid(Comp));
+			if (compType ==  idIt->second.end()) return;
+
+			if (justCreatedObjects.size()>0) compType->second.front()->destroy();
+		}
+
+		template <class Comp>
+		void removeComponentInJustCreatedComponents(Component& comp)
+		{
+			auto& justCreatedObjects = justCreatedComponents();
+
+			auto idIt = justCreatedObjects.find(m_id);
+			if (idIt == justCreatedObjects.end()) return;
+
+			auto compType = idIt->second.find(typeid(Comp));
+			if (compType ==  idIt->second.end()) return;
+
+			auto cmp = std::find(compType->second.begin(), compType->second.end(), &comp);
+			if (cmp != compType->second.end()) compType->second.front()->destroy();
+			else std::cerr << "Couldn't find and destroy a component of type " << typeid(Comp).name() <<" with id " << comp.id() << " in object with id " << m_id << "\n";
+		}
+
+		template<class Comp>
+		void removeComponent() {
+			EASY_FUNCTION("Remove Component")
+			auto pair = m_components.find(typeid(Comp));
+			if (pair == m_components.end() || pair->second.size() == 0)
+			{
+				std::cerr << "Couldn't find and destroy a component of type " << typeid(Comp).name() << "\n";
+				return;
+			}
+			pair->second.front()->destroy();
+
+			removeComponentInJustCreatedComponents<Comp>();
+		}
+
+		template<class Comp>
+		void removeComponent(Component& comp) {
+			EASY_FUNCTION("Remove Component")
+			auto pair = m_components.find(typeid(Comp));
+			if (pair == m_components.end()) return;
+			if (pair->second.size() == 0) return;
+			auto cmp = std::find(pair->second.begin(), pair->second.end(), comp);
+			if (cmp != pair->second.end()) cmp->get()->destroy();
+			else std::cerr << "Couldn't find and destroy a component of type " << typeid(Comp).name() <<" with id " << comp.id() << " in object with id " << m_id << "\n";
+		}
+
+		unsigned int id() const;
+		const std::string& name() const;
+		void setName(const std::string& name);
+
+		void update();
+
+		void destroy();
+
+		void setEnabled(bool status);
+
+		bool isEnabled() const;
+
+		bool destroyFlag() const;
+
+		Transform& transform();
+
+		const Transform& transform() const;
+	private:
+		unsigned int m_id;
+		static unsigned int s_instanceCount;
+	    std::string m_name;
+		Transform m_transform;
+
+		ComponentListMap m_components;
+
+		bool m_enabled = true;
+		bool m_destroyFlag = false;
+
+		static const std::string s_defaultName;
+	};
+}

@@ -2,7 +2,7 @@
 
 #include "SceneManager.hpp"
 #include "Scene.hpp"
-#include "Object.hpp"
+#include "Entity.hpp"
 #include <Component.hpp>
 #include "Renderer.h"
 #include "Vertex.h"
@@ -37,11 +37,11 @@ private:
 		RenderUnitSPtr genericUnit = Renderer::m_drawingDatas[0]->m_renderUnits[materialId];
 
 		glm::mat4 modelMatrix(1.0f);
-		modelMatrix = glm::translate(modelMatrix, object()->transform().position());
-		modelMatrix = glm::rotate(modelMatrix, glm::radians(object()->transform().rotation().x), glm::vec3(1.0f, 0.0f, 0.0f));
-		modelMatrix = glm::rotate(modelMatrix, glm::radians(object()->transform().rotation().y), glm::vec3(0.0f, 1.0f, 0.0f));
-		modelMatrix = glm::rotate(modelMatrix, glm::radians(object()->transform().rotation().z), glm::vec3(0.0f, 0.0f, 1.0f));
-		modelMatrix = glm::scale(modelMatrix, object()->transform().scale());
+		modelMatrix = glm::translate(modelMatrix, entity()->transform().position());
+		modelMatrix = glm::rotate(modelMatrix, glm::radians(entity()->transform().rotation().x), glm::vec3(1.0f, 0.0f, 0.0f));
+		modelMatrix = glm::rotate(modelMatrix, glm::radians(entity()->transform().rotation().y), glm::vec3(0.0f, 1.0f, 0.0f));
+		modelMatrix = glm::rotate(modelMatrix, glm::radians(entity()->transform().rotation().z), glm::vec3(0.0f, 0.0f, 1.0f));
+		modelMatrix = glm::scale(modelMatrix, entity()->transform().scale());
 
 		genericUnit->addBatchData(cube, indices, { modelMatrix });
 	};

@@ -1,4 +1,4 @@
-#include "Object.hpp"
+#include "Entity.hpp"
 #include "Component.hpp"
 #include "Renderer.h"
 #include "Scene.hpp"
@@ -15,20 +15,21 @@
 Scene* CreateInitialScene()
 {
 	auto scene = new Scene(0, "InitialScene");
+	SceneManager::SetActiveScene(scene);
 
-	Object* light = scene->newObject();
+	Entity* light = scene->createEntity();
 	light->addComponent<GlobalLight>();
 	light->transform().setPosition(glm::vec3(0.0f, 100.0f, 0.0f));
 	light->setName("Light");
 
-	Object* nave = scene->newObject();
+	Entity* nave = scene->createEntity();
 	nave->setName("Nave");
 	nave->transform().setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 	ModelRenderer* naveRenderer = nave->addComponent<ModelRenderer>();
 	naveRenderer->m_shaderProgramType = ShaderProgramType::general;
 	naveRenderer->setModel("assets/meshes/Nave/Nave.obj");
 
-	Object* radio = scene->newObject();
+	Entity* radio = scene->createEntity();
 	// radio->addComponent<AudioSource>("assets/music/portal_radio.wav");
 	radio->setName("radio");
 	radio->transform().setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
@@ -39,7 +40,7 @@ Scene* CreateInitialScene()
 	radio->transform().setPosition(glm::vec3(0.0f, -2.0f, 0.0f));
 	radio->transform().setRotation(glm::vec3(90.0f, 0.0f, 0.0f));
 
-	Object* portal = scene->newObject();
+	Entity* portal = scene->createEntity();
 	portal->setName("portal");
 	portal->transform().setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 	ModelRenderer* portalRenderer = portal->addComponent<ModelRenderer>();
@@ -50,7 +51,7 @@ Scene* CreateInitialScene()
 
 	portal->addComponent<Portal>();
 
-	Object* skybox = scene->newObject();
+	Entity* skybox = scene->createEntity();
 	skybox->setName("Skybox");
 	skybox->transform().setScale(glm::vec3(50,50,50));
 	skybox->addComponent<Skybox>();
@@ -60,7 +61,7 @@ Scene* CreateInitialScene()
 	// skybox->transform().setRotation(glm::vec3(180.0f, 0.0, 0.0));
 	// skybox->transform().setScale(glm::vec3(500.0f, 500.0f, 500.0f));
 
-	Object* player = scene->newObject();
+	Entity* player = scene->createEntity();
 	player->transform().setPosition(glm::vec3(50.0f, 20.0f, 160.0f));
 	player->transform().setRotation(glm::vec3(0.0f, 180, 0.0f));
 	player->setName("Player2");
@@ -69,7 +70,7 @@ Scene* CreateInitialScene()
 	player->getComponent<CameraController>()->m_speed = 10.5f;
 	player->getComponent<CameraController>()->m_rotationSpeed = 80.0f;
 
-	Object* manager = scene->newObject();
+	Entity* manager = scene->createEntity();
 	manager->setName("Manager");
 	manager->addComponent<Manager>();
 	// Serial::serialise(SceneManager::ActiveScene());

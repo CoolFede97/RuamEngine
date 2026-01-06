@@ -1,4 +1,4 @@
-#include "Object.hpp"
+#include "Entity.hpp"
 #include "Scene.hpp"
 #include "SceneManager.hpp"
 #include "../components/Manager.h"
@@ -13,7 +13,7 @@ namespace RuamEngine
 // 	{
 // 		SceneManager::CreateScene(0, "MenuScene");
 // 		auto menuScene = SceneManager::ActiveScene();
-// 		Object* manager = menuScene->newObject();
+// 		Object* manager = menuScene->createGo();
 // 		manager->addComponent<Camera>();
 // //		manager->addComponent<AudioSource>("/home/tomy/programming/ce/masmas/RuamEngine/RuamEngine/1 Crumbling Castle.wav");
 // 		manager->addComponent<Counter>();

@@ -6,8 +6,8 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if (POLICY CMP0141)
-    cmake_policy(SET CMP0141 NEW)
-    set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
+	cmake_policy(SET CMP0141 NEW)
+	set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
 # Requerido por Tomy para poder usar lsp
@@ -50,9 +50,9 @@ set(VENDOR_PATH "${CMAKE_SOURCE_DIR}/vendor")
 # Json
 
 FetchContent_Declare(
-  json
-  GIT_REPOSITORY https://github.com/nlohmann/json.git
-  GIT_TAG v3.12.0
+		json
+		GIT_REPOSITORY https://github.com/nlohmann/json.git
+		GIT_TAG v3.12.0
 )
 FetchContent_MakeAvailable(json)
 
@@ -66,8 +66,8 @@ FetchContent_MakeAvailable(json)
 add_library(Vendor INTERFACE)
 
 target_include_directories(Vendor INTERFACE
- ${CMAKE_SOURCE_DIR}/vendor/GLM
- ${CMAKE_SOURCE_DIR}/vendor/stb_image
+	${CMAKE_SOURCE_DIR}/vendor/GLM
+	${CMAKE_SOURCE_DIR}/vendor/stb_image
 #   ${CMAKE_SOURCE_DIR}/vendor/IMGUI
 )
 
@@ -79,16 +79,16 @@ target_compile_definitions(Vendor INTERFACE GLEW_STATIC)
 # GLEW
 
 FetchContent_Populate(
-  glew
-  URL https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0.zip
+		glew
+		URL https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0.zip
 )
 add_library(glew_s STATIC ${glew_SOURCE_DIR}/src/glew.c
-                          ${glew_SOURCE_DIR}/src/glewinfo.c)
+																										${glew_SOURCE_DIR}/src/glewinfo.c)
 target_include_directories(glew_s PUBLIC ${glew_SOURCE_DIR}/include)
 target_compile_definitions(
-  glew_s
-  PRIVATE GLEW_BUILD
-  PUBLIC GLEW_STATIC)
+		glew_s
+		PRIVATE GLEW_BUILD
+		PUBLIC GLEW_STATIC)
 target_link_libraries(glew_s PUBLIC OpenGL::GL)
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -108,9 +108,9 @@ set(GLFW_BUILD_EXAMPLES OFF)
 set(GLFW_BUILD_TESTS OFF)
 set(GLFW_BUILD_DOCS OFF)
 FetchContent_Declare(
-  glfw
-  GIT_REPOSITORY https://github.com/glfw/glfw.git
-  GIT_TAG 3.3.8)
+		glfw
+		GIT_REPOSITORY https://github.com/glfw/glfw.git
+		GIT_TAG 3.3.8)
 FetchContent_MakeAvailable(glfw)
 
 set(BUILD_SHARED_LIBS ON)
@@ -120,8 +120,8 @@ set(BUILD_SHARED_LIBS ON)
 # GLM
 
 FetchContent_Populate(
-  glm
-  URL https://github.com/g-truc/glm/archive/refs/tags/1.0.1.zip
+		glm
+		URL https://github.com/g-truc/glm/archive/refs/tags/1.0.1.zip
 )
 add_library(glm INTERFACE)
 target_include_directories(glm INTERFACE ${glm_SOURCE_DIR})
@@ -132,8 +132,8 @@ add_library(glm::glm ALIAS glm)
 # dr_libs
 
 FetchContent_Populate(
-  dr_libs
-  URL		https://github.com/mackron/dr_libs/archive/refs/heads/master.zip
+		dr_libs
+		URL		https://github.com/mackron/dr_libs/archive/refs/heads/master.zip
 )
 add_library(dr_libs INTERFACE)
 target_include_directories(dr_libs INTERFACE ${dr_libs_SOURCE_DIR})
@@ -144,13 +144,13 @@ add_library(dr_libs::dr_libs ALIAS dr_libs)
 # Assimp
 
 FetchContent_Declare(
-    assimp
-    GIT_REPOSITORY https://github.com/assimp/assimp.git
-    GIT_TAG v6.0.2
+				assimp
+				GIT_REPOSITORY https://github.com/assimp/assimp.git
+				GIT_TAG v6.0.2
 )
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 13)
-    add_compile_options(-Wno-error=dangling-reference)
+	add_compile_options(-Wno-error=dangling-reference)
 endif()
 
 FetchContent_MakeAvailable(assimp)
@@ -160,9 +160,9 @@ FetchContent_MakeAvailable(assimp)
 # IMGUI
 
 FetchContent_Declare(
-    imgui
-    GIT_REPOSITORY  https://github.com/ocornut/imgui.git
-    GIT_TAG         v1.92.3-docking
+				imgui
+				GIT_REPOSITORY  https://github.com/ocornut/imgui.git
+				GIT_TAG         v1.92.3-docking
 )
 FetchContent_MakeAvailable(imgui)
 
@@ -183,10 +183,10 @@ target_include_directories(ImGui PUBLIC "${imgui_SOURCE_DIR}")
 
 # OpenAl-soft
 FetchContent_Declare(
-    openal-soft
-    GIT_REPOSITORY https://github.com/kcat/openal-soft.git
-    GIT_TAG         dc7d7054a5b4f3bec1dc23a42fd616a0847af948
-    FIND_PACKAGE_ARGS NAMES OpenAl
+				openal-soft
+				GIT_REPOSITORY https://github.com/kcat/openal-soft.git
+				GIT_TAG         dc7d7054a5b4f3bec1dc23a42fd616a0847af948
+				FIND_PACKAGE_ARGS NAMES OpenAl
 )
 
 set(ALSOFT_EXAMPLES         OFF)
@@ -198,20 +198,20 @@ FetchContent_MakeAvailable(openal-soft)
 # ///////////////////////////////////////////////////////////////////////////////////////////////
 
 if(LINUX)
-    # easy_profiler
-    FetchContent_Declare(
-            easy_profiler
-            GIT_REPOSITORY https://github.com/yse/easy_profiler.git
-            GIT_TAG v2.1.0
-    )
+	# easy_profiler
+	FetchContent_Declare(
+												easy_profiler
+												GIT_REPOSITORY https://github.com/yse/easy_profiler.git
+												GIT_TAG v2.1.0
+				)
 
-    set(PREV_MIN_VERSION ${CMAKE_POLICY_VERSION_MINIMUM})
+	set(PREV_MIN_VERSION ${CMAKE_POLICY_VERSION_MINIMUM})
 
-    set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
+	set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
 
-    FetchContent_MakeAvailable(easy_profiler)
+	FetchContent_MakeAvailable(easy_profiler)
 
-    set(CMAKE_POLICY_VERSION_MINIMUM ${PREV_MIN_VERSION})
+	set(CMAKE_POLICY_VERSION_MINIMUM ${PREV_MIN_VERSION})
 endif ()
 
 
@@ -237,16 +237,16 @@ target_compile_definitions(Vendor INTERFACE STB_IMAGE_IMPLEMENTATION)
 target_compile_definitions(Vendor INTERFACE BUILD_WITH_EASY_PROFILER)
 
 target_link_libraries(Vendor INTERFACE
-        glfw glew_s glm ImGui OpenGL::GL nlohmann_json::nlohmann_json dr_libs assimp
+								glfw glew_s glm ImGui OpenGL::GL nlohmann_json::nlohmann_json dr_libs assimp
 )
 if (LINUX)
-    target_link_libraries(Vendor INTERFACE easy_profiler OpenAL::OpenAL)
+	target_link_libraries(Vendor INTERFACE easy_profiler OpenAL::OpenAL)
 else()
-    target_link_libraries(Vendor INTERFACE OpenAL::OpenAL)
+	target_link_libraries(Vendor INTERFACE OpenAL::OpenAL)
 endif ()
 
 target_include_directories(Vendor INTERFACE
-    ${VENDOR_PATH}/stb_image
+				${VENDOR_PATH}/stb_image
 )
 
 target_compile_definitions(Vendor INTERFACE GLEW_STATIC)
@@ -266,8 +266,8 @@ add_library(RuamCore INTERFACE)
 
 file (GLOB RENDERING_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Rendering/*.cpp")
 add_library(Rendering STATIC ${RENDERING_SRC}
-        RuamCore/Rendering/VertexBufferLayout.cpp)
-target_link_libraries(Rendering PUBLIC Vendor Files Maths RuamUtils Objects assimp)
+								RuamCore/Rendering/VertexBufferLayout.cpp)
+target_link_libraries(Rendering PUBLIC Vendor Files Maths RuamUtils ECS assimp)
 target_include_directories(Rendering PUBLIC ${CMAKE_SOURCE_DIR}/RuamCore/Rendering)
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -332,7 +332,7 @@ target_include_directories(RuamUtils INTERFACE ${CMAKE_SOURCE_DIR}/RuamCore/Ruam
 file(GLOB SCENES_SRC "${CMAKE_SOURCE_DIR}/assets/scenes/*.cpp")
 add_library(Scenes STATIC ${SCENES_SRC})
 target_include_directories(Scenes PUBLIC "${CMAKE_SOURCE_DIR}/assets/scenes")
-target_link_libraries(Scenes PUBLIC Vendor Maths Rendering Objects)
+target_link_libraries(Scenes PUBLIC Vendor Maths Rendering ECS)
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -346,13 +346,13 @@ target_link_libraries(Audio PUBLIC glm dr_libs Vendor RuamUtils)
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
 
-# Objects
+# ECS
 
-file (GLOB OBJECTS_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Objects/*.cpp")
+file (GLOB ECS_SRC "${CMAKE_SOURCE_DIR}/RuamCore/ECS/*.cpp")
 file (GLOB COMPONENTS_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Components/*.cpp")
-add_library(Objects STATIC ${OBJECTS_SRC} ${COMPONENTS_SRC})
-target_include_directories(Objects PUBLIC "${CMAKE_SOURCE_DIR}/RuamCore/Objects" "${CMAKE_SOURCE_DIR}/RuamCore/Components")
-target_link_libraries(Objects PUBLIC Audio RuamUtils Time Scenes)
+add_library(ECS STATIC ${ECS_SRC} ${COMPONENTS_SRC})
+target_include_directories(ECS PUBLIC "${CMAKE_SOURCE_DIR}/RuamCore/ECS" "${CMAKE_SOURCE_DIR}/RuamCore/Components")
+target_link_libraries(ECS PUBLIC Audio RuamUtils Time Scenes)
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -361,7 +361,7 @@ target_link_libraries(Objects PUBLIC Audio RuamUtils Time Scenes)
 file (GLOB COMPONENTS_ASSETS_SRC "${CMAKE_SOURCE_DIR}/assets/components/*.cpp")
 add_library(AssetsComponents STATIC ${COMPONENTS_ASSETS_SRC})
 target_include_directories(AssetsComponents PUBLIC "${CMAKE_SOURCE_DIR}/assets/components")
-target_link_libraries(AssetsComponents PUBLIC Scenes Objects)
+target_link_libraries(AssetsComponents PUBLIC Scenes ECS)
 
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -379,7 +379,7 @@ target_include_directories(EventSystem INTERFACE ${CMAKE_SOURCE_DIR}/RuamCore/Ev
 # Linking
 
 target_link_libraries(RuamCore INTERFACE
-    Rendering Maths Time Files Input Objects RuamUtils Scenes Audio EventSystem AssetsComponents
+				Rendering Maths Time Files Input ECS RuamUtils Scenes Audio EventSystem AssetsComponents
 )
 
 # -----------------------------------------------------------------------------------------------------
@@ -388,7 +388,7 @@ target_link_libraries(RuamCore INTERFACE
 # -----------------------------------------------------------------------------------------------------
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
-    set_property(TARGET RuamEngine PROPERTY CXX_STANDARD 20)
+	set_property(TARGET RuamEngine PROPERTY CXX_STANDARD 20)
 endif()
 
 target_link_libraries(RuamEngine PUBLIC RuamCore)

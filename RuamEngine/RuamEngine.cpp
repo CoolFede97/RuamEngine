@@ -3,7 +3,7 @@
 #include "RuamEngine.h"
 
 // #include "MenuScene.cpp"
-#include "RuamCore/Objects/SceneManager.hpp"
+#include "SceneManager.hpp"
 #include "SandboxScene.cpp"
 #include "assets/scenes/CollisionSandboxScene.cpp"
 #include "assets/scenes/InitialScene.cpp"
@@ -46,7 +46,7 @@ int main()
 
 			SceneManager::ApplyPendingSceneChange();
 
-		    std::cout << "Frame count: " << frameCount++ << "\n";
+		    // std::cout << "Frame count: " << frameCount++ << "\n";
 
 			// ImGUI
 			ImGui_ImplOpenGL3_NewFrame();

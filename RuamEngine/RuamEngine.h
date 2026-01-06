@@ -3,7 +3,6 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include "SceneManager.hpp"
 #include "Scene.hpp"
 #include "Component.hpp"
 #include "Entity.hpp"

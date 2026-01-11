@@ -1,7 +1,7 @@
 #pragma once
 
-#include "AudioSystem.hpp"
-#include "Entity.hpp"
+#include "AudioSystem.h"
+#include "Entity.h"
 
 namespace RuamEngine
 {
@@ -31,11 +31,6 @@ namespace RuamEngine
 
 		void setLooping(bool state);
 		bool isLooping();
-
-		IMPL_SERIALIZE(AudioSource,
-					SER_FIELD(m_volume),
-					SER_FIELD(m_max_volume),
-					SER_FIELD(m_audio_path));
 	protected:
 		void loadBuffer(std::unique_ptr<Wave>& wave);
 

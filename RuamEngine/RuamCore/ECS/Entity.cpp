@@ -1,11 +1,16 @@
-#include "Entity.hpp"
-#include "SceneManager.hpp"
-
+#include "Entity.h"
+#include "Transform.h"
 
 namespace RuamEngine
 {
-	unsigned int Entity::s_instanceCount = 0;
+	unsigned int Entity::s_idCount = 0;
 	const std::string Entity::s_defaultName = "GameObject";
+
+	Entity::Entity(const std::string& name)
+	: m_id(s_idCount++), m_name(name)
+	{
+		m_transform = addComponent<Transform>();
+	}
 
 	Entity::~Entity()
 	{
@@ -58,6 +63,11 @@ namespace RuamEngine
 	void Entity::destroy()
 	{
 		m_destroyFlag = true;
+		setEnabled(false);
+		for (auto& [typeIndex, cmpVector] : m_components)
+		{
+			for (auto& cmp : cmpVector) cmp->destroy();
+		}
 	}
 
 	bool Entity::destroyFlag() const
@@ -77,12 +87,12 @@ namespace RuamEngine
 
 	Transform &Entity::transform()
 	{
-		return m_transform;
+		return *m_transform;
 	}
 
 	const Transform &Entity::transform() const
 	{
-		return m_transform;
+		return *m_transform;
 	}
 
 	std::vector<Component*> Entity::getComponents() const
@@ -100,12 +110,7 @@ namespace RuamEngine
 
 	void Entity::addCompToJustCreatedComponents(std::type_index tidx)
 	{
-		// std::cout << "m_components size: " << m_components[tidx].size() << "\n";
-		SceneManager::ActiveScene()->m_justCreatedComponents[m_id][tidx].push_back(m_components[tidx].back().get());
+		SceneManager::ActiveScene()->justCreatedComponents()[m_id][tidx].push_back(m_components[tidx].back().get());
 	}
 
-	std::map<unsigned int, std::map<std::type_index, std::vector<Component*>>>& Entity::justCreatedComponents()
-	{
-		return SceneManager::ActiveScene()->m_justCreatedComponents;
-	}
 }

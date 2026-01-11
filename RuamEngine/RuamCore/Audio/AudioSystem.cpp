@@ -1,4 +1,4 @@
-#include "AudioSystem.hpp"
+#include "AudioSystem.h"
 
 namespace AudioSystem {
 static ALC::Device s_dev;

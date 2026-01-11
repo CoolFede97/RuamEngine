@@ -1,4 +1,4 @@
-#include "Wave.hpp"
+#include "Wave.h"
 #include <stdexcept>
 #include "RuamUtils.h"
 
@@ -12,7 +12,7 @@ Wave::Wave(const char* filename, bool to_mono) {
 	}
 	if (!to_mono) return;
 	EASY_BLOCK("Wave2Mono");
-	if (m_channels > 2) 
+	if (m_channels > 2)
 		throw format_error("More than 2 channels is currently unsupported");
 	else if (m_channels == 1) return;
 	for (size_t i = 0; i < m_total_samples; i++) {

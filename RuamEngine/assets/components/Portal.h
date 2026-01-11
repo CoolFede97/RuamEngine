@@ -1,9 +1,9 @@
 #pragma once
 
-#include "SceneManager.hpp"
-#include "Scene.hpp"
-#include "Entity.hpp"
-#include <Component.hpp>
+#include "SceneManager.h"
+#include "Scene.h"
+#include "Entity.h"
+#include "Component.h"
 
 #include "ShaderProgram.h"
 #include "Renderer.h"
@@ -19,9 +19,7 @@ namespace RuamEngine
 	{
 
 	public:
-		IMPL_SIMPLE_SERIALIZE(Portal)
 		using Component::Component;
-		Portal(const nlohmann::json& j, unsigned int obj_id) : Component(obj_id) {}
 		~Portal()
 		{
 		}
@@ -39,5 +37,4 @@ namespace RuamEngine
 
 		}
 	};
-	REGISTER_COMPONENT(Portal)
 }

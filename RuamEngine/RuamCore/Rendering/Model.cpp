@@ -4,10 +4,10 @@
 #include <memory>
 namespace RuamEngine
 {
-	unsigned int Model::s_instanceCount = 0;
+	unsigned int Model::s_idCount = 0;
 
 	Model::Model(std::string path)
-		: m_path(GlobalizePath(path)), m_instanceId(s_instanceCount++)
+		: m_path(GlobalizePath(path)), m_instanceId(s_idCount++)
 	{
 		loadModel(m_path);
 		m_vertices = meshesVertices();

@@ -1,4 +1,4 @@
-#include "alc-wrapper.hpp"
+#include "alc-wrapper.h"
 #include <stdexcept>
 
 namespace AudioSystem {

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "SceneManager.hpp"
-#include "Scene.hpp"
-#include "Entity.hpp"
-#include <Component.hpp>
+#include "SceneManager.h"
+#include "Scene.h"
+#include "Entity.h"
+#include <Component.h>
 
 #include "ShaderProgram.h"
 #include "Renderer.h"
@@ -22,9 +22,7 @@ namespace RuamEngine
 		static Vec4 m_color;
 		static float m_lightOffset;
 	public:
-		IMPL_SIMPLE_SERIALIZE(GlobalLight)
 		using BaseRenderer::BaseRenderer;
-		GlobalLight(const nlohmann::json& j, unsigned int obj_id) : BaseRenderer(obj_id) {}
 		~GlobalLight();
 		static void setLightColor(Vec4 color);
 
@@ -38,5 +36,4 @@ namespace RuamEngine
 		static void loadLightSettings(ShaderProgramSPtr program);
 
 	};
-	REGISTER_COMPONENT(GlobalLight)
 }

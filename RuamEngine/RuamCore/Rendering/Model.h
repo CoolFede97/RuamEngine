@@ -25,7 +25,7 @@ namespace RuamEngine
 	private:
 		std::string m_path;
 		unsigned int m_instanceId;
-		static unsigned int s_instanceCount;
+		static unsigned int s_idCount;
 		std::vector<Vertex> m_vertices;
 		std::vector<unsigned int> m_indices;
 		void loadModel(std::string& path);

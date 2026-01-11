@@ -1,17 +1,18 @@
-#include "Entity.hpp"
-#include "Component.hpp"
+#include "Entity.h"
+#include "Component.h"
 #include "Renderer.h"
-#include "Scene.hpp"
-#include "SceneManager.hpp"
+#include "Scene.h"
+#include "SceneManager.h"
 #include "../components/CameraController.h"
-#include "Serial.hpp"
+//#include "Serial.h"
 #include "ModelRenderer.h"
 #include "GlobalLight.h"
 #include "Skybox.h"
 #include "../components/Portal.h"
 #include <AudioSource.h>
-
+#include "Transform.h"
 #include "../components/Manager.h"
+
 Scene* CreateInitialScene()
 {
 	auto scene = new Scene(0, "InitialScene");

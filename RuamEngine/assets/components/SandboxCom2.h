@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Component.hpp>
+#include "Component.h"
 #include "Renderer.h"
 #include "Vertex.h"
 #include "SSBO.h"

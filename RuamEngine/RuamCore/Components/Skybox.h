@@ -2,12 +2,12 @@
 
 #include "RenderUnit.h"
 #include "Renderer.h"
-#include "SceneManager.hpp"
-#include "Scene.hpp"
-#include "Entity.hpp"
-#include "Serial.hpp"
-#include <Component.hpp>
-#include "AudioSystem.hpp"
+#include "SceneManager.h"
+#include "Scene.h"
+#include "Entity.h"
+//#include "Serial.h"
+#include <Component.h>
+#include "AudioSystem.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -29,16 +29,10 @@ namespace RuamEngine
 		static RenderUnitSPtr m_renderUnit;
 
 	public:
-		Skybox(const nlohmann::json& j, const unsigned int obj_id);
-
 		static Skybox* GetSkybox() {return s_skybox; }
 		static void SetSkybox(std::vector<std::string>& paths);
 		void update();
 		void start();
 		void render();
-
-		//IMPL_SERIALIZE(Skybox,
-		// SER_FIELD(m_cubemap)
-		//);
 	};
 }

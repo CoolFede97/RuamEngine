@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Entity.hpp"
+#include "Entity.h"
 #include "../../RuamCore/Input/Input.h"
 #include "RuamTime.h"
 
@@ -9,16 +9,13 @@
 #include <functional>
 
 class Bullet : public Component {
-	IMPL_SIMPLE_SERIALIZE(Bullet)
 
 	using Component::Component;
-
+public:
 	Bullet(unsigned int obj_id, std::function<void()> callback)
 		: Component(obj_id), m_callback(callback) {
 
 	}
-
-	Bullet(const nlohmann::json& j, unsigned int obj_id) : Component(obj_id) {}
 
 	void start()
 	{
@@ -26,7 +23,6 @@ class Bullet : public Component {
 
 	void update();
 
-public:
     bool m_isPlayerBullet = false;
 	float m_radius;
 	float m_speed;
@@ -35,6 +31,3 @@ public:
 private:
 	std::function<void()> m_callback;
 };
-
-
-REGISTER_COMPONENT(Bullet)

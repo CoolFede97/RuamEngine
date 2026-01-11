@@ -8,10 +8,10 @@
 
 namespace RuamEngine
 {
-	unsigned int Mesh::s_instanceCount = 0;
+	unsigned int Mesh::s_idCount = 0;
 
 	Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, MaterialWPtr material)
-		: m_vertices(vertices), m_indices(indices), m_material(material), m_id(s_instanceCount++)
+		: m_vertices(vertices), m_indices(indices), m_material(material), m_id(s_idCount++)
 	{
 		if (!material.lock()) ResourceManager::GetMaterial(material.lock()->id());
 	}

@@ -1,15 +1,15 @@
 #pragma once
 
-#include "SceneManager.hpp"
-#include "Scene.hpp"
-#include "Entity.hpp"
-#include "Serial.hpp"
-#include <Component.hpp>
-#include "AudioSystem.hpp"
+#include "SceneManager.h"
+#include "Scene.h"
+#include "Entity.h"
+//#include "Serial.h"
+#include "Component.h"
+#include "AudioSystem.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
-
+#include "Transform.h"
 
 namespace RuamEngine
 {
@@ -22,8 +22,6 @@ namespace RuamEngine
 		const glm::vec3 m_up = glm::vec3(0.0, 1.0, 0.0);
 
 	public:
-		Camera(const nlohmann::json& j, const unsigned int obj_id);
-
 		float m_near_plane = 0.1f;
 		float m_far_plane = 3000.0f;
 		float m_fov = 45.0f;
@@ -41,11 +39,5 @@ namespace RuamEngine
 			AudioSystem::AL::Listener::setParam(AL_POSITION, entity()->transform().position());
 		};
 		void start() { setAsMainCamera();};
-
-		IMPL_SERIALIZE(Camera,
-				 SER_FIELD(m_near_plane),
-				 SER_FIELD(m_far_plane),
-				 SER_FIELD(m_fov),
-				 SER_FIELD(m_aspect_ratio));
 	};
 }

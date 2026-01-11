@@ -3,7 +3,7 @@
 #include "RuamEngine.h"
 
 // #include "MenuScene.cpp"
-#include "SceneManager.hpp"
+#include "SceneManager.h"
 #include "SandboxScene.cpp"
 #include "assets/scenes/CollisionSandboxScene.cpp"
 #include "assets/scenes/InitialScene.cpp"

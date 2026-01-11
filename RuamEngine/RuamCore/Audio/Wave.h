@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <future>
 
-#include "al-wrapper.hpp"
+#include "al-wrapper.h"
 
 #include "dr_wav.h"
 

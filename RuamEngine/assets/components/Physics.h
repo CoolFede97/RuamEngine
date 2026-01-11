@@ -1,9 +1,9 @@
 // #pragma once
 
-// #include <Component.hpp>
+// #include "Component.h"
 // #include "RuamEngine.h"
-// #include "SceneManager.hpp"
-// #include "Scene.hpp"
+// #include "SceneManager.h"
+// #include "Scene.h"
 // #include "RuamTime.h"
 
 // using namespace RuamEngine;

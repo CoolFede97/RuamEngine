@@ -28,7 +28,7 @@ public:
 	~Source();
 
 	void generate();
-	
+
 	void setParam(ALenum param, ALfloat v);
 	void setParam(ALenum param, const glm::vec3& v);
 	void setParam(ALenum param, ALint v);

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Component.hpp"
+#include "Component.h"
 #include "Renderer.h"
-#include "Scene.hpp"
-#include "SceneManager.hpp"
+#include "Scene.h"
+#include "SceneManager.h"
 #include "Vertex.h"
 #include "SSBO.h"
 #include "SandboxCom2.h"
@@ -16,11 +16,6 @@ class SandboxCom : public BaseRenderer
 
 	void start()
 	{
-		Entity* newEntity = SceneManager::ActiveScene()->createEntity();
-		std::cout << "START: SANDBOXCOM 1 UNO!\n";
-		std::cout << "JUST CREATED COMPONENTS SIZE: " << SceneManager::ActiveScene()->m_justCreatedComponents.size() << "\n";
-		newEntity->addComponent<SandboxCom2>();
-		std::cout << "JUST CREATED COMPONENTS SIZE: " << SceneManager::ActiveScene()->m_justCreatedComponents.size() << "\n";
 
 	}
 

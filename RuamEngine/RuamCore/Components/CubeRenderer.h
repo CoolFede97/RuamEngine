@@ -1,9 +1,9 @@
 #pragma once
 
-#include "SceneManager.hpp"
-#include "Scene.hpp"
-#include "Entity.hpp"
-#include <Component.hpp>
+#include "SceneManager.h"
+#include "Scene.h"
+#include "Entity.h"
+#include "Component.h"
 #include "Renderer.h"
 #include "Vertex.h"
 #include "RuamTime.h"
@@ -14,9 +14,6 @@ class CubeRenderer : public BaseRenderer
 {
 public:
 	using BaseRenderer::BaseRenderer;
-	CubeRenderer(const nlohmann::json& j, unsigned int obj_id) : BaseRenderer(obj_id)
-	{
-	}
 
 public:
 	GLuint materialId = 0;
@@ -55,6 +52,4 @@ private:
 	{
 		BaseRenderer::update();
 	};
-	IMPL_SIMPLE_SERIALIZE(CubeRenderer)
  };
-REGISTER_COMPONENT(CubeRenderer)

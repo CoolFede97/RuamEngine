@@ -3,9 +3,9 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include "Scene.hpp"
-#include "Component.hpp"
-#include "Entity.hpp"
+#include "Scene.h"
+#include "Component.h"
+#include "Entity.h"
 
 #include "Input.h"
 #include "imgui.h"
@@ -30,4 +30,4 @@
 #include "Vec3.h"
 
 #include "RuamUtils.h"
-#include "AudioSystem.hpp"
+#include "AudioSystem.h"

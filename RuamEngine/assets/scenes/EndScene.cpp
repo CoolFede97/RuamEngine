@@ -1,15 +1,17 @@
-#include "Entity.hpp"
-#include "Component.hpp"
-#include "Scene.hpp"
-#include "SceneManager.hpp"
+#include "Entity.h"
+#include "Component.h"
+#include "Scene.h"
+#include "SceneManager.h"
 #include "../components/CameraController.h"
-#include "Serial.hpp"
+//#include "Serial.h"
 #include "ModelRenderer.h"
 #include "GlobalLight.h"
 #include "Skybox.h"
 #include "../components/Portal.h"
 #include "../components/Manager.h"
 #include "AudioSource.h"
+#include "Transform.h"
+
 Scene* CreateEndScene()
 {
 	Scene* scene = new Scene(2, "EndScene");

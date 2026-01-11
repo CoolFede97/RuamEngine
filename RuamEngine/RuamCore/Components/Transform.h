@@ -1,31 +1,22 @@
 #pragma once
 
-#include "Component.hpp"
+#include "Component.h"
 #include "glm/glm.hpp"
+#include "JsonConverters.h"
 #include <list>
-// #include "Object.hpp"
-// #include "Serial.hpp"
 
 namespace RuamEngine
 {
-	class Transform : public Component {
+	class Entity;
+
+	class Transform : public Component
+	{
 	public:
 		using Component::Component;
 
-		Transform(unsigned int obj_id);
-		Transform(unsigned int obj_id, glm::vec3 pos);
-		Transform(const nlohmann::json& j, const unsigned int obj_id) : Component(obj_id)
-		{
-			// if (j.contains("m_position")) {
-			// 	m_position = j["m_position"];
-			// }
-			// if (j.contains("m_scale")) {
-			// 	m_scale = j["m_scale"];
-			// }
-			// if (j.contains("m_rotation")) {
-			// 	m_rotation = j["m_rotation"];
-			// }
-		};
+		Transform(unsigned int entityId);
+		Transform(Json transformData, const unsigned int entityId);
+
 		void start();
 		void update();
 
@@ -52,11 +43,18 @@ namespace RuamEngine
 
 		Transform* operator[](size_t idx);
 
+		std::list<Transform*> m_children;
+		Transform* m_parent = nullptr; // If null, there is no parent
+
 	protected:
 		glm::vec3 m_position;
 		glm::vec3 m_scale = glm::vec3(1.0f, 1.0f, 1.0f);
 		glm::vec3 m_rotation = glm::vec3(0.0f,0.0f,0.0f);
-		std::list<Transform*> m_children;
+
+	public:
+	IMPL_SERIALIZE(Transform,
+		SER_FIELD(m_position),
+		SER_FIELD(m_rotation),
+		SER_FIELD(m_scale))
 	};
-	// REGISTER_COMPONENT(Transform)
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Entity.hpp"
+#include "Entity.h"
 #include "../../RuamCore/Input/Input.h"
 #include "RuamTime.h"
 
@@ -56,15 +56,6 @@ public:
 		}
 	}
 	using Component::Component;
-	Boss(const nlohmann::json& j, unsigned int obj_id) : Component(obj_id)
-	{
-        m_bulletSpeed = j["m_bulletSpeed"];
-        m_bulletRadius = j["m_bulletRadius"];
-        m_shootingInterval = j["m_shootingInterval"];
-        m_bulletMeshPath = j["m_bulletMeshPath"];
-        m_health = j["m_health"];
-        m_damage = j["m_damage"];
-	}
 	~Boss()
 	{
     	if (s_instance == this) {
@@ -81,15 +72,6 @@ public:
 	float m_health = 100;
 	float m_damage = 10;
 
-	IMPL_SERIALIZE(Boss,
-    SER_FIELD(m_bulletSpeed),
-    SER_FIELD(m_bulletRadius),
-    SER_FIELD(m_shootingInterval),
-    SER_FIELD(m_bulletMeshPath),
-    SER_FIELD(m_health),
-    SER_FIELD(m_damage))
 protected:
 	float m_timeSinceLastShot = 0;
 };
-
-REGISTER_COMPONENT(Boss);

@@ -26,7 +26,7 @@ namespace RuamEngine
 		unsigned int id() const { return m_id; }
 	private:
 		unsigned int m_id; // Instance id
-		static unsigned int s_instanceCount;
+		static unsigned int s_idCount;
 	};
 	using MeshSPtr = std::shared_ptr<Mesh>;
 	using MeshWPtr = std::weak_ptr<Mesh>;

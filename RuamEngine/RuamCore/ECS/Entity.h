@@ -7,17 +7,17 @@
 #include <string>
 #include <algorithm>
 
-#include "Component.hpp"
-#include "Transform.h"
+#include "Component.h"
+#include "SceneManager.h"
 
 #include "RuamUtils.h"
 
 namespace RuamEngine
 {
-
+	class Transform;
 	class Entity {
 	public:
-		Entity(const std::string& name) : m_id(s_instanceCount++), m_name(name), m_transform(m_id) {}
+		Entity(const std::string& name);
 		Entity() : Entity(s_defaultName) {
 		}
 		~Entity();
@@ -54,9 +54,9 @@ namespace RuamEngine
 		}
 
 		template<class Comp>
-		Comp& addComponent(const nlohmann::json& j) {
+		Comp& addComponent(const Json jasonData) {
 			EASY_FUNCTION("Add Component args")
-			std::unique_ptr<Comp> comp = std::make_unique<Comp>(j);
+			std::unique_ptr<Comp> comp = std::make_unique<Comp>(jasonData);
 			const std::type_index tidx = typeid(Comp);
 			if (m_components.count(tidx) > 0) m_components.insert({tidx, ComponentVector()});
 
@@ -116,34 +116,36 @@ namespace RuamEngine
 
 		std::map<unsigned int, std::map<std::type_index, std::vector<Component*>>>& justCreatedComponents();
 
+		// Shouldn't be used by the user
 		template <class Comp>
 		void removeComponentInJustCreatedComponents()
 		{
-			auto& justCreatedObjects = justCreatedComponents();
+			auto& justCreatedEntities = SceneManager::ActiveScene()->justCreatedComponents();
 
-			auto idIt = justCreatedObjects.find(m_id);
-			if (idIt == justCreatedObjects.end()) return;
+			auto idIt = justCreatedEntities.find(m_id);
+			if (idIt == justCreatedEntities.end()) return;
 
 			auto compType = idIt->second.find(typeid(Comp));
 			if (compType ==  idIt->second.end()) return;
 
-			if (justCreatedObjects.size()>0) compType->second.front()->destroy();
+			if (justCreatedEntities.size()>0) compType->second.front()->destroy();
 		}
 
+		// Shouldn't be used by the user
 		template <class Comp>
 		void removeComponentInJustCreatedComponents(Component& comp)
 		{
-			auto& justCreatedObjects = justCreatedComponents();
+			auto& justCreatedEntities = SceneManager::ActiveScene()->justCreatedComponents();
 
-			auto idIt = justCreatedObjects.find(m_id);
-			if (idIt == justCreatedObjects.end()) return;
+			auto idIt = justCreatedEntities.find(m_id);
+			if (idIt == justCreatedEntities.end()) return;
 
 			auto compType = idIt->second.find(typeid(Comp));
 			if (compType ==  idIt->second.end()) return;
 
 			auto cmp = std::find(compType->second.begin(), compType->second.end(), &comp);
 			if (cmp != compType->second.end()) compType->second.front()->destroy();
-			else std::cerr << "Couldn't find and destroy a component of type " << typeid(Comp).name() <<" with id " << comp.id() << " in object with id " << m_id << "\n";
+			else std::cerr << "Couldn't find and destroy a component of type " << typeid(Comp).name() <<" with id " << comp.id() << " in entity with id " << m_id << "\n";
 		}
 
 		template<class Comp>
@@ -156,7 +158,6 @@ namespace RuamEngine
 				return;
 			}
 			pair->second.front()->destroy();
-
 			removeComponentInJustCreatedComponents<Comp>();
 		}
 
@@ -168,7 +169,7 @@ namespace RuamEngine
 			if (pair->second.size() == 0) return;
 			auto cmp = std::find(pair->second.begin(), pair->second.end(), comp);
 			if (cmp != pair->second.end()) cmp->get()->destroy();
-			else std::cerr << "Couldn't find and destroy a component of type " << typeid(Comp).name() <<" with id " << comp.id() << " in object with id " << m_id << "\n";
+			else std::cerr << "Couldn't find and destroy a component of type " << typeid(Comp).name() <<" with id " << comp.id() << " in entity with id " << m_id << "\n";
 		}
 
 		unsigned int id() const;
@@ -190,9 +191,9 @@ namespace RuamEngine
 		const Transform& transform() const;
 	private:
 		unsigned int m_id;
-		static unsigned int s_instanceCount;
+		static unsigned int s_idCount;
 	    std::string m_name;
-		Transform m_transform;
+		Transform* m_transform = nullptr;
 
 		ComponentListMap m_components;
 

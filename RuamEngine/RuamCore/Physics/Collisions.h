@@ -1,7 +1,7 @@
 // #pragma once
 // #include "RuamEngine.h"
-// #include "SceneManager.hpp"
-// #include "Scene.hpp"
+// #include "SceneManager.h"
+// #include "Scene.h"
 // #include "RuamTime.h"
 // #include <climits>
 

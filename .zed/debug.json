@@ -10,6 +10,15 @@
 		"request": "launch",
 		"program": "RuamEngine/build/RuamEngine",
 		"args": ["-arg1", "-arg2"],
-		"adapter": "CodeLLDB"
-	}
+		"adapter": "CodeLLDB",
+	},
+	{
+		"label": "DebugSandbox",
+		"name": "DebugSandbox",
+		"type": "lldb",
+		"request": "launch",
+		"program": "RuamEngine/build/Sandbox/Sandbox",
+		"args": ["-arg1", "-arg2"],
+		"adapter": "CodeLLDB",
+	},
 ]

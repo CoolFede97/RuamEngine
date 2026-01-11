@@ -1,11 +1,11 @@
-#include "Entity.hpp"
-#include "Scene.hpp"
-#include "SceneManager.hpp"
+#include "Entity.h"
+#include "Scene.h"
+#include "SceneManager.h"
 #include "../components/Manager.h"
 #include "../components/Counter.h"
 #include "AudioSource.h"
 #include "Camera.h"
-#include "Serial.hpp"
+//#include "Serial.h"
 
 namespace RuamEngine
 {

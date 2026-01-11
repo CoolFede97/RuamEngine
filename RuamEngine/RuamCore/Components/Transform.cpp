@@ -1,10 +1,17 @@
 #include "Transform.h"
+#include "Component.h"
+#include "Entity.h"
 
 namespace RuamEngine
 {
-	Transform::Transform(const unsigned int obj_id) : Component(obj_id), m_position(0, 0, 0) {}
+	Transform::Transform(const unsigned int entityId) : Component(entityId), m_position(0, 0, 0) {}
+	Transform::Transform(Json transformData, const unsigned int entityId) : Component(entityId)
+	{
+		if (transformData.contains("m_position")) m_position = transformData["m_position"].get<glm::vec3>();
+		if (transformData.contains("m_rotation")) m_rotation = transformData["m_rotation"].get<glm::vec3>();
+		if (transformData.contains("m_scale")) m_scale = transformData["m_scale"].get<glm::vec3>();
 
-	Transform::Transform(const unsigned int obj_id, glm::vec3 pos) : Component(obj_id), m_position(pos) {}
+	}
 
 	void Transform::start() {}
 	void Transform::update() {}
@@ -88,4 +95,5 @@ namespace RuamEngine
 		std::advance(iter, idx);
 		return *iter;
 	}
+	REGISTER_COMPONENT(Transform);
 }

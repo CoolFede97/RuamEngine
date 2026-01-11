@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Wave.hpp"
-#include "al-wrapper.hpp"
-#include "alc-wrapper.hpp"
+#include "Wave.h"
+#include "al-wrapper.h"
+#include "alc-wrapper.h"
 #include "ThreadPool.h"
 
 namespace AudioSystem {
@@ -16,4 +16,4 @@ void shutdown();
 
 ALC::Device device();
 ALC::Context context();
-} 
+}

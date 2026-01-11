@@ -1,51 +1,61 @@
-#include "Scene.hpp"
-#include "SceneManager.hpp"
-#include <fstream>
+#include "Scene.h"
+#include "SceneManager.h"
+#include "Entity.h"
+#include "Component.h"
 
 namespace RuamEngine
 {
 
-	unsigned int Scene::s_instanceCount = 0;
+	unsigned int Scene::s_idCount = 0;
 	const std::string Scene::s_defaultName = "Sample Scene";
 
 	Entity* Scene::createEntity()
 	{
-		std::unique_ptr<Entity> obj = std::make_unique<Entity>();
-		Entity* obj_ptr = obj.get();
-	    m_objects.push_back(std::move(obj));
-	    return obj_ptr;
+		std::unique_ptr<Entity> entity = std::make_unique<Entity>();
+		Entity* entity_ptr = entity.get();
+	    m_entities.push_back(std::move(entity));
+	    return entity_ptr;
+	}
+
+	Entity* Scene::createEntity(const std::string& name)
+	{
+		std::unique_ptr<Entity> entity = std::make_unique<Entity>();
+		entity->setName(name);
+		Entity* entity_ptr = entity.get();
+	    m_entities.push_back(std::move(entity));
+	    return entity_ptr;
 	}
 
 	Entity* Scene::createEntity(unsigned int idx)
 	{
 	    // Going to have to check this
-	    //assert(idx < m_objects.size());
-		std::unique_ptr<Entity> obj = std::make_unique<Entity>();
-	    auto index = m_objects.cbegin();
+	    //assert(idx < m_entities.size());
+		std::unique_ptr<Entity> entity = std::make_unique<Entity>();
+	    auto index = m_entities.cbegin();
 	    std::advance(index, idx);
-		Entity* obj_ptr = obj.get();
-	    m_objects.insert(index, std::move(obj));
-		return obj_ptr;
+		Entity* entity_ptr = entity.get();
+	    m_entities.insert(index, std::move(entity));
+		return entity_ptr;
 	}
 
 	Entity* Scene::getEntityByIdx(const unsigned int idx) const
 	{
-	    auto iter = m_objects.begin();
+	    auto iter = m_entities.begin();
 	    return std::next(iter, idx)->get();
 	}
 
 	Entity* Scene::getEntityById(unsigned int id) const
 	{
-	    auto obj = std::find_if(m_objects.begin(), m_objects.end(), [id](const std::unique_ptr<Entity>& o) { return o->id() == id; });
-	    if (obj == m_objects.end()) {
+	    auto entity = std::find_if(m_entities.begin(), m_entities.end(), [id](const std::unique_ptr<Entity>& o) { return o->id() == id; });
+	    if (entity == m_entities.end()) {
 	        return nullptr;
 	    }
-	    return obj->get();
+	    return entity->get();
 	}
 
 	void Scene::deleteEntityByIdx(unsigned int idx)
 	{
-	    m_objects.erase(std::next(m_objects.begin(), idx));
+	    m_entities.erase(std::next(m_entities.begin(), idx));
 	}
 
 	void Scene::update()
@@ -64,7 +74,7 @@ namespace RuamEngine
 
 					if (cmp == nullptr)
 					{
-						std::cerr << "Error: One component from m_justCreatedComponents is null! (Object id: " << entityId << "), (Component type: " << componentType.name() << ")\n";
+						std::cerr << "Error: One component from m_justCreatedComponents is null! (entity id: " << entityId << "), (Component type: " << componentType.name() << ")\n";
 						continue;
 					}
 					if (cmp->destroyFlag()) continue;
@@ -76,30 +86,30 @@ namespace RuamEngine
 		}
 		if (m_componentsToStart.size()>0) m_componentsToStart.clear();
 
-		for (auto& obj : m_objects)
+		for (auto& entity : m_entities)
 		{
 			if (SceneManager::SceneChange())
 			{
 				return;
 			}
-			if (obj == nullptr)
+			if (entity == nullptr)
 			{
-				std::cerr << "Error: One object from m_objects is null!\n";
+				std::cerr << "Error: One entity from m_entities is null!\n";
 				continue;
 			}
-			if (obj->destroyFlag()) continue;
+			if (entity->destroyFlag()) continue;
 
-			if (!obj->isEnabled()) continue;
-			obj->update();
+			if (!entity->isEnabled()) continue;
+			entity->update();
 		}
 	}
 
-	const std::list<const Entity*> Scene::getEntities() const
+	std::list<Entity*> Scene::getEntities() const
 	{
-		std::list<const Entity*> new_objects;
-		for(auto& obj : m_objects) {
-			new_objects.push_back(obj.get());
+		std::list<Entity*> newEntities;
+		for(auto& entity : m_entities) {
+			newEntities.push_back(entity.get());
 		}
-		return new_objects;
+		return newEntities;
 	}
 }

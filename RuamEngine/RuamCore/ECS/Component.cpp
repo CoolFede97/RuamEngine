@@ -1,9 +1,10 @@
-#include "Component.hpp"
-#include "SceneManager.hpp"
+#include "Component.h"
+#include "SceneManager.h"
+#include "Entity.h"
 
 namespace RuamEngine
 {
-	unsigned int Component::s_id_count = 0;
+	unsigned int Component::s_idCount = 0;
 
 	bool Component::operator==(const Component& other) const {
 		return this->m_id == other.m_id;
@@ -18,6 +19,13 @@ namespace RuamEngine
 	}
 
 	Entity* Component::entity() const {
-		return SceneManager::ActiveScene()->getEntityById(m_object_id);
+		return SceneManager::ActiveScene()->getEntityById(m_entityId);
 	}
+
+	Transform& Component::transform() const
+	{
+		return entity()->transform();
+	}
+
+	REGISTER_COMPONENT(Component);
 }

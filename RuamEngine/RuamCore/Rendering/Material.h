@@ -25,7 +25,7 @@ namespace RuamEngine
 	    unsigned int id() const { return m_id; } // Is the instance id
     private:
         unsigned int m_id;
-		static unsigned int s_instanceCount;
+		static unsigned int s_idCount;
     };
     using MaterialSPtr = std::shared_ptr<Material>;
     using MaterialWPtr = std::weak_ptr<Material>;

@@ -3,10 +3,10 @@
 #include "RenderUnit.h"
 #include "ResourceManager.h"
 #include "RuamUtils.h"
-#include "SceneManager.hpp"
-#include "Scene.hpp"
-#include "Entity.hpp"
-#include <Component.hpp>
+#include "SceneManager.h"
+#include "Scene.h"
+#include "Entity.h"
+#include "Component.h"
 #include "Renderer.h"
 #include "Vertex.h"
 #include "RuamTime.h"
@@ -15,6 +15,8 @@
 #include "Model.h"
 #include "FileFunctions.h"
 #include <set>
+#include "Transform.h"
+
 using namespace RuamEngine;
 
 class ModelRenderer : public BaseRenderer
@@ -26,13 +28,6 @@ public:
 	std::unordered_map<unsigned int, RenderUnitWPtr> m_cachedRenderUnits;
 
 	using BaseRenderer::BaseRenderer;
-	ModelRenderer(const nlohmann::json& j, unsigned int obj_id) : BaseRenderer(obj_id)
-	{
-		if (j.contains("m_meshPath"))
-		{
-			setModel(j["m_meshPath"]);
-		}
-	}
 
 	~ModelRenderer()
 	{
@@ -87,11 +82,29 @@ private:
 	void render()
 	{
 		glm::mat4 modelMatrix(1.0f);
-		modelMatrix = glm::translate(modelMatrix, entity()->transform().position());
-		modelMatrix = glm::rotate(modelMatrix, glm::radians(entity()->transform().rotation().x), glm::vec3(1.0f, 0.0f, 0.0f));
-		modelMatrix = glm::rotate(modelMatrix, glm::radians(entity()->transform().rotation().y), glm::vec3(0.0f, 1.0f, 0.0f));
-		modelMatrix = glm::rotate(modelMatrix, glm::radians(entity()->transform().rotation().z), glm::vec3(0.0f, 0.0f, 1.0f));
-		modelMatrix = glm::scale(modelMatrix, entity()->transform().scale());
+
+		glm::vec3 parentsPos = {0,0,0};
+		glm::vec3 parentsRotation = {0,0,0};
+		glm::vec3 parentsScale = {1,1,1};
+		Transform* lastParent = nullptr;
+		if (transform().m_parent != nullptr)
+		{
+			lastParent = transform().m_parent;
+			while (true)
+			{
+				if (lastParent==nullptr) break;
+				parentsPos+=lastParent->position();
+				parentsRotation+=lastParent->rotation();
+				parentsScale*=lastParent->scale();
+				lastParent = lastParent->m_parent;
+			}
+		}
+
+		modelMatrix = glm::translate(modelMatrix, entity()->transform().position() + parentsPos);
+		modelMatrix = glm::rotate(modelMatrix, glm::radians(entity()->transform().rotation().x + parentsRotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+		modelMatrix = glm::rotate(modelMatrix, glm::radians(entity()->transform().rotation().y + parentsRotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		modelMatrix = glm::rotate(modelMatrix, glm::radians(entity()->transform().rotation().z + parentsRotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+		modelMatrix = glm::scale(modelMatrix, entity()->transform().scale() * parentsScale);
 
 		ModelSPtr modelShared = GetShared(m_model);
 
@@ -133,7 +146,4 @@ private:
 		BaseRenderer::update();
 	};
 	public:
-	IMPL_SERIALIZE(ModelRenderer,
-	SER_FIELD(m_meshPath));
 };
-	REGISTER_COMPONENT(ModelRenderer)

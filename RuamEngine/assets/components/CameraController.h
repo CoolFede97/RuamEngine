@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Entity.hpp"
+#include "Entity.h"
 #include "Renderer.h"
-#include "SceneManager.hpp"
+#include "SceneManager.h"
 #include "Vertex.h"
 #include "SSBO.h"
 #include "RuamTime.h"
@@ -22,11 +22,6 @@ class CameraController : public Component
 	Vec3 m_horizontalDirection;
 	Vec2 m_mouseRotation;
 public:
-	CameraController(const nlohmann::json& j, const unsigned int obj_id) : Component(obj_id)
-	{
-		m_speed = j["m_speed"];
-		m_rotationSpeed = j["m_rotationSpeed"];
-	};
 	float m_speed = 0;
 	float m_rotationSpeed = 0;
 private:
@@ -77,9 +72,4 @@ private:
      //        }
      //    }
 	};
-	IMPL_SERIALIZE(CameraController,
-	SER_FIELD(m_speed),
-	SER_FIELD(m_rotationSpeed))
 };
-
-REGISTER_COMPONENT(CameraController)

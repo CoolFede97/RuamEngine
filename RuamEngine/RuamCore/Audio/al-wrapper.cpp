@@ -1,4 +1,4 @@
-#include "al-wrapper.hpp"
+#include "al-wrapper.h"
 #include <iostream>
 
 namespace AudioSystem {

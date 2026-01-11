@@ -30,14 +30,9 @@ namespace RuamEngine
 
 	AudioSource::AudioSource(const unsigned int entityId, const std::string& audio)
 		: m_audio_path(audio), Component(entityId) {
-		EASY_FUNCTION("AudioSource Constructor")
 	}
 
-	AudioSource::AudioSource(const nlohmann::json& j, const unsigned int obj_id)
-		: AudioSource(obj_id, static_cast<std::string>(j["m_audio_path"])) {}
-
 	void AudioSource::start() {
-		EASY_FUNCTION("AudioSourceStart");
 		try {
 			m_source.generate();
 		} catch (AudioSystem::AL::al_error e) {
@@ -74,7 +69,6 @@ namespace RuamEngine
 	}
 
 	void AudioSource::load(const std::string& path) {
-		EASY_FUNCTION("AudioSourceLOAD");
 		m_audio_path = path;
 		AudioSystem::pool.queue([this]() {
 			m_buffer_ready = false;
@@ -101,7 +95,6 @@ namespace RuamEngine
 
 	void AudioSource::play() {
 		AudioSystem::pool.queue([this]() {
-			EASY_BLOCK("AudioSourcePlay")
 			while (!m_buffer_ready) {}
 			m_source.play();
 			EASY_END_BLOCK
@@ -110,7 +103,6 @@ namespace RuamEngine
 
 	void AudioSource::pause() {
 		AudioSystem::pool.queue([this]() {
-			EASY_BLOCK("AudioSourcePause")
 			while (!m_buffer_ready) {}
 			m_source.pause();
 			EASY_END_BLOCK
@@ -119,7 +111,6 @@ namespace RuamEngine
 
 	void AudioSource::stop() {
 		AudioSystem::pool.queue([this]() {
-			EASY_BLOCK("AudioSourceStop")
 			while (!m_buffer_ready) {}
 			m_source.stop();
 			EASY_END_BLOCK
@@ -163,6 +154,4 @@ namespace RuamEngine
 		m_source.get(AL_GAIN, &m_volume);
 		return m_volume;
 	}
-
-	REGISTER_COMPONENT(AudioSource);
 }

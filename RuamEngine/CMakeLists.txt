@@ -20,12 +20,10 @@ project ("RuamEngine")
 
 # Add source to this project's executable.
 
-add_executable (RuamEngine "RuamEngine.cpp" "RuamEngine.h")
+add_executable(RuamEngine "RuamEngine.cpp" "RuamEngine.h")
 
 include(FetchContent)
 include(FindOpenGL)
-
-add_subdirectory(Santinorua)
 
 # -----------------------------------------------------------------------------------------------------
 #######################################################################################################
@@ -352,7 +350,17 @@ file (GLOB ECS_SRC "${CMAKE_SOURCE_DIR}/RuamCore/ECS/*.cpp")
 file (GLOB COMPONENTS_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Components/*.cpp")
 add_library(ECS STATIC ${ECS_SRC} ${COMPONENTS_SRC})
 target_include_directories(ECS PUBLIC "${CMAKE_SOURCE_DIR}/RuamCore/ECS" "${CMAKE_SOURCE_DIR}/RuamCore/Components")
-target_link_libraries(ECS PUBLIC Audio RuamUtils Time Scenes)
+target_link_libraries(ECS PUBLIC Serialization Audio RuamUtils Time Scenes)
+
+# ///////////////////////////////////////////////////////////////////////////////////////////////
+
+# Serialization
+
+file (GLOB SERIALIZATION_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Serialization/*.cpp")
+add_library(Serialization STATIC ${SERIALIZATION_SRC})
+target_include_directories(Serialization PUBLIC "${CMAKE_SOURCE_DIR}/RuamCore/Serialization")
+target_link_libraries(Serialization PUBLIC ECS Audio RuamUtils Time Scenes)
+
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -379,7 +387,7 @@ target_include_directories(EventSystem INTERFACE ${CMAKE_SOURCE_DIR}/RuamCore/Ev
 # Linking
 
 target_link_libraries(RuamCore INTERFACE
-				Rendering Maths Time Files Input ECS RuamUtils Scenes Audio EventSystem AssetsComponents
+				Rendering Maths Time Files Input ECS RuamUtils Scenes Audio EventSystem AssetsComponents Serialization
 )
 
 # -----------------------------------------------------------------------------------------------------
@@ -394,5 +402,6 @@ endif()
 target_link_libraries(RuamEngine PUBLIC RuamCore)
 
 add_subdirectory(Editor)
+add_subdirectory(Sandbox)
 
 # TODO: Add tests and install targets if needed.

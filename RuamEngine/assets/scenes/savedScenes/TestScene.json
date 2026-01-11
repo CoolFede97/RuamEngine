@@ -1,0 +1,31 @@
+{
+ "m_entities": [
+  {
+   "m_components": [
+    {
+     "TYPE": "Transform",
+     "m_id": 0,
+     "m_position": [
+      1.0,
+      2.0,
+      3.0
+     ],
+     "m_rotation": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "m_scale": [
+      1.0,
+      1.0,
+      1.0
+     ]
+    }
+   ],
+   "m_id": 0,
+   "m_name": "Player"
+  }
+ ],
+ "m_id": 0,
+ "m_name": "TestScene"
+}

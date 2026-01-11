@@ -1,7 +1,7 @@
-#include "Entity.hpp"
-#include "Component.hpp"
-#include "Scene.hpp"
-#include "SceneManager.hpp"
+#include "Entity.h"
+#include "Component.h"
+#include "Scene.h"
+#include "SceneManager.h"
 #include "../assets/components/Manager.h"
 
 // std::shared_ptr<Scene> CreateMenuScene()

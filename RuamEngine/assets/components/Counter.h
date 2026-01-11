@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Component.hpp"
-#include "Scene.hpp"
-#include "SceneManager.hpp"
+#include "Component.h"
+#include "Scene.h"
+#include "SceneManager.h"
 #include "imgui.h"
 #include "Manager.h"
 #include "DebugUtils.h"
@@ -15,7 +15,6 @@ namespace RuamEngine
 	class Counter : public Component {
 	public:
 		using Component::Component;
-		Counter(const nlohmann::json& j, int obj_id) : Component(obj_id) {};
 		void start() {
 			std::cout << "HOADA\n";
 		}
@@ -23,8 +22,5 @@ namespace RuamEngine
 		void update() {
 		}
 
-		IMPL_SIMPLE_SERIALIZE(Counter)
 	};
-
-	REGISTER_COMPONENT(Counter)
 }

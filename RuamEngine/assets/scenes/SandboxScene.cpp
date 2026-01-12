@@ -5,7 +5,6 @@
 #include "SceneManager.h"
 #include "../components/Manager.h"
 #include "Skybox.h"
-#include "../components/Counter.h"
 #include "../components/CameraController.h"
 //#include "Serial.h"
 #include "ModelRenderer.h"
@@ -14,7 +13,6 @@
 #include "../components/Shooter.h"
 #include "../components/Boss.h"
 #include "../components/SandboxCom.h"
-#include "Transform.h"
 
 Scene* CreateSandboxScene()
 {

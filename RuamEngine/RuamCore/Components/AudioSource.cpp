@@ -97,7 +97,6 @@ namespace RuamEngine
 		AudioSystem::pool.queue([this]() {
 			while (!m_buffer_ready) {}
 			m_source.play();
-			EASY_END_BLOCK
 		});
 	}
 
@@ -105,7 +104,6 @@ namespace RuamEngine
 		AudioSystem::pool.queue([this]() {
 			while (!m_buffer_ready) {}
 			m_source.pause();
-			EASY_END_BLOCK
 		});
 	}
 
@@ -113,7 +111,6 @@ namespace RuamEngine
 		AudioSystem::pool.queue([this]() {
 			while (!m_buffer_ready) {}
 			m_source.stop();
-			EASY_END_BLOCK
 		});
 	}
 

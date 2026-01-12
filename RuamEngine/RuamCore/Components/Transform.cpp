@@ -12,7 +12,14 @@ namespace RuamEngine
 		if (transformData.contains("m_scale")) m_scale = transformData["m_scale"].get<glm::vec3>();
 
 	}
-
+	Transform::~Transform()
+	{
+		if (m_parent!=nullptr) m_parent->m_children.remove(this);
+		for (Transform* child : m_children)
+		{
+			if (child!=nullptr) child->m_parent = nullptr;
+		}
+	}
 	void Transform::start() {}
 	void Transform::update() {}
 
@@ -65,16 +72,34 @@ namespace RuamEngine
 	}
 
 	void Transform::setParent(Transform* parent) {
-		parent->addChild(this);
+		if (m_parent == parent) return;
+
+		if (m_parent != nullptr) m_parent->m_children.remove(this);
+		m_parent = parent;
+
+		if (parent != nullptr)
+		{
+			auto it = std::find(parent->m_children.begin(), parent->m_children.end(), this);
+			if (it !=  parent->m_children.end())
+			{
+				parent->m_children.push_back(this);
+			}
+		}
 	}
 
 	void Transform::addChild(Transform* child) {
+		if (child==nullptr)
+		{
+			std::cerr << "Error: Can't add child if child is nullptr!\n";
+			return;
+		}
 		auto child_search = std::find(m_children.begin(), m_children.end(), child);
-		if (*child_search != m_children.back()) {
+		if (child_search != m_children.end()) {
 			throw std::logic_error("Repeated children");
 			return;
 		}
 		m_children.push_back(child);
+		child->setParent(this);
 	}
 
 	void Transform::removeChild(unsigned int idx) {

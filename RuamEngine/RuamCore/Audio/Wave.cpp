@@ -3,15 +3,11 @@
 #include "RuamUtils.h"
 
 Wave::Wave(const char* filename, bool to_mono) {
-	EASY_FUNCTION("WaveConstructor");
-	EASY_BLOCK("ReadWaveFrames");
 	m_data = drwav_open_file_and_read_pcm_frames_s16(filename, &m_channels, &m_sample_rate, &m_total_samples, nullptr);
-	EASY_END_BLOCK;
 	if (!m_data) {
 		std::cerr << "Failure to read file " << filename << '\n';
 	}
 	if (!to_mono) return;
-	EASY_BLOCK("Wave2Mono");
 	if (m_channels > 2)
 		throw format_error("More than 2 channels is currently unsupported");
 	else if (m_channels == 1) return;
@@ -20,7 +16,6 @@ Wave::Wave(const char* filename, bool to_mono) {
 	}
 	m_total_samples *= 0.5;
 	m_channels = 1;
-	EASY_END_BLOCK;
 }
 
 Wave::Wave(const std::string& filename, bool to_mono) : Wave(filename.c_str(), to_mono) {};

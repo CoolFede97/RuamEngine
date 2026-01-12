@@ -195,26 +195,6 @@ FetchContent_MakeAvailable(openal-soft)
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
 
-if(LINUX)
-	# easy_profiler
-	FetchContent_Declare(
-												easy_profiler
-												GIT_REPOSITORY https://github.com/yse/easy_profiler.git
-												GIT_TAG v2.1.0
-				)
-
-	set(PREV_MIN_VERSION ${CMAKE_POLICY_VERSION_MINIMUM})
-
-	set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
-
-	FetchContent_MakeAvailable(easy_profiler)
-
-	set(CMAKE_POLICY_VERSION_MINIMUM ${PREV_MIN_VERSION})
-endif ()
-
-
-# ///////////////////////////////////////////////////////////////////////////////////////////////
-
 # Linking
 #[==========[
 Not used
@@ -232,16 +212,11 @@ endif()
 ]==========]
 
 target_compile_definitions(Vendor INTERFACE STB_IMAGE_IMPLEMENTATION)
-target_compile_definitions(Vendor INTERFACE BUILD_WITH_EASY_PROFILER)
 
 target_link_libraries(Vendor INTERFACE
 								glfw glew_s glm ImGui OpenGL::GL nlohmann_json::nlohmann_json dr_libs assimp
 )
-if (LINUX)
-	target_link_libraries(Vendor INTERFACE easy_profiler OpenAL::OpenAL)
-else()
-	target_link_libraries(Vendor INTERFACE OpenAL::OpenAL)
-endif ()
+target_link_libraries(Vendor INTERFACE OpenAL::OpenAL)
 
 target_include_directories(Vendor INTERFACE
 				${VENDOR_PATH}/stb_image
@@ -401,7 +376,7 @@ endif()
 
 target_link_libraries(RuamEngine PUBLIC RuamCore)
 
-add_subdirectory(Editor)
+add_subdirectory(RuamEditor)
 add_subdirectory(Sandbox)
 
 # TODO: Add tests and install targets if needed.

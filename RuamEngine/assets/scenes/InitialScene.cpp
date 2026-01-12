@@ -10,8 +10,8 @@
 #include "Skybox.h"
 #include "../components/Portal.h"
 #include <AudioSource.h>
-#include "Transform.h"
 #include "../components/Manager.h"
+#include "../components/SandboxCom.h"
 
 Scene* CreateInitialScene()
 {
@@ -40,6 +40,10 @@ Scene* CreateInitialScene()
 	radio->transform().setScale(0.002f, 0.002f, 0.002f);
 	radio->transform().setPosition(glm::vec3(0.0f, -2.0f, 0.0f));
 	radio->transform().setRotation(glm::vec3(90.0f, 0.0f, 0.0f));
+
+	Entity* mover = scene->createEntity();
+	radio->transform().setParent(&mover->transform());
+	mover->addComponent<SandboxCom>();
 
 	Entity* portal = scene->createEntity();
 	portal->setName("portal");

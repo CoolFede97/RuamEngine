@@ -7,13 +7,13 @@
 #include "Vertex.h"
 #include "SSBO.h"
 #include "SandboxCom2.h"
+#include "RuamTime.h"
 
 using namespace RuamEngine;
 
-class SandboxCom : public BaseRenderer
+class SandboxCom : public Component
 {
-	using BaseRenderer::BaseRenderer;
-
+	using Component::Component;
 	void start()
 	{
 
@@ -25,8 +25,6 @@ class SandboxCom : public BaseRenderer
 	};
 	void update()
 	{
-		std::cout << "UPDATE EN SANDBOX 1 UNO!\n";
-		BaseRenderer::update();
-
+		transform().position().x+=30*Time::DeltaTime();
 	};
 };

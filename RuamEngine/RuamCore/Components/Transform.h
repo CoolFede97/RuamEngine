@@ -16,6 +16,7 @@ namespace RuamEngine
 
 		Transform(unsigned int entityId);
 		Transform(Json transformData, const unsigned int entityId);
+		~Transform();
 
 		void start();
 		void update();

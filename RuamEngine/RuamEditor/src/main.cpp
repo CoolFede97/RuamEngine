@@ -1,19 +1,19 @@
 #include <iostream>
 
-#include "RuamEngine.h"
+#include "Renderer.h"
+#include "Input.h"
+#include "imgui.h"
+#include "backends/imgui_impl_glfw.h"
+#include "backends/imgui_impl_opengl3.h"
+#include "RuamTime.h"
 
-// #include "MenuScene.cpp"
-#include "SceneManager.h"
-#include "SandboxScene.cpp"
-#include "assets/scenes/CollisionSandboxScene.cpp"
-#include "assets/scenes/InitialScene.cpp"
-#include "assets/scenes/EndScene.cpp"
 using namespace RuamEngine;
 
 int main()
 {
 	Renderer::Init();
 	AudioSystem::init();
+
 	{
 		Input::SetWindow(Renderer::GetWindow());
 		Input::SetUp(Renderer::GetWindow());
@@ -28,12 +28,6 @@ int main()
 
 		ImGui::StyleColorsDark();
 
-		SceneManager::AddSceneCreator(2, CreateEndScene);
-		SceneManager::AddSceneCreator(1, CreateCFSandboxScene);
-		SceneManager::AddSceneCreator(0, CreateInitialScene);
-		// SceneManager::AddSceneCreator(3, CreateSandboxScene);
-		SceneManager::EnqueueSceneChange(0);
-
 		unsigned int frameCount = 0;
 
 		while (!Renderer::WindowShouldClose())
@@ -41,7 +35,7 @@ int main()
 
 			SceneManager::ApplyPendingSceneChange();
 
-		    // std::cout << "Frame count: " << frameCount++ << "\n";
+		    std::cout << "Frame count: " << frameCount++ << "\n";
 
 			// ImGUI
 			ImGui_ImplOpenGL3_NewFrame();
@@ -57,12 +51,6 @@ int main()
 			Renderer::BeginBatch();
 
 			EventManager::HandleEvents();
-
-            // std::cout << "Frame count: " << frameCount++ << "\n";
-			if (SceneManager::ActiveScene() != nullptr)
-			{
-				SceneManager::ActiveScene()->update();
-			}
 
 			Input::UpdateInput();
 

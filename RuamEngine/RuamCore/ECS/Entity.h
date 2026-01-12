@@ -29,7 +29,6 @@ namespace RuamEngine
 
 		template<class Comp>
 		Comp* addComponent() {
-			EASY_FUNCTION("Add Component");
 			std::unique_ptr<Comp> comp = std::make_unique<Comp>(m_id);
 			const std::type_index tidx = typeid(Comp);
 			if (m_components.count(tidx) <= 0) m_components.insert({tidx, ComponentVector()});
@@ -42,7 +41,6 @@ namespace RuamEngine
 
 		template<class Comp, typename... Args>
 		Comp& addComponent(Args&&... args) {
-			EASY_FUNCTION("Add Component args")
 			std::unique_ptr<Comp> comp = std::make_unique<Comp>(m_id, std::forward<Args>(args...)...);
 			const std::type_index tidx = typeid(Comp);
 			if (m_components.count(tidx) <= 0) m_components.insert({tidx, ComponentVector()});
@@ -55,7 +53,6 @@ namespace RuamEngine
 
 		template<class Comp>
 		Comp& addComponent(const Json jasonData) {
-			EASY_FUNCTION("Add Component args")
 			std::unique_ptr<Comp> comp = std::make_unique<Comp>(jasonData);
 			const std::type_index tidx = typeid(Comp);
 			if (m_components.count(tidx) > 0) m_components.insert({tidx, ComponentVector()});
@@ -68,7 +65,6 @@ namespace RuamEngine
 
 		template<class Comp>
 		Component* addComponentPtr(const nlohmann::json& j) {
-			EASY_FUNCTION("Add Component args")
 			std::unique_ptr<Comp> comp = std::make_unique<Comp>(j, m_id);
 			const std::type_index tidx = typeid(Comp);
 			if (m_components.count(tidx) > 0) m_components.insert({tidx, ComponentVector()});
@@ -85,7 +81,6 @@ namespace RuamEngine
 		// TODO: Find if there's a better way
 		template<class Comp>
 		Comp* getComponent() const {
-			EASY_FUNCTION("Get Component")
 			auto pair = m_components.find(typeid(Comp));
 			if (pair == m_components.end()) {
 				return nullptr;
@@ -150,7 +145,6 @@ namespace RuamEngine
 
 		template<class Comp>
 		void removeComponent() {
-			EASY_FUNCTION("Remove Component")
 			auto pair = m_components.find(typeid(Comp));
 			if (pair == m_components.end() || pair->second.size() == 0)
 			{
@@ -163,7 +157,6 @@ namespace RuamEngine
 
 		template<class Comp>
 		void removeComponent(Component& comp) {
-			EASY_FUNCTION("Remove Component")
 			auto pair = m_components.find(typeid(Comp));
 			if (pair == m_components.end()) return;
 			if (pair->second.size() == 0) return;

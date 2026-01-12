@@ -1,11 +1,12 @@
 #include <iostream>
 
-#include "Renderer.h"
-#include "Input.h"
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
-#include "RuamTime.h"
+
+#include "SceneManager.h"
+#include "SandboxScene.cpp"
+#include "../../assets/scenes/InitialScene.cpp"
 
 using namespace RuamEngine;
 
@@ -13,7 +14,6 @@ int main()
 {
 	Renderer::Init();
 	AudioSystem::init();
-
 	{
 		Input::SetWindow(Renderer::GetWindow());
 		Input::SetUp(Renderer::GetWindow());
@@ -28,20 +28,58 @@ int main()
 
 		ImGui::StyleColorsDark();
 
+		SceneManager::AddSceneCreator(0, CreateInitialScene);
+
+		SceneManager::EnqueueSceneChange(0);
+
 		unsigned int frameCount = 0;
 
 		while (!Renderer::WindowShouldClose())
 		{
 
 			SceneManager::ApplyPendingSceneChange();
-
-		    std::cout << "Frame count: " << frameCount++ << "\n";
+		    // std::cout << "Frame count: " << frameCount++ << "\n";
 
 			// ImGUI
 			ImGui_ImplOpenGL3_NewFrame();
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
 
+			static Entity* selectedEntity = nullptr;
+
+			ImGui::Begin("Hierarchy");
+			Scene* scene = SceneManager::ActiveScene();
+			if (scene != nullptr)
+			{
+				if (ImGui::Button("Create Entity"))
+				{
+					selectedEntity = scene->createEntity();
+				}
+
+				ImGui::SameLine();
+
+				if (selectedEntity != nullptr)
+				{
+					if (ImGui::Button("Delete selected entity"))
+					{
+						selectedEntity->destroy();
+						selectedEntity = nullptr;
+					}
+				}
+
+				ImGui::Separator();
+
+				std::list<Entity*> entities = scene->getEntities();
+				for (Entity* entity : entities)
+				{
+					bool selected = (selectedEntity == entity);
+					if (ImGui::Selectable(entity->name().c_str(), selected))
+					{
+						selectedEntity = entity;
+					}
+				}
+			}
+			ImGui::End();
 			// Input
 
 			// Time
@@ -51,6 +89,11 @@ int main()
 			Renderer::BeginBatch();
 
 			EventManager::HandleEvents();
+
+			if (SceneManager::ActiveScene() != nullptr)
+			{
+				SceneManager::ActiveScene()->update();
+			}
 
 			Input::UpdateInput();
 

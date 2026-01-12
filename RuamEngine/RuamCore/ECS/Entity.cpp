@@ -43,7 +43,10 @@ namespace RuamEngine
 	{
 		for (auto& cmp_vec : m_components)
 		{
-			auto tmp = std::remove_if(cmp_vec.second.begin(), cmp_vec.second.end(), [](std::unique_ptr<Component>& cmp){ return cmp->destroyFlag(); });
+			cmp_vec.second.erase(
+				std::remove_if(cmp_vec.second.begin(), cmp_vec.second.end(), [](std::unique_ptr<Component>& cmp){ return cmp->destroyFlag(); }),
+				cmp_vec.second.end()
+			);
 		}
 		for (auto& pair : m_components)
 		{

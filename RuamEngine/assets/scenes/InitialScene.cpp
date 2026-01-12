@@ -42,6 +42,7 @@ Scene* CreateInitialScene()
 	radio->transform().setRotation(glm::vec3(90.0f, 0.0f, 0.0f));
 
 	Entity* mover = scene->createEntity();
+	mover->setName("mover");
 	radio->transform().setParent(&mover->transform());
 	mover->addComponent<SandboxCom>();
 

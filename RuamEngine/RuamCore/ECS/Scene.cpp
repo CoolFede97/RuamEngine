@@ -60,6 +60,11 @@ namespace RuamEngine
 
 	void Scene::update()
 	{
+		m_entities.erase(
+			std::remove_if(m_entities.begin(), m_entities.end(), [](std::unique_ptr<Entity>& e){ return e->destroyFlag(); }),
+			m_entities.end()
+		);
+
 		m_componentsToStart = m_justCreatedComponents;
 
 		if (m_justCreatedComponents.size()>0) m_justCreatedComponents.clear();

@@ -375,13 +375,11 @@ namespace RuamEngine
                 ShaderProgramSPtr program = drawingData->m_program;
                 program->bind();
                 GlobalLight::loadLightSettings(program);
-
                 program->loadMaterial(*renderUnit->m_material.lock());
 
                 // Bind the SSBOs for this specific render unit
                 renderUnit->submitData();
 				renderUnit->bindBuffersBase();
-
                 GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit->m_indices->currentSize()/sizeof(unsigned int), renderUnit->m_modelMatricesBuffer->m_data.size()));
             }
         }

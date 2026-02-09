@@ -5,9 +5,19 @@
 #include "JsonConverters.h"
 #include <list>
 
+#include "imgui.h"
+#include "backends/imgui_impl_glfw.h"
+#include "backends/imgui_impl_opengl3.h"
+
 namespace RuamEngine
 {
 	class Entity;
+
+	#define TRANSFORM_SERIALIZED_MEMBERS(X, ...) \
+	X(m_position, glm::vec3, glm::vec3(0,0,0))__VA_ARGS__	\
+	X(m_rotation, glm::vec3, glm::vec3(0,0,0))__VA_ARGS__	\
+	X(m_scale, glm::vec3, glm::vec3(1,1,1))	\
+
 
 	class Transform : public Component
 	{
@@ -47,15 +57,18 @@ namespace RuamEngine
 		std::list<Transform*> m_children;
 		Transform* m_parent = nullptr; // If null, there is no parent
 
+		inline void forEachSerializedField(SerializedFieldFunction fn) override
+		{
+			TRANSFORM_SERIALIZED_MEMBERS(CALL_INSPECTOR_DRAWER)
+		}
+
 	protected:
-		glm::vec3 m_position;
-		glm::vec3 m_scale = glm::vec3(1.0f, 1.0f, 1.0f);
-		glm::vec3 m_rotation = glm::vec3(0.0f,0.0f,0.0f);
+		TRANSFORM_SERIALIZED_MEMBERS(DECL_MEMBER)
 
 	public:
+
 	IMPL_SERIALIZE(Transform,
-		SER_FIELD(m_position),
-		SER_FIELD(m_rotation),
-		SER_FIELD(m_scale))
+		TRANSFORM_SERIALIZED_MEMBERS(SER_FIELD, ,))
 	};
+
 }

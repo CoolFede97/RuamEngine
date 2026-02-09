@@ -4,10 +4,11 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <typeinfo>
 // ==== MACROS de Serialización ====
 //
 // Macro 1: SER_FIELD
-#define SER_FIELD(x) {#x, x}
+#define SER_FIELD(name, type, initialValue) {#name, name}
 
 // Macro 2: IMPL_SIMPLE_SERIALIZE
 //
@@ -30,8 +31,8 @@ virtual operator Json() const override \
 { \
 	return Json \
 	{ \
-		__VA_ARGS__, \
-		{"m_id", m_id}, \
+		__VA_ARGS__ \
+		,{"m_id", m_id}, \
 		{"TYPE", #ComponentClass} \
 	}; \
 } \
@@ -53,13 +54,22 @@ namespace \
 	static ComponentClass##Register global##ComponentClass##Register; \
 } \
 
+// Macros para declaración de miembros
+
+#define DECL_MEMBER(name, type, initialValue) type name = initialValue;
+
+// It receives initialValue because that's data that member initializers pass as parameters. It is not used in this case
+#define CALL_INSPECTOR_DRAWER(name, type, initialValue) fn(#name, typeid(type), &name);
+
 namespace RuamEngine
 {
 	class Entity;
 	class Transform;
+
+	using SerializedFieldFunction = std::function<void(const std::string&, const std::type_info&, void*)>;
+
 	class Component {
 	public:
-
 		using ComponentFactory = std::function<Component*(const Json&, Entity*)>;
 		inline static std::map<std::string, ComponentFactory> componentRegistry;
 
@@ -93,6 +103,8 @@ namespace RuamEngine
             };
         }
 
+        virtual inline void forEachSerializedField(SerializedFieldFunction fn) {};
+
 	protected:
 		const unsigned int m_entityId;
 		const unsigned int m_id;
@@ -120,4 +132,5 @@ namespace RuamEngine
 			render();
 		}
 	};
+
 }

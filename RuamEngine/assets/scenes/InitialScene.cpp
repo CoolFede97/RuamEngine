@@ -41,10 +41,10 @@ Scene* CreateInitialScene()
 	radio->transform().setPosition(glm::vec3(0.0f, -2.0f, 0.0f));
 	radio->transform().setRotation(glm::vec3(90.0f, 0.0f, 0.0f));
 
-	Entity* mover = scene->createEntity();
-	mover->setName("mover");
-	radio->transform().setParent(&mover->transform());
-	mover->addComponent<SandboxCom>();
+	// Entity* mover = scene->createEntity();
+	// mover->setName("mover");
+	// radio->transform().setParent(&mover->transform());
+	// mover->addComponent<SandboxCom>();
 
 	Entity* portal = scene->createEntity();
 	portal->setName("portal");

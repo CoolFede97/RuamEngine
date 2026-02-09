@@ -5,6 +5,7 @@
 namespace RuamEngine
 {
 	unsigned int Component::s_idCount = 0;
+	std::string m_forEachSerializedField = "";
 
 	bool Component::operator==(const Component& other) const {
 		return this->m_id == other.m_id;

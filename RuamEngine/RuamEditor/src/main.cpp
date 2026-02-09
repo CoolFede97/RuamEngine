@@ -8,6 +8,8 @@
 #include "SandboxScene.cpp"
 #include "../../assets/scenes/InitialScene.cpp"
 
+#include "RuamEditor.h"
+
 using namespace RuamEngine;
 
 int main()
@@ -32,6 +34,7 @@ int main()
 
 		SceneManager::EnqueueSceneChange(0);
 
+
 		unsigned int frameCount = 0;
 
 		while (!Renderer::WindowShouldClose())
@@ -45,42 +48,10 @@ int main()
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
 
-			static Entity* selectedEntity = nullptr;
-
-			ImGui::Begin("Hierarchy");
-			Scene* scene = SceneManager::ActiveScene();
-			if (scene != nullptr)
-			{
-				if (ImGui::Button("Create Entity"))
-				{
-					selectedEntity = scene->createEntity();
-				}
-
-				ImGui::SameLine();
-
-				if (selectedEntity != nullptr)
-				{
-					if (ImGui::Button("Delete selected entity"))
-					{
-						selectedEntity->destroy();
-						selectedEntity = nullptr;
-					}
-				}
-
-				ImGui::Separator();
-
-				std::list<Entity*> entities = scene->getEntities();
-				for (Entity* entity : entities)
-				{
-					bool selected = (selectedEntity == entity);
-					if (ImGui::Selectable(entity->name().c_str(), selected))
-					{
-						selectedEntity = entity;
-					}
-				}
-			}
-			ImGui::End();
 			// Input
+
+			RuamEditor::UpdateHierarchy();
+			RuamEditor::UpdateInspector();
 
 			// Time
 			Time::Update();

@@ -38,7 +38,6 @@ public:
 		}
 	}
 
-    // IMPL_SIMPLE_SERIALIZE(ModelRenderer)
 	void setModel(const std::string& relativePath)
 	{
 	    if (!m_meshPath.empty() && m_model.lock())

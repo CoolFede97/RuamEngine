@@ -91,7 +91,6 @@ namespace RuamEngine
 			return dynamic_cast<Comp*>(pair->second.front().get());
 		}
 
-
 		std::vector<Component*> getComponents() const;
 		bool operator==(const Entity& obj) {
 			return this->m_id == obj.m_id;

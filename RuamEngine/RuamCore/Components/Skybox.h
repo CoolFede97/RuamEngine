@@ -29,8 +29,12 @@ namespace RuamEngine
 		static RenderUnitSPtr m_renderUnit;
 
 	public:
+		IMPL_SIMPLE_SERIALIZE(Skybox)
 		static Skybox* GetSkybox() {return s_skybox; }
 		static void SetSkybox(std::vector<std::string>& paths);
+
+		std::string name() override { return "Skybox"; }
+
 		void update();
 		void start();
 		void render();

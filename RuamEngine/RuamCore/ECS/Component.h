@@ -12,20 +12,20 @@
 
 // Macro 2: IMPL_SIMPLE_SERIALIZE
 //
-#define IMPL_SIMPLE_SERIALIZE(ComponentClass) \
+#define IMPL_SIMPLE_SERIALIZE(ComponentName) \
 public: \
 virtual operator Json() const override \
 { \
 	return Json \
 	{ \
 		{"m_id", m_id}, \
-		{"TYPE", #ComponentClass} \
+		{"TYPE", #ComponentName} \
 	}; \
 } \
 
 // Macro 3: IMPL_SERIALIZE
 //
-#define IMPL_SERIALIZE(ComponentClass, ...) \
+#define IMPL_SERIALIZE(ComponentName, ...) \
 public: \
 virtual operator Json() const override \
 { \
@@ -33,33 +33,40 @@ virtual operator Json() const override \
 	{ \
 		__VA_ARGS__ \
 		,{"m_id", m_id}, \
-		{"TYPE", #ComponentClass} \
+		{"TYPE", #ComponentName} \
 	}; \
 } \
 
-#define REGISTER_COMPONENT(ComponentClass) \
+// Registers a function in Component::componentRegistry that add a component to the entity parameter
+#define REGISTER_COMPONENT(ComponentName) \
 namespace \
 { \
-	struct ComponentClass##Register \
+	struct ComponentName##Register \
 	{ \
-		ComponentClass##Register() \
+		ComponentName##Register() \
 		{ \
-			Component::componentRegistry.insert(std::make_pair(#ComponentClass, \
+			Component::componentRegistry.insert(std::make_pair(#ComponentName, \
 			[](const Json& componentData, Entity* entity) -> Component* \
 			{ \
-				return entity->addComponentPtr<ComponentClass>(componentData); \
+				return entity->addComponentPtr<ComponentName>(componentData); \
 			})); \
 		} \
 	}; \
-	static ComponentClass##Register global##ComponentClass##Register; \
+	static ComponentName##Register global##ComponentName##Register; \
 } \
 
 // Macros para declaración de miembros
-
 #define DECL_MEMBER(name, type, initialValue) type name = initialValue;
 
 // It receives initialValue because that's data that member initializers pass as parameters. It is not used in this case
 #define CALL_INSPECTOR_DRAWER(name, type, initialValue) fn(#name, typeid(type), &name);
+
+// Creates the forEachSerializedField function
+#define IMPL_forEachSerializedField(inspectorDrawerCalls)	\
+	inline void forEachSerializedField(SerializedFieldFunction fn) override	\
+	{	\
+		inspectorDrawerCalls	\
+	}
 
 namespace RuamEngine
 {
@@ -103,8 +110,9 @@ namespace RuamEngine
             };
         }
 
-        virtual inline void forEachSerializedField(SerializedFieldFunction fn) {};
-
+        // Doesn't use the macro IMPL_forEachSerializedField since this is the virtual one.
+        virtual inline void forEachSerializedField(SerializedFieldFunction fn) {;};
+        virtual std::string name() { return "Component"; }
 	protected:
 		const unsigned int m_entityId;
 		const unsigned int m_id;

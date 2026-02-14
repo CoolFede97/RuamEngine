@@ -5,7 +5,6 @@
 // #include "MenuScene.cpp"
 #include "SceneManager.h"
 #include "SandboxScene.cpp"
-#include "assets/scenes/CollisionSandboxScene.cpp"
 #include "assets/scenes/InitialScene.cpp"
 #include "assets/scenes/EndScene.cpp"
 using namespace RuamEngine;
@@ -31,7 +30,6 @@ int main()
 		SceneManager::AddSceneCreator(2, CreateEndScene);
 		SceneManager::AddSceneCreator(1, CreateCFSandboxScene);
 		SceneManager::AddSceneCreator(0, CreateInitialScene);
-		// SceneManager::AddSceneCreator(3, CreateSandboxScene);
 		SceneManager::EnqueueSceneChange(0);
 
 		unsigned int frameCount = 0;

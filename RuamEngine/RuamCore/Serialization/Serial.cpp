@@ -76,6 +76,7 @@ namespace RuamEngine
 		const unsigned int sceneId = jsonScene["m_id"];
 
 		Scene* scene = new Scene(sceneId, sceneName);
+
 		if (jsonScene["m_entities"].is_null()) return scene;
 
 		for (const Json& jsonEntity : jsonScene["m_entities"])
@@ -84,10 +85,7 @@ namespace RuamEngine
 			{
 				std::string entityName = jsonEntity["m_name"];
 				Entity* entity = scene->createEntity(entityName);
-				std::cout << "Components size " << entity->getComponents().size()<< "\n";
-				entity->removeComponent<Transform>();
-				std::cout << "Components size " << entity->getComponents().size()<< "\n";
-				if (jsonEntity["m_components"].is_null()) continue;
+				if (jsonEntity["m_components"].size()<=1) continue;
 
 				for (const Json& jsonCmp : jsonEntity["m_components"])
 				{

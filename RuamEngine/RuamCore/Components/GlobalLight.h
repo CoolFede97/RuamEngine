@@ -22,11 +22,14 @@ namespace RuamEngine
 		static Vec4 m_color;
 		static float m_lightOffset;
 	public:
+		IMPL_SIMPLE_SERIALIZE(GlobalLight)
 		using BaseRenderer::BaseRenderer;
 		~GlobalLight();
 		static void setLightColor(Vec4 color);
 
 		static void setLightOffset(float offset);
+
+		std::string name() override { return "GlobalLight"; }
 
 		void update(){};
 		void start();

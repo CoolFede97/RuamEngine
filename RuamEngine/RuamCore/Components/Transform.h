@@ -57,10 +57,8 @@ namespace RuamEngine
 		std::list<Transform*> m_children;
 		Transform* m_parent = nullptr; // If null, there is no parent
 
-		inline void forEachSerializedField(SerializedFieldFunction fn) override
-		{
-			TRANSFORM_SERIALIZED_MEMBERS(CALL_INSPECTOR_DRAWER)
-		}
+		IMPL_forEachSerializedField(TRANSFORM_SERIALIZED_MEMBERS(CALL_INSPECTOR_DRAWER))
+		std::string name() override { return "Transform"; }
 
 	protected:
 		TRANSFORM_SERIALIZED_MEMBERS(DECL_MEMBER)
@@ -70,5 +68,4 @@ namespace RuamEngine
 	IMPL_SERIALIZE(Transform,
 		TRANSFORM_SERIALIZED_MEMBERS(SER_FIELD, ,))
 	};
-
 }

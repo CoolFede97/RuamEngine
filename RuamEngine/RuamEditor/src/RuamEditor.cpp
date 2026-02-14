@@ -85,7 +85,7 @@ namespace RuamEngine
 				std::string labelCopy = "##"+name;
 				ImGui::Text("%s",label.c_str());
 				ImGui::SameLine();
-				ImGui::DragFloat3(labelCopy.c_str(), static_cast<float*>(value), 0.1f);
+				ImGui::DragFloat(labelCopy.c_str(), static_cast<float*>(value), 0.1f);
 			}
 		},
 		{
@@ -107,43 +107,24 @@ namespace RuamEngine
 		if (scene != nullptr)
 		{
 			ImGui::PushID(selectedEntity->id());
-			if (ImGui::CollapsingHeader("Transform"))
-			{
-				selectedEntity->transform().forEachSerializedField([](const std::string& name, const std::type_index& type, void* value)
-				{
-					if (s_inspectorDrawers.find(type) != s_inspectorDrawers.end())	s_inspectorDrawers[type](name, value);
-					else std::cerr << "Error: Couldn't find matching function in s_inspectorDrawers for a variable of type " << type.name() << " \n";
-				});
-			}
-			if (ImGui::CollapsingHeader("Model Renderer"))
-			{
-				DrawOnInspector(selectedEntity->getComponent<ModelRenderer>());
-			}
-			ImGui::PopID();
 
+			for (Component* com : selectedEntity->getComponents())
+			{
+				if (ImGui::CollapsingHeader(com->name().c_str()))
+				{
+					com->forEachSerializedField([](const std::string& name, const std::type_index& type, void* value)
+					{
+						if (s_inspectorDrawers.find(type) != s_inspectorDrawers.end())	s_inspectorDrawers[type](name, value);
+						else std::cerr << "Error: Couldn't find matching function in s_inspectorDrawers for a variable of type " << type.name() << " \n";
+					});
+				}
+			}
+
+			ImGui::PopID();
 		}
 		ImGui::End();
 	}
 
-	// void RuamEditor::DrawOnInspector(const std::string& name, const std::type_info& type, void* value)
-	// {
-	// }
-
-
-	void RuamEditor::DrawOnInspector(Transform& transform)
-	{
-		ImGui::Text("Pos: ");
-		ImGui::SameLine();
-		ImGui::DragFloat3("##Pos", &transform.position().x, 0.1f);
-
-		ImGui::Text("Rot: ");
-		ImGui::SameLine();
-		ImGui::DragFloat3("##Rot", &transform.rotation().x, 0.1f);
-
-		ImGui::Text("Sca: ");
-		ImGui::SameLine();
-		ImGui::DragFloat3("##Sca", &transform.scale().x, 0.1f);
-	}
 	void RuamEditor::DrawOnInspector(ModelRenderer* modelRenderer)
 	{
 		static char nameBuffer[128];

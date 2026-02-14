@@ -13,6 +13,12 @@
 
 namespace RuamEngine
 {
+	#define CAMERA_SERIALIZED_MEMBERS(X, ...) \
+	X(m_near_plane, float, 0.1f)__VA_ARGS__	\
+	X(m_far_plane, float, 3000.0f)__VA_ARGS__	\
+	X(m_fov, float, 45.0f)__VA_ARGS__	\
+	X(m_aspect_ratio, float, 800.0f/600.0f)
+
 	class Camera : public Component
 	{
 		using Component::Component;
@@ -22,10 +28,9 @@ namespace RuamEngine
 		const glm::vec3 m_up = glm::vec3(0.0, 1.0, 0.0);
 
 	public:
-		float m_near_plane = 0.1f;
-		float m_far_plane = 3000.0f;
-		float m_fov = 45.0f;
-		float m_aspect_ratio = 800.0f/600.0f;
+		CAMERA_SERIALIZED_MEMBERS(DECL_MEMBER)
+
+		IMPL_forEachSerializedField(CAMERA_SERIALIZED_MEMBERS(CALL_INSPECTOR_DRAWER))
 
 		glm::mat4 projectionMatrix();
 		glm::mat4 viewMatrix();
@@ -39,5 +44,7 @@ namespace RuamEngine
 			AudioSystem::AL::Listener::setParam(AL_POSITION, entity()->transform().position());
 		};
 		void start() { setAsMainCamera();};
+		std::string name() override { return "Camera"; }
+		IMPL_SERIALIZE(Camera, CAMERA_SERIALIZED_MEMBERS(SER_FIELD, ,))
 	};
 }

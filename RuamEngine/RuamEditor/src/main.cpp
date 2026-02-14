@@ -7,7 +7,7 @@
 #include "SceneManager.h"
 #include "SandboxScene.cpp"
 #include "../../assets/scenes/InitialScene.cpp"
-
+#include "../../assets/scenes/EmptyScene.cpp"
 #include "RuamEditor.h"
 
 using namespace RuamEngine;
@@ -30,7 +30,7 @@ int main()
 
 		ImGui::StyleColorsDark();
 
-		SceneManager::AddSceneCreator(0, CreateInitialScene);
+		SceneManager::AddSceneCreator(0, CreateEmptyScene);
 
 		SceneManager::EnqueueSceneChange(0);
 

@@ -32,7 +32,7 @@ namespace RuamEngine
             }
 
             TextureSPtr newTexture = std::make_shared<T>(relativePath);
-            unsigned int rendererIndex = RegisterTextureInRenderer(newTexture);
+            unsigned int rendererIndex = Renderer::RegisterTexture(newTexture);
             newTexture->setRendererIndex(rendererIndex);
 
             TextureEntry newEntry;
@@ -55,7 +55,7 @@ namespace RuamEngine
             }
 
             TextureSPtr newTexture = std::make_shared<T>(relativePaths);
-            unsigned int rendererIdx = RegisterTextureInRenderer(newTexture);
+            unsigned int rendererIdx = Renderer::RegisterTexture(newTexture);
 
             TextureEntry newEntry;
             newEntry.rendererIndex = rendererIdx;
@@ -79,16 +79,13 @@ namespace RuamEngine
 
             if (it->second.refCount <=0)
             {
-                UnregisterTextureInRenderer(it->second.rendererIndex, it->second.texture->texType());
+                Renderer::UnregisterTexture(it->second.rendererIndex, it->second.texture->texType());
                 m_textureCache.erase(it);
             }
 
         }
         static TextureWPtr GetTexture(const std::string& relativePath);
         static TextureWPtr GetTexture(const std::vector<std::string>& relativePaths);
-
-        static unsigned int RegisterTextureInRenderer(TextureSPtr texture);
-        static void UnregisterTextureInRenderer(unsigned int textureIndex, GLenum type);
 
         // Model handling ---------------------------------------------------------------------------------
         static ModelWPtr LoadModel(const std::string& relativePath, ShaderProgramType shaderProgramType);
@@ -99,8 +96,6 @@ namespace RuamEngine
         static MaterialWPtr CreateMaterial();
         static void DestroyMaterial(unsigned int materialId);
         static MaterialWPtr GetMaterial(unsigned int materialId);
-
-        static void DestroyRenderUnitInRenderer(RenderUnitSPtr renderUnit, DrawingDataSPtr drawingData);
 
         private:
 

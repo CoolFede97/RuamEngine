@@ -44,7 +44,7 @@ namespace RuamEngine
 
     void Skybox::SetSkybox(std::vector<std::string>& paths)
     {
-        s_skybox->m_cubemap = Renderer::RegisterTexture(std::make_shared<Cubemap>(paths));
+        s_skybox->m_cubemap = ResourceManager::LoadTexture<Cubemap>(paths).lock()->rendererIndex();
     }
 
     void Skybox::update()

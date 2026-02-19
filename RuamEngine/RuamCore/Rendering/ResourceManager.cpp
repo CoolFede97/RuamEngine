@@ -92,7 +92,7 @@ namespace RuamEngine
 			}
 			for (auto& ru : unitsToDestroy)
 			{
-           		DestroyRenderUnitInRenderer(ru, drawingData);
+           		Renderer::DestroyRenderUnit(ru, drawingData);
 			}
 			for (auto& path : texturesToDestroy)
 			{
@@ -154,19 +154,5 @@ namespace RuamEngine
 		}
      	it->second.refCount++;
     	return it->second.material;
-    }
-
-    unsigned int ResourceManager::RegisterTextureInRenderer(TextureSPtr texture)
-    {
-        return Renderer::RegisterTexture(texture);
-    }
-
-    void ResourceManager::UnregisterTextureInRenderer(unsigned int textureIndex, GLenum type)
-    {
-        Renderer::UnregisterTexture(textureIndex, type);
-    }
-    void ResourceManager::DestroyRenderUnitInRenderer(RenderUnitSPtr renderUnit, DrawingDataSPtr drawingData)
-    {
-        Renderer::DestroyRenderUnit(renderUnit, drawingData);
     }
 }

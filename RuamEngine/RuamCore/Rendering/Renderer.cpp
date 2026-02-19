@@ -203,8 +203,8 @@ namespace RuamEngine
 
     // Registrations -------------------------------------------------------------
 
-    // If the texture already exists, it returns the existing index. Otherwise, it creates a new texture and returns its index.
-    // The index is the index of the handle in m_handlesByType[type].
+    // Shouldn't be called directly.
+    // Returns the index of the handle in m_handlesByType[type].
     unsigned int Renderer::RegisterTexture(const TextureSPtr& texture)
     {
         GLenum type = texture->texType();
@@ -213,11 +213,6 @@ namespace RuamEngine
         {
             std::cerr << "ERROR: Max texture limit of type " << type << " reached. The limit is " << maxTextureCountPerType << "\n";
             return 0;
-        }
-        for (unsigned int i = 0; i < m_texturesByType[type].size(); i++)
-        {
-         	if (m_texturesByType[type][i]==nullptr) continue;
-            if (texture->path() == m_texturesByType[type][i]->path()) return i;
         }
 
         GLuint64 newHandle;

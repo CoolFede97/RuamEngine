@@ -18,6 +18,7 @@
 namespace RuamEngine
 {
 	class DrawingData;
+	class ResourceManager;
 
     enum SSBOType
     {
@@ -107,8 +108,6 @@ namespace RuamEngine
         static unsigned int FindMaterial(MaterialWPtr material);
         static RenderUnitSPtr GetRenderUnit(MaterialWPtr material, DrawingDataSPtr drawingData);
 
-		static unsigned int RegisterTexture(const TextureSPtr& texture);
-        static void UnregisterTexture(unsigned int textureIndex, GLenum type);
         static void DestroyMaterial(unsigned int materialId);
         static void DestroyRenderUnit(RenderUnitSPtr renderUnit, DrawingDataSPtr drawingData);
         static void DestroyShaderProgram(unsigned int programId);
@@ -116,6 +115,10 @@ namespace RuamEngine
 		static void UpdateTextures();
         static void UpdateTextureType(GLenum type);
     private:
+
+		static unsigned int RegisterTexture(const TextureSPtr& texture);
+        static void UnregisterTexture(unsigned int textureIndex, GLenum type);
+
         static void AllocateTextureTypes();
         static void AllocateTextureType(GLenum type);
 
@@ -140,6 +143,8 @@ namespace RuamEngine
         static bool texturesUploaded;
         static RendererConfig m_config;
         static GLFWwindow* m_window;
+
+        friend class ResourceManager;
     };
 
 }

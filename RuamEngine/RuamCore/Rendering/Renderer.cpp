@@ -204,6 +204,7 @@ namespace RuamEngine
     // Registrations -------------------------------------------------------------
 
     // If the texture already exists, it returns the existing index. Otherwise, it creates a new texture and returns its index.
+    // The index is the index of the handle in m_handlesByType[type].
     unsigned int Renderer::RegisterTexture(const TextureSPtr& texture)
     {
         GLenum type = texture->texType();

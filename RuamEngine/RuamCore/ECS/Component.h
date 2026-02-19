@@ -8,7 +8,7 @@
 // ==== MACROS de Serialización ====
 //
 // Macro 1: SER_FIELD
-#define SER_FIELD(name, type, initialValue) {#name, name}
+#define SER_FIELD(name, type, initialValue /* unused */, componentName /* unused */) {#name, name}
 
 // Macro 2: IMPL_SIMPLE_SERIALIZE
 //
@@ -56,10 +56,10 @@ namespace \
 } \
 
 // Macros para declaración de miembros
-#define DECL_MEMBER(name, type, initialValue) type name = initialValue;
-
-// It receives initialValue because that's data that member initializers pass as parameters. It is not used in this case
-#define CALL_INSPECTOR_DRAWER(name, type, initialValue) fn(#name, typeid(type), &name);
+#define DECL_MEMBER(name, type, initialValue, componentName /* unused */) type name = initialValue;
+#define DECL_STATIC_MEMBER(name, type, initialValue, componentName /* unused */) static type name;
+#define DEF_STATIC_MEMBER(name, type, initialValue, componentName) type componentName::name = initialValue;
+#define CALL_INSPECTOR_DRAWER(name, type, initialValue /* unused */, componentName /* unused */) fn(#name, typeid(type), &name);
 
 // Creates the forEachSerializedField function
 #define IMPL_forEachSerializedField(inspectorDrawerCalls)	\
@@ -127,18 +127,18 @@ namespace RuamEngine
 
 	using ComponentUPtr = std::unique_ptr<Component>;
 
-	class BaseRenderer : public Component {
-	public:
-		using Component::Component;
+	// class BaseRenderer : public Component {
+	// public:
+	// 	using Component::Component;
 
-		virtual void render() = 0;
+	// 	virtual void render() = 0;
 
-		void start() {}
+	// 	void start() {}
 
-		void update() {
-			Component::update();
-			render();
-		}
-	};
+	// 	void update() {
+	// 		Component::update();
+	// 		render();
+	// 	}
+	// };
 
 }

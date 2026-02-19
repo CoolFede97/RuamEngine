@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Component.h"
+
 #include "glm/glm.hpp"
 #include "JsonConverters.h"
 #include <list>
@@ -11,13 +12,11 @@
 
 namespace RuamEngine
 {
-	class Entity;
 
 	#define TRANSFORM_SERIALIZED_MEMBERS(X, ...) \
-	X(m_position, glm::vec3, glm::vec3(0,0,0))__VA_ARGS__	\
-	X(m_rotation, glm::vec3, glm::vec3(0,0,0))__VA_ARGS__	\
-	X(m_scale, glm::vec3, glm::vec3(1,1,1))	\
-
+	X(m_position, glm::vec3, glm::vec3(0,0,0), Transform)__VA_ARGS__	\
+	X(m_rotation, glm::vec3, glm::vec3(0,0,0), Transform)__VA_ARGS__	\
+	X(m_scale, glm::vec3, glm::vec3(1,1,1), Transform)	\
 
 	class Transform : public Component
 	{

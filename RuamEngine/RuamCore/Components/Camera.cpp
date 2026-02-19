@@ -1,8 +1,9 @@
 #include "Camera.h"
+#include "Component.h"
 
 namespace RuamEngine
 {
-	Camera* Camera::s_mainCamera = nullptr;
+    CAMERA_STATIC_MEMBERS(DEF_STATIC_MEMBER)
 
 	glm::mat4 Camera::projectionMatrix()
 	{

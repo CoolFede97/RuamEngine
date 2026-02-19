@@ -19,8 +19,8 @@ namespace RuamEngine
 {
 
 	#define CAMERA_CONTROLLER_SERIALIZED_MEMBERS(X, ...)	\
-	X(m_speed, float, 0)__VA_ARGS__	\
-	X(m_rotationSpeed, float, 0)
+	X(m_speed, float, 0, CameraController)__VA_ARGS__	\
+	X(m_rotationSpeed, float, 0, CameraController)
 
 	class CameraController : public Component
 	{

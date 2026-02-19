@@ -14,16 +14,19 @@
 namespace RuamEngine
 {
 	#define CAMERA_SERIALIZED_MEMBERS(X, ...) \
-	X(m_near_plane, float, 0.1f)__VA_ARGS__	\
-	X(m_far_plane, float, 3000.0f)__VA_ARGS__	\
-	X(m_fov, float, 45.0f)__VA_ARGS__	\
-	X(m_aspect_ratio, float, 800.0f/600.0f)
+	X(m_near_plane, float, 0.1f, Camera)__VA_ARGS__	\
+	X(m_far_plane, float, 3000.0f, Camera)__VA_ARGS__	\
+	X(m_fov, float, 45.0f, Camera)__VA_ARGS__	\
+	X(m_aspect_ratio, float, 800.0f/600.0f, Camera)
+
+	#define CAMERA_STATIC_MEMBERS(X, ...) \
+	X(s_mainCamera, Camera*, nullptr, Camera)
 
 	class Camera : public Component
 	{
 		using Component::Component;
 
-		static Camera* s_mainCamera;
+		CAMERA_STATIC_MEMBERS(DECL_STATIC_MEMBER)
 
 		const glm::vec3 m_up = glm::vec3(0.0, 1.0, 0.0);
 

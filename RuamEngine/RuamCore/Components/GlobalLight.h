@@ -14,7 +14,7 @@
 
 namespace RuamEngine
 {
-	class GlobalLight : public BaseRenderer
+	class GlobalLight : public Component
 	{
 
 	private:
@@ -23,7 +23,7 @@ namespace RuamEngine
 		static float m_lightOffset;
 	public:
 		IMPL_SIMPLE_SERIALIZE(GlobalLight)
-		using BaseRenderer::BaseRenderer;
+		using Component::Component;
 		~GlobalLight();
 		static void setLightColor(Vec4 color);
 
@@ -31,8 +31,7 @@ namespace RuamEngine
 
 		std::string name() override { return "GlobalLight"; }
 
-		void update(){};
-		void start();
+		void start() override;
 
 		void render(){};
 

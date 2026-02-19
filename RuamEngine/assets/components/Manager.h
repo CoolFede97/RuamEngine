@@ -9,10 +9,11 @@
 
 namespace RuamEngine
 {
-	class Manager : public BaseRenderer {
+	class Manager : public Component {
 	public:
-		using BaseRenderer::BaseRenderer;
-		void render() {
+		using Component::Component;
+		void update()
+		{
 			ImGuiIO& io = ImGui::GetIO();
 			ImGui::Text("FPS: %.1f", io.Framerate);
 			for (int i = 0; i < SceneManager::sceneList().size(); i++)
@@ -23,10 +24,6 @@ namespace RuamEngine
 					SceneManager::EnqueueSceneChange(i);
 				}
 			}
-		};
-		void update()
-		{
-			BaseRenderer::update();
 		}
 	};
 }

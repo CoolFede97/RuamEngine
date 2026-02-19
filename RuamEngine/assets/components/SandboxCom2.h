@@ -8,9 +8,9 @@
 
 using namespace RuamEngine;
 
-class SandboxCom2 : public BaseRenderer
+class SandboxCom2 : public Component
 {
-	using BaseRenderer::BaseRenderer;
+	using Component::Component;
 
 	void start()
 	{
@@ -24,7 +24,7 @@ class SandboxCom2 : public BaseRenderer
 	void update()
 	{
 		std::cout << "UPDATE EN SANDBOXCOM 2 DOS!\n";
-		BaseRenderer::update();
+		Component::update();
 	};
 
 };

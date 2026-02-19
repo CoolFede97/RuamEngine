@@ -19,7 +19,7 @@
 
 using namespace RuamEngine;
 
-class ModelRenderer : public BaseRenderer
+class ModelRenderer : public Component
 {
 public:
 	std::string m_meshPath;
@@ -27,7 +27,7 @@ public:
 	ShaderProgramType m_shaderProgramType;
 	std::unordered_map<unsigned int, RenderUnitWPtr> m_cachedRenderUnits;
 
-	using BaseRenderer::BaseRenderer;
+	using Component::Component;
 
 	~ModelRenderer()
 	{
@@ -78,63 +78,6 @@ private:
 	std::vector<unsigned int> m_indices;
 	// std::vector<RenderUnitSPtr> m_myRenderUnits;
 
-	void render()
-	{
-		glm::mat4 modelMatrix(1.0f);
-
-		glm::vec3 parentsPos = {0,0,0};
-		glm::vec3 parentsRotation = {0,0,0};
-		glm::vec3 parentsScale = {1,1,1};
-		Transform* lastParent = nullptr;
-		if (transform().m_parent != nullptr)
-		{
-			lastParent = transform().m_parent;
-			while (true)
-			{
-				if (lastParent==nullptr) break;
-				parentsPos+=lastParent->position();
-				parentsRotation+=lastParent->rotation();
-				parentsScale*=lastParent->scale();
-				lastParent = lastParent->m_parent;
-			}
-		}
-
-		modelMatrix = glm::translate(modelMatrix, entity()->transform().position() + parentsPos);
-		modelMatrix = glm::rotate(modelMatrix, glm::radians(entity()->transform().rotation().x + parentsRotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-		modelMatrix = glm::rotate(modelMatrix, glm::radians(entity()->transform().rotation().y + parentsRotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-		modelMatrix = glm::rotate(modelMatrix, glm::radians(entity()->transform().rotation().z + parentsRotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-		modelMatrix = glm::scale(modelMatrix, entity()->transform().scale() * parentsScale);
-
-		ModelSPtr modelShared = GetShared(m_model);
-
-        if (modelShared->m_localToGlobalMaterials.size() == 1)
-		{
-			MeshSPtr mesh = modelShared->m_meshes[0];
-			RenderUnitSPtr ru = m_cachedRenderUnits[mesh->m_material.lock()->id()].lock();
-			if (ru != nullptr)
-			{
-				Renderer::matrices.push_back(modelMatrix);
-				ru->m_modelMatricesBuffer->addBatchData({ modelMatrix });
-				return;
-			}
-		}
-
-		std::vector<unsigned int> renderUnitsUsed = {};
-		auto renderUnits = Renderer::m_drawingDatas[m_shaderProgramType]->m_renderUnits;
-		for (const MeshSPtr& mesh : m_model.lock()->m_meshes)
-		{
-			RenderUnitSPtr ru = m_cachedRenderUnits[mesh->m_material.lock()->id()].lock();
-
-			MaterialSPtr ruSharedMaterial = GetShared(ru->m_material);
-			std::vector<unsigned int>::iterator usedRU = std::find(renderUnitsUsed.begin(), renderUnitsUsed.end(), ruSharedMaterial->id());
-			if (usedRU == renderUnitsUsed.end())
-			{
-				ru->m_modelMatricesBuffer->addBatchData({ modelMatrix });
-				renderUnitsUsed.push_back(ruSharedMaterial->id());
-			}
-		}
-	};
-
 	void start()
 	{
 	}
@@ -142,7 +85,58 @@ private:
 
 	void update()
 	{
-		BaseRenderer::update();
-	};
-	public:
+    	glm::mat4 modelMatrix(1.0f);
+
+    	glm::vec3 parentsPos = {0,0,0};
+    	glm::vec3 parentsRotation = {0,0,0};
+    	glm::vec3 parentsScale = {1,1,1};
+    	Transform* lastParent = nullptr;
+    	if (transform().m_parent != nullptr)
+    	{
+    		lastParent = transform().m_parent;
+    		while (true)
+    		{
+    			if (lastParent==nullptr) break;
+    			parentsPos+=lastParent->position();
+    			parentsRotation+=lastParent->rotation();
+    			parentsScale*=lastParent->scale();
+    			lastParent = lastParent->m_parent;
+    		}
+    	}
+
+    	modelMatrix = glm::translate(modelMatrix, entity()->transform().position() + parentsPos);
+    	modelMatrix = glm::rotate(modelMatrix, glm::radians(entity()->transform().rotation().x + parentsRotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+    	modelMatrix = glm::rotate(modelMatrix, glm::radians(entity()->transform().rotation().y + parentsRotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+    	modelMatrix = glm::rotate(modelMatrix, glm::radians(entity()->transform().rotation().z + parentsRotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+    	modelMatrix = glm::scale(modelMatrix, entity()->transform().scale() * parentsScale);
+
+    	ModelSPtr modelShared = GetShared(m_model);
+
+            if (modelShared->m_localToGlobalMaterials.size() == 1)
+    	{
+    		MeshSPtr mesh = modelShared->m_meshes[0];
+    		RenderUnitSPtr ru = m_cachedRenderUnits[mesh->m_material.lock()->id()].lock();
+    		if (ru != nullptr)
+    		{
+    			Renderer::matrices.push_back(modelMatrix);
+    			ru->m_modelMatricesBuffer->addBatchData({ modelMatrix });
+    			return;
+    		}
+    	}
+
+    	std::vector<unsigned int> renderUnitsUsed = {};
+    	auto renderUnits = Renderer::m_drawingDatas[m_shaderProgramType]->m_renderUnits;
+    	for (const MeshSPtr& mesh : m_model.lock()->m_meshes)
+    	{
+    		RenderUnitSPtr ru = m_cachedRenderUnits[mesh->m_material.lock()->id()].lock();
+
+    		MaterialSPtr ruSharedMaterial = GetShared(ru->m_material);
+    		std::vector<unsigned int>::iterator usedRU = std::find(renderUnitsUsed.begin(), renderUnitsUsed.end(), ruSharedMaterial->id());
+    		if (usedRU == renderUnitsUsed.end())
+    		{
+    			ru->m_modelMatricesBuffer->addBatchData({ modelMatrix });
+    			renderUnitsUsed.push_back(ruSharedMaterial->id());
+    		}
+    	}
+	}
 };

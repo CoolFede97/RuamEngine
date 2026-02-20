@@ -1,14 +1,14 @@
 #include "Renderer.h"
-#include "FileFunctions.h"
+// #include "FileFunctions.h"
 #include "GlobalLight.h"
 #include "RenderUnit.h"
 #include "RenderingConstants.h"
 #include "RenderingCore.h"
 #include "ResourceManager.h"
 #include "ShaderProgram.h"
-#include <algorithm>
+// #include <algorithm>
 #include <cstddef>
-#include <iterator>
+// #include <iterator>
 #include <memory>
 
 namespace RuamEngine

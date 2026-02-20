@@ -1,12 +1,25 @@
-#include <iostream>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
-#include "RuamEngine.h"
+#include "Scene.h"
 
-// #include "MenuScene.cpp"
+#include "Input.h"
+#include "imgui.h"
+#include "backends/imgui_impl_glfw.h"
+#include "backends/imgui_impl_opengl3.h"
+
+#include <assert.h>
+
+#include "Renderer.h"
+
+#include "AudioSystem.h"
+
 #include "SceneManager.h"
 #include "SandboxScene.cpp"
 #include "assets/scenes/InitialScene.cpp"
 #include "assets/scenes/EndScene.cpp"
+
+
 using namespace RuamEngine;
 
 int main()

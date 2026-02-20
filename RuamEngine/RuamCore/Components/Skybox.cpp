@@ -3,7 +3,7 @@
 #include "Renderer.h"
 #include "RenderingCore.h"
 #include "ResourceManager.h"
-#include <memory>
+// #include <memory>
 
 namespace RuamEngine
 {
@@ -59,7 +59,7 @@ namespace RuamEngine
     void Skybox::start()
     {
         if (s_skybox == nullptr) s_skybox = this;
-		else if (s_skybox != this) entity()->removeComponent<Skybox>();
+        else if (s_skybox != this) entity()->removeComponent<Skybox>();
 
         m_material = ResourceManager::CreateMaterial();
         m_renderUnit = Renderer::CreateRenderUnit(Renderer::m_drawingDatas[ShaderProgramType::skybox], m_material);

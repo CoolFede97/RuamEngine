@@ -62,7 +62,7 @@ namespace RuamEngine
         else if (s_skybox != this) entity()->removeComponent<Skybox>();
 
         m_material = ResourceManager::CreateMaterial();
-        m_renderUnit = Renderer::CreateRenderUnit(Renderer::m_drawingDatas[ShaderProgramType::skybox], m_material);
+        m_renderUnit = Renderer::CreateRenderUnit(ShaderProgramType::skybox, m_material);
         m_renderUnit->m_staticPosition = true;
         m_renderUnit->m_staticStorage = true;
         m_renderUnit->addBatchData(m_vertices, m_indices, {glm::mat4(1.0f)});

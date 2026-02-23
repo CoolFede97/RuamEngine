@@ -11,128 +11,131 @@
 
 #include "Vec2.h"
 
-struct Event {
-    virtual ~Event() = default;
-};
+namespace RuamEngine
+{
+    struct Event {
+        virtual ~Event() = default;
+    };
 
-struct OnKeyPressEvent : public Event {
-    int key;
+    struct OnKeyPressEvent : public Event {
+        int key;
 
-    OnKeyPressEvent(int key) : key(key) {}
-};
+        OnKeyPressEvent(int key) : key(key) {}
+    };
 
-struct OnKeyReleaseEvent : public Event {
-    int key;
+    struct OnKeyReleaseEvent : public Event {
+        int key;
 
-    OnKeyReleaseEvent(int key) : key(key) {}
-};
+        OnKeyReleaseEvent(int key) : key(key) {}
+    };
 
-struct OnMouseMoveEvent : public Event {
-    Vec2 positionPix;
-    Vec2 positionNorm;
+    struct OnMouseMoveEvent : public Event {
+        Vec2 positionPix;
+        Vec2 positionNorm;
 
-    OnMouseMoveEvent(Vec2 posPix, Vec2 posNorm) : positionPix(posPix), positionNorm(posNorm) {}
-};
+        OnMouseMoveEvent(Vec2 posPix, Vec2 posNorm) : positionPix(posPix), positionNorm(posNorm) {}
+    };
 
-struct OnMouseButtonDownEvent : public Event {
-    Vec2 positionPix;
-    Vec2 positionNorm;
-    MouseCode button;
+    struct OnMouseButtonDownEvent : public Event {
+        Vec2 positionPix;
+        Vec2 positionNorm;
+        MouseCode button;
 
-    OnMouseButtonDownEvent(Vec2 posPix, Vec2 posNorm, MouseCode button) : positionPix(posPix), positionNorm(posNorm), button(button) {}
-};
+        OnMouseButtonDownEvent(Vec2 posPix, Vec2 posNorm, MouseCode button) : positionPix(posPix), positionNorm(posNorm), button(button) {}
+    };
 
-struct OnMouseButtonUpEvent : public Event {
-    Vec2 positionPix;
-    Vec2 positionNorm;
-    MouseCode button;
+    struct OnMouseButtonUpEvent : public Event {
+        Vec2 positionPix;
+        Vec2 positionNorm;
+        MouseCode button;
 
-    OnMouseButtonUpEvent(Vec2 posPix, Vec2 posNorm, MouseCode button) : positionPix(posPix), positionNorm(posNorm), button(button) {}
-};
+        OnMouseButtonUpEvent(Vec2 posPix, Vec2 posNorm, MouseCode button) : positionPix(posPix), positionNorm(posNorm), button(button) {}
+    };
 
-struct OnMouseScrollEvent : public Event {
-    Vec2 offset;
-    Vec2 positionPix;
-    Vec2 positionNorm;
+    struct OnMouseScrollEvent : public Event {
+        Vec2 offset;
+        Vec2 positionPix;
+        Vec2 positionNorm;
 
-    OnMouseScrollEvent(Vec2 offset, Vec2 posPix, Vec2 posNorm) : offset(offset), positionPix(posPix), positionNorm(posNorm) {}
-};
+        OnMouseScrollEvent(Vec2 offset, Vec2 posPix, Vec2 posNorm) : offset(offset), positionPix(posPix), positionNorm(posNorm) {}
+    };
 
-struct OnMouseEnterWindowEvent : public Event {
-    Vec2 positionPix;
-    Vec2 positionNorm;
+    struct OnMouseEnterWindowEvent : public Event {
+        Vec2 positionPix;
+        Vec2 positionNorm;
 
-    OnMouseEnterWindowEvent(Vec2 posPix, Vec2 posNorm) : positionPix(posPix), positionNorm(posNorm) {}
-};
+        OnMouseEnterWindowEvent(Vec2 posPix, Vec2 posNorm) : positionPix(posPix), positionNorm(posNorm) {}
+    };
 
-struct OnMouseLeaveWindowEvent : public Event {
-    Vec2 positionPix;
-    Vec2 positionNorm;
+    struct OnMouseLeaveWindowEvent : public Event {
+        Vec2 positionPix;
+        Vec2 positionNorm;
 
-    OnMouseLeaveWindowEvent(Vec2 posPix, Vec2 posNorm) : positionPix(posPix), positionNorm(posNorm) {}
-};
+        OnMouseLeaveWindowEvent(Vec2 posPix, Vec2 posNorm) : positionPix(posPix), positionNorm(posNorm) {}
+    };
 
-struct OnCharEvent : public Event {
-    char32_t unicodeChar;
+    struct OnCharEvent : public Event {
+        char32_t unicodeChar;
 
-    OnCharEvent(unsigned int cp) : unicodeChar((char32_t)cp) {}
-};
+        OnCharEvent(unsigned int cp) : unicodeChar((char32_t)cp) {}
+    };
 
-class EventManager {
-public:
+    class EventManager {
+    public:
 
-    template <typename EventType>
-    static void InstantSubscribe(std::function<void(const EventType&)> listener) {
-        auto& listeners = instantSubscribers[typeid(EventType)];
-        instantSubscribers[typeid(EventType)].push_back(
-            [listener](const Event& e) {
-                listener(static_cast<const EventType&>(e));
-            }
-        );
-    }
-
-    template <typename EventType>
-    static void Subscribe(std::function<void(const EventType&)> listener) {
-        subscribers[typeid(EventType)].push_back(
-            [listener](const Event& e) {
-                listener(static_cast<const EventType&>(e));
-            }
-        );
-    }
-
-
-    template <typename EventType>
-    static void InstantPublish(const EventType& event) {
-        auto thisTypeEvents = instantSubscribers.find(typeid(EventType));
-        if (thisTypeEvents != instantSubscribers.end()) {
-            for (auto& listener : thisTypeEvents->second) {
-                listener(event);
-            }
+        template <typename EventType>
+        static void InstantSubscribe(std::function<void(const EventType&)> listener) {
+            auto& listeners = instantSubscribers[typeid(EventType)];
+            instantSubscribers[typeid(EventType)].push_back(
+                [listener](const Event& e) {
+                    listener(static_cast<const EventType&>(e));
+                }
+            );
         }
-    }
 
-    template <typename EventType>
-    static void Publish(const EventType& event) {
-        eventQueue.push(std::make_unique<EventType>(event));
-    }
+        template <typename EventType>
+        static void Subscribe(std::function<void(const EventType&)> listener) {
+            subscribers[typeid(EventType)].push_back(
+                [listener](const Event& e) {
+                    listener(static_cast<const EventType&>(e));
+                }
+            );
+        }
 
-    static void HandleEvents() {
-        while (!eventQueue.empty()) {
-            auto& eventPtr = eventQueue.front();
-            auto thisTypeEvents = subscribers.find(typeid(*eventPtr));
-            if (thisTypeEvents != subscribers.end()) {
+
+        template <typename EventType>
+        static void InstantPublish(const EventType& event) {
+            auto thisTypeEvents = instantSubscribers.find(typeid(EventType));
+            if (thisTypeEvents != instantSubscribers.end()) {
                 for (auto& listener : thisTypeEvents->second) {
-                    listener(*eventPtr);
+                    listener(event);
                 }
             }
-            eventQueue.pop();
         }
-    }
 
-    static void OnKeyPress(KeyCode key, std::function<void(const OnKeyPressEvent&)> callback);
+        template <typename EventType>
+        static void Publish(const EventType& event) {
+            eventQueue.push(std::make_unique<EventType>(event));
+        }
 
-private:
-    static std::unordered_map<std::type_index, std::vector<std::function<void(const Event&)>>> instantSubscribers;
-    static std::unordered_map<std::type_index, std::vector<std::function<void(const Event&)>>> subscribers;
-    static std::queue<std::unique_ptr<Event>> eventQueue;
-};
+        static void HandleEvents() {
+            while (!eventQueue.empty()) {
+                auto& eventPtr = eventQueue.front();
+                auto thisTypeEvents = subscribers.find(typeid(*eventPtr));
+                if (thisTypeEvents != subscribers.end()) {
+                    for (auto& listener : thisTypeEvents->second) {
+                        listener(*eventPtr);
+                    }
+                }
+                eventQueue.pop();
+            }
+        }
+
+        static void OnKeyPress(KeyCode key, std::function<void(const OnKeyPressEvent&)> callback);
+
+    private:
+        static std::unordered_map<std::type_index, std::vector<std::function<void(const Event&)>>> instantSubscribers;
+        static std::unordered_map<std::type_index, std::vector<std::function<void(const Event&)>>> subscribers;
+        static std::queue<std::unique_ptr<Event>> eventQueue;
+    };
+}

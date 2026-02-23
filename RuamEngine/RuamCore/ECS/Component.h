@@ -112,7 +112,7 @@ namespace RuamEngine
 
         // Doesn't use the macro IMPL_forEachSerializedField since this is the virtual one.
         virtual inline void forEachSerializedField(SerializedFieldFunction fn) {;};
-        virtual std::string name() { return "Component"; }
+        virtual inline std::string name() { return "Component"; }
 	protected:
 		const unsigned int m_entityId;
 		const unsigned int m_id;

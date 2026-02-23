@@ -61,6 +61,7 @@ namespace RuamEngine
 
         m_modelCache[relativePath] = newEntry;
 
+        Renderer::UpdateTextureType(GL_TEXTURE_2D);
         return newModel;
     }
     void ResourceManager::UnloadModel(const std::string& relativePath, ShaderProgramType shaderProgramType)
@@ -80,7 +81,7 @@ namespace RuamEngine
          	std::set<std::string> texturesToDestroy;
          	for (const MeshSPtr& mesh : it->second.model->m_meshes)
 			{
-				RenderUnitSPtr ru = Renderer::GetRenderUnit(mesh->m_material, drawingData);
+				RenderUnitSPtr ru = Renderer::GetRenderUnit(mesh->m_material, shaderProgramType);
 				if (ru != nullptr)
 				{
 					unitsToDestroy.insert(ru);

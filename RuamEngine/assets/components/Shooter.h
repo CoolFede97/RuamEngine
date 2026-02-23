@@ -7,28 +7,28 @@
 #include "glm/glm.hpp"
 #include "ModelRenderer.h"
 
-class Shooter : public Component {
+namespace RuamEngine
+{
 
-	using Component::Component;
-	void start();
+    class Shooter : public Component {
+
+    	using Component::Component;
+    	void start();
 
 
-	void update();
+    	void update();
 
 
-public:
-	void take_damage(float damage);
-	~Shooter()
-	{
-		if (s_instance == this)
-			s_instance = nullptr;
-	}
-	static Shooter* s_instance;
-	float m_bulletSpeed = 0.0f;
-	float m_bulletRadius = 1.0f;
-	float m_shootingInterval = 0.0f;
-	float m_timeSinceLastShot = 0.0f;
-	std::string m_bulletMeshPath;
-	float m_health = 100;
-	float m_damage = 3;
-};
+    public:
+    	void take_damage(float damage);
+    	~Shooter();
+    	static Shooter* s_instance;
+    	float m_bulletSpeed = 0.0f;
+    	float m_bulletRadius = 1.0f;
+    	float m_shootingInterval = 0.0f;
+    	float m_timeSinceLastShot = 0.0f;
+    	std::string m_bulletMeshPath;
+    	float m_health = 100;
+    	float m_damage = 3;
+    };
+}

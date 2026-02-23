@@ -3,18 +3,14 @@
 #include "RenderUnit.h"
 #include "ResourceManager.h"
 #include "RuamUtils.h"
-#include "SceneManager.h"
 #include "Scene.h"
 #include "Entity.h"
 #include "Component.h"
 #include "Renderer.h"
 #include "Vertex.h"
-#include "RuamTime.h"
 #include <string>
 #include <vector>
 #include "Model.h"
-#include "FileFunctions.h"
-#include <set>
 #include "Transform.h"
 
 using namespace RuamEngine;
@@ -53,16 +49,14 @@ public:
 
 		m_meshPath = relativePath;
 		m_model = ResourceManager::LoadModel(m_meshPath, m_shaderProgramType);
-		Renderer::UpdateTextureType(GL_TEXTURE_2D);
 
 		// Pre-upload geometry once per mesh into the appropriate RenderUnit (vertices + indices).
 		for (const MeshSPtr& mesh : m_model.lock()->m_meshes)
 		{
-			DrawingDataSPtr drawingData =  Renderer::m_drawingDatas[m_shaderProgramType];
-			RenderUnitSPtr ru = Renderer::GetRenderUnit(mesh->m_material, drawingData);
+			RenderUnitSPtr ru = Renderer::GetRenderUnit(mesh->m_material, m_shaderProgramType);
 			if (ru == nullptr)
 			{
-				ru = Renderer::CreateRenderUnit(drawingData, mesh->m_material);
+				ru = Renderer::CreateRenderUnit(m_shaderProgramType, mesh->m_material);
 			}
 
 			m_cachedRenderUnits[mesh->m_material.lock()->id()] = ru;
@@ -118,14 +112,13 @@ private:
     		RenderUnitSPtr ru = m_cachedRenderUnits[mesh->m_material.lock()->id()].lock();
     		if (ru != nullptr)
     		{
-    			Renderer::matrices.push_back(modelMatrix);
+    			// Renderer::matrices.push_back(modelMatrix);
     			ru->m_modelMatricesBuffer->addBatchData({ modelMatrix });
     			return;
     		}
     	}
 
     	std::vector<unsigned int> renderUnitsUsed = {};
-    	auto renderUnits = Renderer::m_drawingDatas[m_shaderProgramType]->m_renderUnits;
     	for (const MeshSPtr& mesh : m_model.lock()->m_meshes)
     	{
     		RenderUnitSPtr ru = m_cachedRenderUnits[mesh->m_material.lock()->id()].lock();

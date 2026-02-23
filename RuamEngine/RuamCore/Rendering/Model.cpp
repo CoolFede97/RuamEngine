@@ -68,13 +68,6 @@ namespace RuamEngine
 			vector.z = mesh->mNormals[i].z;
 			vertex.m_normal = vector;
 
-			//// Le� esto despu�s Fede
-			//std::cout << "Vertex data: --------\n";
-			//std::cout << "Position: " << vertex.m_position << "\n";
-			//std::cout << "UV: " << vertex.m_uv<< "\n";
-			//std::cout << "Normals: " << vertex.m_normal << "\n";
-
-
 			vertices.push_back(vertex);
 		}
 

@@ -2,17 +2,13 @@
 
 #include "RenderingCore.h"
 #include "RenderingElements.h"
-// #include "RenderingConstants.h"
 
 #include "DrawingData.h"
 #include "RenderUnit.h"
 #include "Material.h"
 #include "Texture.h"
-// #include "Texture2D.h"
-// #include "Cubemap.h"
-// #include "Model.h"
+
 #include <unordered_map>
-// #include <cstdint>
 #include <vector>
 
 namespace RuamEngine
@@ -56,30 +52,17 @@ namespace RuamEngine
 		GLenum blendSFactor = GL_SRC_ALPHA;
 		GLenum blendDFactor = GL_ONE_MINUS_SRC_ALPHA;
 
-
     };
 
     class Renderer
     {
     public:
-
-        static void Init();
-        static void Shutdown();
-        static void EndDraw();
-        static void BeginBatch();
-        static void EndBatch();
-		static void EndBatch(RenderUnit& renderUnit);
-        static void ClearScreen();
-        static void Flush();
-        static void ClearRenderUnits();
-
 		// Setters for RendererConfig
         static void SetWindowSize(int width, int height);
         static void SetWindowTitle(const char* title);
         static void SetClearColor(const glm::vec4& color);
         static void SetDepthTest(bool enable);
         static void SetBlend(bool enable, GLenum sfactor = GL_SRC_ALPHA, GLenum dfactor = GL_ONE_MINUS_SRC_ALPHA);
-
 
 		// Getters for RendererConfig
         static int GetWindowWidth() { return m_config.windowWidth; }
@@ -93,28 +76,44 @@ namespace RuamEngine
         static GLFWwindow* GetShare()  { return m_config.share; }
         static GLenum GetBlendSFactor()  { return m_config.blendSFactor; }
         static GLenum GetBlendDFactor()  { return m_config.blendDFactor; }
-
-
 		static GLFWwindow* GetWindow() { return m_window; }
 		static int WindowShouldClose() { return glfwWindowShouldClose(m_window); }
 
-		// Creators
-        static DrawingDataSPtr CreateDrawingData(GLuint type, const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
-		static ShaderProgramSPtr CreateProgram(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
-        static RenderUnitSPtr CreateRenderUnit(DrawingDataSPtr drawingData, MaterialWPtr material);
-		static MaterialWPtr CreateMaterial();
+        // Creators
+		static RenderUnitSPtr CreateRenderUnit(ShaderProgramType shaderProgramType, MaterialWPtr material);
 
-		// Finders
+        // Destroyers
+		static void DestroyRenderUnit(RenderUnitSPtr renderUnit, DrawingDataSPtr drawingData);
+
+        // Finders
         static unsigned int FindMaterial(MaterialWPtr material);
-        static RenderUnitSPtr GetRenderUnit(MaterialWPtr material, DrawingDataSPtr drawingData);
+        static RenderUnitSPtr GetRenderUnit(MaterialWPtr material, ShaderProgramType shaderProgramType);
 
+
+    private:
+        static void Init();
+        static void Shutdown();
+
+        static void EndDraw();
+        static void BeginBatch();
+        static void EndBatch();
+		static void EndBatch(RenderUnit& renderUnit);
+        static void ClearScreen();
+        static void Flush();
+        static void ClearRenderUnits();
+
+        // Destroyers
         static void DestroyMaterial(unsigned int materialId);
-        static void DestroyRenderUnit(RenderUnitSPtr renderUnit, DrawingDataSPtr drawingData);
         static void DestroyShaderProgram(unsigned int programId);
 
+        // Updaters
 		static void UpdateTextures();
         static void UpdateTextureType(GLenum type);
-    private:
+
+        // Creators
+        static DrawingDataSPtr CreateDrawingData(GLuint type, const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
+		static ShaderProgramSPtr CreateProgram(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
+
 
 		static unsigned int RegisterTexture(const TextureSPtr& texture);
         static void UnregisterTexture(unsigned int textureIndex, GLenum type);
@@ -122,7 +121,6 @@ namespace RuamEngine
         static void AllocateTextureTypes();
         static void AllocateTextureType(GLenum type);
 
-    public:
         static void Draw();
         static void Draw(RenderUnit& renderUnit);
 
@@ -138,13 +136,13 @@ namespace RuamEngine
 
         static std::vector<glm::mat4> matrices;
 
-        //static std::vector<uvec2>
-    private:
         static bool texturesUploaded;
         static RendererConfig m_config;
         static GLFWwindow* m_window;
 
         friend class ResourceManager;
+        friend class Engine;
+        friend class RenderUnit;
     };
 
 }

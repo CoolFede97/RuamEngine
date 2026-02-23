@@ -1,6 +1,5 @@
 #include "Entity.h"
 #include "Component.h"
-#include "Renderer.h"
 #include "Scene.h"
 #include "SceneManager.h"
 #include "../components/Manager.h"

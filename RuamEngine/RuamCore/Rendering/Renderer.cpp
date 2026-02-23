@@ -1,3 +1,4 @@
+#include "Engine.h"
 #include "Renderer.h"
 // #include "FileFunctions.h"
 #include "GlobalLight.h"
@@ -24,7 +25,7 @@ namespace RuamEngine
     std::unordered_map<GLenum, GLuint> Renderer::m_buffersByType;
     std::unordered_map<GLenum, int> Renderer::m_bindingsByType;
 
-    std::vector<glm::mat4> Renderer::matrices = {};
+    // std::vector<glm::mat4> Renderer::matrices = {};
 
 	bool Renderer::texturesUploaded = false;
     void Renderer::Init()
@@ -179,9 +180,10 @@ namespace RuamEngine
     }
 
     // If the render unit already exists, it returns the existing index. Otherwise, it creates a new render unit and returns its index.
-    RenderUnitSPtr Renderer::CreateRenderUnit(DrawingDataSPtr drawingData, MaterialWPtr material)
+    RenderUnitSPtr Renderer::CreateRenderUnit(ShaderProgramType shaderProgramType, MaterialWPtr material)
     {
-		RenderUnitSPtr ru = GetRenderUnit(material, drawingData);
+        DrawingDataSPtr drawingData = m_drawingDatas[shaderProgramType];
+		RenderUnitSPtr ru = GetRenderUnit(material, shaderProgramType);
         if (ru != nullptr)
         {
             return ru;
@@ -193,13 +195,6 @@ namespace RuamEngine
         drawingData->m_renderUnits[material.lock()->id()] = newRenderUnit;
         return newRenderUnit;
 	}
-
-  //   MaterialPtr Renderer::CreateMaterial()
-  //   {
-		// MaterialPtr newMaterial = std::make_shared<Material>();
-		// m_materials[newMaterial->GetId()] = newMaterial;
-		// return newMaterial;
-  //   }
 
     // Registrations -------------------------------------------------------------
 
@@ -299,8 +294,9 @@ namespace RuamEngine
     // Finders -------------------------------------------------------------
 
     // Finds if a render unit already exists in a certain drawing data, if not, returns nullptr
-    RenderUnitSPtr Renderer::GetRenderUnit(MaterialWPtr material, DrawingDataSPtr drawingData)
+    RenderUnitSPtr Renderer::GetRenderUnit(MaterialWPtr material, ShaderProgramType shaderProgramType)
     {
+        DrawingDataSPtr drawingData = m_drawingDatas[shaderProgramType];
     	unsigned int materialId = material.lock()->id();
      	auto units = drawingData->m_renderUnits;
     	auto it = units.find(materialId);

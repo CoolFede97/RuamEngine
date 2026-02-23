@@ -14,80 +14,80 @@ using namespace RuamEngine;
 
 int main()
 {
-	Renderer::Init();
-	AudioSystem::init();
-	{
-		Input::SetWindow(Renderer::GetWindow());
-		Input::SetUp(Renderer::GetWindow());
-		IMGUI_CHECKVERSION();
-		ImGui::CreateContext();
-		ImGuiIO& io = ImGui::GetIO();
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	// Renderer::Init();
+	// AudioSystem::init();
+	// {
+	// 	Input::SetWindow(Renderer::GetWindow());
+	// 	Input::SetUp(Renderer::GetWindow());
+	// 	IMGUI_CHECKVERSION();
+	// 	ImGui::CreateContext();
+	// 	ImGuiIO& io = ImGui::GetIO();
+	// 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	// 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
-		ImGui_ImplGlfw_InitForOpenGL(Renderer::GetWindow(), true);
-		ImGui_ImplOpenGL3_Init();
+	// 	ImGui_ImplGlfw_InitForOpenGL(Renderer::GetWindow(), true);
+	// 	ImGui_ImplOpenGL3_Init();
 
-		ImGui::StyleColorsDark();
+	// 	ImGui::StyleColorsDark();
 
-		SceneManager::AddSceneCreator(0, CreateEmptyScene);
+	// 	SceneManager::AddSceneCreator(0, CreateEmptyScene);
 
-		SceneManager::EnqueueSceneChange(0);
+	// 	SceneManager::EnqueueSceneChange(0);
 
 
-		unsigned int frameCount = 0;
+	// 	unsigned int frameCount = 0;
 
-		while (!Renderer::WindowShouldClose())
-		{
+	// 	while (!Renderer::WindowShouldClose())
+	// 	{
 
-			SceneManager::ApplyPendingSceneChange();
-		    // std::cout << "Frame count: " << frameCount++ << "\n";
+	// 		SceneManager::ApplyPendingSceneChange();
+	// 	    // std::cout << "Frame count: " << frameCount++ << "\n";
 
-			// ImGUI
-			ImGui_ImplOpenGL3_NewFrame();
-			ImGui_ImplGlfw_NewFrame();
-			ImGui::NewFrame();
+	// 		// ImGUI
+	// 		ImGui_ImplOpenGL3_NewFrame();
+	// 		ImGui_ImplGlfw_NewFrame();
+	// 		ImGui::NewFrame();
 
-			// Input
+	// 		// Input
 
-			RuamEditor::UpdateHierarchy();
-			RuamEditor::UpdateInspector();
+	// 		RuamEditor::UpdateHierarchy();
+	// 		RuamEditor::UpdateInspector();
 
-			// Time
-			Time::Update();
+	// 		// Time
+	// 		Time::Update();
 
-			Renderer::ClearScreen();
-			Renderer::BeginBatch();
+	// 		Renderer::ClearScreen();
+	// 		Renderer::BeginBatch();
 
-			EventManager::HandleEvents();
+	// 		EventManager::HandleEvents();
 
-			if (SceneManager::ActiveScene() != nullptr)
-			{
-				SceneManager::ActiveScene()->update();
-			}
+	// 		if (SceneManager::ActiveScene() != nullptr)
+	// 		{
+	// 			SceneManager::ActiveScene()->update();
+	// 		}
 
-			Input::UpdateInput();
+	// 		Input::UpdateInput();
 
-			if (!SceneManager::SceneChange())
-			{
-    			Renderer::EndBatch();
-    			Renderer::Draw();
-			}
-			else std::cout << "No se llamo a draw porque se acaba de cambiar de escena\n";
+	// 		if (!SceneManager::SceneChange())
+	// 		{
+ //    			Renderer::EndBatch();
+ //    			Renderer::Draw();
+	// 		}
+	// 		else std::cout << "No se llamo a draw porque se acaba de cambiar de escena\n";
 
- 			ImGui::Render();
- 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+ // 			ImGui::Render();
+ // 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-            Renderer::EndDraw();
-			glfwPollEvents();
-		}
-	}
-	// Cleanup
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
-	ImGui::DestroyContext();
-	Renderer::Shutdown();
-	AudioSystem::shutdown();
+ //            Renderer::EndDraw();
+	// 		glfwPollEvents();
+	// 	}
+	// }
+	// // Cleanup
+	// ImGui_ImplOpenGL3_Shutdown();
+	// ImGui_ImplGlfw_Shutdown();
+	// ImGui::DestroyContext();
+	// Renderer::Shutdown();
+	// AudioSystem::shutdown();
 
 	return 0;
 }

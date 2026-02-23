@@ -2,6 +2,7 @@
 #include "Renderer.h"
 #include "Input.h"
 #include "RuamTime.h"
+#include "Editor.h"
 
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
@@ -57,7 +58,9 @@ namespace RuamEngine
         SceneManager::AddSceneCreator(2, CreateEndScene);
 		SceneManager::AddSceneCreator(1, CreateCFSandboxScene);
 		SceneManager::AddSceneCreator(0, CreateInitialScene);
+
 		SceneManager::EnqueueSceneChange(0);
+
 
   		while (!Renderer::WindowShouldClose())
   		{
@@ -71,7 +74,8 @@ namespace RuamEngine
  			ImGui_ImplGlfw_NewFrame();
  			ImGui::NewFrame();
 
- 			// Input
+    		Editor::UpdateHierarchy();
+            Editor::UpdateInspector();
 
  			// Time
  			Time::Update();

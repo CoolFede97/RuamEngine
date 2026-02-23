@@ -5,7 +5,7 @@
 namespace RuamEngine
 {
 	class Entity;
-	class RuamEditor
+	class Editor
 	{
 	public:
 		static void UpdateHierarchy();

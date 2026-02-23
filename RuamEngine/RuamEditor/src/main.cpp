@@ -8,7 +8,7 @@
 #include "SandboxScene.cpp"
 #include "../../assets/scenes/InitialScene.cpp"
 #include "../../assets/scenes/EmptyScene.cpp"
-#include "RuamEditor.h"
+#include "Editor.h"
 
 using namespace RuamEngine;
 
@@ -50,8 +50,8 @@ int main()
 
 	// 		// Input
 
-	// 		RuamEditor::UpdateHierarchy();
-	// 		RuamEditor::UpdateInspector();
+	// 		Editor::UpdateHierarchy();
+	// 		Editor::UpdateInspector();
 
 	// 		// Time
 	// 		Time::Update();

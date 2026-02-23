@@ -67,4 +67,5 @@ namespace RuamEngine
 	IMPL_SERIALIZE(Transform,
 		TRANSFORM_SERIALIZED_MEMBERS(SER_FIELD, ,))
 	};
+
 }

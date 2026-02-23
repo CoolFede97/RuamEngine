@@ -1,8 +1,9 @@
-#include "RuamEditor.h"
+#include "Editor.h"
 #include "Entity.h"
 #include "ModelRenderer.h"
 #include "SceneManager.h"
 #include "Transform.h"
+#include "Input.h"
 
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
@@ -12,8 +13,8 @@
 
 namespace RuamEngine
 {
-	Entity* RuamEditor::selectedEntity = nullptr;
-	void RuamEditor::UpdateHierarchy()
+	Entity* Editor::selectedEntity = nullptr;
+	void Editor::UpdateHierarchy()
 	{
 		ImGui::Begin("Hierarchy");
 		Scene* scene = SceneManager::ActiveScene();
@@ -28,7 +29,7 @@ namespace RuamEngine
 
 			if (selectedEntity != nullptr)
 			{
-				if (ImGui::Button("Delete selected entity"))
+				if (Input::GetKeyDown(KeyCode::Delete_Key))
 				{
 					selectedEntity->destroy();
 					selectedEntity = nullptr;
@@ -76,7 +77,7 @@ namespace RuamEngine
 		ImGui::End();
 	}
 
-	std::unordered_map<std::type_index, std::function<void(const std::string&, void*)>> RuamEditor::s_inspectorDrawers =
+	std::unordered_map<std::type_index, std::function<void(const std::string&, void*)>> Editor::s_inspectorDrawers =
 	{
 		{
 			std::type_index(typeid(float)), [](const std::string& name, void* value)
@@ -99,7 +100,7 @@ namespace RuamEngine
 			}
 		}
 	};
-	void RuamEditor::UpdateInspector()
+	void Editor::UpdateInspector()
 	{
 		if (selectedEntity == nullptr) return;
 		ImGui::Begin("Inspector");
@@ -125,7 +126,7 @@ namespace RuamEngine
 		ImGui::End();
 	}
 
-	void RuamEditor::DrawOnInspector(ModelRenderer* modelRenderer)
+	void Editor::DrawOnInspector(ModelRenderer* modelRenderer)
 	{
 		static char nameBuffer[128];
 		std::strncpy(nameBuffer, modelRenderer->m_meshPath.c_str(), sizeof(nameBuffer));

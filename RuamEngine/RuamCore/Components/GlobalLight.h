@@ -38,4 +38,5 @@ namespace RuamEngine
 		static void loadLightSettings(ShaderProgramSPtr program);
 
 	};
+	REGISTER_COMPONENT(GlobalLight);
 }

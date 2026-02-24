@@ -9,26 +9,37 @@
 
 namespace RuamEngine
 {
+	#define SHOOTER_SERIALIZED_MEMBERS(X, ...) \
+	X(m_bulletSpeed, float, 0.0f, Shooter)__VA_ARGS__ \
+	X(m_bulletRadius, float, 1.0f, Shooter)__VA_ARGS__ \
+	X(m_shootingInterval, float, 0.0f, Shooter)__VA_ARGS__ \
+	X(m_bulletMeshPath, std::string, "", Shooter)__VA_ARGS__ \
+	X(m_health, float, 100.0f, Shooter)__VA_ARGS__ \
+	X(m_damage, float, 3.0f, Shooter)
 
-    class Shooter : public Component {
+	#define SHOOTER_STATIC_MEMBERS(X, ...) \
+	X(s_instance, Shooter*, nullptr, Shooter)
 
-    	using Component::Component;
-    	void start();
+	class Shooter : public Component
+	{
+		using Component::Component;
 
 
-    	void update();
+		void start();
+		void update();
 
+		float m_timeSinceLastShot = 0.0f;
 
-    public:
-    	void take_damage(float damage);
-    	~Shooter();
-    	static Shooter* s_instance;
-    	float m_bulletSpeed = 0.0f;
-    	float m_bulletRadius = 1.0f;
-    	float m_shootingInterval = 0.0f;
-    	float m_timeSinceLastShot = 0.0f;
-    	std::string m_bulletMeshPath;
-    	float m_health = 100;
-    	float m_damage = 3;
-    };
+	public:
+		SHOOTER_STATIC_MEMBERS(DECL_STATIC_MEMBER)
+		SHOOTER_SERIALIZED_MEMBERS(DECL_MEMBER)
+
+		IMPL_forEachSerializedField(SHOOTER_SERIALIZED_MEMBERS(CALL_INSPECTOR_DRAWER))
+		IMPL_SERIALIZE(Shooter, SHOOTER_SERIALIZED_MEMBERS(SER_FIELD, ,))
+
+		std::string name() override { return "Shooter"; }
+
+		void take_damage(float damage);
+		~Shooter();
+	};
 }

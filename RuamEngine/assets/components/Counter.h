@@ -12,15 +12,22 @@
 
 namespace RuamEngine
 {
-	class Counter : public Component {
+	class Counter : public Component
+	{
 	public:
 		using Component::Component;
-		void start() {
+		
+		IMPL_SIMPLE_SERIALIZE(Counter)
+		std::string name() override { return "Counter"; }
+		IMPL_forEachSerializedField(;)
+		
+		void start()
+		{
 			std::cout << "HOADA\n";
 		}
 
-		void update() {
+		void update()
+		{
 		}
-
 	};
 }

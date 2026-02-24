@@ -1,6 +1,5 @@
 #include "Editor.h"
 #include "Entity.h"
-#include "ModelRenderer.h"
 #include "SceneManager.h"
 #include "Transform.h"
 #include "Input.h"
@@ -98,6 +97,31 @@ namespace RuamEngine
 				ImGui::SameLine();
 				ImGui::DragFloat3(labelCopy.c_str(), &static_cast<glm::vec3*>(value)->x, 0.1f);
 			}
+		},
+		{
+			std::type_index(typeid(std::string)), [](const std::string& name, void* value)
+			{
+				std::string label = name + ": ";
+				std::string labelCopy = "##"+name;
+				ImGui::Text("%s",label.c_str());
+				ImGui::SameLine();
+				std::string* str = static_cast<std::string*>(value);
+
+				static std::unordered_map<void*, std::array<char, 256>> buffers;
+
+				auto& buffer = buffers[value];
+
+				if (std::strcmp(buffer.data(), str->c_str()) != 0)
+				{
+    				std::strncpy(buffer.data(), str->c_str(), buffer.size());
+    				buffer[sizeof(buffer)-1] = '\0';
+				}
+				if (ImGui::InputText(labelCopy.c_str(), buffer.data(), buffer.size(), ImGuiInputTextFlags_EnterReturnsTrue))
+				{
+				    std::cout << buffer.data() << "\n";
+				    *str = buffer.data();
+				}
+			}
 		}
 	};
 	void Editor::UpdateInspector()
@@ -126,19 +150,19 @@ namespace RuamEngine
 		ImGui::End();
 	}
 
-	void Editor::DrawOnInspector(ModelRenderer* modelRenderer)
-	{
-		static char nameBuffer[128];
-		std::strncpy(nameBuffer, modelRenderer->m_meshPath.c_str(), sizeof(nameBuffer));
-		nameBuffer[sizeof(nameBuffer) - 1] = '\0';
+	// void Editor::DrawOnInspector(ModelRenderer* modelRenderer)
+	// {
+	// 	static char nameBuffer[128];
+	// 	std::strncpy(nameBuffer, modelRenderer->m_meshPath.c_str(), sizeof(nameBuffer));
+	// 	nameBuffer[sizeof(nameBuffer) - 1] = '\0';
 
-		ImGui::Text("Model path: ");
+	// 	ImGui::Text("Model path: ");
 
-		ImGui::SameLine();
+	// 	ImGui::SameLine();
 
-		if (ImGui::InputText("",nameBuffer, sizeof(nameBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
-		{
-			modelRenderer->setModel(nameBuffer);
-		}
-	}
+	// 	if (ImGui::InputText("",nameBuffer, sizeof(nameBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
+	// 	{
+	// 		modelRenderer->setModel(nameBuffer);
+	// 	}
+	// }
 }

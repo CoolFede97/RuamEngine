@@ -14,6 +14,12 @@ using namespace RuamEngine;
 class SandboxCom : public Component
 {
 	using Component::Component;
+
+public:
+	IMPL_SIMPLE_SERIALIZE(SandboxCom)
+	std::string name() override { return "SandboxCom"; }
+	IMPL_forEachSerializedField(;)
+
 	void start()
 	{
 
@@ -22,9 +28,10 @@ class SandboxCom : public Component
 	void render()
 	{
 
-	};
+	}
+
 	void update()
 	{
 		transform().position().x+=30*Time::DeltaTime();
-	};
+	}
 };

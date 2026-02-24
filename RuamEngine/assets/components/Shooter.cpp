@@ -5,6 +5,8 @@
 
 namespace RuamEngine
 {
+    SHOOTER_STATIC_MEMBERS(DEF_STATIC_MEMBER)
+
     Shooter::~Shooter()
     {
     	if (s_instance == this)
@@ -20,14 +22,15 @@ namespace RuamEngine
     	}
     	else if (s_instance != this)
     	{
-    		entity()->removeComponent<Shooter>(); // ESTO EST� MAL
+    		entity()->removeComponent<Shooter>();
     	}
         if (Boss::s_instance != nullptr)
     	Boss::s_instance->playerTransform = &entity()->transform();
     	else std::cout << "Error: Boss instance does not exist\n";
     }
 
-    void Shooter::update() {
+    void Shooter::update()
+    {
     	if (Input::GetKeyDown(KeyCode::SpaceBar_Key) && m_timeSinceLastShot > m_shootingInterval)
     	{
     	    if (Boss::s_instance == nullptr) return;
@@ -49,11 +52,13 @@ namespace RuamEngine
     	m_timeSinceLastShot += Time::DeltaTime();
     }
 
-    void Shooter::take_damage(float damage) {
+    void Shooter::take_damage(float damage)
+    {
     	s_instance->m_health -= damage;
-    	if (s_instance->m_health <= 0) {
+    	if (s_instance->m_health <= 0)
+    	{
     	}
     }
 
-    Shooter* Shooter::s_instance = nullptr;
+    REGISTER_COMPONENT(Shooter);
 }

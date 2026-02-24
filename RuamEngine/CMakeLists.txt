@@ -325,7 +325,7 @@ file (GLOB ECS_SRC "${CMAKE_SOURCE_DIR}/RuamCore/ECS/*.cpp")
 file (GLOB COMPONENTS_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Components/*.cpp")
 add_library(ECS STATIC ${ECS_SRC} ${COMPONENTS_SRC})
 target_include_directories(ECS PUBLIC "${CMAKE_SOURCE_DIR}/RuamCore/ECS" "${CMAKE_SOURCE_DIR}/RuamCore/Components")
-target_link_libraries(ECS PUBLIC Serialization Audio RuamUtils Time Scenes)
+target_link_libraries(ECS PUBLIC Serialization Audio RuamUtils Time Scenes Core)
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
 

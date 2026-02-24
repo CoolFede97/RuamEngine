@@ -1,5 +1,6 @@
+#pragma once
+
 #include "Entity.h"
-#include "ModelRenderer.h"
 #include <typeinfo>
 #include <unordered_map>
 namespace RuamEngine
@@ -13,8 +14,7 @@ namespace RuamEngine
 
 		// static void DrawOnInspector(const std::string& name, const std::type_info& type, void* value);
 		static void DrawOnInspector(glm::vec3& vec);
-		static void DrawOnInspector(Transform& transform);
-		static void DrawOnInspector(ModelRenderer* modelRenderer);
+		// static void DrawOnInspector(ModelRenderer* modelRenderer);
 
 		static Entity* selectedEntity;
 

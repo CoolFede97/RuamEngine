@@ -12,70 +12,24 @@
 #include <vector>
 #include "Model.h"
 #include "Transform.h"
+#include "Editor.h"
 
 using namespace RuamEngine;
 
+#define MODEL_RENDERER_SERIALIZED_MEMBERS(X, ...) \
+	X(m_meshPath, std::string, "", ModelRenderer)
+
 class ModelRenderer : public Component
 {
-public:
-	std::string m_meshPath;
-	ModelWPtr m_model;
-	ShaderProgramType m_shaderProgramType;
-	std::unordered_map<unsigned int, RenderUnitWPtr> m_cachedRenderUnits;
-
 	using Component::Component;
 
-	~ModelRenderer()
-	{
-		if (!m_meshPath.empty())
-		{
-			ResourceManager::UnloadModel(m_meshPath, m_shaderProgramType);
-			m_cachedRenderUnits.clear();
-		}
-	}
-
-	void setModel(const std::string& relativePath)
-	{
-	    if (!m_meshPath.empty() && m_model.lock())
-		{
-			ResourceManager::UnloadModel(relativePath, m_shaderProgramType);
-
-			for (auto& [matId, ruPtr] : m_cachedRenderUnits)
-			{
-				Renderer::DestroyRenderUnit(ruPtr.lock(), ruPtr.lock()->m_drawingData.lock());
-			}
-			m_cachedRenderUnits.clear();
-		}
-
-		m_meshPath = relativePath;
-		m_model = ResourceManager::LoadModel(m_meshPath, m_shaderProgramType);
-
-		// Pre-upload geometry once per mesh into the appropriate RenderUnit (vertices + indices).
-		for (const MeshSPtr& mesh : m_model.lock()->m_meshes)
-		{
-			RenderUnitSPtr ru = Renderer::GetRenderUnit(mesh->m_material, m_shaderProgramType);
-			if (ru == nullptr)
-			{
-				ru = Renderer::CreateRenderUnit(m_shaderProgramType, mesh->m_material);
-			}
-
-			m_cachedRenderUnits[mesh->m_material.lock()->id()] = ru;
-			auto meshId = std::find(ru->m_meshesRegistered.begin(), ru->m_meshesRegistered.end(), mesh->id());
-			if (meshId != ru->m_meshesRegistered.end()) continue;
-			ru->addBatchData(mesh->m_vertices, mesh->m_indices, {});
-			ru->m_staticStorage = true;
-			ru->m_meshesRegistered.push_back(mesh->id());
-		}
-	}
 private:
 	std::vector<Vertex> m_vertices;
 	std::vector<unsigned int> m_indices;
-	// std::vector<RenderUnitSPtr> m_myRenderUnits;
 
 	void start()
 	{
 	}
-
 
 	void update()
 	{
@@ -106,13 +60,12 @@ private:
 
     	ModelSPtr modelShared = GetShared(m_model);
 
-            if (modelShared->m_localToGlobalMaterials.size() == 1)
+        if (modelShared->m_localToGlobalMaterials.size() == 1)
     	{
     		MeshSPtr mesh = modelShared->m_meshes[0];
     		RenderUnitSPtr ru = m_cachedRenderUnits[mesh->m_material.lock()->id()].lock();
     		if (ru != nullptr)
     		{
-    			// Renderer::matrices.push_back(modelMatrix);
     			ru->m_modelMatricesBuffer->addBatchData({ modelMatrix });
     			return;
     		}
@@ -131,5 +84,59 @@ private:
     			renderUnitsUsed.push_back(ruSharedMaterial->id());
     		}
     	}
+	}
+
+protected:
+	MODEL_RENDERER_SERIALIZED_MEMBERS(DECL_MEMBER)
+
+public:
+	ModelWPtr m_model;
+	ShaderProgramType m_shaderProgramType;
+	std::unordered_map<unsigned int, RenderUnitWPtr> m_cachedRenderUnits;
+
+	std::string name() override { return "ModelRenderer"; }
+	IMPL_forEachSerializedField(MODEL_RENDERER_SERIALIZED_MEMBERS(CALL_INSPECTOR_DRAWER))
+	IMPL_SERIALIZE(ModelRenderer, MODEL_RENDERER_SERIALIZED_MEMBERS(SER_FIELD, ,))
+
+	~ModelRenderer()
+	{
+		if (!m_meshPath.empty())
+		{
+			ResourceManager::UnloadModel(m_meshPath, m_shaderProgramType);
+			m_cachedRenderUnits.clear();
+		}
+	}
+
+	void setModel(const std::string& relativePath)
+	{
+	    if (!m_meshPath.empty() && m_model.lock())
+		{
+			ResourceManager::UnloadModel(relativePath, m_shaderProgramType);
+
+			for (auto& [matId, ruPtr] : m_cachedRenderUnits)
+			{
+				Renderer::DestroyRenderUnit(ruPtr.lock(), ruPtr.lock()->m_drawingData.lock());
+			}
+			m_cachedRenderUnits.clear();
+		}
+
+		m_meshPath = relativePath;
+		m_model = ResourceManager::LoadModel(m_meshPath, m_shaderProgramType);
+
+		for (const MeshSPtr& mesh : m_model.lock()->m_meshes)
+		{
+			RenderUnitSPtr ru = Renderer::GetRenderUnit(mesh->m_material, m_shaderProgramType);
+			if (ru == nullptr)
+			{
+				ru = Renderer::CreateRenderUnit(m_shaderProgramType, mesh->m_material);
+			}
+
+			m_cachedRenderUnits[mesh->m_material.lock()->id()] = ru;
+			auto meshId = std::find(ru->m_meshesRegistered.begin(), ru->m_meshesRegistered.end(), mesh->id());
+			if (meshId != ru->m_meshesRegistered.end()) continue;
+			ru->addBatchData(mesh->m_vertices, mesh->m_indices, {});
+			ru->m_staticStorage = true;
+			ru->m_meshesRegistered.push_back(mesh->id());
+		}
 	}
 };

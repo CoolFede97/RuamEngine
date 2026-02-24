@@ -63,6 +63,7 @@ namespace \
 
 // Creates the forEachSerializedField function
 #define IMPL_forEachSerializedField(inspectorDrawerCalls)	\
+    friend class Editor;    \
 	inline void forEachSerializedField(SerializedFieldFunction fn) override	\
 	{	\
 		inspectorDrawerCalls	\

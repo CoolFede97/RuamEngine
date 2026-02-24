@@ -13,37 +13,44 @@
 
 namespace RuamEngine
 {
-    class Boss : public Component {
-    	void start();
+    #define BOSS_SERIALIZED_MEMBERS(X, ...) \
+        X(m_bulletSpeed, float, 0.0f, Boss)__VA_ARGS__ \
+        X(m_bulletRadius, float, 1.0f, Boss)__VA_ARGS__ \
+        X(m_shootingInterval, float, 0.0f, Boss)__VA_ARGS__ \
+        X(m_bulletMeshPath, std::string, "", Boss)__VA_ARGS__ \
+        X(m_health, float, 100.0f, Boss)__VA_ARGS__ \
+        X(m_damage, float, 10.0f, Boss)
 
-    	void update();
-
-    public:
-        IMPL_SIMPLE_SERIALIZE(Boss)
-        virtual inline std::string name() override { return "Boss";}
-        IMPL_forEachSerializedField(;);
-    	void take_damage(float damage) {
-    		s_instance->m_health -= damage;
-    		if (s_instance->m_health <= 0) {
-    			s_instance->playerTransform = nullptr;
-    			s_instance = nullptr;
-    			entity()->destroy();
-    			SceneManager::EnqueueSceneChange(2);
-    		}
-    	}
-    	using Component::Component;
-    	~Boss();
-
-    	static Boss* s_instance;
-        Transform* playerTransform;
-    	float m_bulletSpeed = 0;
-    	float m_bulletRadius = 1.0f;
-    	float m_shootingInterval = 0;
-    	std::string m_bulletMeshPath;
-    	float m_health = 100;
-    	float m_damage = 10;
+    class Boss : public Component
+    {
+        using Component::Component;
 
     protected:
-    	float m_timeSinceLastShot = 0;
+        float m_timeSinceLastShot = 0.0f;
+
+    public:
+        BOSS_SERIALIZED_MEMBERS(DECL_MEMBER)
+        std::string name() override { return "Boss"; }
+        IMPL_forEachSerializedField(BOSS_SERIALIZED_MEMBERS(CALL_INSPECTOR_DRAWER))
+        IMPL_SERIALIZE(Boss, BOSS_SERIALIZED_MEMBERS(SER_FIELD, ,))
+
+        void start();
+        void update();
+        ~Boss();
+
+        void take_damage(float damage)
+        {
+            s_instance->m_health -= damage;
+            if (s_instance->m_health <= 0)
+            {
+                s_instance->playerTransform = nullptr;
+                s_instance = nullptr;
+                entity()->destroy();
+                SceneManager::EnqueueSceneChange(2);
+            }
+        }
+
+        static Boss* s_instance;
+        Transform* playerTransform;
     };
 }

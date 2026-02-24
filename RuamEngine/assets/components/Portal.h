@@ -17,9 +17,13 @@ namespace RuamEngine
 {
 	class Portal : public Component
 	{
+		using Component::Component;
 
 	public:
-		using Component::Component;
+		IMPL_SIMPLE_SERIALIZE(Portal)
+		IMPL_forEachSerializedField(;)
+		std::string name() override { return "Portal"; }
+
 		~Portal()
 		{
 		}
@@ -32,6 +36,7 @@ namespace RuamEngine
 			    SceneManager::EnqueueSceneChange(1);
 			}
 		}
+		
 		void start()
 		{
 

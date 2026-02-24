@@ -9,10 +9,16 @@
 
 namespace RuamEngine
 {
-	class Manager : public Component {
+	class Manager : public Component 
+	{
 	public:
 		using Component::Component;
-		void update()
+		
+		IMPL_SIMPLE_SERIALIZE(Manager)
+		std::string name() override { return "Manager"; }
+		IMPL_forEachSerializedField(;)
+		
+		void update() override
 		{
 			ImGuiIO& io = ImGui::GetIO();
 			ImGui::Text("FPS: %.1f", io.Framerate);

@@ -27,4 +27,8 @@ class SandboxCom2 : public Component
 		Component::update();
 	};
 
+public:
+	IMPL_SIMPLE_SERIALIZE(SandboxCom2)
+	std::string name() override { return "SandboxCom2"; }
+	IMPL_forEachSerializedField(;)
 };

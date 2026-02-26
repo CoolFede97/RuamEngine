@@ -21,7 +21,7 @@ namespace RuamEngine
 
 	public:
 		IMPL_SIMPLE_SERIALIZE(Portal)
-		IMPL_forEachSerializedField(;)
+		IMPL_DRAW_SERIALIZED_MEMBERS(;)
 		std::string name() override { return "Portal"; }
 
 		~Portal()
@@ -36,7 +36,7 @@ namespace RuamEngine
 			    SceneManager::EnqueueSceneChange(1);
 			}
 		}
-		
+
 		void start()
 		{
 

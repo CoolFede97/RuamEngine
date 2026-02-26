@@ -1,10 +1,13 @@
 #pragma once
 
-#include "Entity.h"
-#include <typeinfo>
+#include <functional>
+#include <string>
+#include <typeindex>
 #include <unordered_map>
 namespace RuamEngine
 {
+    using SerializedMemberDrawer = std::function<void(const std::string&, void*, std::function<void()>*)>;
+
 	class Entity;
 	class Editor
 	{
@@ -12,12 +15,16 @@ namespace RuamEngine
 		static void UpdateHierarchy();
 		static void UpdateInspector();
 
-		// static void DrawOnInspector(const std::string& name, const std::type_info& type, void* value);
-		static void DrawOnInspector(glm::vec3& vec);
-		// static void DrawOnInspector(ModelRenderer* modelRenderer);
+		static void DrawMemberInInspector(const std::string& name, const std::type_index& type, void* value, std::function<void()>* callbackOnChange);
+
+		#define DRAW_MEMBER_NAME(name)  \
+    		std::string label = name + ": ";    \
+            std::string labelCopy = "##"+name;  \
+            ImGui::Text("%s",label.c_str());    \
+            ImGui::SameLine();
 
 		static Entity* selectedEntity;
 
-		static std::unordered_map<std::type_index, std::function<void(const std::string&, void*)>> s_inspectorDrawers;
+		static std::unordered_map<std::type_index, SerializedMemberDrawer> s_inspectorDrawers;
 	};
 }

@@ -2,7 +2,7 @@
 
 #include "RenderingCore.h"
 #include "Vertex.h"
-
+#include <memory>
 namespace RuamEngine
 {
 	class VertexBuffer

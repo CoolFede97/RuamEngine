@@ -3,6 +3,8 @@
 #include "RenderingCore.h"
 #include "Vertex.h"
 
+#include <memory>
+
 namespace RuamEngine
 {
 	template<typename T>

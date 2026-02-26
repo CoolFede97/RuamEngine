@@ -2,11 +2,11 @@
 
 #include "Boss.h"
 #include "Bullet.h"
+#include "ModelRenderer.h"
 
 namespace RuamEngine
 {
-    SHOOTER_STATIC_MEMBERS(DEF_STATIC_MEMBER)
-
+    Shooter* Shooter::s_instance = nullptr;
     Shooter::~Shooter()
     {
     	if (s_instance == this)

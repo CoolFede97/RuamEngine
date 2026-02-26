@@ -1,8 +1,6 @@
 #pragma once
 
 #include "RendererCore.h"
-#include "RuamUtils.h"
-#include "GLFW/glfw3.h"
 
 // Think of rows when thinking about every vertex array element.
 // Every row contains how to read the buffer.

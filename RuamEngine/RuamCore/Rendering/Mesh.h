@@ -2,9 +2,9 @@
 
 #include "Material.h"
 #include <vector>
-#include <Vertex.h>
 namespace RuamEngine
 {
+    class Vertex;
 	class Mesh
 	{
 	public:

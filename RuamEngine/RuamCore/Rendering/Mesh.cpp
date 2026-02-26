@@ -3,7 +3,7 @@
 #include "ResourceManager.h"
 #include "ResourceManager.h"
 #include "RuamUtils.h"
-#include <algorithm>
+#include "Vertex.h"
 #include <memory>
 
 namespace RuamEngine

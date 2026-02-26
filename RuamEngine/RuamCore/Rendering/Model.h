@@ -1,18 +1,16 @@
 #pragma once
 
-#include <memory>
-#include <vector>
+
 #include "Mesh.h"
-#include <string>
-#include "Texture2D.h"
 #include "Material.h"
-#include "Renderer.h"
-#include "Vec3.h"
+
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-#include "FileFunctions.h"
-#include <algorithm>
+
+#include <memory>
+#include <vector>
+#include <string>
 #include <unordered_map>
 namespace RuamEngine
 {

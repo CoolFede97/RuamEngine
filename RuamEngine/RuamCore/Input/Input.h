@@ -4,7 +4,6 @@
 #include <GLFW/glfw3.h>
 #include "Vec2.h"
 #include "Vec3.h"
-#include "Renderer.h"
 #include "KeyCode.h"
 #include "Cursor.h"
 

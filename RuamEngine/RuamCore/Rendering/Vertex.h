@@ -1,6 +1,10 @@
 #pragma once
 
-#include "RenderingCore.h"
+#include <iostream>
+#include <vector>
+
+#include <Vec2.h>
+#include <Vec3.h>
 
 namespace RuamEngine
 {

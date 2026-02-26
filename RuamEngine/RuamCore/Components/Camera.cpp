@@ -3,7 +3,7 @@
 
 namespace RuamEngine
 {
-    CAMERA_STATIC_MEMBERS(DEF_STATIC_MEMBER)
+    Camera* Camera::s_mainCamera = nullptr;
 
 	glm::mat4 Camera::projectionMatrix()
 	{

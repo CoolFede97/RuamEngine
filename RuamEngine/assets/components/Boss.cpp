@@ -1,10 +1,11 @@
 #include "Boss.h"
+#include "ModelRenderer.h"
 
 namespace RuamEngine
 {
     Boss* Boss::s_instance = nullptr;
 
-    void Boss::start() 
+    void Boss::start()
     {
         if (s_instance == nullptr)
         {
@@ -39,12 +40,12 @@ namespace RuamEngine
 
     Boss::~Boss()
     {
-        if (s_instance == this) 
+        if (s_instance == this)
         {
             s_instance = nullptr;
             playerTransform = nullptr;
         }
     }
-    
+
     REGISTER_COMPONENT(Boss);
 }

@@ -9,15 +9,15 @@
 
 namespace RuamEngine
 {
-	class Manager : public Component 
+	class Manager : public Component
 	{
 	public:
 		using Component::Component;
-		
+
 		IMPL_SIMPLE_SERIALIZE(Manager)
 		std::string name() override { return "Manager"; }
-		IMPL_forEachSerializedField(;)
-		
+		IMPL_DRAW_SERIALIZED_MEMBERS(;)
+
 		void update() override
 		{
 			ImGuiIO& io = ImGui::GetIO();

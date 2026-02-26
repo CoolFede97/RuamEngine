@@ -1,5 +1,8 @@
 #include "RuamTime.h"
 
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
 namespace RuamEngine
 {
 
@@ -12,4 +15,3 @@ namespace RuamEngine
 		m_currentFrame = glfwGetTime();
 	}
 }
-

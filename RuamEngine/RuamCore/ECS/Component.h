@@ -1,14 +1,18 @@
 #pragma once
-#include <iostream>
 #include "nlohmann/json.hpp"
 #include <map>
 #include <memory>
 #include <string>
-#include <typeinfo>
+#include "../../RuamCore/Input/Input.h"
+#include "RuamTime.h"
+
+#include "Editor.h"
+#include "Entity.h"
+
 // ==== MACROS de Serialización ====
 //
 // Macro 1: SER_FIELD
-#define SER_FIELD(name, type, initialValue /* unused */, componentName /* unused */) {#name, name}
+#define SER_FIELD(name, type, initialValue /* unused */, callbackOnInspectorChange /* unused */) {#name, name}
 
 // Macro 2: IMPL_SIMPLE_SERIALIZE
 //
@@ -56,15 +60,24 @@ namespace \
 } \
 
 // Macros para declaración de miembros
-#define DECL_MEMBER(name, type, initialValue, componentName /* unused */) type name = initialValue;
-#define DECL_STATIC_MEMBER(name, type, initialValue, componentName /* unused */) static type name;
-#define DEF_STATIC_MEMBER(name, type, initialValue, componentName) type componentName::name = initialValue;
-#define CALL_INSPECTOR_DRAWER(name, type, initialValue /* unused */, componentName /* unused */) fn(#name, typeid(type), &name);
+#define DECL_MEMBER(name, type, initialValue, callbackOnInspectorChange /* unused */) type name = initialValue;
+
 
 // Creates the forEachSerializedField function
-#define IMPL_forEachSerializedField(inspectorDrawerCalls)	\
+#define CALL_INSPECTOR_DRAWER(name, type, initialValue, callbackOnInspectorChange) \
+    if constexpr (!std::is_same_v<decltype(callbackOnInspectorChange), std::nullptr_t>) \
+    {   \
+        temp_callback = callbackOnInspectorChange;  \
+        callbacks[#name] = &temp_callback;  \
+    }   \
+    Editor::DrawMemberInInspector(#name, typeid(type), &name, callbacks[#name]);
+
+// Draw serialized members in the inspector
+#define IMPL_DRAW_SERIALIZED_MEMBERS(inspectorDrawerCalls)	\
     friend class Editor;    \
-	inline void forEachSerializedField(SerializedFieldFunction fn) override	\
+    std::unordered_map<std::string, std::function<void()>*> callbacks = {};  \
+    std::function<void()> temp_callback;    \
+	inline void drawSerializedMembers() override	\
 	{	\
 		inspectorDrawerCalls	\
 	}
@@ -73,8 +86,6 @@ namespace RuamEngine
 {
 	class Entity;
 	class Transform;
-
-	using SerializedFieldFunction = std::function<void(const std::string&, const std::type_info&, void*)>;
 
 	class Component {
 	public:
@@ -111,8 +122,8 @@ namespace RuamEngine
             };
         }
 
-        // Doesn't use the macro IMPL_forEachSerializedField since this is the virtual one.
-        virtual inline void forEachSerializedField(SerializedFieldFunction fn) {;};
+        // Doesn't use the macro IMPL_DRAW_SERIALIZED_MEMBERS since this is the virtual one.
+        virtual inline void drawSerializedMembers() {;};
         virtual inline std::string name() { return "Component"; }
 	protected:
 		const unsigned int m_entityId;

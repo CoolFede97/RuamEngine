@@ -1,6 +1,8 @@
 #include "Bullet.h"
 #include "Boss.h"
-#include "Shooter.h"
+#include "Transform.h"
+#include "Entity.h"
+#include "RuamTime.h"
 
 namespace RuamEngine
 {
@@ -23,6 +25,6 @@ namespace RuamEngine
 			entity()->destroy();
 		}
     }
-    
+
     REGISTER_COMPONENT(Bullet);
 }

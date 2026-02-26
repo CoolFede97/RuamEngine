@@ -14,9 +14,9 @@ namespace RuamEngine
 {
 
 	#define TRANSFORM_SERIALIZED_MEMBERS(X, ...) \
-	X(m_position, glm::vec3, glm::vec3(0,0,0), Transform)__VA_ARGS__	\
-	X(m_rotation, glm::vec3, glm::vec3(0,0,0), Transform)__VA_ARGS__	\
-	X(m_scale, glm::vec3, glm::vec3(1,1,1), Transform)	\
+	X(m_position, glm::vec3, glm::vec3(0,0,0), nullptr)__VA_ARGS__	\
+	X(m_rotation, glm::vec3, glm::vec3(0,0,0), nullptr)__VA_ARGS__	\
+	X(m_scale, glm::vec3, glm::vec3(1,1,1), nullptr)	\
 
 	class Transform : public Component
 	{
@@ -56,7 +56,7 @@ namespace RuamEngine
 		std::list<Transform*> m_children;
 		Transform* m_parent = nullptr; // If null, there is no parent
 
-		IMPL_forEachSerializedField(TRANSFORM_SERIALIZED_MEMBERS(CALL_INSPECTOR_DRAWER))
+		IMPL_DRAW_SERIALIZED_MEMBERS(TRANSFORM_SERIALIZED_MEMBERS(CALL_INSPECTOR_DRAWER))
 		std::string name() override { return "Transform"; }
 
 	protected:

@@ -1,7 +1,8 @@
 #pragma once
 
+#include "nlohmann/json.hpp"
+#include "Component.h"
 #include "AudioSystem.h"
-#include "Entity.h"
 
 namespace RuamEngine
 {

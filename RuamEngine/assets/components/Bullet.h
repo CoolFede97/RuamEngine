@@ -1,11 +1,8 @@
 #pragma once
 
 #include "Entity.h"
-#include "../../RuamCore/Input/Input.h"
-#include "RuamTime.h"
 
 #include "glm/glm.hpp"
-#include "ModelRenderer.h"
 #include <functional>
 
 namespace RuamEngine
@@ -17,7 +14,7 @@ namespace RuamEngine
     public:
         IMPL_SIMPLE_SERIALIZE(Bullet)
         std::string name() override { return "Bullet"; }
-        IMPL_forEachSerializedField(;)
+        IMPL_DRAW_SERIALIZED_MEMBERS(;)
 
         ~Bullet();
     	Bullet(unsigned int obj_id, std::function<void()> callback)

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "GLFW/glfw3.h"
-
 namespace RuamEngine
 {
 	class Time
@@ -14,4 +12,3 @@ namespace RuamEngine
 		static float DeltaTime() { return m_currentFrame - m_lastFrame; }
 	};
 }
-

@@ -1,9 +1,13 @@
 #pragma once
 
-#include "Scene.h"
+#include <iostream>
+#include <functional>
+#include <memory>
+#include <map>
 
 namespace RuamEngine
 {
+    class Scene;
 	class SceneManager {
 	public:
 		using ScenePtr = std::unique_ptr<Scene>;

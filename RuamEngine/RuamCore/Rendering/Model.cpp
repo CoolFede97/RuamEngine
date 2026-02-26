@@ -1,6 +1,8 @@
 #include "Model.h"
 #include "ResourceManager.h"
 #include "Vec3.h"
+#include "FileFunctions.h"
+
 #include <memory>
 namespace RuamEngine
 {

@@ -5,20 +5,16 @@
 #include "RuamTime.h"
 
 #include "glm/glm.hpp"
-#include "ModelRenderer.h"
 
 namespace RuamEngine
 {
 	#define SHOOTER_SERIALIZED_MEMBERS(X, ...) \
-	X(m_bulletSpeed, float, 0.0f, Shooter)__VA_ARGS__ \
-	X(m_bulletRadius, float, 1.0f, Shooter)__VA_ARGS__ \
-	X(m_shootingInterval, float, 0.0f, Shooter)__VA_ARGS__ \
-	X(m_bulletMeshPath, std::string, "", Shooter)__VA_ARGS__ \
-	X(m_health, float, 100.0f, Shooter)__VA_ARGS__ \
-	X(m_damage, float, 3.0f, Shooter)
-
-	#define SHOOTER_STATIC_MEMBERS(X, ...) \
-	X(s_instance, Shooter*, nullptr, Shooter)
+	X(m_bulletSpeed, float, 0.0f, nullptr)__VA_ARGS__ \
+	X(m_bulletRadius, float, 1.0f, nullptr)__VA_ARGS__ \
+	X(m_shootingInterval, float, 0.0f, nullptr)__VA_ARGS__ \
+	X(m_bulletMeshPath, std::string, "", nullptr)__VA_ARGS__ \
+	X(m_health, float, 100.0f, nullptr)__VA_ARGS__ \
+	X(m_damage, float, 3.0f, nullptr)
 
 	class Shooter : public Component
 	{
@@ -31,10 +27,10 @@ namespace RuamEngine
 		float m_timeSinceLastShot = 0.0f;
 
 	public:
-		SHOOTER_STATIC_MEMBERS(DECL_STATIC_MEMBER)
+	    static Shooter* s_instance;
 		SHOOTER_SERIALIZED_MEMBERS(DECL_MEMBER)
 
-		IMPL_forEachSerializedField(SHOOTER_SERIALIZED_MEMBERS(CALL_INSPECTOR_DRAWER))
+		IMPL_DRAW_SERIALIZED_MEMBERS(SHOOTER_SERIALIZED_MEMBERS(CALL_INSPECTOR_DRAWER))
 		IMPL_SERIALIZE(Shooter, SHOOTER_SERIALIZED_MEMBERS(SER_FIELD, ,))
 
 		std::string name() override { return "Shooter"; }

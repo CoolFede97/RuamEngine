@@ -1,9 +1,6 @@
 #pragma once
-#include "RenderingCore.h"
 #include "RenderingElements.h"
-#include "DrawingData.h"
 #include "Renderer.h"
-#include "Material.h"
 #include "RenderUnit.h"
 
 namespace RuamEngine
@@ -11,6 +8,7 @@ namespace RuamEngine
     class Material;
     class RenderUnit;
     class Shader;
+
     class DrawingData
     {
     public:

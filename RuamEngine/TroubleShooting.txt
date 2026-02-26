@@ -1,0 +1,5 @@
+Json is not defined ----------------------------------------------------------------------------
+
+Make sure you have added this line to json.hpp (probably located at build/_deps/json-src/include/nlohmann):
+
+using Json = nlohmann::json;

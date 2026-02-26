@@ -16,11 +16,11 @@ namespace RuamEngine
 	{
 	public:
 		using Component::Component;
-		
+
 		IMPL_SIMPLE_SERIALIZE(Counter)
 		std::string name() override { return "Counter"; }
-		IMPL_forEachSerializedField(;)
-		
+		IMPL_DRAW_SERIALIZED_MEMBERS(;)
+
 		void start()
 		{
 			std::cout << "HOADA\n";

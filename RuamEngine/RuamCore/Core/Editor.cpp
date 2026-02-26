@@ -1,14 +1,10 @@
 #include "Editor.h"
 #include "Entity.h"
 #include "SceneManager.h"
-#include "Transform.h"
 #include "Input.h"
 
 #include "imgui.h"
-#include "backends/imgui_impl_glfw.h"
-#include "backends/imgui_impl_opengl3.h"
 #include <typeindex>
-#include <typeinfo>
 
 namespace RuamEngine
 {
@@ -69,42 +65,39 @@ namespace RuamEngine
 				{
 					selectedEntity->setName(nameBuffer);
 				}
-				ImGui::TextDisabled("Press enter to apply");
 			}
 
 		}
 		ImGui::End();
 	}
 
-	std::unordered_map<std::type_index, std::function<void(const std::string&, void*)>> Editor::s_inspectorDrawers =
+	std::unordered_map<std::type_index, SerializedMemberDrawer> Editor::s_inspectorDrawers =
 	{
 		{
-			std::type_index(typeid(float)), [](const std::string& name, void* value)
+			std::type_index(typeid(float)), [](const std::string& name, void* value, std::function<void()>* callbackOnChange)
 			{
-				std::string label = name + ": ";
-				std::string labelCopy = "##"+name;
-				ImGui::Text("%s",label.c_str());
-				ImGui::SameLine();
-				ImGui::DragFloat(labelCopy.c_str(), static_cast<float*>(value), 0.1f);
+			    DRAW_MEMBER_NAME(name);
+				if (ImGui::DragFloat(labelCopy.c_str(), static_cast<float*>(value), 0.1f))
+				{
+				    if (callbackOnChange != nullptr) (*callbackOnChange)();
+				};
+
 			}
 		},
 		{
-			std::type_index(typeid(glm::vec3)), [](const std::string& name, void* value)
+			std::type_index(typeid(glm::vec3)), [](const std::string& name, void* value, std::function<void()>* callbackOnChange)
 			{
-				std::string label = name + ": ";
-				std::string labelCopy = "##"+name;
-				ImGui::Text("%s",label.c_str());
-				ImGui::SameLine();
-				ImGui::DragFloat3(labelCopy.c_str(), &static_cast<glm::vec3*>(value)->x, 0.1f);
+				DRAW_MEMBER_NAME(name);
+				if (ImGui::DragFloat3(labelCopy.c_str(), &static_cast<glm::vec3*>(value)->x, 0.1f))
+				{
+                    if (callbackOnChange != nullptr) (*callbackOnChange)();
+				}
 			}
 		},
 		{
-			std::type_index(typeid(std::string)), [](const std::string& name, void* value)
+			std::type_index(typeid(std::string)), [](const std::string& name, void* value, std::function<void()>* callbackOnChange)
 			{
-				std::string label = name + ": ";
-				std::string labelCopy = "##"+name;
-				ImGui::Text("%s",label.c_str());
-				ImGui::SameLine();
+				DRAW_MEMBER_NAME(name);
 				std::string* str = static_cast<std::string*>(value);
 
 				static std::unordered_map<void*, std::array<char, 256>> buffers;
@@ -118,16 +111,27 @@ namespace RuamEngine
 				}
 				if (ImGui::InputText(labelCopy.c_str(), buffer.data(), buffer.size(), ImGuiInputTextFlags_EnterReturnsTrue))
 				{
-				    std::cout << buffer.data() << "\n";
 				    *str = buffer.data();
+					if (callbackOnChange != nullptr) (*callbackOnChange)();
 				}
 			}
 		}
 	};
+
 	void Editor::UpdateInspector()
 	{
 		if (selectedEntity == nullptr) return;
 		ImGui::Begin("Inspector");
+
+		ImGui::SetWindowFontScale(1.5f);
+		ImGui::Text(selectedEntity->name().c_str());
+		ImGui::SetWindowFontScale(1.0f);
+		ImGui::SameLine();
+		if (ImGui::Button("+"))
+		{
+
+		}
+
 		Scene* scene = SceneManager::ActiveScene();
 		if (scene != nullptr)
 		{
@@ -137,32 +141,20 @@ namespace RuamEngine
 			{
 				if (ImGui::CollapsingHeader(com->name().c_str()))
 				{
-					com->forEachSerializedField([](const std::string& name, const std::type_index& type, void* value)
-					{
-						if (s_inspectorDrawers.find(type) != s_inspectorDrawers.end())	s_inspectorDrawers[type](name, value);
-						else std::cerr << "Error: Couldn't find matching function in s_inspectorDrawers for a variable of type " << type.name() << " \n";
-					});
+					com->drawSerializedMembers();
 				}
 			}
+
 
 			ImGui::PopID();
 		}
 		ImGui::End();
 	}
 
-	// void Editor::DrawOnInspector(ModelRenderer* modelRenderer)
-	// {
-	// 	static char nameBuffer[128];
-	// 	std::strncpy(nameBuffer, modelRenderer->m_meshPath.c_str(), sizeof(nameBuffer));
-	// 	nameBuffer[sizeof(nameBuffer) - 1] = '\0';
+	void Editor::DrawMemberInInspector(const std::string& name, const std::type_index& type, void* value, std::function<void()>* callbackOnChange)
+	{
+	    if (s_inspectorDrawers.find(type) != s_inspectorDrawers.end())	s_inspectorDrawers[type](name, value, callbackOnChange);
+		else std::cerr << "Error: Couldn't find matching function in s_inspectorDrawers for a variable of type " << type.name() << " \n";
+	}
 
-	// 	ImGui::Text("Model path: ");
-
-	// 	ImGui::SameLine();
-
-	// 	if (ImGui::InputText("",nameBuffer, sizeof(nameBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
-	// 	{
-	// 		modelRenderer->setModel(nameBuffer);
-	// 	}
-	// }
 }

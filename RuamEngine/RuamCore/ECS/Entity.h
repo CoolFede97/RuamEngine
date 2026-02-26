@@ -7,14 +7,15 @@
 #include <string>
 #include <algorithm>
 
-#include "Component.h"
+#include "nlohmann/json.hpp"
+
 #include "SceneManager.h"
-
-#include "RuamUtils.h"
-
+#include "Scene.h"
+#include "Component.h"
 namespace RuamEngine
 {
 	class Transform;
+
 	class Entity {
 	public:
 		Entity(const std::string& name);

@@ -34,9 +34,6 @@ namespace RuamEngine
   		IMGUI_CHECKVERSION();
   		ImGui::CreateContext();
   		ImGuiIO& io = ImGui::GetIO();
-        float xScale, yScale;
-        glfwGetWindowContentScale(Renderer::GetWindow(), &xScale, &yScale);
-        io.FontGlobalScale = xScale;
         ImFont* regularFont = io.Fonts->AddFontFromFileTTF((std::string(PROJECT_ROOT_DIR)+"/"+"RuamCore/Fonts/AdwaitaMonoNerdFont-Regular.ttf").c_str());
         ImFont* BoldFont = io.Fonts->AddFontFromFileTTF((std::string(PROJECT_ROOT_DIR)+"/"+"RuamCore/Fonts/AdwaitaMonoNerdFont-Bold.ttf").c_str());
         ImFont* largerRegularFont = io.Fonts->AddFontFromFileTTF((std::string(PROJECT_ROOT_DIR)+"/"+"RuamCore/Fonts/AdwaitaMonoNerdFont-Regular.ttf").c_str(), 24.0f);

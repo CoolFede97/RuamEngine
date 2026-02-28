@@ -294,11 +294,12 @@ namespace RuamEngine
     RenderUnitSPtr Renderer::GetRenderUnit(MaterialWPtr material, ShaderProgramType shaderProgramType)
     {
         DrawingDataSPtr drawingData = m_drawingDatas[shaderProgramType];
-    	unsigned int materialId = material.lock()->id();
-     	auto units = drawingData->m_renderUnits;
-    	auto it = units.find(materialId);
-     	if (it != units.end()) return it->second;
-      else return nullptr;
+        unsigned int materialId = material.lock()->id();
+        auto units = drawingData->m_renderUnits;
+        auto it = units.find(materialId);
+
+        if (it != units.end()) return it->second;
+        else return nullptr;
     }
     // Should be called before loading any textures (before any UpdateTextures/UpdateTextureType call)
     void Renderer::AllocateTextureTypes()
@@ -353,11 +354,15 @@ namespace RuamEngine
     {
         for (auto& [type,drawingData] : m_drawingDatas)
         {
-            // std::cout << "Render units count: " << drawingData->m_renderUnits.size() << "\n";
 			drawingData->m_program->updateCameraMatrices();
-            for (auto& [materialId, renderUnit] : drawingData->m_renderUnits)
+
+			// std::cout << "Units size: " << drawingData->m_renderUnits.size() << "\n";
+
+			for (auto& [materialId, renderUnit] : drawingData->m_renderUnits)
             {
-            	// The vertex array is useless and doesn't contain any information since I use SSBOs to pass the data into the shader.
+           	// std::cout << "Vertices size: "<< renderUnit->m_vertices->m_data.size() << "\n";
+
+             	// The vertex array is useless and doesn't contain any information since I use SSBOs to pass the data into the shader.
              	// It's just there in order to satisfy OpenGL because it need to have one bound
            		renderUnit->m_vertexArray->bind();
 

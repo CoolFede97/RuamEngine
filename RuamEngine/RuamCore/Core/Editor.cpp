@@ -1,10 +1,12 @@
 #include "Editor.h"
 #include "Entity.h"
+#include "Component.h"
 #include "SceneManager.h"
 #include "Input.h"
 
 #include "imgui.h"
 #include <typeindex>
+#include <utility>
 
 namespace RuamEngine
 {
@@ -129,7 +131,22 @@ namespace RuamEngine
 		ImGui::SameLine();
 		if (ImGui::Button("+"))
 		{
+			ImGui::OpenPopup("addComponent");
+		}
 
+		if (ImGui::BeginPopup("addComponent"))
+		{
+			ImGui::Text("Add a component:");
+			ImGui::Separator();
+
+			for (auto& [cmpName, factory] : Component::componentRegistry)
+			{
+				if (ImGui::Selectable(cmpName.c_str()))
+				{
+					factory.addComponent(selectedEntity);
+				}
+			}
+			ImGui::EndPopup();
 		}
 
 		Scene* scene = SceneManager::ActiveScene();

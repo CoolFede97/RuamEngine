@@ -1,5 +1,6 @@
 #include "ModelRenderer.h"
 #include "ResourceManager.h"
+#include "RuamUtils.h"
 
 namespace RuamEngine
 {
@@ -13,6 +14,7 @@ namespace RuamEngine
    	}
     void ModelRenderer::update()
 	{
+		if (m_vertices<= 0) return;
        	glm::mat4 modelMatrix(1.0f);
 
        	glm::vec3 parentsPos = {0,0,0};
@@ -40,7 +42,7 @@ namespace RuamEngine
 
        	ModelSPtr modelShared = GetShared(m_model);
 
-           if (modelShared->m_localToGlobalMaterials.size() == 1)
+        if (modelShared->m_localToGlobalMaterials.size() == 1)
        	{
        		MeshSPtr mesh = modelShared->m_meshes[0];
        		RenderUnitSPtr ru = m_cachedRenderUnits[mesh->m_material.lock()->id()].lock();
@@ -68,37 +70,37 @@ namespace RuamEngine
 
 	void ModelRenderer::setModel(const std::string& relativePath)
    	{
-  		m_meshPath = relativePath;
-  		LoadModel();
+     	m_meshPath = relativePath;
+  		loadModel();
    	}
-    void ModelRenderer::LoadModel()
+    void ModelRenderer::loadModel()
    	{
-   	    if (!m_meshPath.empty() && m_model.lock())
-   		{
-   			ResourceManager::UnloadModel(m_meshPath, m_shaderProgramType);
+	    if (!m_meshPath.empty() || m_model.lock())
+  		{
+    		ResourceManager::UnloadModel(m_meshPath, m_shaderProgramType);
 
-   			// for (auto& [matId, ruPtr] : m_cachedRenderUnits)
-   			// {
-   			// 	Renderer::DestroyRenderUnit(ruPtr.lock(), ruPtr.lock()->m_drawingData.lock());
-   			// }
-   			m_cachedRenderUnits.clear();
-   		}
+ 			m_cachedRenderUnits.clear();
+			m_vertices = 0;
+			m_indices = 0;
+    	}
    		m_model = ResourceManager::LoadModel(m_meshPath, m_shaderProgramType);
 
-   		for (const MeshSPtr& mesh : m_model.lock()->m_meshes)
+   		for (const MeshSPtr& mesh : GetShared(m_model)->m_meshes)
    		{
-   			RenderUnitSPtr ru = Renderer::GetRenderUnit(mesh->m_material, m_shaderProgramType);
-   			if (ru == nullptr)
+   			m_vertices+=mesh->m_vertices.size();
+   			m_indices+=mesh->m_indices.size();
+
+      		RenderUnitSPtr ru = Renderer::GetRenderUnit(mesh->m_material, m_shaderProgramType);
+      		if (ru == nullptr)
    			{
    				ru = Renderer::CreateRenderUnit(m_shaderProgramType, mesh->m_material);
    			}
-
-   			m_cachedRenderUnits[mesh->m_material.lock()->id()] = ru;
-   			auto meshId = std::find(ru->m_meshesRegistered.begin(), ru->m_meshesRegistered.end(), mesh->id());
-   			if (meshId != ru->m_meshesRegistered.end()) continue;
-   			ru->addBatchData(mesh->m_vertices, mesh->m_indices, {});
-   			ru->m_staticStorage = true;
-   			ru->m_meshesRegistered.push_back(mesh->id());
+   			m_cachedRenderUnits[GetShared(mesh->m_material)->id()] = ru;
+      		auto meshId = std::find(ru->m_meshesRegistered.begin(), ru->m_meshesRegistered.end(), mesh->id());
+        	if (meshId != ru->m_meshesRegistered.end()) continue;
+         	ru->addBatchData(mesh->m_vertices, mesh->m_indices, {});
+          	ru->m_staticStorage = true;
+          	ru->m_meshesRegistered.push_back(mesh->id());
    		}
    	}
 

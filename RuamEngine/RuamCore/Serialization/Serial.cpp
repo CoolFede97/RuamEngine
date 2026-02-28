@@ -98,7 +98,7 @@ namespace RuamEngine
 					}
 					if (cmpType != "Transform")
 					{
-						auto constructor = Component::componentRegistry[cmpType];
+						auto constructor = Component::componentRegistry[cmpType].addComponentWithJson;
 						// Uses the constructor defined by the user that takes the Json Component as parameter to add the component to the entity
 						constructor(jsonCmp, entity);
 					}

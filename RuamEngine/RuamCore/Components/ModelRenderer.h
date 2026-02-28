@@ -13,15 +13,15 @@ namespace RuamEngine
     class Vertex;
 
     #define MODEL_RENDERER_SERIALIZED_MEMBERS(X, ...) \
-    	X(m_meshPath, std::string, "", [this]()->void{ this ->LoadModel();})
+    	X(m_meshPath, std::string, "", [this]()->void{ this ->loadModel();})
 
     class ModelRenderer : public Component
     {
     	using Component::Component;
 
     private:
-    	std::vector<Vertex> m_vertices;
-    	std::vector<unsigned int> m_indices;
+    	float m_vertices;
+    	float m_indices;
 
     	void update() override;
 
@@ -30,7 +30,7 @@ namespace RuamEngine
 
     public:
     	ModelWPtr m_model;
-    	ShaderProgramType m_shaderProgramType;
+    	ShaderProgramType m_shaderProgramType = ShaderProgramType::general;
     	std::unordered_map<unsigned int, RenderUnitWPtr> m_cachedRenderUnits;
 
     	std::string name() override { return "ModelRenderer"; }
@@ -40,6 +40,6 @@ namespace RuamEngine
     	~ModelRenderer();
 
     	void setModel(const std::string& relativePath);
-    	void LoadModel();
+    	void loadModel();
     };
 }

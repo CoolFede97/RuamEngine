@@ -64,7 +64,7 @@ namespace RuamEngine
 		{
 			indices[i] += m_indexCount;
 		}
-		m_indexCount += indices.size();
+		m_indexCount += vertices.size();
 		bool fullBatch = false;
 
 		if (m_vertices->currentSize() + vertices.size() * sizeof(Vertex) > m_vertices->maxSize())

@@ -49,10 +49,17 @@ namespace \
 	{ \
 		ComponentName##Register() \
 		{ \
-			Component::componentRegistry.insert(std::make_pair(#ComponentName, \
-			[](const Json& componentData, Entity* entity) -> Component* \
-			{ \
-				return entity->addComponentPtr<ComponentName>(componentData); \
+			Component::componentRegistry.insert(std::make_pair(	\
+			#ComponentName, \
+			ComponentFactory{ \
+				[](Entity* entity) -> Component* \
+				{ \
+					return entity->addComponent<ComponentName>(); \
+				}, \
+				[](const Json& componentData, Entity* entity) -> Component* \
+				{ \
+					return entity->addComponentPtr<ComponentName>(componentData); \
+				} \
 			})); \
 		} \
 	}; \
@@ -87,9 +94,15 @@ namespace RuamEngine
 	class Entity;
 	class Transform;
 
+	struct ComponentFactory
+	{
+		std::function<Component*(Entity*)> addComponent;
+		std::function<Component*(const Json&, Entity*)> addComponentWithJson;
+	};
+
 	class Component {
 	public:
-		using ComponentFactory = std::function<Component*(const Json&, Entity*)>;
+
 		inline static std::map<std::string, ComponentFactory> componentRegistry;
 
 		virtual ~Component() = default;

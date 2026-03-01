@@ -26,7 +26,7 @@ namespace RuamEngine
 
             entity->transform().position() = s_instance->entity()->transform().position();
 
-            Bullet* bullet = &entity->addComponent<Bullet>([this]() {Shooter::s_instance->take_damage(m_damage);});
+            Bullet* bullet = entity->addComponent<Bullet>([this]() {Shooter::s_instance->take_damage(m_damage);});
             bullet->m_speed = m_bulletSpeed;
             bullet->m_direction = glm::normalize(playerTransform->position() - this->entity()->transform().position());
             bullet->m_target = playerTransform->position();

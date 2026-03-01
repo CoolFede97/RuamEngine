@@ -141,6 +141,7 @@ namespace RuamEngine
 
 			for (auto& [cmpName, factory] : Component::componentRegistry)
 			{
+				if (cmpName == "Transform" || cmpName == "Component") continue;
 				if (ImGui::Selectable(cmpName.c_str()))
 				{
 					factory.addComponent(selectedEntity);

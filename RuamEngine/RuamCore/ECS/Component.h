@@ -58,7 +58,7 @@ namespace \
 				}, \
 				[](const Json& componentData, Entity* entity) -> Component* \
 				{ \
-					return entity->addComponentPtr<ComponentName>(componentData); \
+					return entity->addComponentWithJson<ComponentName>(componentData); \
 				} \
 			})); \
 		} \

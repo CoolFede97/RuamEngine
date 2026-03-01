@@ -41,7 +41,7 @@ namespace RuamEngine
 		}
 
 		template<class Comp, typename... Args>
-		Comp& addComponent(Args&&... args) {
+		Comp* addComponent(Args&&... args) {
 			std::unique_ptr<Comp> comp = std::make_unique<Comp>(m_id, std::forward<Args>(args...)...);
 			const std::type_index tidx = typeid(Comp);
 			if (m_components.count(tidx) <= 0) m_components.insert({tidx, ComponentVector()});
@@ -49,23 +49,23 @@ namespace RuamEngine
 			m_components[tidx].push_back(std::move(comp));
 			addCompToJustCreatedComponents(tidx);
 
-			return *dynamic_cast<Comp*>(m_components[tidx].back().get());
+			return dynamic_cast<Comp*>(m_components[tidx].back().get());
 		}
 
+		// template<class Comp>
+		// Comp& addComponent(const Json jasonData) {
+		// 	std::unique_ptr<Comp> comp = std::make_unique<Comp>(jasonData);
+		// 	const std::type_index tidx = typeid(Comp);
+		// 	if (m_components.count(tidx) > 0) m_components.insert({tidx, ComponentVector()});
+
+		// 	m_components[tidx].push_back(std::move(comp));
+		// 	addCompToJustCreatedComponents(tidx);
+
+		// 	return *dynamic_cast<Comp*>(m_components[tidx].back().get());
+		// }
+
 		template<class Comp>
-		Comp& addComponent(const Json jasonData) {
-			std::unique_ptr<Comp> comp = std::make_unique<Comp>(jasonData);
-			const std::type_index tidx = typeid(Comp);
-			if (m_components.count(tidx) > 0) m_components.insert({tidx, ComponentVector()});
-
-			m_components[tidx].push_back(std::move(comp));
-			addCompToJustCreatedComponents(tidx);
-
-			return *dynamic_cast<Comp*>(m_components[tidx].back().get());
-		}
-
-		template<class Comp>
-		Component* addComponentPtr(const nlohmann::json& j) {
+		Component* addComponentWithJson(const nlohmann::json& j) {
 			std::unique_ptr<Comp> comp = std::make_unique<Comp>(j, m_id);
 			const std::type_index tidx = typeid(Comp);
 			if (m_components.count(tidx) > 0) m_components.insert({tidx, ComponentVector()});

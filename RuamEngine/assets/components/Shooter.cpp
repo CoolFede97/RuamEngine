@@ -37,17 +37,16 @@ namespace RuamEngine
     		m_timeSinceLastShot = 0.0f;
     		Entity* entity = SceneManager::ActiveScene()->createEntity(0);
 
-    		Bullet& bullet = entity->addComponent<Bullet>([this]() {Boss::s_instance->take_damage(m_damage);});
+    		Bullet* bullet = entity->addComponent<Bullet>([this]() {Boss::s_instance->take_damage(m_damage);});
 
-    		bullet.entity()->transform().position() = s_instance->entity()->transform().position();
+    		bullet->entity()->transform().position() = s_instance->entity()->transform().position();
 
-    		bullet.m_speed = m_bulletSpeed;
-    		bullet.m_direction = glm::normalize(Boss::s_instance->entity()->transform().position() - s_instance->entity()->transform().position());
-    		bullet.m_target = Boss::s_instance->entity()->transform().position();
-    		bullet.m_radius = m_bulletRadius;
-
-    		bullet.entity()->addComponent<ModelRenderer>()->m_shaderProgramType = ShaderProgramType::general;
-    		bullet.entity()->getComponent<ModelRenderer>()->setModel(m_bulletMeshPath);
+    		bullet->m_speed = m_bulletSpeed;
+    		bullet->m_direction = glm::normalize(Boss::s_instance->entity()->transform().position() - s_instance->entity()->transform().position());
+    		bullet->m_target = Boss::s_instance->entity()->transform().position();
+    		bullet->m_radius = m_bulletRadius;
+    		bullet->entity()->addComponent<ModelRenderer>()->m_shaderProgramType = ShaderProgramType::general;
+      		bullet->entity()->getComponent<ModelRenderer>()->setModel(m_bulletMeshPath);
     	}
     	m_timeSinceLastShot += Time::DeltaTime();
     }

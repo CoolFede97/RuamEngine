@@ -23,9 +23,9 @@ namespace RuamEngine
     	float m_vertices;
     	float m_indices;
 
-    	void update() override;
+     	void renderUpdate() override;
 
-    protected:
+      protected:
     	MODEL_RENDERER_SERIALIZED_MEMBERS(DECL_MEMBER)
 
     public:

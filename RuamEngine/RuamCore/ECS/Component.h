@@ -110,8 +110,10 @@ namespace RuamEngine
 		}
 		explicit Component(Json componentData, const unsigned int entityId) : m_entityId(entityId), m_id(s_idCount++) {
 		}
-		virtual void start() {};
-		virtual void update() {};
+		virtual void start() {};  // This is called only in playmode
+		virtual void update() {}; // This is called only in playmode
+		virtual void renderStart() {};
+		virtual void renderUpdate() {}; // This is called regardless of the state of the engine (this means it's called even in edit mode)
 
 		bool operator==(const Component& other) const;
 		bool operator==(const std::unique_ptr<Component>& other) const;

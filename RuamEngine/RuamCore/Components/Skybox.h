@@ -35,8 +35,6 @@ namespace RuamEngine
 
 		std::string name() override { return "Skybox"; }
 
-		void update();
-		void start();
-		void render();
+		void renderStart() override;
 	};
 }

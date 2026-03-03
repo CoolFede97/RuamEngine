@@ -2,6 +2,7 @@
 #include "SceneManager.h"
 #include "Entity.h"
 #include "Component.h"
+#include <functional>
 
 namespace RuamEngine
 {
@@ -58,7 +59,7 @@ namespace RuamEngine
 	    m_entities.erase(std::next(m_entities.begin(), idx));
 	}
 
-	void Scene::update()
+	void Scene::tick()
 	{
 		m_entities.erase(
 			std::remove_if(m_entities.begin(), m_entities.end(), [](std::unique_ptr<Entity>& e){ return e->destroyFlag(); }),
@@ -71,44 +72,51 @@ namespace RuamEngine
 
 		for (auto& [entityId, map] : m_componentsToStart)
 		{
-			for (auto& [componentType, vector] : map)
+			for (auto& [cmpType, cmpVec] : map)
 			{
-				for (auto& cmp : vector)
-				{
-					if (SceneManager::SceneChange()) return;
-
-					if (cmp == nullptr)
-					{
-						std::cerr << "Error: One component from m_justCreatedComponents is null! (entity id: " << entityId << "), (Component type: " << componentType.name() << ")\n";
-						continue;
-					}
-					if (cmp->destroyFlag()) continue;
-					if (!cmp->enabled()) continue;
-					cmp->start();
-					cmp->markNotCreatedOnThisFrame();
-				}
+				forEachActiveComponentToStart(entityId, cmpType, cmpVec, [](Component* cmp){cmp->start();});
+				forEachActiveComponentToStart(entityId, cmpType, cmpVec, [](Component* cmp){cmp->renderStart();});
+				for ( auto& cmp : cmpVec) cmp->markNotCreatedOnThisFrame();
 			}
 		}
 		if (m_componentsToStart.size()>0) m_componentsToStart.clear();
 
-		for (auto& entity : m_entities)
-		{
-			if (SceneManager::SceneChange())
-			{
-				return;
-			}
-			if (entity == nullptr)
-			{
-				std::cerr << "Error: One entity from m_entities is null!\n";
-				continue;
-			}
-			if (entity->destroyFlag()) continue;
-
-			if (!entity->isEnabled()) continue;
-			entity->update();
-		}
+		forEachActiveEntity([](Entity* entity)->void{entity->update();});
+		forEachActiveEntity([](Entity* entity)->void{entity->renderUpdate();});
 	}
 
+	void Scene::forEachActiveEntity(std::function<void(Entity*)> fn)
+	{
+		for (auto& entity : m_entities)
+		{
+       		if (SceneManager::SceneChange()) return;
+	        if (entity == nullptr)
+	        {
+	            std::cerr << "Error: One entity from m_entities is null!\n";
+	            continue;
+	        }
+	        if (entity->destroyFlag()) continue;
+	        if (!entity->isEnabled()) continue;
+			fn(entity.get());
+    	}
+	}
+
+	void Scene::forEachActiveComponentToStart(unsigned int entityId, std::type_index cmpType, std::vector<Component*>& cmpVec, std::function<void(Component*)> fn)
+	{
+		for (auto& cmp : cmpVec)
+		{
+			if (SceneManager::SceneChange()) return;
+
+			if (cmp == nullptr)
+			{
+				std::cerr << "Error: One component from m_justCreatedComponents is null! (entity id: " << entityId << "), (Component type: " << cmpType.name() << ")\n";
+				continue;
+			}
+			if (cmp->destroyFlag()) continue;
+			if (!cmp->enabled()) continue;
+			fn(cmp);
+		}
+	}
 	std::list<Entity*> Scene::getEntities() const
 	{
 		std::list<Entity*> newEntities;

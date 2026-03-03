@@ -47,16 +47,7 @@ namespace RuamEngine
         s_skybox->m_cubemap = ResourceManager::LoadTexture<Cubemap>(paths).lock()->rendererIndex();
     }
 
-    void Skybox::update()
-    {
-        Component::update();
-    }
-
-    void Skybox::render()
-    {
-    }
-
-    void Skybox::start()
+    void Skybox::renderStart()
     {
         if (s_skybox == nullptr) s_skybox = this;
         else if (s_skybox != this) entity()->removeComponent<Skybox>();

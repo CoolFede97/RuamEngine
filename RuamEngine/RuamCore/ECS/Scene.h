@@ -7,6 +7,7 @@
 #include <typeindex>
 #include <vector>
 #include <memory>
+#include <functional>
 
 namespace RuamEngine
 {
@@ -48,11 +49,14 @@ namespace RuamEngine
 			return m_justCreatedComponents;
 		}
 
-		void update();
+		void tick();
 
 	private:
 
-	// Key of the object that owns the component, then the type of component and you get a vector of components
+		void forEachActiveEntity(std::function<void(Entity*)> fn);
+		void forEachActiveComponentToStart(unsigned int entityId, std::type_index cmpType, std::vector<Component*>& cmpVec, std::function<void(Component*)> fn);
+
+		// Key of the object that owns the component, then the type of component and you get a vector of components
 	    std::map<unsigned int, std::map<std::type_index, std::vector<Component*>>> m_componentsToStart;
 	    std::map<unsigned int, std::map<std::type_index, std::vector<Component*>>> m_justCreatedComponents;
 

@@ -12,7 +12,7 @@ namespace RuamEngine
    			m_cachedRenderUnits.clear();
    		}
    	}
-    void ModelRenderer::update()
+    void ModelRenderer::renderUpdate()
 	{
 		if (m_vertices<= 0) return;
        	glm::mat4 modelMatrix(1.0f);

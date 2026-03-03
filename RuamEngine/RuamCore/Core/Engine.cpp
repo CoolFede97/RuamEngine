@@ -92,7 +92,7 @@ namespace RuamEngine
             // std::cout << "Frame count: " << frameCount++ << "\n";
  			if (SceneManager::ActiveScene() != nullptr)
  			{
-				SceneManager::ActiveScene()->update();
+				SceneManager::ActiveScene()->tick();
  			}
 
  			Input::UpdateInput();

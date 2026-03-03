@@ -52,18 +52,6 @@ namespace RuamEngine
 			return dynamic_cast<Comp*>(m_components[tidx].back().get());
 		}
 
-		// template<class Comp>
-		// Comp& addComponent(const Json jasonData) {
-		// 	std::unique_ptr<Comp> comp = std::make_unique<Comp>(jasonData);
-		// 	const std::type_index tidx = typeid(Comp);
-		// 	if (m_components.count(tidx) > 0) m_components.insert({tidx, ComponentVector()});
-
-		// 	m_components[tidx].push_back(std::move(comp));
-		// 	addCompToJustCreatedComponents(tidx);
-
-		// 	return *dynamic_cast<Comp*>(m_components[tidx].back().get());
-		// }
-
 		template<class Comp>
 		Component* addComponentWithJson(const nlohmann::json& j) {
 			std::unique_ptr<Comp> comp = std::make_unique<Comp>(j, m_id);
@@ -75,7 +63,6 @@ namespace RuamEngine
 
 			return m_components[tidx].back().get();
 		}
-
 
 		// Returns ptr because a ref can't be null
 		// Returned pointer is non-owning
@@ -170,6 +157,8 @@ namespace RuamEngine
 		void setName(const std::string& name);
 
 		void update();
+		void renderUpdate();
+
 
 		void destroy();
 
@@ -183,6 +172,9 @@ namespace RuamEngine
 
 		const Transform& transform() const;
 	private:
+
+		void forEachActiveComponent(std::function<void(Component*)> fn);
+
 		unsigned int m_id;
 		static unsigned int s_idCount;
 	    std::string m_name;

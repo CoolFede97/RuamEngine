@@ -1,4 +1,5 @@
 #include "Entity.h"
+#include "RuamUtils.h"
 #include "Transform.h"
 
 namespace RuamEngine
@@ -59,6 +60,39 @@ namespace RuamEngine
 				if (!cmp->enabled()) continue;
 
 				cmp->update();
+			}
+	    }
+	}
+	void Entity::renderUpdate()
+	{
+		for (auto& pair : m_components)
+		{
+			for (auto& cmp : pair.second)
+			{
+				if (SceneManager::SceneChange()) return;
+				if (destroyFlag()) return;
+				if (cmp->destroyFlag()) continue;
+				if (cmp->createdOnThisFrame()) continue;
+				if (!cmp->enabled()) continue;
+
+				cmp->renderUpdate();
+			}
+	    }
+	}
+
+	void Entity::forEachActiveComponent(std::function<void(Component*)> fn)
+	{
+		for (auto& pair : m_components)
+		{
+			for (auto& cmp : pair.second)
+			{
+				if (SceneManager::SceneChange()) return;
+				if (destroyFlag()) return;
+				if (cmp->destroyFlag()) continue;
+				if (cmp->createdOnThisFrame()) continue;
+				if (!cmp->enabled()) continue;
+
+				fn(cmp.get());
 			}
 	    }
 	}

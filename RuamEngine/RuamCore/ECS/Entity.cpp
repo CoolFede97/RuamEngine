@@ -49,35 +49,12 @@ namespace RuamEngine
 				cmp_vec.second.end()
 			);
 		}
-		for (auto& pair : m_components)
-		{
-			for (auto& cmp : pair.second)
-			{
-				if (SceneManager::SceneChange()) return;
-				if (destroyFlag()) return;
-				if (cmp->destroyFlag()) continue;
-				if (cmp->createdOnThisFrame()) continue;
-				if (!cmp->enabled()) continue;
+		forEachActiveComponent([](Component* cmp)->void {cmp->update();});
 
-				cmp->update();
-			}
-	    }
 	}
 	void Entity::renderUpdate()
 	{
-		for (auto& pair : m_components)
-		{
-			for (auto& cmp : pair.second)
-			{
-				if (SceneManager::SceneChange()) return;
-				if (destroyFlag()) return;
-				if (cmp->destroyFlag()) continue;
-				if (cmp->createdOnThisFrame()) continue;
-				if (!cmp->enabled()) continue;
-
-				cmp->renderUpdate();
-			}
-	    }
+		forEachActiveComponent([](Component* cmp)->void {cmp->renderUpdate();});
 	}
 
 	void Entity::forEachActiveComponent(std::function<void(Component*)> fn)

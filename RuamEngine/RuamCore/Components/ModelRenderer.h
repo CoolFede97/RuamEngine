@@ -20,8 +20,8 @@ namespace RuamEngine
     	using Component::Component;
 
     private:
-    	float m_vertices;
-    	float m_indices;
+    	float m_vertices = 0;
+    	float m_indices = 0;
 
      	void renderUpdate() override;
 

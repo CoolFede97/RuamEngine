@@ -84,7 +84,6 @@ namespace RuamEngine
 			m_indices = 0;
     	}
    		m_model = ResourceManager::LoadModel(m_meshPath, m_shaderProgramType);
-
    		for (const MeshSPtr& mesh : GetShared(m_model)->m_meshes)
    		{
    			m_vertices+=mesh->m_vertices.size();

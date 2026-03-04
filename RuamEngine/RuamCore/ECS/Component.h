@@ -3,11 +3,8 @@
 #include <map>
 #include <memory>
 #include <string>
-#include "../../RuamCore/Input/Input.h"
-#include "RuamTime.h"
 
 #include "Editor.h"
-#include "Entity.h"
 
 // ==== MACROS de Serialización ====
 //
@@ -93,6 +90,7 @@ namespace RuamEngine
 {
 	class Entity;
 	class Transform;
+	class Component;
 
 	struct ComponentFactory
 	{

@@ -127,7 +127,7 @@ namespace RuamEngine
 
 			auto cmp = std::find(compType->second.begin(), compType->second.end(), &comp);
 			if (cmp != compType->second.end()) compType->second.front()->destroy();
-			else std::cerr << "Couldn't find and destroy a component of type " << typeid(Comp).name() <<" with id " << comp.id() << " in entity with id " << m_id << "\n";
+			else std::cerr << "Couldn't find and destroy a component of type " << typeid(Comp).name() <<" with id " << comp.id() << " in the entity called" << m_name << "with id " << m_id << "\n";
 		}
 
 		template<class Comp>
@@ -135,7 +135,7 @@ namespace RuamEngine
 			auto pair = m_components.find(typeid(Comp));
 			if (pair == m_components.end() || pair->second.size() == 0)
 			{
-				std::cerr << "Couldn't find and destroy a component of type " << typeid(Comp).name() << "\n";
+				std::cerr << "Couldn't find and destroy a component of type " << typeid(Comp).name() <<" with id " << " in the entity called" << m_name << "with id " << m_id << "\n";
 				return;
 			}
 			pair->second.front()->destroy();
@@ -149,7 +149,7 @@ namespace RuamEngine
 			if (pair->second.size() == 0) return;
 			auto cmp = std::find(pair->second.begin(), pair->second.end(), comp);
 			if (cmp != pair->second.end()) cmp->get()->destroy();
-			else std::cerr << "Couldn't find and destroy a component of type " << typeid(Comp).name() <<" with id " << comp.id() << " in entity with id " << m_id << "\n";
+			else std::cerr << "Couldn't find and destroy a component of type " << typeid(Comp).name() <<" with id " << comp.id() << " in the entity called" << m_name << "with id " << m_id << "\n";
 		}
 
 		unsigned int id() const;

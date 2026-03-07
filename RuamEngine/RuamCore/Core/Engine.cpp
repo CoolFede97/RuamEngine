@@ -70,7 +70,6 @@ namespace RuamEngine
   		{
 
  			SceneManager::ApplyPendingSceneChange();
-
   		    // std::cout << "Frame count: " << frameCount++ << "\n";
 
  			// ImGUI
@@ -80,7 +79,6 @@ namespace RuamEngine
 
     		Editor::UpdateHierarchy();
             Editor::UpdateInspector();
-
  			// Time
  			Time::Update();
 

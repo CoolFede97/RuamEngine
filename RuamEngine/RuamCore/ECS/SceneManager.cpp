@@ -1,6 +1,7 @@
 #include "SceneManager.h"
 //#include "Serial.h"
 #include "Camera.h"
+#include "Editor.h"
 #include "Renderer.h"
 
 namespace RuamEngine
@@ -20,11 +21,13 @@ namespace RuamEngine
 		// This is the order. First nullptr and then reset.
 		// This is because otherwise the new objects of the new scene are created before the previous scene's objects are destroyed
 		s_active_scene = nullptr;
+		Editor::selectedEntity = nullptr;
 		s_scenes[s_pending_scene_id]();
 	}
 
 	void SceneManager::SetActiveScene(Scene* newScene)
 	{
+	    Editor::selectedEntity = nullptr;
 		s_active_scene.reset(newScene);
 	}
 

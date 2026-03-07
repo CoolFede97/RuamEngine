@@ -14,7 +14,7 @@ namespace RuamEngine
    	}
     void ModelRenderer::renderUpdate()
 	{
-		if (m_vertices<= 0) return;
+		if (m_vertices<= 0 || !m_model.lock()) return;
        	glm::mat4 modelMatrix(1.0f);
 
        	glm::vec3 parentsPos = {0,0,0};
@@ -45,7 +45,7 @@ namespace RuamEngine
         if (modelShared->m_localToGlobalMaterials.size() == 1)
        	{
        		MeshSPtr mesh = modelShared->m_meshes[0];
-       		RenderUnitSPtr ru = m_cachedRenderUnits[mesh->m_material.lock()->id()].lock();
+       		RenderUnitSPtr ru = GetShared(m_cachedRenderUnits[GetShared(mesh->m_material)->id()]);
        		if (ru != nullptr)
        		{
        			ru->m_modelMatricesBuffer->addBatchData({ modelMatrix });
@@ -54,9 +54,9 @@ namespace RuamEngine
        	}
 
        	std::vector<unsigned int> renderUnitsUsed = {};
-       	for (const MeshSPtr& mesh : m_model.lock()->m_meshes)
+       	for (const MeshSPtr& mesh : GetShared(m_model)->m_meshes)
        	{
-       		RenderUnitSPtr ru = m_cachedRenderUnits[mesh->m_material.lock()->id()].lock();
+       		RenderUnitSPtr ru = GetShared(m_cachedRenderUnits[GetShared(mesh->m_material)->id()]);
 
        		MaterialSPtr ruSharedMaterial = GetShared(ru->m_material);
        		std::vector<unsigned int>::iterator usedRU = std::find(renderUnitsUsed.begin(), renderUnitsUsed.end(), ruSharedMaterial->id());
@@ -75,16 +75,16 @@ namespace RuamEngine
    	}
     void ModelRenderer::loadModel()
    	{
-	    if (!m_meshPath.empty() || m_model.lock())
+ 	    if (!m_model.expired())
   		{
+            m_cachedRenderUnits.clear();
+ 	        m_model.reset();
     		ResourceManager::UnloadModel(m_meshPath, m_shaderProgramType);
-
- 			m_cachedRenderUnits.clear();
 			m_vertices = 0;
 			m_indices = 0;
     	}
    		m_model = ResourceManager::LoadModel(m_meshPath, m_shaderProgramType);
-   		for (const MeshSPtr& mesh : GetShared(m_model)->m_meshes)
+        for (const MeshSPtr& mesh : GetShared(m_model)->m_meshes)
    		{
    			m_vertices+=mesh->m_vertices.size();
    			m_indices+=mesh->m_indices.size();

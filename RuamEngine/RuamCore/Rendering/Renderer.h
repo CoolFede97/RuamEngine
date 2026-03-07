@@ -34,8 +34,8 @@ namespace RuamEngine
     // General data
     struct RendererConfig
     {
-        int windowWidth = 640;
-        int windowHeight = 480;
+        int windowWidth = 1280;
+        int windowHeight = 960;
         const char* windowTitle = "Cool Window";
 
 

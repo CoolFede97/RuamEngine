@@ -97,7 +97,7 @@ namespace RuamEngine
         static void DestroyMaterial(unsigned int materialId);
         static MaterialWPtr GetMaterial(unsigned int materialId);
 
-        private:
+    private:
 
         struct TextureEntry
         {
@@ -117,7 +117,7 @@ namespace RuamEngine
         	MaterialSPtr material;
          	int refCount = 0;
         };
-
+public:
         static std::unordered_map<std::string, TextureEntry> m_textureCache;
         static std::unordered_map<std::string, ModelEntry> m_modelCache;
         static std::unordered_map<unsigned int, MaterialEntry> m_materialCache;

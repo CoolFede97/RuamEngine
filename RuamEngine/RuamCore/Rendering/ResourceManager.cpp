@@ -112,7 +112,7 @@ namespace RuamEngine
     ModelWPtr ResourceManager::GetModel(const std::string& relativePath)
     {
 	   	auto it = m_modelCache.find(relativePath);
-	    if (it != m_modelCache.end())
+		if (it != m_modelCache.end())
 	    {
 	        return it->second.model;
 	    }

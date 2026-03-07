@@ -51,10 +51,10 @@ Scene* CreateCFSandboxScene()
 	boss->m_health = 1;
 	boss->m_bulletMeshPath = "assets/meshes/bullet/bullet.obj";
 
-	// Object* skybox = sandboxScene->createGo();
-	// skybox->setName("Skybox");
-	// skybox->transform().setScale(glm::vec3(50,50,50));
-	// skybox->addComponent<Skybox>();
+	Entity* skybox = sandboxScene->createEntity();
+	skybox->setName("Skybox");
+	skybox->transform().setScale(glm::vec3(50,50,50));
+	skybox->addComponent<Skybox>();
 
 	Entity* player = sandboxScene->createEntity();
 	player->setName("Player");
@@ -74,9 +74,9 @@ Scene* CreateCFSandboxScene()
 	manager->setName("Manager");
 	//manager->addComponent<CameraController>();
 	manager->addComponent<Manager>();
+
 	//manager->addComponent<AudioSource>("/home/tomy/programming/ce/masmas/RuamEngine/RuamEngine/1 Crumbling Castle.wav");
 
 	// Serial::serialise(SceneManager::ActiveScene());
-
 	return sandboxScene;
 }

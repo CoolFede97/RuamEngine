@@ -83,7 +83,6 @@ namespace RuamEngine
 				{
 				    if (callbackOnChange != nullptr) (*callbackOnChange)();
 				};
-
 			}
 		},
 		{
@@ -154,7 +153,6 @@ namespace RuamEngine
 		if (scene != nullptr)
 		{
 			ImGui::PushID(selectedEntity->id());
-
 			for (Component* com : selectedEntity->getComponents())
 			{
 				if (ImGui::CollapsingHeader(com->name().c_str()))
@@ -162,8 +160,6 @@ namespace RuamEngine
 					com->drawSerializedMembers();
 				}
 			}
-
-
 			ImGui::PopID();
 		}
 		ImGui::End();

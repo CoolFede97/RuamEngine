@@ -15,6 +15,8 @@ namespace RuamEngine
 		static void UpdateHierarchy();
 		static void UpdateInspector();
 
+		static void DrawEntityFamily(Entity* entity);
+
 		static void DrawMemberInInspector(const std::string& name, const std::type_index& type, void* value, std::function<void()>* callbackOnChange);
 
 		#define DRAW_MEMBER_NAME(name)  \

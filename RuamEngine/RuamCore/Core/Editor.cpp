@@ -3,6 +3,7 @@
 #include "Component.h"
 #include "SceneManager.h"
 #include "Input.h"
+#include "Transform.h"
 
 #include "imgui.h"
 #include <typeindex>
@@ -38,11 +39,8 @@ namespace RuamEngine
 			std::list<Entity*> entities = scene->getEntities();
 			for (Entity* entity : entities)
 			{
-				bool selected = (selectedEntity == entity);
-				if (ImGui::Selectable(entity->name().c_str(), selected))
-				{
-					selectedEntity = entity;
-				}
+				if (entity->transform().m_parent) continue;
+				DrawEntityFamily(entity);
 			}
 
 			ImGui::Separator();
@@ -71,6 +69,32 @@ namespace RuamEngine
 
 		}
 		ImGui::End();
+	}
+
+	void Editor::DrawEntityFamily(Entity *entity)
+	{
+		std::list<Transform*> childrenTransform = entity->transform().children();
+
+		bool selected = (selectedEntity == entity);
+
+		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow |
+                               ImGuiTreeNodeFlags_OpenOnDoubleClick;
+
+		if (selected) flags |= ImGuiTreeNodeFlags_Selected;
+		if (childrenTransform.empty()) flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+
+		bool opened = ImGui::TreeNodeEx(entity->name().c_str(), flags);
+
+		if (ImGui::IsItemClicked()) selectedEntity = entity;
+
+		if (opened && !childrenTransform.empty())
+		{
+			for (Transform* transform : childrenTransform)
+			{
+				DrawEntityFamily(transform->entity());
+			}
+			ImGui::TreePop();
+		}
 	}
 
 	std::unordered_map<std::type_index, SerializedMemberDrawer> Editor::s_inspectorDrawers =

@@ -79,7 +79,7 @@ namespace RuamEngine
 		if (parent != nullptr)
 		{
 			auto it = std::find(parent->m_children.begin(), parent->m_children.end(), this);
-			if (it !=  parent->m_children.end())
+			if (it == parent->m_children.end())
 			{
 				parent->m_children.push_back(this);
 			}

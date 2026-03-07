@@ -21,6 +21,9 @@ Scene* CreateInitialScene()
 	light->transform().setPosition(glm::vec3(0.0f, 100.0f, 0.0f));
 	light->setName("Light");
 
+	Entity* father = scene->createEntity();
+	father->setName("father");
+
 	Entity* nave = scene->createEntity();
 	nave->setName("Nave");
 	nave->transform().setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
@@ -28,6 +31,8 @@ Scene* CreateInitialScene()
 	naveRenderer->m_shaderProgramType = ShaderProgramType::general;
 	naveRenderer->setModel("assets/meshes/Nave/Nave.obj");
 
+	nave->transform().setParent(&father->transform());
+	std::cout << "HIJOS: " << father->transform().children().size();
 	Entity* radio = scene->createEntity();
 	// radio->addComponent<AudioSource>("assets/music/portal_radio.wav");
 	radio->setName("radio");

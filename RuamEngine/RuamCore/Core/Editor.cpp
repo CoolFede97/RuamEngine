@@ -78,7 +78,8 @@ namespace RuamEngine
 		bool selected = (selectedEntity == entity);
 
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow |
-                               ImGuiTreeNodeFlags_OpenOnDoubleClick;
+                        	ImGuiTreeNodeFlags_OpenOnDoubleClick  |
+                            ImGuiTreeNodeFlags_SpanAvailWidth;
 
 		if (selected) flags |= ImGuiTreeNodeFlags_Selected;
 		if (childrenTransform.empty()) flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
@@ -176,15 +177,18 @@ namespace RuamEngine
 		Scene* scene = SceneManager::ActiveScene();
 		if (scene != nullptr)
 		{
-			ImGui::PushID(selectedEntity->id());
 			for (Component* com : selectedEntity->getComponents())
 			{
-				if (ImGui::CollapsingHeader(com->name().c_str()))
+				ImGui::PushID(com->id());
+				bool opened = ImGui::CollapsingHeader(com->name().c_str(), ImGuiTreeNodeFlags_AllowItemOverlap);
+				ImGui::SameLine();
+				if (ImGui::Button("-"))	com->destroy();
+				if (opened)
 				{
 					com->drawSerializedMembers();
 				}
+				ImGui::PopID();
 			}
-			ImGui::PopID();
 		}
 		ImGui::End();
 	}

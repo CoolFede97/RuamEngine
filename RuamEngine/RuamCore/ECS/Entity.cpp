@@ -1,4 +1,5 @@
 #include "Entity.h"
+#include "Component.h"
 #include "RuamUtils.h"
 #include "Transform.h"
 
@@ -42,15 +43,12 @@ namespace RuamEngine
 
 	void Entity::update()
 	{
-		for (auto& cmp_vec : m_components)
-		{
-			cmp_vec.second.erase(
-				std::remove_if(cmp_vec.second.begin(), cmp_vec.second.end(), [](std::unique_ptr<Component>& cmp){ return cmp->destroyFlag(); }),
-				cmp_vec.second.end()
-			);
-		}
+		for (auto& [cmpType, cmpVector] : m_components)
+		cmpVector.erase(
+			std::remove_if(cmpVector.begin(), cmpVector.end(), [](std::unique_ptr<Component>& cmp){ return cmp->destroyFlag(); }),
+			cmpVector.end()
+		);
 		forEachActiveComponent([](Component* cmp)->void {cmp->update();});
-
 	}
 	void Entity::renderUpdate()
 	{
@@ -64,7 +62,6 @@ namespace RuamEngine
 			for (auto& cmp : pair.second)
 			{
 				if (SceneManager::SceneChange()) return;
-				if (destroyFlag()) return;
 				if (cmp->destroyFlag()) continue;
 				if (cmp->createdOnThisFrame()) continue;
 				if (!cmp->enabled()) continue;
@@ -77,7 +74,6 @@ namespace RuamEngine
 	void Entity::destroy()
 	{
 		m_destroyFlag = true;
-		setEnabled(false);
 		for (auto& [typeIndex, cmpVector] : m_components)
 		{
 			for (auto& cmp : cmpVector) cmp->destroy();

@@ -67,7 +67,6 @@ namespace \
 #define DECL_MEMBER(name, type, initialValue, callbackOnInspectorChange /* unused */) type name = initialValue;
 
 
-// Creates the forEachSerializedField function
 #define CALL_INSPECTOR_DRAWER(name, type, initialValue, callbackOnInspectorChange) \
     if constexpr (!std::is_same_v<decltype(callbackOnInspectorChange), std::nullptr_t>) \
     {   \
@@ -124,7 +123,7 @@ namespace RuamEngine
 		bool destroyFlag() const { return m_destroyFlag; }
 		bool createdOnThisFrame() const { return m_createdOnThisFrame; }
 
-		void destroy() { m_destroyFlag = true; setEnabled(false); }
+		void destroy() { m_destroyFlag = true; }
 		void markNotCreatedOnThisFrame() { m_createdOnThisFrame = false; }
 		void setEnabled(bool status) { m_enabled = status; };
 

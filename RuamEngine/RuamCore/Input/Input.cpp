@@ -1,6 +1,7 @@
 #include "Input.h"
 
 #include "EventManager.h"
+#include "GLFW/glfw3.h"
 
 namespace RuamEngine
 {

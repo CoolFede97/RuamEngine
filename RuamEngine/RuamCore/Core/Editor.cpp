@@ -1,6 +1,7 @@
 #include "Editor.h"
 #include "Entity.h"
 #include "Component.h"
+#include "EventManager.h"
 #include "SceneManager.h"
 #include "Input.h"
 #include "Transform.h"
@@ -24,9 +25,10 @@ namespace RuamEngine
 			}
 
 			ImGui::SameLine();
-
 			if (selectedEntity != nullptr)
 			{
+				// EventManager::Subscribe<OnKeyPressEvent>([](){selectedEntity->destroy();
+				// selectedEntity = nullptr;})
 				if (Input::GetKeyDown(KeyCode::Delete_Key))
 				{
 					selectedEntity->destroy();

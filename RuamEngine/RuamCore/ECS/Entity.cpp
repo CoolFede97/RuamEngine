@@ -78,6 +78,13 @@ namespace RuamEngine
 		{
 			for (auto& cmp : cmpVector) cmp->destroy();
 		}
+		if (transform().children().size()>0)
+		{
+			for (auto& childTransform : transform().children())
+			{
+				childTransform->entity()->destroy();
+			}
+		}
 	}
 
 	bool Entity::destroyFlag() const

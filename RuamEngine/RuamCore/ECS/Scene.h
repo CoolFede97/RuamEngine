@@ -1,5 +1,6 @@
 #pragma once
 
+#include "SceneManager.h"
 #include <list>
 #include <string>
 #include <iostream>
@@ -44,10 +45,10 @@ namespace RuamEngine
 	    void deleteEntityByIdx(unsigned int idx);
 	    void deleteEntityById(unsigned int idx);
 
-		inline std::map<unsigned int, std::map<std::type_index, std::vector<Component*>>>& justCreatedComponents()
-		{
-			return m_justCreatedComponents;
-		}
+		// inline std::map<unsigned int, std::map<std::type_index, std::vector<Component*>>>& justCreatedComponents()
+		// {
+		// 	return m_justCreatedComponents;
+		// }
 
 		void tick();
 
@@ -57,8 +58,8 @@ namespace RuamEngine
 		void forEachActiveComponentToStart(unsigned int entityId, std::type_index cmpType, std::vector<Component*>& cmpVec, std::function<void(Component*)> fn);
 
 		// Key of the object that owns the component, then the type of component and you get a vector of components
-	    std::map<unsigned int, std::map<std::type_index, std::vector<Component*>>> m_componentsToStart;
-	    std::map<unsigned int, std::map<std::type_index, std::vector<Component*>>> m_justCreatedComponents;
+	    static std::map<unsigned int, std::map<std::type_index, std::vector<Component*>>> m_componentsToStart;
+	    static std::map<unsigned int, std::map<std::type_index, std::vector<Component*>>> m_justCreatedComponents;
 
 	    std::list<std::unique_ptr<Entity>> m_entities;
 		const std::string m_name;
@@ -66,6 +67,9 @@ namespace RuamEngine
 	    static unsigned int s_idCount;
 
 		static const std::string s_defaultName;
+
+		friend class SceneManager;
+		friend class Entity;
 	};
 	using SceneSPtr = std::shared_ptr<Scene>;
 }

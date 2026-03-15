@@ -14,7 +14,7 @@
 Scene* CreateEndScene()
 {
 	Scene* scene = new Scene(2, "EndScene");
-	SceneManager::SetActiveScene(scene);
+	// SceneManager::SetActiveScene(scene);
 
 	Entity* light = scene->createEntity();
 	light->addComponent<GlobalLight>();

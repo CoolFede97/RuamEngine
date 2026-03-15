@@ -10,7 +10,7 @@
 Scene* CreateEmptyScene()
 {
 	auto scene = new Scene(0, "EmptyScene");
-	SceneManager::SetActiveScene(scene);
+	// SceneManager::SetActiveScene(scene);
 
 	Entity* light = scene->createEntity("Light");
 	light->addComponent<GlobalLight>();

@@ -127,7 +127,7 @@ namespace RuamEngine
 
 	void Entity::addCompToJustCreatedComponents(std::type_index tidx)
 	{
-		SceneManager::ActiveScene()->justCreatedComponents()[m_id][tidx].push_back(m_components[tidx].back().get());
+		Scene::m_justCreatedComponents[m_id][tidx].push_back(m_components[tidx].back().get());
 	}
 
 }

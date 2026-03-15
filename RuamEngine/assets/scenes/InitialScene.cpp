@@ -14,7 +14,6 @@
 Scene* CreateInitialScene()
 {
 	auto scene = new Scene(0, "InitialScene");
-	SceneManager::SetActiveScene(scene);
 
 	Entity* light = scene->createEntity();
 	light->addComponent<GlobalLight>();

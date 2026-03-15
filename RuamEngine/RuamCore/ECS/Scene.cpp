@@ -9,6 +9,8 @@ namespace RuamEngine
 
 	unsigned int Scene::s_idCount = 0;
 	const std::string Scene::s_defaultName = "Sample Scene";
+	std::map<unsigned int, std::map<std::type_index, std::vector<Component*>>> Scene::m_componentsToStart;
+	std::map<unsigned int, std::map<std::type_index, std::vector<Component*>>> Scene::m_justCreatedComponents;
 
 	Entity* Scene::createEntity()
 	{
@@ -23,8 +25,8 @@ namespace RuamEngine
 		std::unique_ptr<Entity> entity = std::make_unique<Entity>();
 		entity->setName(name);
 		Entity* entity_ptr = entity.get();
-	    m_entities.push_back(std::move(entity));
-	    return entity_ptr;
+		m_entities.push_back(std::move(entity));
+		return entity_ptr;
 	}
 
 	Entity* Scene::createEntity(unsigned int idx)

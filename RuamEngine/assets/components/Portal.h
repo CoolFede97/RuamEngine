@@ -33,7 +33,7 @@ namespace RuamEngine
 		    if (Camera::GetMainCamera() == nullptr) return;
 			if (glm::length(Camera::GetMainCamera()->entity()->transform().position() - entity()->transform().position()) < 1.5f)
 			{
-			    SceneManager::EnqueueSceneChange(1);
+			    SceneManager::EnqueueSceneChange("SandboxScene");
 			}
 		}
 

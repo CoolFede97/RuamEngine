@@ -1,4 +1,6 @@
 #include <iostream>
+#include <memory>
+#include "SaveSystem.h"
 #include "SceneManager.h"
 #include "Serial.h"
 #include "nlohmann/json.hpp"
@@ -11,14 +13,14 @@ using namespace RuamEngine;
 
 int main()
 {
-	Scene* scene = new Scene("TestScene");
-	SceneManager::SetActiveScene(scene);
+	SceneSPtr scene = std::make_shared<Scene>("TestScene");
+	// SceneManager::SetActiveScene(scene.get());
 	Entity* player = scene->createEntity("Player");
 	player->transform().setPosition(1,2,3);
-	Json jsonScene = serialize(scene);
+	Json jsonScene = Serial::Serialize(scene.get());
 
 	std::cout << "Scene in JSON: \n" << jsonScene.dump(2) << "\n";
 
-	Scene* loadedScene = deserialize(scene->name());
+	Scene* loadedScene = Serial::DeserializeJsonScene(SaveSystem::LoadJsonScene(scene->name()));
 	std::cout << "Y Pos: " << loadedScene->getEntities().front()->transform().position().y << "\n";
 }

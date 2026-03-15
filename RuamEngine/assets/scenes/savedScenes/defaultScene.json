@@ -1,0 +1,127 @@
+{
+ "m_entities": [
+  {
+   "m_components": [
+    {
+     "TYPE": "GlobalLight",
+     "m_id": 1
+    },
+    {
+     "TYPE": "Transform",
+     "m_id": 0,
+     "m_position": [
+      0.0,
+      100.0,
+      0.0
+     ],
+     "m_rotation": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "m_scale": [
+      1.0,
+      1.0,
+      1.0
+     ]
+    }
+   ],
+   "m_id": 0,
+   "m_name": "Light"
+  },
+  {
+   "m_components": [
+    {
+     "TYPE": "Skybox",
+     "m_id": 3
+    },
+    {
+     "TYPE": "Transform",
+     "m_id": 2,
+     "m_position": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "m_rotation": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "m_scale": [
+      50.0,
+      50.0,
+      50.0
+     ]
+    }
+   ],
+   "m_id": 1,
+   "m_name": "Skybox"
+  },
+  {
+   "m_components": [
+    {
+     "TYPE": "Camera",
+     "m_aspect_ratio": 1.3333333730697632,
+     "m_far_plane": 3000.0,
+     "m_fov": 45.0,
+     "m_id": 5,
+     "m_near_plane": 0.10000000149011612
+    },
+    {
+     "TYPE": "Transform",
+     "m_id": 4,
+     "m_position": [
+      20.799999237060547,
+      17.600000381469727,
+      2500.0
+     ],
+     "m_rotation": [
+      -13.5,
+      180.3000030517578,
+      7.599999904632568
+     ],
+     "m_scale": [
+      1.0,
+      1.0,
+      1.0
+     ]
+    }
+   ],
+   "m_id": 2,
+   "m_name": "Player2"
+  },
+  {
+   "m_components": [
+    {
+     "TYPE": "ModelRenderer",
+     "m_id": 7,
+     "m_meshPath": "assets/meshes/CyberChad/CyberChad.obj"
+    },
+    {
+     "TYPE": "Transform",
+     "m_id": 6,
+     "m_position": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "m_rotation": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "m_scale": [
+      1.0,
+      1.0,
+      1.0
+     ]
+    }
+   ],
+   "m_id": 3,
+   "m_name": "Atanasoff"
+  }
+ ],
+ "m_id": 0,
+ "m_name": "defaultScene"
+}

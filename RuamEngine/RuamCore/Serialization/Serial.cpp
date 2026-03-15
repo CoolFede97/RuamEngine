@@ -4,12 +4,22 @@
 #include <fstream>
 #include <filesystem>
 #include "Entity.h"
+#include "SceneManager.h"
 #include "Transform.h"
+#include "SaveSystem.h"
+
 namespace fs = std::filesystem;
 
 namespace RuamEngine
 {
-	Json serialize(const Entity* entity)
+	void Serial::DeserializeTransform(const Json& jsonTransform, Transform& transfrom)
+	{
+		if (jsonTransform.contains("m_position")) transfrom.setPosition(jsonTransform["m_position"].get<glm::vec3>());
+		if (jsonTransform.contains("m_rotation")) transfrom.setRotation(jsonTransform["m_rotation"].get<glm::vec3>());
+		if (jsonTransform.contains("m_scale")) transfrom.setScale(jsonTransform["m_scale"].get<glm::vec3>());
+	}
+
+	Json Serial::Serialize(const Entity* entity)
 	{
 		Json jsonEntity =
 		{
@@ -24,7 +34,7 @@ namespace RuamEngine
 		}
 		return jsonEntity;
 	}
-	Json serialize(const Scene* scene)
+	Json Serial::Serialize(const Scene* scene)
 	{
 		Json jsonScene =
 		{
@@ -34,48 +44,17 @@ namespace RuamEngine
 		};
 		for (Entity* entity : scene->getEntities())
 		{
-			jsonScene["m_entities"].push_back(serialize(entity));
+			jsonScene["m_entities"].push_back(Serialize(entity));
 		}
-
-		fs::create_directories(scenesDir);
-
-		std::string fileName = scene->name() + ".json";
-		fs::path filePath = scenesDir / fileName;
-
-		std::ofstream file(filePath);
-		if (!file)
-		{
-			std::cerr << "Failed to open file: " << filePath << " when saving scene of name " << scene->name() << "\n";
-			return Json::array();
-		}
-		file << jsonScene.dump(1);
-		file.close();
 		return jsonScene;
 	}
 
-	void deserializeTransform(const Json& jsonTransform, Transform& transfrom)
-	{
-		if (jsonTransform.contains("m_position")) transfrom.setPosition(jsonTransform["m_position"].get<glm::vec3>());
-		if (jsonTransform.contains("m_rotation")) transfrom.setRotation(jsonTransform["m_rotation"].get<glm::vec3>());
-		if (jsonTransform.contains("m_scale")) transfrom.setScale(jsonTransform["m_scale"].get<glm::vec3>());
-	}
 
-	Scene* deserialize(const std::string& sceneName)
+	Scene* Serial::DeserializeJsonScene(Json jsonScene)
 	{
-		std::string fileName = sceneName + ".json";
-		fs::path filePath = scenesDir / fileName;
-
-		if (!fs::exists(filePath))
-		{
-			std::cerr << "Failed to find scene: " << filePath << " before deserializing!\n";
-			return nullptr;
-		}
-		std::ifstream file(filePath);
-		Json jsonScene;
-		file >> jsonScene;
 		const unsigned int sceneId = jsonScene["m_id"];
 
-		Scene* scene = new Scene(sceneId, sceneName);
+		Scene* scene = new Scene(sceneId, jsonScene["m_name"]);
 
 		if (jsonScene["m_entities"].is_null()) return scene;
 
@@ -99,12 +78,13 @@ namespace RuamEngine
 					if (cmpType != "Transform")
 					{
 						auto constructor = Component::componentRegistry[cmpType].addComponentWithJson;
+
 						// Uses the constructor defined by the user that takes the Json Component as parameter to add the component to the entity
 						constructor(jsonCmp, entity);
 					}
 					else
 					{
-						deserializeTransform(jsonCmp, entity->transform());
+						DeserializeTransform(jsonCmp, entity->transform());
 					}
 				}
 			}
@@ -114,7 +94,32 @@ namespace RuamEngine
 				continue;
 			}
 		}
+		std::cout << "End of DeserializeJsonScene\n";
 		return scene;
+	}
+
+	Json Serial::Serialize(const RuamConfig& config)
+	{
+		Json jsonConfig =
+		{
+			{"scenesPaths", Json::array()}
+		};
+		for (auto& sceneName : config.sceneNames)
+		{
+			jsonConfig["scenesPaths"].push_back(sceneName);
+		}
+		return jsonConfig;
+	};
+
+	// Make sure everything is okay with the jsonConfig you are passsing as argument (e.g. it has at least one scene)
+	RuamConfig Serial::DeserializeRuamConfig(const Json& jsonConfig)
+	{
+		RuamConfig ruamConfig;
+		for (std::string sceneName : jsonConfig["scenesPaths"])
+		{
+			ruamConfig.sceneNames.push_back(sceneName);
+		}
+		return ruamConfig;
 	}
 
 }

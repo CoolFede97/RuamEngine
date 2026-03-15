@@ -1,4 +1,5 @@
 #include "Skybox.h"
+#include "Component.h"
 #include "Cubemap.h"
 #include "Renderer.h"
 #include "RenderingCore.h"
@@ -59,4 +60,6 @@ namespace RuamEngine
 
         m_material.lock()->m_cubemap = m_cubemap;
     }
+
+    REGISTER_COMPONENT(Skybox)
 }

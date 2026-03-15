@@ -45,7 +45,7 @@ namespace RuamEngine
                 s_instance->playerTransform = nullptr;
                 s_instance = nullptr;
                 entity()->destroy();
-                SceneManager::EnqueueSceneChange(2);
+                SceneManager::EnqueueSceneChange("EndScene");
             }
         }
 

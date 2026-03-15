@@ -1,19 +1,33 @@
 #pragma once
 
 #include "SceneManager.h"
+#include "RuamConfig.h"
+#include "Transform.h"
 #include "nlohmann/json.hpp"
 #include <filesystem>
 namespace fs = std::filesystem;
 
 namespace RuamEngine
 {
+	class Transform;
     class Entity;
 
-	inline fs::path scenesDir = fs::path(PROJECT_ROOT_DIR) / "assets" / "scenes" / "savedScenes";
+    using SceneSPtr = std::shared_ptr<Scene>;
 
-	Json serialize(const Entity* entity);
-	Json serialize(const Scene* scene);
 
-	Scene* deserialize(const std::string& sceneName);
+    class Serial
+    {
+    public:
+    	static void DeserializeTransform(const Json& jsonTransform, Transform& transfrom);
+
+		static Json Serialize(const Entity* entity);
+
+		static Json Serialize(const Scene* scene);
+		static Scene* DeserializeJsonScene(Json jsonScene);
+
+		static Json Serialize(const RuamConfig& config);
+		static RuamConfig DeserializeRuamConfig(const Json& jsonConfig);
+		static Json LoadRuamConfigAsJson();
+    };
 
 }

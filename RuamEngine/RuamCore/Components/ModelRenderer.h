@@ -29,6 +29,7 @@ namespace RuamEngine
     	MODEL_RENDERER_SERIALIZED_MEMBERS(DECL_MEMBER)
 
     public:
+	   	ModelRenderer(Json modelRendererData, const unsigned int entityId);
     	ModelWPtr m_model;
     	ShaderProgramType m_shaderProgramType = ShaderProgramType::general;
     	std::unordered_map<unsigned int, RenderUnitWPtr> m_cachedRenderUnits;

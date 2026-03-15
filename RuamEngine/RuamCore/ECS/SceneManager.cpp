@@ -3,99 +3,114 @@
 #include "Camera.h"
 #include "Editor.h"
 #include "Renderer.h"
+#include "Engine.h"
+
+#include "SaveSystem.h"
+
+#include "GlobalLight.h"
+#include "SaveSystem.h"
+#include "Skybox.h"
+#include "Camera.h"
+
+#include <memory>
+
 
 namespace RuamEngine
 {
-	SceneManager::SceneList SceneManager::s_scenes;
-	SceneManager::ScenePtr SceneManager::s_active_scene = nullptr;
-	bool SceneManager::s_has_pending_scene = false;
-	unsigned int SceneManager::s_pending_scene_id = -1;
-	const SceneManager::SceneList& SceneManager::sceneList() {
+	std::vector<std::string> SceneManager::s_scenes;
+	SceneManager::SceneUPtr SceneManager::s_activeScene = nullptr;
+	bool SceneManager::s_pendingSceneChange = false;
+	std::string SceneManager::s_pendingSceneName;
+	const std::vector<std::string>& SceneManager::scenes()
+	{
 		return s_scenes;
 	}
 
-	void SceneManager::ResetActiveScene()
+	void SceneManager::ChangeActiveScene(const std::string &sceneName)
 	{
+		Scene::m_componentsToStart.clear();
+		Scene::m_justCreatedComponents.clear();
 		RuamEngine::Camera::EmptyMainCamera();
-
-		// This is the order. First nullptr and then reset.
-		// This is because otherwise the new objects of the new scene are created before the previous scene's objects are destroyed
-		s_active_scene = nullptr;
 		Editor::selectedEntity = nullptr;
-		s_scenes[s_pending_scene_id]();
+		s_activeScene = nullptr;
+		s_activeScene.reset(Serial::DeserializeJsonScene(SaveSystem::LoadJsonScene(sceneName)));
+		std::cout << "Is this called?\n";
 	}
 
-	void SceneManager::SetActiveScene(Scene* newScene)
-	{
-	    Editor::selectedEntity = nullptr;
-		s_active_scene.reset(newScene);
-	}
+	// void SceneManager::SetActiveScene(Scene* scene)
+	// {
+	// 	Editor::selectedEntity = nullptr;
+	// 	s_activeScene.reset(scene);
+	// }
 
-	void SceneManager::EnqueueSceneChange(unsigned int id)
+	void SceneManager::EnqueueSceneChange(const std::string& sceneName)
 	{
-		if (s_has_pending_scene) return;
-		s_pending_scene_id = id;
-		s_has_pending_scene = true;
+		if (s_pendingSceneChange) return;
+		s_pendingSceneName = sceneName;
+		s_pendingSceneChange = true;
 	}
 
 	void SceneManager::ApplyPendingSceneChange()
 	{
-		if (s_has_pending_scene) ResetActiveScene();
+		if (s_pendingSceneChange) ChangeActiveScene(s_pendingSceneName);
 		SetSceneChange(false);
 	}
 
-	Scene* SceneManager::ActiveScene() {
-		return s_active_scene.get();
-	}
-
-	// void SceneManager::AddScene(const unsigned int id, const std::string& scene) {
-
-	// 	s_scenes[id] = [scene]() {
-	// 		return Serial::deserialise(scene);
-	// 	};
-	// }
-
-	void SceneManager::AddSceneCreator(unsigned int id, std::function<Scene*()> sceneCreator)
+	void SceneManager::UpdateScenes()
 	{
-		s_scenes[id] = sceneCreator;
+		s_scenes.clear();
+		for (std::string& sceneName : Engine::Config().sceneNames)
+		{
+			s_scenes.push_back(sceneName);
+		}
 	}
 
-	void SceneManager::RemoveScene(const int id) {
-		s_scenes.erase(id);
+	Scene* SceneManager::ActiveScene() {
+		return s_activeScene.get();
 	}
 
-	SceneManager::ScenePtr SceneManager::EmptyScene() {
-		return std::move(std::make_unique<Scene>());
+	SceneSPtr SceneManager::CreateDefaultScene()
+	{
+		SceneUPtr scene = std::make_unique<Scene>(0, "defaultScene");
+		Entity* light = scene->createEntity();
+		light->addComponent<GlobalLight>();
+		light->transform().setPosition(glm::vec3(0.0f, 100.0f, 0.0f));
+		light->setName("Light");
+
+		Entity* skybox = scene->createEntity();
+		skybox->setName("Skybox");
+		skybox->transform().setScale(glm::vec3(50,50,50));
+		skybox->addComponent<Skybox>();
+
+		Entity* player = scene->createEntity();
+		player->transform().setPosition(glm::vec3(50.0f, 20.0f, 160.0f));
+		player->transform().setRotation(glm::vec3(0.0f, 180, 0.0f));
+		player->setName("Player2");
+		player->addComponent<Camera>();
+
+		return scene;
 	}
 
-	// void SceneManager::CreateScene(const unsigned int id, const std::string& name) {
-	// 	Scene *s = new Scene(name);
-	// 	Serial::serialise(s);
-	// 	AddScene(id, name);
-	// 	RuamEngine::Camera::EmptyMainCamera();
-	// 	s_active_scene.reset(s_scenes[id]());
-	// 	s_has_pending_scene = true;
-	// 	delete s;
-	// }
 
-	// bool SceneManager::StartScene(const unsigned int id, const std::string& name) {
-	// 	auto s = Serial::deserialise(name);
-	// 	bool ret = s == nullptr;
-	// 	if (ret){
-	// 		CreateScene(id, name);
-	// 	}
-	// 	else {
-	// 		AddScene(id, name);
-	// 		SetActiveScene(id);
-	// 	}
-	// 	delete s;
-	// 	return ret;
-	// }
+	void SceneManager::AddSceneCreator(const std::string& sceneName)
+	{
+		s_scenes.push_back(sceneName);
+	}
+
+	void SceneManager::RemoveScene(const std::string& sceneName)
+	{
+		auto it = std::find(s_scenes.begin(), s_scenes.end(), sceneName);
+		if (it != s_scenes.end())
+		{
+			s_scenes.erase(it);
+		}
+	}
+
 	bool SceneManager::SceneChange() {
-		return s_has_pending_scene;
+		return s_pendingSceneChange;
 	}
 
 	void SceneManager::SetSceneChange(bool state) {
-		s_has_pending_scene = state;
+		s_pendingSceneChange = state;
 	}
 }

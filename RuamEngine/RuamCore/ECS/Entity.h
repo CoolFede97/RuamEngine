@@ -96,39 +96,39 @@ namespace RuamEngine
 			return comps;
 		}
 
-		std::map<unsigned int, std::map<std::type_index, std::vector<Component*>>>& justCreatedComponents();
+		// std::map<unsigned int, std::map<std::type_index, std::vector<Component*>>>& justCreatedComponents();
 
-		// Shouldn't be used by the user
-		template <class Comp>
-		void removeComponentInJustCreatedComponents()
-		{
-			auto& justCreatedEntities = SceneManager::ActiveScene()->justCreatedComponents();
+		// // Shouldn't be used by the user
+		// template <class Comp>
+		// void removeComponentInJustCreatedComponents()
+		// {
+		// 	auto& justCreatedEntities = Scene::m_justCreatedComponents;
 
-			auto idIt = justCreatedEntities.find(m_id);
-			if (idIt == justCreatedEntities.end()) return;
+		// 	auto idIt = justCreatedEntities.find(m_id);
+		// 	if (idIt == justCreatedEntities.end()) return;
 
-			auto compType = idIt->second.find(typeid(Comp));
-			if (compType ==  idIt->second.end()) return;
+		// 	auto compType = idIt->second.find(typeid(Comp));
+		// 	if (compType ==  idIt->second.end()) return;
 
-			if (justCreatedEntities.size()>0) compType->second.front()->destroy();
-		}
+		// 	if (justCreatedEntities.size()>0) compType->second.front()->destroy();
+		// }
 
-		// Shouldn't be used by the user
-		template <class Comp>
-		void removeComponentInJustCreatedComponents(Component& comp)
-		{
-			auto& justCreatedEntities = SceneManager::ActiveScene()->justCreatedComponents();
+		// // Shouldn't be used by the user
+		// template <class Comp>
+		// void removeComponentInJustCreatedComponents(Component& comp)
+		// {
+		// 	auto& justCreatedEntities = Scene::m_justCreatedComponents;
 
-			auto idIt = justCreatedEntities.find(m_id);
-			if (idIt == justCreatedEntities.end()) return;
+		// 	auto idIt = justCreatedEntities.find(m_id);
+		// 	if (idIt == justCreatedEntities.end()) return;
 
-			auto compType = idIt->second.find(typeid(Comp));
-			if (compType ==  idIt->second.end()) return;
+		// 	auto compType = idIt->second.find(typeid(Comp));
+		// 	if (compType ==  idIt->second.end()) return;
 
-			auto cmp = std::find(compType->second.begin(), compType->second.end(), &comp);
-			if (cmp != compType->second.end()) compType->second.front()->destroy();
-			else std::cerr << "Couldn't find and destroy a component of type " << typeid(Comp).name() <<" with id " << comp.id() << " in the entity called" << m_name << "with id " << m_id << "\n";
-		}
+		// 	auto cmp = std::find(compType->second.begin(), compType->second.end(), &comp);
+		// 	if (cmp != compType->second.end()) compType->second.front()->destroy();
+		// 	else std::cerr << "Couldn't find and destroy a component of type " << typeid(Comp).name() <<" with id " << comp.id() << " in the entity called" << m_name << "with id " << m_id << "\n";
+		// }
 
 		template<class Comp>
 		void removeComponent() {
@@ -139,7 +139,7 @@ namespace RuamEngine
 				return;
 			}
 			pair->second.front()->destroy();
-			removeComponentInJustCreatedComponents<Comp>();
+			// removeComponentInJustCreatedComponents<Comp>();
 		}
 
 		template<class Comp>

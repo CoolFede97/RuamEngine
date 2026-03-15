@@ -1,8 +1,14 @@
 #include "Engine.h"
+#include "KeyCode.h"
 #include "Renderer.h"
 #include "Input.h"
 #include "RuamTime.h"
 #include "Editor.h"
+#include "EventManager.h"
+#include "SaveSystem.h"
+#include "Scene.h"
+#include "SceneManager.h"
+#include "Serial.h"
 
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
@@ -11,17 +17,17 @@
 #include "SandboxScene.cpp"
 #include "InitialScene.cpp"
 #include "EndScene.cpp"
-#include "EventManager.h"
 
 
 namespace RuamEngine
 {
-    bool Engine::initialized = false;
-    bool Engine::started = false;
+    bool Engine::s_initialized = false;
+    bool Engine::s_started = false;
+    RuamConfig Engine::s_config;
 
     void Engine::Init()
     {
-        if (initialized)
+        if (s_initialized)
         {
             std::cerr << "Can't call Engine::SetUp() because the engine is already set up\n";
             return;
@@ -46,29 +52,26 @@ namespace RuamEngine
 
   		ImGui::StyleColorsDark();
 
-        initialized = true;
+   		LoadRuamConfig();
+    	SceneManager::UpdateScenes();
+        s_initialized = true;
     }
 
     void Engine::Start()
     {
-        if (started)
+        if (s_started)
         {
             std::cerr << "Can't call Engine::Init() because the engine is already initialized\n";
             return;
         }
-        started = true;
+        s_started = true;
        	unsigned int frameCount = 0;
-
-        SceneManager::AddSceneCreator(2, CreateEndScene);
-		SceneManager::AddSceneCreator(1, CreateCFSandboxScene);
-		SceneManager::AddSceneCreator(0, CreateInitialScene);
-
-		SceneManager::EnqueueSceneChange(0);
+		SceneManager::EnqueueSceneChange(SceneManager::scenes()[0]);
 
 
   		while (!Renderer::WindowShouldClose())
   		{
-
+    		CheckIfWantToSaveChanges();
  			SceneManager::ApplyPendingSceneChange();
   		    // std::cout << "Frame count: " << frameCount++ << "\n";
 
@@ -109,11 +112,32 @@ namespace RuamEngine
             glfwPollEvents();
     	}
     	// Cleanup
-        SceneManager::SetActiveScene(nullptr);
+        SceneManager::s_activeScene = nullptr;
     	ImGui_ImplOpenGL3_Shutdown();
     	ImGui_ImplGlfw_Shutdown();
     	ImGui::DestroyContext();
     	Renderer::Shutdown();
     	AudioSystem::shutdown();
+    }
+
+    void Engine::CheckIfWantToSaveChanges()
+    {
+    	if (Input::GetKeyDown(KeyCode::LeftControl_Key) && Input::GetKeyDown(KeyCode::S_Key))
+     	{
+      		SaveSystem::SaveRuamConfig();
+
+			SaveSystem::SaveJsonScene(Serial::Serialize(SceneManager::ActiveScene()));
+
+      	}
+    }
+
+    void Engine::LoadRuamConfig()
+    {
+   		s_config = Serial::DeserializeRuamConfig(SaveSystem::LoadJsonRuamConfig());
+    }
+
+    RuamConfig Engine::Config()
+    {
+    	return s_config;
     }
 }

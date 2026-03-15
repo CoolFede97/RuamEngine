@@ -39,4 +39,6 @@ namespace RuamEngine
 	{
 		return s_mainCamera;
 	}
+
+	REGISTER_COMPONENT(Camera);
 }

@@ -1,9 +1,15 @@
 #include "ModelRenderer.h"
+#include "Component.h"
 #include "ResourceManager.h"
 #include "RuamUtils.h"
 
 namespace RuamEngine
 {
+	ModelRenderer::ModelRenderer(Json modelRendererData, const unsigned int entityId) : Component(entityId)
+	{
+		if (modelRendererData.contains("m_meshPath")) m_meshPath = modelRendererData["m_meshPath"].get<std::string>();
+		loadModel();
+	}
     ModelRenderer::~ModelRenderer()
    	{
    		if (!m_meshPath.empty())

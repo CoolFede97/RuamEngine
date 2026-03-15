@@ -16,7 +16,7 @@
 Scene* CreateSandboxScene()
 {
 	Scene* sandboxScene = new Scene(3, "SandboxScene");
-	SceneManager::SetActiveScene(sandboxScene);
+	// SceneManager::SetActiveScene(sandboxScene);
 
 	Entity* newEntity = sandboxScene->createEntity();
 	newEntity->addComponent<SandboxCom>();
@@ -27,7 +27,7 @@ Scene* CreateSandboxScene()
 Scene* CreateCFSandboxScene()
 {
 	Scene* sandboxScene = new Scene(1, "SandboxScene");
-	SceneManager::SetActiveScene(sandboxScene);
+	// SceneManager::SetActiveScene(sandboxScene);
 
 	Entity* light = sandboxScene->createEntity();
 	light->setName("Light");

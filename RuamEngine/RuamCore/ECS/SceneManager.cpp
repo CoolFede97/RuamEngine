@@ -34,7 +34,6 @@ namespace RuamEngine
 		Editor::selectedEntity = nullptr;
 		s_activeScene = nullptr;
 		s_activeScene.reset(Serial::DeserializeJsonScene(SaveSystem::LoadJsonScene(sceneName)));
-		std::cout << "Is this called?\n";
 	}
 
 	// void SceneManager::SetActiveScene(Scene* scene)

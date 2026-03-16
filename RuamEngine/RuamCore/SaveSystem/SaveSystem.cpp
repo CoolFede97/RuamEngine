@@ -75,12 +75,12 @@ namespace RuamEngine
 	{
 		if (!fs::exists(configsPath))
 		{
+			std::cerr << "Directory " << configsPath << " not found. This directory is about to be created automatically now\n";
 			fs::create_directories(configsPath);
-			std::cerr << "Directory " << configsPath << " not found. It has just been created\n";
 		}
 		if (!fs::exists(ruamConfigPath))
 		{
-			std::cerr << "Failed to find ruamConfig at path: " << ruamConfigPath << "! A new one is going to be created\n";
+			std::cerr << "Failed to find ruamConfig at path: " << ruamConfigPath << "! A new one is about to be created now\n";
 			RuamConfig ruamConfig;
 			MakeSureDefaultSceneExists();
 			ruamConfig.sceneNames.push_back("defaultScene");

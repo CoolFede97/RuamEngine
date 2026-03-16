@@ -127,6 +127,7 @@ namespace RuamEngine
       		SaveSystem::SaveRuamConfig();
 
 			SaveSystem::SaveJsonScene(Serial::Serialize(SceneManager::ActiveScene()));
+			std::cout << "Changes saved successfully!\n";
 
       	}
     }

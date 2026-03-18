@@ -122,13 +122,12 @@ namespace RuamEngine
 
     void Engine::CheckIfWantToSaveChanges()
     {
-    	if (Input::GetKeyDown(KeyCode::LeftControl_Key) && Input::GetKeyDown(KeyCode::S_Key))
+    	if (Input::GetKey(KeyCode::LeftControl_Key) && Input::GetKeyDown(KeyCode::S_Key))
      	{
       		SaveSystem::SaveRuamConfig();
 
 			SaveSystem::SaveJsonScene(Serial::Serialize(SceneManager::ActiveScene()));
 			std::cout << "Changes saved successfully!\n";
-
       	}
     }
 

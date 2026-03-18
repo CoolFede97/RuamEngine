@@ -6,6 +6,7 @@
 #include "Vec3.h"
 #include "KeyCode.h"
 #include "Cursor.h"
+#include <map>
 
 namespace RuamEngine
 {
@@ -16,19 +17,21 @@ namespace RuamEngine
         static void UpdateInput();
 
         // Window
-        static GLFWwindow* GetWindow() { return m_window; }
-        static void SetWindow(GLFWwindow* newWindow) { m_window = newWindow; }
+        static GLFWwindow* GetWindow() { return s_window; }
+        static void SetWindow(GLFWwindow* newWindow) { s_window = newWindow; }
         static Vec2 GetPixToNorm(Vec2 pix);
         static Vec2 GetNormToPix(Vec2 Norm);
 
         // Keyboard
+        static bool GetKey(KeyCode key);
+
         static bool GetKeyDown(KeyCode key);
         static bool GetKeyUp(KeyCode key);
 
         //Mouse
         static void SetCursorMode(CursorMode mode);
         static CursorMode GetCursorMode();
-        static bool IsCursorInWindow() { return glfwGetWindowAttrib(m_window, GLFW_HOVERED); }
+        static bool IsCursorInWindow() { return glfwGetWindowAttrib(s_window, GLFW_HOVERED); }
 
         static bool GetMouseButtonDown(MouseCode button);
         static bool GetMouseButtonUp(MouseCode button);
@@ -37,13 +40,16 @@ namespace RuamEngine
         static Vec2 GetCursorPosNorm();
         static Vec2 GetMouseDeltaPix();
         static Vec2 GetMouseDeltaNorm();
-        static void SetCursorPosPix(const Vec2& newPos) { glfwSetCursorPos(m_window, newPos.x, newPos.y); }
+        static void SetCursorPosPix(const Vec2& newPos) { glfwSetCursorPos(s_window, newPos.x, newPos.y); }
         static void SetCursorPosNorm(const Vec2& newPos);
 
     private:
-        static GLFWwindow* m_window;
-        static Vec2 m_lastMousePosPix;
-        static Vec2 m_lastMousePosNorm;
+        static GLFWwindow* s_window;
+        static Vec2 s_lastMousePosPix;
+        static Vec2 s_lastMousePosNorm;
+
+        static const KeyCode s_supportedKeys[];
+        static std::map<KeyCode, bool> s_previousKeys;
 
         static void KeyEvent(GLFWwindow* window, int key, int scancode, int action, int mods);
         static void CharEvent(GLFWwindow* window, unsigned int codepoint);

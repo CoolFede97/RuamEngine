@@ -17,20 +17,20 @@ namespace RuamEngine
 
 			m_mouseRotation = Vec2(0.0f, 0.0f);
 
-			if (Input::GetKeyDown(KeyCode::Down_Arrow)) m_mouseRotation.x -= 1;
-			if (Input::GetKeyDown(KeyCode::Up_Arrow)) m_mouseRotation.x += 1;
-			if (Input::GetKeyDown(KeyCode::Left_Arrow)) m_mouseRotation.y += 1;
-			if (Input::GetKeyDown(KeyCode::Right_Arrow)) m_mouseRotation.y -= 1;
+			if (Input::GetKey(KeyCode::Down_Arrow)) m_mouseRotation.x -= 1;
+			if (Input::GetKey(KeyCode::Up_Arrow)) m_mouseRotation.x += 1;
+			if (Input::GetKey(KeyCode::Left_Arrow)) m_mouseRotation.y += 1;
+			if (Input::GetKey(KeyCode::Right_Arrow)) m_mouseRotation.y -= 1;
 
 
 			entity()->transform().rotation() += static_cast<glm::vec3>(m_mouseRotation * Time::DeltaTime() * m_rotationSpeed);
 			entity()->transform().rotation().x = std::clamp(entity()->transform().rotation().x, -89.0f, 89.0f);
 
 			m_horizontalDirection = {0, 0, 0};
-			if (Input::GetKeyDown(KeyCode::W_Key)) m_horizontalDirection.z += 1;
-			if (Input::GetKeyDown(KeyCode::S_Key)) m_horizontalDirection.z -= 1;
-			if (Input::GetKeyDown(KeyCode::A_Key)) m_horizontalDirection.x -= 1;
-			if (Input::GetKeyDown(KeyCode::D_Key)) m_horizontalDirection.x += 1;
+			if (Input::GetKey(KeyCode::W_Key)) m_horizontalDirection.z += 1;
+			if (Input::GetKey(KeyCode::S_Key)) m_horizontalDirection.z -= 1;
+			if (Input::GetKey(KeyCode::A_Key)) m_horizontalDirection.x -= 1;
+			if (Input::GetKey(KeyCode::D_Key)) m_horizontalDirection.x += 1;
 
 			m_direction = Vec3::GetDirectionFromEuler(entity()->transform().rotation());
 

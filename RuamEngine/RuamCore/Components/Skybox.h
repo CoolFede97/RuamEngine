@@ -32,7 +32,7 @@ namespace RuamEngine
 		IMPL_SIMPLE_SERIALIZE(Skybox)
 		static Skybox* GetSkybox() {return s_skybox; }
 		static void SetSkybox(std::vector<std::string>& paths);
-
+		static void EmptySkybox();
 		std::string name() override { return "Skybox"; }
 
 		void renderStart() override;

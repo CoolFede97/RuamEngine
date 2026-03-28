@@ -14,11 +14,6 @@
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 
-#include "SandboxScene.cpp"
-#include "InitialScene.cpp"
-#include "EndScene.cpp"
-
-
 namespace RuamEngine
 {
     bool Engine::s_initialized = false;
@@ -52,7 +47,7 @@ namespace RuamEngine
 
   		ImGui::StyleColorsDark();
 
-   		LoadRuamConfig();
+   		// LoadRuamConfig();
     	SceneManager::UpdateScenes();
         s_initialized = true;
     }
@@ -66,13 +61,13 @@ namespace RuamEngine
         }
         s_started = true;
        	unsigned int frameCount = 0;
-		SceneManager::EnqueueSceneChange(SceneManager::scenes()[0]);
+        if (SceneManager::scenes().size()>0) SceneManager::EnqueueSceneChange(SceneManager::scenes()[0]);
 
 
   		while (!Renderer::WindowShouldClose())
   		{
     		CheckIfWantToSaveChanges();
- 			SceneManager::ApplyPendingSceneChange();
+ 			if (SceneManager::scenes().size()>0) SceneManager::ApplyPendingSceneChange();
   		    // std::cout << "Frame count: " << frameCount++ << "\n";
 
  			// ImGUI
@@ -82,7 +77,9 @@ namespace RuamEngine
 
     		Editor::UpdateHierarchy();
             Editor::UpdateInspector();
- 			// Time
+            Editor::UpdateSceneManager();
+
+            // Time
  			Time::Update();
 
  			Renderer::ClearScreen();
@@ -124,8 +121,6 @@ namespace RuamEngine
     {
     	if (Input::GetKey(KeyCode::LeftControl_Key) && Input::GetKeyDown(KeyCode::S_Key))
      	{
-      		SaveSystem::SaveRuamConfig();
-
 			SaveSystem::SaveJsonScene(Serial::Serialize(SceneManager::ActiveScene()));
 			std::cout << "Changes saved successfully!\n";
       	}

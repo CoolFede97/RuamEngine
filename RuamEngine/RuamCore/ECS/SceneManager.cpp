@@ -30,7 +30,10 @@ namespace RuamEngine
 	{
 		Scene::m_componentsToStart.clear();
 		Scene::m_justCreatedComponents.clear();
+
 		RuamEngine::Camera::EmptyMainCamera();
+		RuamEngine::Skybox::EmptySkybox();
+
 		Editor::selectedEntity = nullptr;
 		s_activeScene = nullptr;
 		s_activeScene.reset(Serial::DeserializeJsonScene(SaveSystem::LoadJsonScene(sceneName)));
@@ -58,7 +61,7 @@ namespace RuamEngine
 	void SceneManager::UpdateScenes()
 	{
 		s_scenes.clear();
-		for (std::string& sceneName : Engine::Config().sceneNames)
+		for (std::string& sceneName : SaveSystem::LoadAllSavedSceneNames())
 		{
 			s_scenes.push_back(sceneName);
 		}
@@ -70,7 +73,7 @@ namespace RuamEngine
 
 	SceneSPtr SceneManager::CreateDefaultScene()
 	{
-		SceneUPtr scene = std::make_unique<Scene>(0, "defaultScene");
+		SceneSPtr scene = std::make_shared<Scene>(0, "defaultScene");
 		Entity* light = scene->createEntity();
 		light->addComponent<GlobalLight>();
 		light->transform().setPosition(glm::vec3(0.0f, 100.0f, 0.0f));

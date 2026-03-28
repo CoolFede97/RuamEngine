@@ -37,9 +37,9 @@ namespace RuamEngine
 
 		static bool SceneChange();
 
-		static void SetSceneChange(bool state);
 		static SceneUPtr s_activeScene;
 	private:
+		static void SetSceneChange(bool state);
 		static std::vector<std::string> s_scenes;
 		// static bool s_scene_change;
 		static bool s_pendingSceneChange;

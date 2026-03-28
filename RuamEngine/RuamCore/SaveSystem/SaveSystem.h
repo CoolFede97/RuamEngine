@@ -7,7 +7,7 @@ namespace fs = std::filesystem;
 
 namespace RuamEngine
 {
-	inline fs::path scenesDir = fs::path(PROJECT_ROOT_DIR) / "assets" / "scenes" / "savedScenes";
+	inline fs::path scenesDir = fs::path(PROJECT_ROOT_DIR) / "assets" / "scenes";
 	inline fs::path configsPath = fs::path(PROJECT_ROOT_DIR) / "config";
 	inline fs::path ruamConfigPath = fs::path(PROJECT_ROOT_DIR) / "config" / "ruamConfig.json";
 
@@ -16,6 +16,8 @@ namespace RuamEngine
 	public:
 		static Json LoadJsonScene(const std::string& sceneName);
 		static void SaveJsonScene(const Json& jsonScene);
+
+		static std::vector<std::string> LoadAllSavedSceneNames();
 
 		static Json LoadJsonRuamConfig();
 		static void MakeSureDefaultSceneExists();

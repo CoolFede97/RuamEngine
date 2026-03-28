@@ -8,7 +8,7 @@ namespace RuamEngine
 	class Texture2D : public Texture
 	{
 	private:
-		int m_Width, m_Height, m_BPP; // Bits per pixel
+		int m_width, m_height, m_BPP; // Bits per pixel
 
 	public:
 		unsigned char* m_localBuffer;
@@ -20,8 +20,8 @@ namespace RuamEngine
 
 		GLenum texType() const override { return GL_TEXTURE_2D; }
 
-		int GetWidth() const { return m_Width; }
-		int GetHeight() const { return m_Height; }
+		int GetWidth() const { return m_width; }
+		int GetHeight() const { return m_height; }
 	};
 	using Texture2DPtr = std::shared_ptr<Texture2D>;
 }

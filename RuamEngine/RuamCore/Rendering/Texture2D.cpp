@@ -13,7 +13,7 @@ namespace RuamEngine
 
 		stbi_set_flip_vertically_on_load(1);
 
-		m_localBuffer = stbi_load(m_filePath.c_str(), &m_Width, &m_Height, &m_BPP, 4);
+		m_localBuffer = stbi_load(m_filePath.c_str(), &m_width, &m_height, &m_BPP, 4);
 
 		if (m_localBuffer == NULL)
 		{
@@ -29,8 +29,8 @@ namespace RuamEngine
 			std::cout << "Texture2D at path: " << m_filePath << " was loaded succesfully" << "\n";
 		}
 
-		GLCall(glTextureStorage2D(m_glName, 1, GL_RGBA8, m_Width, m_Height));
-		GLCall(glTextureSubImage2D(m_glName, 0, 0, 0, m_Width, m_Height, GL_RGBA, GL_UNSIGNED_BYTE, m_localBuffer));
+		GLCall(glTextureStorage2D(m_glName, 1, GL_RGBA8, m_width, m_height));
+		GLCall(glTextureSubImage2D(m_glName, 0, 0, 0, m_width, m_height, GL_RGBA, GL_UNSIGNED_BYTE, m_localBuffer));
 		// Turns around the texture, so that it is up-side down
 		// We do this because OpenGL expects textures (0,0) position to be at the bottom-left corner,
 		// not at the top-left corner.

@@ -5,6 +5,7 @@
 #include "Serial.h"
 #include "Engine.h"
 
+#include <exception>
 #include <filesystem>
 #include <fstream>
 
@@ -41,6 +42,37 @@ namespace RuamEngine
 		}
 		file << jsonScene.dump(1);
 		file.close();
+	}
+
+	std::vector<std::string> SaveSystem::LoadAllSavedSceneNames()
+	{
+		std::vector<std::string> sceneNames;
+
+		std::filesystem::create_directories(scenesDir);
+
+		for (const auto& entry : fs::directory_iterator(scenesDir))
+		{
+			if (entry.is_regular_file() && entry.path().extension() == ".json")
+			{
+				try
+				{
+					std::ifstream file(entry.path());
+					Json jsonScene;
+					file >> jsonScene;
+
+					if (jsonScene.contains("m_id") && jsonScene.contains("m_name"))
+					{
+						sceneNames.push_back(jsonScene["m_name"].get<std::string>());
+					}
+				}
+				catch (const std::exception& e)
+				{
+					std::cerr << "Warning: Failed to parse potential scene file: " <<
+					entry.path() << " | " << e.what() << "\n";
+				}
+			}
+		}
+		return sceneNames;
 	}
 
 	Json SaveSystem::LoadJsonRuamConfig()
@@ -82,8 +114,6 @@ namespace RuamEngine
 		{
 			std::cerr << "Failed to find ruamConfig at path: " << ruamConfigPath << "! A new one is about to be created now\n";
 			RuamConfig ruamConfig;
-			MakeSureDefaultSceneExists();
-			ruamConfig.sceneNames.push_back("defaultScene");
 			Json jsonRuamConfig = Serial::Serialize(ruamConfig);
 
 			std::ofstream file(ruamConfigPath);

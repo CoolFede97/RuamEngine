@@ -27,8 +27,6 @@ namespace RuamEngine
 			ImGui::SameLine();
 			if (selectedEntity != nullptr)
 			{
-				// EventManager::Subscribe<OnKeyPressEvent>([](){selectedEntity->destroy();
-				// selectedEntity = nullptr;})
 				if (Input::GetKeyDown(KeyCode::Delete_Key))
 				{
 					selectedEntity->destroy();
@@ -201,4 +199,19 @@ namespace RuamEngine
 		else std::cerr << "Error: Couldn't find matching function in s_inspectorDrawers for a variable of type " << type.name() << " \n";
 	}
 
+	void Editor::UpdateSceneManager()
+	{
+		ImGui::Begin("Scenes");
+
+		for (std::string sceneName : SceneManager::scenes())
+		{
+			std::cout << sceneName << "\n";
+			if (ImGui::Selectable(sceneName.c_str()))
+			{
+				SceneManager::EnqueueSceneChange(sceneName);
+			}
+		}
+
+		ImGui::End();
+	}
 }

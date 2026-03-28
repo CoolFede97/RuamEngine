@@ -67,11 +67,8 @@ namespace RuamEngine
 			std::remove_if(m_entities.begin(), m_entities.end(), [](std::unique_ptr<Entity>& e){ return e->destroyFlag(); }),
 			m_entities.end()
 		);
-
 		m_componentsToStart = m_justCreatedComponents;
-
 		if (m_justCreatedComponents.size()>0) m_justCreatedComponents.clear();
-
 		for (auto& [entityId, map] : m_componentsToStart)
 		{
 			for (auto& [cmpType, cmpVec] : map)

@@ -99,5 +99,5 @@ imgui.ini
 # Audio
 *.wav
 *log*
-RuamEngine/MenuScene.json
-RuamEngine/SandboxScene.json
+
+!assets/**

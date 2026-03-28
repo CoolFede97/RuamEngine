@@ -300,14 +300,6 @@ target_include_directories(RuamUtils INTERFACE ${CMAKE_SOURCE_DIR}/RuamCore/Ruam
 
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
-# Scenes
-
-file(GLOB SCENES_SRC "${CMAKE_SOURCE_DIR}/assets/scenes/*.cpp")
-add_library(Scenes STATIC ${SCENES_SRC})
-target_include_directories(Scenes PUBLIC "${CMAKE_SOURCE_DIR}/assets/scenes")
-target_link_libraries(Scenes PUBLIC Vendor Maths Rendering ECS)
-
-# ///////////////////////////////////////////////////////////////////////////////////////////////
 
 # Audio
 
@@ -325,7 +317,7 @@ file (GLOB ECS_SRC "${CMAKE_SOURCE_DIR}/RuamCore/ECS/*.cpp")
 file (GLOB COMPONENTS_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Components/*.cpp")
 add_library(ECS STATIC ${ECS_SRC} ${COMPONENTS_SRC})
 target_include_directories(ECS PUBLIC "${CMAKE_SOURCE_DIR}/RuamCore/ECS" "${CMAKE_SOURCE_DIR}/RuamCore/Components")
-target_link_libraries(ECS PUBLIC Serialization Audio RuamUtils Time Scenes Core)
+target_link_libraries(ECS PUBLIC Serialization Audio RuamUtils Time Core)
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -334,7 +326,7 @@ target_link_libraries(ECS PUBLIC Serialization Audio RuamUtils Time Scenes Core)
 file (GLOB SERIALIZATION_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Serialization/*.cpp")
 add_library(Serialization STATIC ${SERIALIZATION_SRC})
 target_include_directories(Serialization PUBLIC "${CMAKE_SOURCE_DIR}/RuamCore/Serialization")
-target_link_libraries(Serialization PUBLIC ECS Audio RuamUtils Time Scenes SaveSystem)
+target_link_libraries(Serialization PUBLIC ECS Audio RuamUtils Time SaveSystem)
 
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -344,7 +336,7 @@ target_link_libraries(Serialization PUBLIC ECS Audio RuamUtils Time Scenes SaveS
 file (GLOB COMPONENTS_ASSETS_SRC "${CMAKE_SOURCE_DIR}/assets/components/*.cpp")
 add_library(AssetsComponents STATIC ${COMPONENTS_ASSETS_SRC})
 target_include_directories(AssetsComponents PUBLIC "${CMAKE_SOURCE_DIR}/assets/components")
-target_link_libraries(AssetsComponents PUBLIC Scenes ECS)
+target_link_libraries(AssetsComponents PUBLIC ECS)
 
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -362,7 +354,7 @@ target_include_directories(EventSystem INTERFACE ${CMAKE_SOURCE_DIR}/RuamCore/Ev
 
 file (GLOB CORE_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Core/*.cpp")
 add_library(Core STATIC ${CORE_SRC})
-target_link_libraries(Core PUBLIC Rendering ECS AssetsComponents Input Time Scenes SaveSystem)
+target_link_libraries(Core PUBLIC Rendering ECS AssetsComponents Input Time SaveSystem)
 target_include_directories(Core INTERFACE ${CMAKE_SOURCE_DIR}/RuamCore/Core)
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -379,7 +371,7 @@ target_include_directories(SaveSystem INTERFACE ${CMAKE_SOURCE_DIR}/RuamCore/Sav
 # Linking
 
 target_link_libraries(RuamCore INTERFACE
-				Rendering Core Maths Time Files Input ECS RuamUtils Scenes Audio EventSystem AssetsComponents Serialization
+				Rendering Core Maths Time Files Input ECS RuamUtils Audio EventSystem AssetsComponents Serialization
 )
 
 # -----------------------------------------------------------------------------------------------------

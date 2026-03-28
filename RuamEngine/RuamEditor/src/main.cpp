@@ -5,9 +5,6 @@
 #include "backends/imgui_impl_opengl3.h"
 
 #include "SceneManager.h"
-#include "SandboxScene.cpp"
-#include "../../assets/scenes/InitialScene.cpp"
-#include "../../assets/scenes/EmptyScene.cpp"
 #include "Editor.h"
 
 using namespace RuamEngine;

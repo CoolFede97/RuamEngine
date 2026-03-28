@@ -61,5 +61,10 @@ namespace RuamEngine
         m_material.lock()->m_cubemap = m_cubemap;
     }
 
+    void Skybox::EmptySkybox()
+    {
+   		s_skybox = nullptr;
+    }
+
     REGISTER_COMPONENT(Skybox)
 }

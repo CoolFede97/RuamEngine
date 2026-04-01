@@ -15,15 +15,15 @@ namespace RuamEngine
 
 		SceneManager() = delete;
 
-		static const std::vector<std::string>& scenes();
+		static const std::vector<std::string>& Scenes();
 
 		static void ResetActiveScene();
 		static void ChangeActiveScene(const std::string &sceneName);
-		// static void SetActiveScene(Scene* scene);
 		static void EnqueueSceneChange(const std::string& sceneName);
 		static void ApplyPendingSceneChange();
 
 		static void UpdateScenes();
+		static bool CheckIfSceneAlreadyExists(std::string sceneName);
 
 		static Scene* ActiveScene();
 

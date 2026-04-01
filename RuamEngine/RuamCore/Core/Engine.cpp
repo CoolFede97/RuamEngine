@@ -61,13 +61,13 @@ namespace RuamEngine
         }
         s_started = true;
        	unsigned int frameCount = 0;
-        if (SceneManager::scenes().size()>0) SceneManager::EnqueueSceneChange(SceneManager::scenes()[0]);
+        if (SceneManager::Scenes().size()>0) SceneManager::EnqueueSceneChange(SceneManager::Scenes()[0]);
 
 
   		while (!Renderer::WindowShouldClose())
   		{
     		CheckIfWantToSaveChanges();
- 			if (SceneManager::scenes().size()>0) SceneManager::ApplyPendingSceneChange();
+ 			if (SceneManager::Scenes().size()>0) SceneManager::ApplyPendingSceneChange();
   		    // std::cout << "Frame count: " << frameCount++ << "\n";
 
  			// ImGUI

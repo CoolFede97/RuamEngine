@@ -9,6 +9,7 @@
 
 #include "GlobalLight.h"
 #include "SaveSystem.h"
+#include "Scene.h"
 #include "Skybox.h"
 #include "Camera.h"
 
@@ -21,7 +22,7 @@ namespace RuamEngine
 	SceneManager::SceneUPtr SceneManager::s_activeScene = nullptr;
 	bool SceneManager::s_pendingSceneChange = false;
 	std::string SceneManager::s_pendingSceneName;
-	const std::vector<std::string>& SceneManager::scenes()
+	const std::vector<std::string>& SceneManager::Scenes()
 	{
 		return s_scenes;
 	}
@@ -62,6 +63,13 @@ namespace RuamEngine
 		{
 			s_scenes.push_back(sceneName);
 		}
+	}
+
+	bool SceneManager::CheckIfSceneAlreadyExists(std::string sceneName)
+	{
+		auto it = std::find(s_scenes.begin(), s_scenes.end(), sceneName);
+		if (it != s_scenes.end()) return true;
+		return false;
 	}
 
 	Scene* SceneManager::ActiveScene() {

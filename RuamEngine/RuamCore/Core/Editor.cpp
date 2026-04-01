@@ -11,6 +11,7 @@
 #include "imgui.h"
 #include <typeindex>
 #include <utility>
+#include <cstring>
 
 namespace RuamEngine
 {
@@ -203,45 +204,63 @@ namespace RuamEngine
 
 	void Editor::UpdateSceneManager()
 	{
+		static bool nameError = false;
+		static char newSceneName[128] = "newScene";
 		ImGui::Begin("Scenes");
 
-		for (std::string sceneName : SceneManager::scenes())
+		for (std::string sceneName : SceneManager::Scenes())
 		{
-			if (ImGui::Button("+\n"))
-			{
-				ImGui::OpenPopup("CreateNewScene");
-			}
-			if (ImGui::BeginPopupModal("CreateNewScene"))
-			{
-				if (ImGui::IsMouseClicked(0) && !ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow))
-				{
-					ImGui::CloseCurrentPopup();
-				}
-
-				static char newSceneName[128] = "newScene";
-
-				ImGui::Text("Insert scene's name:");
-				ImGui::InputText("##sceneName", newSceneName, IM_ARRAYSIZE(newSceneName));
-
-				ImGui::Separator();
-
-				if (ImGui::Button("Create", ImVec2(120,0)))
-				{
-					SaveSystem::SaveCurrentScene();
-					SceneSPtr defaultScene = SceneManager::CreateDefaultScene(newSceneName);
-					SaveSystem::SaveScene(defaultScene.get());
-					SceneManager::UpdateScenes();
-					std::cout << "Scene created\n";
-					ImGui::CloseCurrentPopup();
-				}
-				ImGui::SetItemDefaultFocus();
-    			ImGui::SameLine();
-       			ImGui::EndPopup();
-			}
 			if (ImGui::Selectable(sceneName.c_str()))
 			{
 				SceneManager::EnqueueSceneChange(sceneName);
 			}
+		}
+		if (ImGui::Button("+\n"))
+		{
+			nameError = false;
+			std::strncpy(newSceneName, "newScene", sizeof(newSceneName));
+			newSceneName[sizeof(newSceneName) - 1] = '\0';
+			ImGui::OpenPopup("CreateNewScene");
+		}
+		if (ImGui::BeginPopupModal("CreateNewScene"))
+		{
+			if (ImGui::IsMouseClicked(0) && !ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow))
+			{
+				ImGui::CloseCurrentPopup();
+			}
+
+
+			ImGui::Text("Insert scene's name:");
+			bool enterPressed = ImGui::InputText("##sceneName", newSceneName, IM_ARRAYSIZE(newSceneName), ImGuiInputTextFlags_EnterReturnsTrue);
+
+
+			ImGui::Separator();
+
+			if (enterPressed)
+			{
+				if (SceneManager::CheckIfSceneAlreadyExists(newSceneName))
+				{
+					nameError = true;
+				}
+				else
+				{
+					if (SceneManager::Scenes().size()>0) SaveSystem::SaveCurrentScene();
+					SceneSPtr newScene = SceneManager::CreateDefaultScene(newSceneName);
+					SaveSystem::SaveScene(newScene.get());
+					SceneManager::UpdateScenes();
+					SceneManager::EnqueueSceneChange(newScene->name());
+					std::cout << "Scene created\n";
+					ImGui::CloseCurrentPopup();
+				}
+			}
+			if (nameError)
+			{
+				std::cout << "Name already used!\n";
+				ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Name already used!");
+			}
+			ImGui::SetItemDefaultFocus();
+ 			ImGui::SameLine();
+ 			ImGui::EndPopup();
 		}
 
 		ImGui::End();

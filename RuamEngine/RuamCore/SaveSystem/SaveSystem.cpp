@@ -48,6 +48,7 @@ namespace RuamEngine
 
 	void SaveSystem::SaveCurrentScene()
 	{
+		if (SceneManager::ActiveScene() == nullptr) std::cerr << "Error: Trying to save active scene, but active scene is nullptr!\n";
 		SaveJsonScene(Serial::Serialize(SceneManager::ActiveScene()));
 		std::cout << "Changes saved successfully!\n";
 	}

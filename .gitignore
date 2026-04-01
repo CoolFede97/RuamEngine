@@ -85,7 +85,6 @@ CMakeUserPresets.json
 *.mp4
 *.mp3
 *.jpg
-*.png
 *.gif
 
 # Archivos del sistema

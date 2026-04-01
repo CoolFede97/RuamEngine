@@ -2,6 +2,7 @@
 #include "Entity.h"
 #include "Component.h"
 #include "EventManager.h"
+#include "KeyCode.h"
 #include "SaveSystem.h"
 #include "Scene.h"
 #include "SceneManager.h"
@@ -156,26 +157,8 @@ namespace RuamEngine
 		ImGui::Text(selectedEntity->name().c_str());
 		ImGui::SetWindowFontScale(1.0f);
 		ImGui::SameLine();
-		if (ImGui::Button("+"))
-		{
-			ImGui::OpenPopup("addComponent");
-		}
 
-		if (ImGui::BeginPopup("addComponent"))
-		{
-			ImGui::Text("Add a component:");
-			ImGui::Separator();
-
-			for (auto& [cmpName, factory] : Component::componentRegistry)
-			{
-				if (cmpName == "Transform" || cmpName == "Component") continue;
-				if (ImGui::Selectable(cmpName.c_str()))
-				{
-					factory.addComponent(selectedEntity);
-				}
-			}
-			ImGui::EndPopup();
-		}
+		DrawAddComponentButton();
 
 		Scene* scene = SceneManager::ActiveScene();
 		if (scene != nullptr)
@@ -196,6 +179,30 @@ namespace RuamEngine
 		ImGui::End();
 	}
 
+	void Editor::DrawAddComponentButton()
+	{
+		if (ImGui::Button("+"))
+		{
+			ImGui::OpenPopup("addComponent");
+		}
+
+		if (ImGui::BeginPopup("addComponent"))
+		{
+			ImGui::Text("Add a component:");
+			ImGui::Separator();
+
+			for (auto& [cmpName, factory] : Component::componentRegistry)
+			{
+				if (cmpName == "Transform" || cmpName == "Component") continue;
+				if (ImGui::Selectable(cmpName.c_str()))
+				{
+					factory.addComponent(selectedEntity);
+				}
+			}
+			ImGui::EndPopup();
+		}
+	}
+
 	void Editor::DrawMemberInInspector(const std::string& name, const std::type_index& type, void* value, std::function<void()>* callbackOnChange)
 	{
 	    if (s_inspectorDrawers.find(type) != s_inspectorDrawers.end())	s_inspectorDrawers[type](name, value, callbackOnChange);
@@ -204,8 +211,6 @@ namespace RuamEngine
 
 	void Editor::UpdateSceneManager()
 	{
-		static bool nameError = false;
-		static char newSceneName[128] = "newScene";
 		ImGui::Begin("Scenes");
 
 		for (std::string sceneName : SceneManager::Scenes())
@@ -215,6 +220,13 @@ namespace RuamEngine
 				SceneManager::EnqueueSceneChange(sceneName);
 			}
 		}
+		DrawCreateSceneButton();
+	}
+
+	void Editor::DrawCreateSceneButton()
+	{
+		static bool nameError = false; // True if the user tries to create a scene with a name that is already used
+		static char newSceneName[128] = "newScene";
 		if (ImGui::Button("+\n"))
 		{
 			nameError = false;
@@ -224,15 +236,13 @@ namespace RuamEngine
 		}
 		if (ImGui::BeginPopupModal("CreateNewScene"))
 		{
-			if (ImGui::IsMouseClicked(0) && !ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow))
+			if (Input::GetKeyDown(KeyCode::Escape_Key) || (ImGui::IsMouseClicked(0) && !ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow)))
 			{
 				ImGui::CloseCurrentPopup();
 			}
 
-
 			ImGui::Text("Insert scene's name:");
 			bool enterPressed = ImGui::InputText("##sceneName", newSceneName, IM_ARRAYSIZE(newSceneName), ImGuiInputTextFlags_EnterReturnsTrue);
-
 
 			ImGui::Separator();
 
@@ -255,14 +265,12 @@ namespace RuamEngine
 			}
 			if (nameError)
 			{
-				std::cout << "Name already used!\n";
 				ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Name already used!");
 			}
 			ImGui::SetItemDefaultFocus();
- 			ImGui::SameLine();
- 			ImGui::EndPopup();
+			ImGui::SameLine();
+			ImGui::EndPopup();
 		}
-
 		ImGui::End();
 	}
 }

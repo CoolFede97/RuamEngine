@@ -15,8 +15,11 @@ namespace RuamEngine
 		static void UpdateHierarchy();
 		static void UpdateInspector();
 		static void UpdateSceneManager(); // Doesn't update anything from the class SceneManager itself. It refers to the UI.
-		static void DrawEntityFamily(Entity* entity);
 
+		static void DrawAddComponentButton();
+		static void DrawCreateSceneButton();
+
+		static void DrawEntityFamily(Entity* entity);
 		static void DrawMemberInInspector(const std::string& name, const std::type_index& type, void* value, std::function<void()>* callbackOnChange);
 
 		#define DRAW_MEMBER_NAME(name)  \

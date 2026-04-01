@@ -29,7 +29,6 @@ namespace RuamEngine
 		};
 		for (Component* cmp : entity->getComponents())
 		{
-			std::cout << typeid(cmp).name() << "\n";
 			Json jsonCmp = *cmp;
 			jsonEntity["m_components"].push_back(jsonCmp);
 		}

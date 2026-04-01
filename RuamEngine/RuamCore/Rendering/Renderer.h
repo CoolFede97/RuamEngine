@@ -16,21 +16,6 @@ namespace RuamEngine
 	class DrawingData;
 	class ResourceManager;
 
-    enum SSBOType
-    {
-        vertices = 0,
-        indices = 1,
-        modelMatrices = 2,
-        textures2D = 3,
-        cubemaps = 4
-    };
-
-    enum ShaderProgramType
-    {
-        general = 0,
-        skybox = 1
-    };
-
     // General data
     struct RendererConfig
     {

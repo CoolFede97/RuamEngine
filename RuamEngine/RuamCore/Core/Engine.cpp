@@ -121,8 +121,7 @@ namespace RuamEngine
     {
     	if (Input::GetKey(KeyCode::LeftControl_Key) && Input::GetKeyDown(KeyCode::S_Key))
      	{
-			SaveSystem::SaveJsonScene(Serial::Serialize(SceneManager::ActiveScene()));
-			std::cout << "Changes saved successfully!\n";
+			SaveSystem::SaveCurrentScene();
       	}
     }
 

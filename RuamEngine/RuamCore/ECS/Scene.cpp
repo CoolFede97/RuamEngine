@@ -2,6 +2,7 @@
 #include "SceneManager.h"
 #include "Entity.h"
 #include "Component.h"
+#include "Transform.h"
 #include <functional>
 
 namespace RuamEngine
@@ -9,12 +10,12 @@ namespace RuamEngine
 
 	unsigned int Scene::s_idCount = 0;
 	const std::string Scene::s_defaultName = "Sample Scene";
-	std::map<unsigned int, std::map<std::type_index, std::vector<Component*>>> Scene::m_componentsToStart;
-	std::map<unsigned int, std::map<std::type_index, std::vector<Component*>>> Scene::m_justCreatedComponents;
 
 	Entity* Scene::createEntity()
 	{
 		std::unique_ptr<Entity> entity = std::make_unique<Entity>();
+		entity->m_parentScene = this;
+		entity->m_transform = entity->addComponent<Transform>();
 		Entity* entity_ptr = entity.get();
 	    m_entities.push_back(std::move(entity));
 	    return entity_ptr;
@@ -23,6 +24,8 @@ namespace RuamEngine
 	Entity* Scene::createEntity(const std::string& name)
 	{
 		std::unique_ptr<Entity> entity = std::make_unique<Entity>();
+		entity->m_parentScene = this;
+		entity->m_transform = entity->addComponent<Transform>();
 		entity->setName(name);
 		Entity* entity_ptr = entity.get();
 		m_entities.push_back(std::move(entity));
@@ -34,6 +37,8 @@ namespace RuamEngine
 	    // Going to have to check this
 	    //assert(idx < m_entities.size());
 		std::unique_ptr<Entity> entity = std::make_unique<Entity>();
+		entity->m_parentScene = this;
+		entity->m_transform = entity->addComponent<Transform>();
 	    auto index = m_entities.cbegin();
 	    std::advance(index, idx);
 		Entity* entity_ptr = entity.get();

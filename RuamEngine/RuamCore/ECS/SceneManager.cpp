@@ -28,9 +28,6 @@ namespace RuamEngine
 
 	void SceneManager::ChangeActiveScene(const std::string &sceneName)
 	{
-		Scene::m_componentsToStart.clear();
-		Scene::m_justCreatedComponents.clear();
-
 		RuamEngine::Camera::EmptyMainCamera();
 		RuamEngine::Skybox::EmptySkybox();
 
@@ -71,9 +68,9 @@ namespace RuamEngine
 		return s_activeScene.get();
 	}
 
-	SceneSPtr SceneManager::CreateDefaultScene()
+	SceneSPtr SceneManager::CreateDefaultScene(std::string sceneName)
 	{
-		SceneSPtr scene = std::make_shared<Scene>(0, "defaultScene");
+		SceneSPtr scene = std::make_shared<Scene>(0, sceneName);
 		Entity* light = scene->createEntity();
 		light->addComponent<GlobalLight>();
 		light->transform().setPosition(glm::vec3(0.0f, 100.0f, 0.0f));

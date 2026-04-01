@@ -2,6 +2,8 @@
 #include "Entity.h"
 #include "Component.h"
 #include "EventManager.h"
+#include "SaveSystem.h"
+#include "Scene.h"
 #include "SceneManager.h"
 #include "Input.h"
 #include "Transform.h"
@@ -205,7 +207,37 @@ namespace RuamEngine
 
 		for (std::string sceneName : SceneManager::scenes())
 		{
-			std::cout << sceneName << "\n";
+			if (ImGui::Button("+\n"))
+			{
+				ImGui::OpenPopup("CreateNewScene");
+			}
+			if (ImGui::BeginPopupModal("CreateNewScene"))
+			{
+				if (ImGui::IsMouseClicked(0) && !ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow))
+				{
+					ImGui::CloseCurrentPopup();
+				}
+
+				static char newSceneName[128] = "newScene";
+
+				ImGui::Text("Insert scene's name:");
+				ImGui::InputText("##sceneName", newSceneName, IM_ARRAYSIZE(newSceneName));
+
+				ImGui::Separator();
+
+				if (ImGui::Button("Create", ImVec2(120,0)))
+				{
+					SaveSystem::SaveCurrentScene();
+					SceneSPtr defaultScene = SceneManager::CreateDefaultScene(newSceneName);
+					SaveSystem::SaveScene(defaultScene.get());
+					SceneManager::UpdateScenes();
+					std::cout << "Scene created\n";
+					ImGui::CloseCurrentPopup();
+				}
+				ImGui::SetItemDefaultFocus();
+    			ImGui::SameLine();
+       			ImGui::EndPopup();
+			}
 			if (ImGui::Selectable(sceneName.c_str()))
 			{
 				SceneManager::EnqueueSceneChange(sceneName);

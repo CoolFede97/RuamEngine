@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Renderer.h"
+#include "ShaderProgram.h"
 #include "RenderUnit.h"
 #include "Component.h"
 #include <string>

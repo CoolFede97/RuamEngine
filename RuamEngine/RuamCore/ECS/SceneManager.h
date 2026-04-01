@@ -33,7 +33,7 @@ namespace RuamEngine
 
 		static void RemoveScene(const std::string& sceneName);
 
-		static SceneSPtr CreateDefaultScene();
+		static SceneSPtr CreateDefaultScene(std::string sceneName = "defaultScene");
 
 		static bool SceneChange();
 

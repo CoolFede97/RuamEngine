@@ -11,7 +11,6 @@ namespace RuamEngine
 	Entity::Entity(const std::string& name)
 	: m_id(s_idCount++), m_name(name)
 	{
-		m_transform = addComponent<Transform>();
 	}
 
 	Entity::~Entity()
@@ -127,7 +126,8 @@ namespace RuamEngine
 
 	void Entity::addCompToJustCreatedComponents(std::type_index tidx)
 	{
-		Scene::m_justCreatedComponents[m_id][tidx].push_back(m_components[tidx].back().get());
+		if (m_parentScene == nullptr) std::cout << "No existe perri\n";
+		m_parentScene->m_justCreatedComponents[m_id][tidx].push_back(m_components[tidx].back().get());
 	}
 
 }

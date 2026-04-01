@@ -30,6 +30,7 @@ namespace RuamEngine
 
 	void SaveSystem::SaveJsonScene(const Json &jsonScene)
 	{
+		std::cout << "KQODFKWOFKWEF\n";
 		fs::create_directories(scenesDir);
 
 		std::string fileName = jsonScene["m_name"].get<std::string>() + ".json";
@@ -41,7 +42,19 @@ namespace RuamEngine
 			std::cerr << "Failed to open file: " << filePath << " when saving scene of name " << jsonScene["m_name"] << "\n";
 		}
 		file << jsonScene.dump(1);
+		std::cout << "LISTOOO\n";
 		file.close();
+	}
+
+	void SaveSystem::SaveCurrentScene()
+	{
+		SaveJsonScene(Serial::Serialize(SceneManager::ActiveScene()));
+		std::cout << "Changes saved successfully!\n";
+	}
+
+	void SaveSystem::SaveScene(Scene* scene)
+	{
+		SaveJsonScene(Serial::Serialize(scene));
 	}
 
 	std::vector<std::string> SaveSystem::LoadAllSavedSceneNames()

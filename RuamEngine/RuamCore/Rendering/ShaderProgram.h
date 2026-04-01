@@ -13,6 +13,12 @@
 
 namespace RuamEngine
 {
+	enum ShaderProgramType
+    {
+        general = 0,
+        skybox = 1
+    };
+
 	class ShaderProgram
 	{
 		// caching for uniforms

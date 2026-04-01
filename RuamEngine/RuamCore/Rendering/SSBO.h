@@ -7,7 +7,16 @@
 
 namespace RuamEngine
 {
-	template<typename T>
+	enum SSBOType
+    {
+        vertices = 0,
+        indices = 1,
+        modelMatrices = 2,
+        textures2D = 3,
+        cubemaps = 4
+    };
+
+    template<typename T>
 	class SSBO
 	{
 	private:

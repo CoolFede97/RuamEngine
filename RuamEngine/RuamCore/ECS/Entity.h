@@ -179,12 +179,14 @@ namespace RuamEngine
 		static unsigned int s_idCount;
 	    std::string m_name;
 		Transform* m_transform = nullptr;
-
+		Scene* m_parentScene = nullptr;
 		ComponentListMap m_components;
 
 		bool m_enabled = true;
 		bool m_destroyFlag = false;
 
 		static const std::string s_defaultName;
+
+		friend class Scene;
 	};
 }

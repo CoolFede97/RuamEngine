@@ -11,11 +11,11 @@ namespace RuamEngine
         if (s_mainLight == this) s_mainLight = nullptr;
 	}
 
-	void GlobalLight::setLightColor(Vec4 color)
+	void GlobalLight::SetLightColor(Vec4 color)
 	{
 		m_color = color;
 	}
-	void GlobalLight::setLightOffset(float offset)
+	void GlobalLight::SetLightOffset(float offset)
 	{
 		m_lightOffset = offset;
 	}
@@ -24,10 +24,10 @@ namespace RuamEngine
 	{
 		if (!s_mainLight) s_mainLight = this;
 		else if (s_mainLight != this) entity()->removeComponent<GlobalLight>(); // PREGUNTARLE A TOMI COMO HACER QUE ESTO BORRE A �ESTE! COMPONENTE
-		setLightColor(m_color);
+		SetLightColor(m_color);
 	}
 
-	void GlobalLight::loadLightSettings(ShaderProgramSPtr program)
+	void GlobalLight::LoadLightSettings(ShaderProgramSPtr program)
 	{
 	    program->setUniform4f("u_globalLightColor", m_color.x, m_color.y, m_color.z, m_color.w);
 		program->setUniform1f("u_lightOffset", m_lightOffset);

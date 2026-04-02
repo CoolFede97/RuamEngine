@@ -25,9 +25,9 @@ namespace RuamEngine
 		IMPL_SIMPLE_SERIALIZE(GlobalLight)
 		using Component::Component;
 		~GlobalLight();
-		static void setLightColor(Vec4 color);
+		static void SetLightColor(Vec4 color);
 
-		static void setLightOffset(float offset);
+		static void SetLightOffset(float offset);
 
 		std::string name() override { return "GlobalLight"; }
 
@@ -35,7 +35,7 @@ namespace RuamEngine
 
 		void render(){};
 
-		static void loadLightSettings(ShaderProgramSPtr program);
+		static void LoadLightSettings(ShaderProgramSPtr program);
 
 	};
 	REGISTER_COMPONENT(GlobalLight);

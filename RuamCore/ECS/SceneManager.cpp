@@ -30,7 +30,6 @@ namespace RuamEngine
 	void SceneManager::ChangeActiveScene(const std::string &sceneName)
 	{
 		RuamEngine::Camera::EmptyMainCamera();
-		RuamEngine::Skybox::EmptySkybox();
 
 		Editor::selectedEntity = nullptr;
 		s_activeScene = nullptr;
@@ -83,11 +82,6 @@ namespace RuamEngine
 		light->addComponent<GlobalLight>();
 		light->transform().setPosition(glm::vec3(0.0f, 100.0f, 0.0f));
 		light->setName("Light");
-
-		Entity* skybox = scene->createEntity();
-		skybox->setName("Skybox");
-		skybox->transform().setScale(glm::vec3(50,50,50));
-		skybox->addComponent<Skybox>();
 
 		Entity* player = scene->createEntity();
 		player->transform().setPosition(glm::vec3(50.0f, 20.0f, 160.0f));

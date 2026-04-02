@@ -6,6 +6,7 @@
 #include "RenderingCore.h"
 #include "ResourceManager.h"
 #include "ShaderProgram.h"
+#include "Skybox.h"
 #include <cstddef>
 #include <memory>
 
@@ -68,6 +69,7 @@ namespace RuamEngine
             AllocateTextureTypes();
 
             ResourceManager::Init();
+            Skybox::Init();
         }
 
     }
@@ -356,19 +358,15 @@ namespace RuamEngine
         {
 			drawingData->m_program->updateCameraMatrices();
 
-			// std::cout << "Units size: " << drawingData->m_renderUnits.size() << "\n";
-
 			for (auto& [materialId, renderUnit] : drawingData->m_renderUnits)
             {
-           	// std::cout << "Vertices size: "<< renderUnit->m_vertices->m_data.size() << "\n";
-
              	// The vertex array is useless and doesn't contain any information since I use SSBOs to pass the data into the shader.
              	// It's just there in order to satisfy OpenGL because it need to have one bound
            		renderUnit->m_vertexArray->bind();
 
                 ShaderProgramSPtr program = drawingData->m_program;
                 program->bind();
-                GlobalLight::loadLightSettings(program);
+                GlobalLight::LoadLightSettings(program);
                 program->loadMaterial(*renderUnit->m_material.lock());
 
                 // Bind the SSBOs for this specific render unit
@@ -387,7 +385,7 @@ namespace RuamEngine
 
 		ShaderProgramSPtr program = renderUnit.m_drawingData.lock()->m_program;
 		program->bind();
-		GlobalLight::loadLightSettings(program);
+		GlobalLight::LoadLightSettings(program);
 
 		program->loadMaterial(*renderUnit.m_material.lock());
 

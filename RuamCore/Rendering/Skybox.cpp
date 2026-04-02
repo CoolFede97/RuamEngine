@@ -1,18 +1,15 @@
 #include "Skybox.h"
-#include "Component.h"
 #include "Cubemap.h"
 #include "Renderer.h"
 #include "RenderingCore.h"
 #include "ResourceManager.h"
-// #include <memory>
 
 namespace RuamEngine
 {
-    Skybox* Skybox::s_skybox = nullptr;
     GLuint Skybox::m_cubemap = 0;
     MaterialWPtr Skybox::m_material = {};
     RenderUnitSPtr Skybox::m_renderUnit = nullptr;
-
+    bool Skybox::s_initialized = false;
 
     std::vector<Vertex> Skybox::m_vertices = Vertex::createCube();
 
@@ -44,27 +41,17 @@ namespace RuamEngine
 
     void Skybox::SetSkybox(std::vector<std::string>& paths)
     {
-        s_skybox->m_cubemap = ResourceManager::LoadTexture<Cubemap>(paths).lock()->rendererIndex();
+        m_cubemap = ResourceManager::LoadTexture<Cubemap>(paths).lock()->rendererIndex();
     }
 
-    void Skybox::renderStart()
+    void Skybox::Init()
     {
-        if (s_skybox == nullptr) s_skybox = this;
-        else if (s_skybox != this) entity()->removeComponent<Skybox>();
-
+        s_initialized = true;
         m_material = ResourceManager::CreateMaterial();
         m_renderUnit = Renderer::CreateRenderUnit(ShaderProgramType::skybox, m_material);
         m_renderUnit->m_staticPosition = true;
         m_renderUnit->m_staticStorage = true;
         m_renderUnit->addBatchData(m_vertices, m_indices, {glm::mat4(1.0f)});
-
         m_material.lock()->m_cubemap = m_cubemap;
     }
-
-    void Skybox::EmptySkybox()
-    {
-   		s_skybox = nullptr;
-    }
-
-    REGISTER_COMPONENT(Skybox)
 }

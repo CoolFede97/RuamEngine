@@ -95,7 +95,7 @@ namespace RuamEngine
 
  			Input::UpdateInput();
 
- 			if (!SceneManager::SceneChange())
+ 			if (!SceneManager::SceneChange() && SceneManager::ActiveScene())
  			{
       		    Renderer::EndBatch();
           		Renderer::Draw();

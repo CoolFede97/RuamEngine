@@ -215,10 +215,31 @@ namespace RuamEngine
 
 		for (std::string sceneName : SceneManager::Scenes())
 		{
-			if (ImGui::Selectable(sceneName.c_str()))
+		    ImGui::PushID(sceneName.c_str());
+
+		    ImGui::Selectable(sceneName.c_str());
+			if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
 			{
 				SceneManager::EnqueueSceneChange(sceneName);
 			}
+			else if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+			{
+			    ImGui::OpenPopup("SceneOptions");
+			}
+			if (ImGui::BeginPopupContextItem("SceneOptions"))
+			{
+    			if (Input::GetKeyDown(KeyCode::Escape_Key))
+    			{
+    				ImGui::CloseCurrentPopup();
+    			}
+			    if (ImGui::Button("Delete"))
+				{
+				    std::cout << "Scene deleted: " << sceneName << "\n";
+					ImGui::CloseCurrentPopup();
+				}
+				ImGui::EndPopup();
+			}
+			ImGui::PopID();
 		}
 		DrawCreateSceneButton();
 	}
@@ -236,7 +257,7 @@ namespace RuamEngine
 		}
 		if (ImGui::BeginPopupModal("CreateNewScene"))
 		{
-			if (Input::GetKeyDown(KeyCode::Escape_Key) || (ImGui::IsMouseClicked(0) && !ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow)))
+			if (Input::GetKeyDown(KeyCode::Escape_Key))
 			{
 				ImGui::CloseCurrentPopup();
 			}

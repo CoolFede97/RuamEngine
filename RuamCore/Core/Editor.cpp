@@ -235,6 +235,9 @@ namespace RuamEngine
 			    if (ImGui::Button("Delete"))
 				{
 				    std::cout << "Scene deleted: " << sceneName << "\n";
+					SaveSystem::EraseScene(sceneName);
+					SceneManager::ResetActiveScene();
+					SceneManager::RemoveScene(sceneName);
 					ImGui::CloseCurrentPopup();
 				}
 				ImGui::EndPopup();

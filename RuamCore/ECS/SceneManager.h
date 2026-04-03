@@ -17,12 +17,13 @@ namespace RuamEngine
 
 		static const std::vector<std::string>& Scenes();
 
-		static void ResetActiveScene();
 		static void ChangeActiveScene(const std::string &sceneName);
 		static void EnqueueSceneChange(const std::string& sceneName);
 		static void ApplyPendingSceneChange();
 
 		static void UpdateScenes();
+		static void RemoveScene(std::string& sceneName);
+
 		static bool CheckIfSceneAlreadyExists(std::string sceneName);
 
 		static Scene* ActiveScene();
@@ -31,18 +32,20 @@ namespace RuamEngine
 
 		static void AddSceneCreator(const std::string& sceneName);
 
-		static void RemoveScene(const std::string& sceneName);
-
 		static SceneSPtr CreateDefaultScene(std::string sceneName = "defaultScene");
 
 		static bool SceneChange();
 
 		static SceneUPtr s_activeScene;
 	private:
+		static void ResetActiveScene(); // Makes active scene be nullptr
 		static void SetSceneChange(bool state);
+
 		static std::vector<std::string> s_scenes;
 		// static bool s_scene_change;
 		static bool s_pendingSceneChange;
 		static std::string s_pendingSceneName;
+
+		friend class Editor;
 	};
 }

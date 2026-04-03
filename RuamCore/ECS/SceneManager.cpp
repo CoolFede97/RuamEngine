@@ -64,6 +64,13 @@ namespace RuamEngine
 		}
 	}
 
+	void SceneManager::RemoveScene(std::string& sceneName)
+	{
+	    // Remove reorders the elements so that the ones with the value of sceneName end up in the end.
+		// Then erase erases from the beginning of those whose value is sceneName to the end.
+	    s_scenes.erase(std::remove(s_scenes.begin(),s_scenes.end(), sceneName), s_scenes.end());
+	}
+
 	bool SceneManager::CheckIfSceneAlreadyExists(std::string sceneName)
 	{
 		auto it = std::find(s_scenes.begin(), s_scenes.end(), sceneName);
@@ -73,6 +80,11 @@ namespace RuamEngine
 
 	Scene* SceneManager::ActiveScene() {
 		return s_activeScene.get();
+	}
+
+	void SceneManager::ResetActiveScene()
+	{
+	    s_activeScene = nullptr;
 	}
 
 	SceneSPtr SceneManager::CreateDefaultScene(std::string sceneName)
@@ -96,15 +108,6 @@ namespace RuamEngine
 	void SceneManager::AddSceneCreator(const std::string& sceneName)
 	{
 		s_scenes.push_back(sceneName);
-	}
-
-	void SceneManager::RemoveScene(const std::string& sceneName)
-	{
-		auto it = std::find(s_scenes.begin(), s_scenes.end(), sceneName);
-		if (it != s_scenes.end())
-		{
-			s_scenes.erase(it);
-		}
 	}
 
 	bool SceneManager::SceneChange() {

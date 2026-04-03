@@ -30,7 +30,6 @@ namespace RuamEngine
 
 	void SaveSystem::SaveJsonScene(const Json &jsonScene)
 	{
-		std::cout << "KQODFKWOFKWEF\n";
 		fs::create_directories(scenesDir);
 
 		std::string fileName = jsonScene["m_name"].get<std::string>() + ".json";
@@ -42,8 +41,20 @@ namespace RuamEngine
 			std::cerr << "Failed to open file: " << filePath << " when saving scene of name " << jsonScene["m_name"] << "\n";
 		}
 		file << jsonScene.dump(1);
-		std::cout << "LISTOOO\n";
 		file.close();
+	}
+
+	void SaveSystem::EraseScene(std::string sceneName)
+	{
+	    std::string fileName = sceneName + ".json";
+		fs::path filePath = scenesDir / fileName;
+
+		if (fs::exists(filePath))
+		{
+		    if (fs::remove(filePath)) std::cout << "Scene " << sceneName << "was erased succesfully\n";
+			else std::cout << "Failed to delete scene " << sceneName << "\n";
+		}
+		else std::cout << "Couldn't find file when trying to erase scene " << fileName << "\n";
 	}
 
 	void SaveSystem::SaveCurrentScene()

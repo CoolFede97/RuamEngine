@@ -20,6 +20,7 @@ namespace RuamEngine
 		static void SaveJsonScene(const Json& jsonScene);
 		static void SaveCurrentScene();
 		static void SaveScene(Scene* scene);
+		static void EraseScene(std::string sceneName);
 		static std::vector<std::string> LoadAllSavedSceneNames();
 
 		static Json LoadJsonRuamConfig();

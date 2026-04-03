@@ -94,7 +94,6 @@ namespace RuamEngine
 				continue;
 			}
 		}
-		std::cout << "End of DeserializeJsonScene\n";
 		return scene;
 	}
 

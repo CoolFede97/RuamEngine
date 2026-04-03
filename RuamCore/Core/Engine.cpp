@@ -100,7 +100,6 @@ namespace RuamEngine
       		    Renderer::EndBatch();
           		Renderer::Draw();
  			}
- 			else std::cout << "No se llamo a draw porque se acaba de cambiar de escena\n";
 
             ImGui::Render();
            	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

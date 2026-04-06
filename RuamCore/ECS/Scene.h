@@ -39,6 +39,7 @@ namespace RuamEngine
 
 	    Entity* getEntityByIdx(unsigned int idx) const;
 	    Entity* getEntityById(unsigned int id) const;
+		Entity* getEntityByName(std::string entityName) const;
 
 		std::list<Entity*> getEntities() const;
 

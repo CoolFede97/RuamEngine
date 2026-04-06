@@ -61,6 +61,14 @@ namespace RuamEngine
 	    return entity->get();
 	}
 
+	Entity* Scene::getEntityByName(std::string entityName) const
+	{
+	    auto entity = std::find_if(m_entities.begin(), m_entities.end(),
+        [&entityName](const std::unique_ptr<Entity>& e) { return e->name() == entityName; });
+
+        return entity != m_entities.end() ? entity->get() : nullptr;
+	}
+
 	void Scene::deleteEntityByIdx(unsigned int idx)
 	{
 	    m_entities.erase(std::next(m_entities.begin(), idx));

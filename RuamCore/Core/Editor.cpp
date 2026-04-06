@@ -24,11 +24,44 @@ namespace RuamEngine
 		Scene* scene = SceneManager::ActiveScene();
 		if (scene != nullptr)
 		{
+            static bool nameError = false; // True if the user tries to create an entity with a name that is already used
+ 			static char newEntityName[128] = "newEntity";
+
 			if (ImGui::Button("Create Entity"))
 			{
-				selectedEntity = scene->createEntity();
+			    nameError = false;
+				std::strncpy(newEntityName, "newEntity", sizeof(newEntityName));
+				newEntityName[sizeof(newEntityName) - 1] = '\0';
+			    ImGui::OpenPopup("CreateEntity");
 			}
 
+			ImGui::SetNextWindowSize(ImVec2(187, 95), ImGuiCond_Always);
+			if (ImGui::BeginPopupModal("CreateEntity",NULL, ImGuiWindowFlags_NoResize))
+			{
+    			if (Input::GetKeyDown(KeyCode::Escape_Key) || Input::GetMouseButtonDown(MouseCode::Mouse_Right))
+    			{
+    				ImGui::CloseCurrentPopup();
+    			}
+    		    if (ImGui::IsWindowAppearing()) ImGui::SetKeyboardFocusHere();
+                ImGui::SetNextItemWidth(-3.0f);
+			    bool enterPressed = ImGui::InputText("##entityName", newEntityName, IM_ARRAYSIZE(newEntityName), ImGuiInputTextFlags_EnterReturnsTrue);
+				ImGui::SetItemDefaultFocus();
+				if (enterPressed)
+				{
+				    bool nameAlreadyUsed = SceneManager::ActiveScene()->getEntityByName(newEntityName)!=nullptr;
+				    if (nameAlreadyUsed) nameError = true;
+                    else
+                    {
+                        SceneManager::ActiveScene()->createEntity(newEntityName);
+                        ImGui::CloseCurrentPopup();
+                    };
+				}
+				if (nameError)
+				{
+					ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Name already used!");
+				}
+				ImGui::EndPopup();
+			}
 			ImGui::SameLine();
 			if (selectedEntity != nullptr)
 			{
@@ -47,31 +80,6 @@ namespace RuamEngine
 				if (entity->transform().m_parent) continue;
 				DrawEntityFamily(entity);
 			}
-
-			ImGui::Separator();
-
-			if (selectedEntity != nullptr)
-			{
-				ImGui::Text("Selected: ");
-				ImGui::SameLine();
-				ImGui::TextColored(ImVec4(0.2f, 0.8f, 1.0f, 1.0f), "%s", selectedEntity->name().c_str());
-
-				static char nameBuffer[128];
-
-				static Entity* lastSelected = nullptr;
-
-				if (selectedEntity != lastSelected)
-				{
-					strcpy(nameBuffer, selectedEntity->name().c_str());
-					lastSelected = selectedEntity;
-				}
-
-				if (ImGui::InputText("##entity_name", nameBuffer, sizeof(nameBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
-				{
-					selectedEntity->setName(nameBuffer);
-				}
-			}
-
 		}
 		ImGui::End();
 	}
@@ -89,8 +97,25 @@ namespace RuamEngine
 		if (selected) flags |= ImGuiTreeNodeFlags_Selected;
 		if (childrenTransform.empty()) flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
 
-		bool opened = ImGui::TreeNodeEx(entity->name().c_str(), flags);
+		ImGui::PushID(entity->name().c_str());
 
+		bool opened = ImGui::TreeNodeEx(entity->name().c_str(), flags);
+		if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+		{
+            selectedEntity = entity;
+		    ImGui::OpenPopup("EntityOptions");
+		}
+		if (ImGui::BeginPopupContextItem("EntityOptions"))
+		{
+		    if (ImGui::Button("Delete"))
+			{
+			    std::cout << "Entity deleted: " << entity->name() << "\n";
+				if (selectedEntity == entity) selectedEntity = nullptr;
+				entity->destroy();
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
+		}
 		if (ImGui::IsItemClicked()) selectedEntity = entity;
 
 		if (opened && !childrenTransform.empty())
@@ -101,6 +126,7 @@ namespace RuamEngine
 			}
 			ImGui::TreePop();
 		}
+		ImGui::PopID();
 	}
 
 	std::unordered_map<std::type_index, SerializedMemberDrawer> Editor::s_inspectorDrawers =
@@ -196,6 +222,8 @@ namespace RuamEngine
 			{
 			    ImGui::OpenPopup("CreateNewComponent");
 			}
+			bool componentAdded = false;
+
 			if (ImGui::BeginPopup("CreateNewComponent"))
 			{
 			    static char newComponentName[128] = "";
@@ -207,6 +235,7 @@ namespace RuamEngine
 				    std::cout << "TODO: Component created\n";
 					newComponentName[0] = '\0';
 					ImGui::CloseCurrentPopup();
+					componentAdded = true;
 				}
 
 				ImGui::EndPopup();
@@ -218,8 +247,10 @@ namespace RuamEngine
 				if (ImGui::Selectable(cmpName.c_str()))
 				{
 					factory.addComponent(selectedEntity);
+					componentAdded = true;
 				}
 			}
+			if (componentAdded) ImGui::CloseCurrentPopup();
 			ImGui::EndPopup();
 		}
 	}

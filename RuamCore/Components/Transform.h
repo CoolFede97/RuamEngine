@@ -62,10 +62,12 @@ namespace RuamEngine
 	protected:
 		TRANSFORM_SERIALIZED_MEMBERS(DECL_MEMBER)
 
+	private:
+		DECL_REGISTER_COMPONENT(Transform)
 	public:
 
 	IMPL_SERIALIZE(Transform,
 		TRANSFORM_SERIALIZED_MEMBERS(SER_FIELD, ,))
-	};
 
+	};
 }

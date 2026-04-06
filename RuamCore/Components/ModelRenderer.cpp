@@ -108,6 +108,5 @@ namespace RuamEngine
           	ru->m_meshesRegistered.push_back(mesh->id());
    		}
    	}
-
-    REGISTER_COMPONENT(ModelRenderer);
+    DEF_REGISTER_COMPONENT(ModelRenderer);
 }

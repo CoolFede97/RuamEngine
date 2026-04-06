@@ -119,5 +119,5 @@ namespace RuamEngine
 		std::advance(iter, idx);
 		return *iter;
 	}
-	REGISTER_COMPONENT(Transform);
+	DEF_REGISTER_COMPONENT(Transform);
 }

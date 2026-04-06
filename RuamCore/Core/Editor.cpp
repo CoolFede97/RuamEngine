@@ -1,4 +1,5 @@
 #include "Editor.h"
+#include "Cursor.h"
 #include "Entity.h"
 #include "Component.h"
 #include "EventManager.h"
@@ -191,6 +192,26 @@ namespace RuamEngine
 			ImGui::Text("Add a component:");
 			ImGui::Separator();
 
+			if (ImGui::Button("Create component"))
+			{
+			    ImGui::OpenPopup("CreateNewComponent");
+			}
+			if (ImGui::BeginPopup("CreateNewComponent"))
+			{
+			    static char newComponentName[128] = "";
+				if (ImGui::IsWindowAppearing()) ImGui::SetKeyboardFocusHere();
+
+				bool enterPressed = ImGui::InputText("Name", newComponentName, IM_ARRAYSIZE(newComponentName), ImGuiInputTextFlags_EnterReturnsTrue);
+				if (enterPressed)
+				{
+				    std::cout << "TODO: Component created\n";
+					newComponentName[0] = '\0';
+					ImGui::CloseCurrentPopup();
+				}
+
+				ImGui::EndPopup();
+			}
+
 			for (auto& [cmpName, factory] : Component::componentRegistry)
 			{
 				if (cmpName == "Transform" || cmpName == "Component") continue;
@@ -217,7 +238,9 @@ namespace RuamEngine
 		{
 		    ImGui::PushID(sceneName.c_str());
 
-		    ImGui::Selectable(sceneName.c_str());
+			bool isSelected = sceneName == SceneManager::ActiveScene()->name();
+
+		    ImGui::Selectable(sceneName.c_str(), isSelected);
 			if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
 			{
 				SceneManager::EnqueueSceneChange(sceneName);
@@ -228,10 +251,6 @@ namespace RuamEngine
 			}
 			if (ImGui::BeginPopupContextItem("SceneOptions"))
 			{
-    			if (Input::GetKeyDown(KeyCode::Escape_Key))
-    			{
-    				ImGui::CloseCurrentPopup();
-    			}
 			    if (ImGui::Button("Delete"))
 				{
 				    std::cout << "Scene deleted: " << sceneName << "\n";
@@ -260,10 +279,11 @@ namespace RuamEngine
 		}
 		if (ImGui::BeginPopupModal("CreateNewScene"))
 		{
-			if (Input::GetKeyDown(KeyCode::Escape_Key))
+			if (Input::GetKeyDown(KeyCode::Escape_Key) || Input::GetMouseButtonDown(MouseCode::Mouse_Right))
 			{
 				ImGui::CloseCurrentPopup();
 			}
+		    if (ImGui::IsWindowAppearing()) ImGui::SetKeyboardFocusHere();
 
 			ImGui::Text("Insert scene's name:");
 			bool enterPressed = ImGui::InputText("##sceneName", newSceneName, IM_ARRAYSIZE(newSceneName), ImGuiInputTextFlags_EnterReturnsTrue);

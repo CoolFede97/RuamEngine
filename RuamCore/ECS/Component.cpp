@@ -27,6 +27,5 @@ namespace RuamEngine
 	{
 		return entity()->transform();
 	}
-
-	REGISTER_COMPONENT(Component);
+	DEF_REGISTER_COMPONENT(Component)
 }

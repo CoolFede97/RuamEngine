@@ -45,5 +45,7 @@ namespace RuamEngine
 		void start() { setAsMainCamera();};
 		std::string name() override { return "Camera"; }
 		IMPL_SERIALIZE(Camera, CAMERA_SERIALIZED_MEMBERS(SER_FIELD, ,))
+	private:
+		DECL_REGISTER_COMPONENT(Camera)
 	};
 }

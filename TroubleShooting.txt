@@ -1,5 +1,18 @@
+------------------------------------------------------------------------------------------------
 Json is not defined ----------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
 
 Make sure you have added this line to json.hpp (probably located at build/_deps/json-src/include/nlohmann):
 
 using Json = nlohmann::json;
+
+------------------------------------------------------------------------------------------------
+The component you created is not displayed in the add component button -------------------------
+------------------------------------------------------------------------------------------------
+
+Make sure you called
+NameOfYourComponentRegister()
+in the file ComponentsInitializer.cpp.
+If your component doesn't have that function, you probably forgot to use these macros:
+DECL_REGISTER_COMPONENT(ComponentName)  // Use this one at the end of your component class declaration (.h)
+DEF_REGISTER_COMPONENT(ComponentName)   // Use this one at the end of your component class definition (.cpp)

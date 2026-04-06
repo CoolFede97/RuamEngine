@@ -40,5 +40,5 @@ namespace RuamEngine
 		return s_mainCamera;
 	}
 
-	REGISTER_COMPONENT(Camera);
+	DEF_REGISTER_COMPONENT(Camera);
 }

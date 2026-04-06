@@ -9,6 +9,7 @@
 #include "Scene.h"
 #include "SceneManager.h"
 #include "Serial.h"
+#include "ComponentsInitializer.h"
 
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
@@ -28,6 +29,7 @@ namespace RuamEngine
             return;
         }
         Renderer::Init();
+        ComponentsInitializer::InitComponents();
     	AudioSystem::init();
 
   		Input::SetWindow(Renderer::GetWindow());

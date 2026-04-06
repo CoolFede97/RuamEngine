@@ -39,5 +39,5 @@ namespace RuamEngine
 			entity()->transform().position() += static_cast<glm::vec3>(left * -m_horizontalDirection.x * Time::DeltaTime() * m_speed);
 
 		};
-    REGISTER_COMPONENT(CameraController);
+    // REGISTER_COMPONENT(CameraController);
 }

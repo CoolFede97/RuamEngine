@@ -1,4 +1,5 @@
 #pragma once
+#include "ComponentsInitializer.h"
 #include "nlohmann/json.hpp"
 #include <map>
 #include <memory>
@@ -38,30 +39,26 @@ virtual operator Json() const override \
 	}; \
 } \
 
-// Registers a function in Component::componentRegistry that add a component to the entity parameter
-#define REGISTER_COMPONENT(ComponentName) \
-namespace \
-{ \
-	struct ComponentName##Register \
+#define DECL_REGISTER_COMPONENT(ComponentName) \
+	static void ComponentName##Register(); \
+	friend class ComponentsInitializer;
+
+#define DEF_REGISTER_COMPONENT(ComponentName) \
+	void ComponentName::ComponentName##Register() \
 	{ \
-		ComponentName##Register() \
-		{ \
-			Component::componentRegistry.insert(std::make_pair(	\
-			#ComponentName, \
-			ComponentFactory{ \
-				[](Entity* entity) -> Component* \
-				{ \
-					return entity->addComponent<ComponentName>(); \
-				}, \
-				[](const Json& componentData, Entity* entity) -> Component* \
-				{ \
-					return entity->addComponentWithJson<ComponentName>(componentData); \
-				} \
-			})); \
-		} \
-	}; \
-	static ComponentName##Register global##ComponentName##Register; \
-} \
+		Component::componentRegistry.insert(std::make_pair(	\
+		#ComponentName, \
+		ComponentFactory{ \
+			[](Entity* entity) -> Component* \
+			{ \
+				return entity->addComponent<ComponentName>(); \
+			}, \
+			[](const Json& componentData, Entity* entity) -> Component* \
+			{ \
+				return entity->addComponentWithJson<ComponentName>(componentData); \
+			} \
+		})); \
+	} \
 
 // Macros para declaración de miembros
 #define DECL_MEMBER(name, type, initialValue, callbackOnInspectorChange /* unused */) type name = initialValue;
@@ -147,22 +144,8 @@ namespace RuamEngine
 		bool m_destroyFlag = false;
 
 	public:
+	    DECL_REGISTER_COMPONENT(Component)
 	};
 
 	using ComponentUPtr = std::unique_ptr<Component>;
-
-	// class BaseRenderer : public Component {
-	// public:
-	// 	using Component::Component;
-
-	// 	virtual void render() = 0;
-
-	// 	void start() {}
-
-	// 	void update() {
-	// 		Component::update();
-	// 		render();
-	// 	}
-	// };
-
 }

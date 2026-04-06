@@ -1,4 +1,5 @@
 #include "GlobalLight.h"
+#include "Component.h"
 
 namespace RuamEngine
 {
@@ -33,4 +34,5 @@ namespace RuamEngine
 		program->setUniform1f("u_lightOffset", m_lightOffset);
 		program->setUniform3f("u_globalLightPos", s_mainLight->entity()->transform().position().x, s_mainLight->entity()->transform().position().y, s_mainLight->entity()->transform().position().z);
 	}
+	DEF_REGISTER_COMPONENT(GlobalLight)
 }

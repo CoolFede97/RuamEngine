@@ -42,5 +42,7 @@ namespace RuamEngine
 
     	void setModel(const std::string& relativePath);
     	void loadModel();
+    private:
+        DECL_REGISTER_COMPONENT(ModelRenderer)
     };
 }

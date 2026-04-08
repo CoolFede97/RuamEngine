@@ -87,15 +87,14 @@ namespace RuamEngine
 		{
 			for (auto& [cmpType, cmpVec] : map)
 			{
-				// if (Engine::State()==EngineState::GameMode)
-				forEachActiveComponentToStart(entityId, cmpType, cmpVec, [](Component* cmp){cmp->start();});
+				if (Engine::State()==EngineState::GameMode) forEachActiveComponentToStart(entityId, cmpType, cmpVec, [](Component* cmp){cmp->start();});
 				forEachActiveComponentToStart(entityId, cmpType, cmpVec, [](Component* cmp){cmp->renderStart();});
 				for ( auto& cmp : cmpVec) cmp->markNotCreatedOnThisFrame();
 			}
 		}
 		if (m_componentsToStart.size()>0) m_componentsToStart.clear();
 
-		forEachActiveEntity([](Entity* entity)->void{entity->update();});
+		if (Engine::State()==EngineState::GameMode) forEachActiveEntity([](Entity* entity)->void{entity->update();});
 		forEachActiveEntity([](Entity* entity)->void{entity->renderUpdate();});
 	}
 

@@ -15,10 +15,10 @@ namespace RuamEngine
 
     void ResourceManager::Init()
     {
-        LoadTexture<Texture2D>("assets/sprites/defaultSprite.png");
+        LoadTexture<Texture2D>("RuamCore/Assets/Sprites/DefaultSprite.png");
         std::vector<std::string> skyboxes =
 			{
-			"assets/sprites/skybox.png","assets/sprites/skybox.png","assets/sprites/skybox.png","assets/sprites/skybox.png","assets/sprites/skybox.png","assets/sprites/skybox.png"
+			"RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png"
 			};
         LoadTexture<Cubemap>(skyboxes);
     }

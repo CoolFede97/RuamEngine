@@ -6,10 +6,10 @@
 namespace RuamEngine
 {
 
-	float Time::m_currentFrame = 0.0f;
-	float Time::m_lastFrame = 0.0f;
+	float RuamTime::m_currentFrame = 0.0f;
+	float RuamTime::m_lastFrame = 0.0f;
 
-	void Time::Update()
+	void RuamTime::Update()
 	{
 		m_lastFrame = m_currentFrame;
 		m_currentFrame = glfwGetTime();

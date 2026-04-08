@@ -2,7 +2,7 @@
 
 namespace RuamEngine
 {
-	class Time
+	class RuamTime
 	{
 	private:
 		static float m_currentFrame;

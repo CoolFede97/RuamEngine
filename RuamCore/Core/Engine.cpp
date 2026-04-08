@@ -83,7 +83,7 @@ namespace RuamEngine
             Editor::UpdateSceneManager();
 
             // Time
- 			Time::Update();
+ 			RuamTime::Update();
 
  			Renderer::ClearScreen();
  			Renderer::BeginBatch();
@@ -93,6 +93,15 @@ namespace RuamEngine
             // std::cout << "Frame count: " << frameCount++ << "\n";
  			if (SceneManager::ActiveScene() != nullptr)
  			{
+                if (Input::GetKey(KeyCode::LeftControl_Key) && Input::GetKeyDown(KeyCode::P_Key))
+                {
+                    if (s_state == EngineState::EditorMode) s_state = EngineState::GameMode;
+                    else
+                    {
+                        SceneManager::EnqueueSceneChange(SceneManager::ActiveScene()->name());
+                        s_state = EngineState::EditorMode;
+                    }
+                }
 				SceneManager::ActiveScene()->tick();
  			}
 
@@ -131,10 +140,5 @@ namespace RuamEngine
     void Engine::LoadRuamConfig()
     {
    		s_config = Serial::DeserializeRuamConfig(SaveSystem::LoadJsonRuamConfig());
-    }
-
-    RuamConfig Engine::Config()
-    {
-    	return s_config;
     }
 }

@@ -31,7 +31,7 @@ namespace RuamEngine
 
 		std::string name() override { return "GlobalLight"; }
 
-		void start() override;
+		void renderStart() override;
 
 		void render(){};
 

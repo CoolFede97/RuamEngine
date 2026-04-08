@@ -23,7 +23,7 @@ namespace RuamEngine
 			if (Input::GetKey(KeyCode::Right_Arrow)) m_mouseRotation.y -= 1;
 
 
-			entity()->transform().rotation() += static_cast<glm::vec3>(m_mouseRotation * Time::DeltaTime() * m_rotationSpeed);
+			entity()->transform().rotation() += static_cast<glm::vec3>(m_mouseRotation * RuamTime::DeltaTime() * m_rotationSpeed);
 			entity()->transform().rotation().x = std::clamp(entity()->transform().rotation().x, -89.0f, 89.0f);
 
 			m_horizontalDirection = {0, 0, 0};
@@ -35,8 +35,8 @@ namespace RuamEngine
 			m_direction = Vec3::GetDirectionFromEuler(entity()->transform().rotation());
 
 			Vec3 left = Vec3::Up().CrossProduct(m_direction).Normalized();
-			entity()->transform().position() += static_cast<glm::vec3>(m_direction * m_horizontalDirection.z * Time::DeltaTime() * m_speed);
-			entity()->transform().position() += static_cast<glm::vec3>(left * -m_horizontalDirection.x * Time::DeltaTime() * m_speed);
+			entity()->transform().position() += static_cast<glm::vec3>(m_direction * m_horizontalDirection.z * RuamTime::DeltaTime() * m_speed);
+			entity()->transform().position() += static_cast<glm::vec3>(left * -m_horizontalDirection.x * RuamTime::DeltaTime() * m_speed);
 
 		};
     // REGISTER_COMPONENT(CameraController);

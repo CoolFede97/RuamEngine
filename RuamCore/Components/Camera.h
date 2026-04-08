@@ -42,7 +42,7 @@ namespace RuamEngine
 			Component::update();
 			AudioSystem::AL::Listener::setParam(AL_POSITION, entity()->transform().position());
 		};
-		void start() { setAsMainCamera();};
+		void renderStart() { setAsMainCamera();};
 		std::string name() override { return "Camera"; }
 		IMPL_SERIALIZE(Camera, CAMERA_SERIALIZED_MEMBERS(SER_FIELD, ,))
 	private:

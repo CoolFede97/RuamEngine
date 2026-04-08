@@ -3,6 +3,8 @@
 #include "GlobalLight.h"
 #include "ModelRenderer.h"
 #include "Transform.h"
+#include "Sandbox.h"
+
 namespace RuamEngine
 {
     void ComponentsInitializer::InitComponents()
@@ -11,5 +13,6 @@ namespace RuamEngine
         Camera::CameraRegister();
         GlobalLight::GlobalLightRegister();
         ModelRenderer::ModelRendererRegister();
+        Sandbox::SandboxRegister();
     }
 }

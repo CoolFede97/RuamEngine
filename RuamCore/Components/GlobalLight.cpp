@@ -21,7 +21,7 @@ namespace RuamEngine
 		m_lightOffset = offset;
 	}
 
-	void GlobalLight::start()
+	void GlobalLight::renderStart()
 	{
 		if (!s_mainLight) s_mainLight = this;
 		else if (s_mainLight != this) entity()->removeComponent<GlobalLight>(); // PREGUNTARLE A TOMI COMO HACER QUE ESTO BORRE A �ESTE! COMPONENTE

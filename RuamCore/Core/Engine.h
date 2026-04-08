@@ -20,8 +20,8 @@ namespace RuamEngine
         static void CheckIfWantToSaveChanges();
 
         static void LoadRuamConfig();
-        static RuamConfig Config();
-        static EngineState State();
+        inline static RuamConfig Config() {return s_config;};
+        inline static EngineState State() {return s_state;};
     private:
         static bool s_initialized;
         static bool s_started;

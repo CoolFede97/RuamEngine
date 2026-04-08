@@ -17,7 +17,6 @@ CMakeUserPresets.json
 *.so
 *.a
 *.o
-*.obj
 *.pdb
 *.idb
 *.ilk

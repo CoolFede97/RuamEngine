@@ -4,6 +4,7 @@
 #include "Component.h"
 #include "Transform.h"
 #include <functional>
+#include "Engine.h"
 
 namespace RuamEngine
 {
@@ -86,6 +87,7 @@ namespace RuamEngine
 		{
 			for (auto& [cmpType, cmpVec] : map)
 			{
+				// if (Engine::State()==EngineState::GameMode)
 				forEachActiveComponentToStart(entityId, cmpType, cmpVec, [](Component* cmp){cmp->start();});
 				forEachActiveComponentToStart(entityId, cmpType, cmpVec, [](Component* cmp){cmp->renderStart();});
 				for ( auto& cmp : cmpVec) cmp->markNotCreatedOnThisFrame();

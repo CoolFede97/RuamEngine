@@ -20,6 +20,7 @@ namespace RuamEngine
     bool Engine::s_initialized = false;
     bool Engine::s_started = false;
     RuamConfig Engine::s_config;
+    EngineState Engine::s_state = EngineState::EditorMode;
 
     void Engine::Init()
     {
@@ -122,8 +123,9 @@ namespace RuamEngine
     {
     	if (Input::GetKey(KeyCode::LeftControl_Key) && Input::GetKeyDown(KeyCode::S_Key))
      	{
-			SaveSystem::SaveCurrentScene();
-      	}
+            if (s_state == EngineState::EditorMode) SaveSystem::SaveCurrentScene();
+            else std::cerr << "Can't save scene during game mode!\n"; // TODO UI
+     	}
     }
 
     void Engine::LoadRuamConfig()

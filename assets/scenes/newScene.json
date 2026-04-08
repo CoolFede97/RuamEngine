@@ -7,6 +7,11 @@
      "m_id": 1
     },
     {
+     "TYPE": "ModelRenderer",
+     "m_id": 6,
+     "m_meshPath": "assets/meshes/light.obj"
+    },
+    {
      "TYPE": "Transform",
      "m_id": 0,
      "m_position": [
@@ -61,6 +66,36 @@
    ],
    "m_id": 1,
    "m_name": "Player2"
+  },
+  {
+   "m_components": [
+    {
+     "TYPE": "ModelRenderer",
+     "m_id": 5,
+     "m_meshPath": "assets/meshes/fede.obj"
+    },
+    {
+     "TYPE": "Transform",
+     "m_id": 4,
+     "m_position": [
+      49.400001525878906,
+      20.0,
+      153.39999389648438
+     ],
+     "m_rotation": [
+      1.2999999523162842,
+      236.1999969482422,
+      -43.900001525878906
+     ],
+     "m_scale": [
+      1.0,
+      1.0,
+      1.0
+     ]
+    }
+   ],
+   "m_id": 2,
+   "m_name": "fede"
   }
  ],
  "m_id": 0,

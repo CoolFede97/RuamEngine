@@ -6,6 +6,11 @@
 
 namespace RuamEngine
 {
+    enum EngineState
+    {
+        GameMode,
+        EditorMode
+    };
     class Engine
     {
     public:
@@ -16,9 +21,11 @@ namespace RuamEngine
 
         static void LoadRuamConfig();
         static RuamConfig Config();
+        static EngineState State();
     private:
         static bool s_initialized;
         static bool s_started;
         static RuamConfig s_config;
+        static EngineState s_state;
     };
 }

@@ -10,6 +10,7 @@
 #include "SceneManager.h"
 #include "Serial.h"
 #include "ComponentsInitializer.h"
+#include "EditorCamera.h"
 
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
@@ -31,7 +32,7 @@ namespace RuamEngine
         }
         Renderer::Init();
         ComponentsInitializer::InitComponents();
-    	AudioSystem::init();
+       	// AudioSystem::init();
 
   		Input::SetWindow(Renderer::GetWindow());
   		Input::SetUp(Renderer::GetWindow());
@@ -69,6 +70,7 @@ namespace RuamEngine
 
   		while (!Renderer::WindowShouldClose())
   		{
+            // std::cout << "Mouse translation: " << Input::GetMouseDeltaPix() << "\n";
     		CheckIfWantToSaveChanges();
  			if (SceneManager::Scenes().size()>0) SceneManager::ApplyPendingSceneChange();
   		    // std::cout << "Frame count: " << frameCount++ << "\n";
@@ -81,7 +83,6 @@ namespace RuamEngine
     		Editor::UpdateHierarchy();
             Editor::UpdateInspector();
             Editor::UpdateSceneManager();
-
             // Time
  			RuamTime::Update();
 
@@ -106,6 +107,7 @@ namespace RuamEngine
  			}
 
  			Input::UpdateInput();
+            EditorCamera::UpdateCameraTransform();
 
  			if (!SceneManager::SceneChange() && SceneManager::ActiveScene())
  			{
@@ -125,7 +127,7 @@ namespace RuamEngine
     	ImGui_ImplGlfw_Shutdown();
     	ImGui::DestroyContext();
     	Renderer::Shutdown();
-    	AudioSystem::shutdown();
+    	// AudioSystem::shutdown();
     }
 
     void Engine::CheckIfWantToSaveChanges()

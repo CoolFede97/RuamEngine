@@ -9,7 +9,7 @@
 
 #include "RenderingCore.h"
 #include "Material.h"
-#include "Camera.h"
+#include "EditorCamera.h"
 
 namespace RuamEngine
 {

@@ -1,7 +1,8 @@
 #include "Entity.h"
 #include "Component.h"
-#include "RuamUtils.h"
 #include "Transform.h"
+#include "Scene.h"
+#include "SceneManager.h"
 
 namespace RuamEngine
 {

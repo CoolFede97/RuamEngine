@@ -4,16 +4,16 @@
    "m_components": [
     {
      "TYPE": "GlobalLight",
-     "m_id": 25
+     "m_id": 1
     },
     {
      "TYPE": "ModelRenderer",
-     "m_id": 26,
+     "m_id": 2,
      "m_meshPath": "RuamCore/Assets/Models/Light.obj"
     },
     {
      "TYPE": "Transform",
-     "m_id": 24,
+     "m_id": 0,
      "m_position": [
       0.0,
       100.0,
@@ -31,30 +31,22 @@
      ]
     }
    ],
-   "m_id": 9,
+   "m_id": 0,
    "m_name": "Light"
   },
   {
    "m_components": [
     {
-     "TYPE": "Camera",
-     "m_aspect_ratio": 1.3333333730697632,
-     "m_far_plane": 3000.0,
-     "m_fov": 45.0,
-     "m_id": 28,
-     "m_near_plane": 0.10000000149011612
-    },
-    {
      "TYPE": "Transform",
-     "m_id": 27,
+     "m_id": 3,
      "m_position": [
-      50.0,
-      20.0,
-      160.0
+      0.0,
+      0.0,
+      0.0
      ],
      "m_rotation": [
       0.0,
-      180.0,
+      0.0,
       0.0
      ],
      "m_scale": [
@@ -64,32 +56,32 @@
      ]
     }
    ],
-   "m_id": 10,
+   "m_id": 1,
    "m_name": "Player2"
   },
   {
    "m_components": [
     {
      "TYPE": "ModelRenderer",
-     "m_id": 30,
+     "m_id": 5,
      "m_meshPath": "RuamCore/Assets/Models/Fede.obj"
     },
     {
      "TYPE": "Sandbox",
-     "m_id": 31
+     "m_id": 6
     },
     {
      "TYPE": "Transform",
-     "m_id": 29,
+     "m_id": 4,
      "m_position": [
-      49.400001525878906,
-      20.0,
-      149.89175415039063
+      0.0,
+      0.0,
+      4.699999809265137
      ],
      "m_rotation": [
-      1.2999999523162842,
-      236.1999969482422,
-      -43.900001525878906
+      -10.800000190734863,
+      128.3000030517578,
+      -37.79999923706055
      ],
      "m_scale": [
       1.0,
@@ -98,7 +90,7 @@
      ]
     }
    ],
-   "m_id": 11,
+   "m_id": 2,
    "m_name": "fede"
   }
  ],

@@ -3,6 +3,8 @@
 #include "Renderer.h"
 #include "RenderUnit.h"
 
+#include <map>
+
 namespace RuamEngine
 {
     class Material;

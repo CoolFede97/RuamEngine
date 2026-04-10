@@ -1,14 +1,13 @@
 #pragma once
 
-#include "SceneManager.h"
 #include "RuamConfig.h"
 #include "Transform.h"
 #include "nlohmann/json.hpp"
-#include <filesystem>
 namespace fs = std::filesystem;
 
 namespace RuamEngine
 {
+    class Scene;
 	class Transform;
     class Entity;
 

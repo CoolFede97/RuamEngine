@@ -1,6 +1,5 @@
 #pragma once
 
-#include "SceneManager.h"
 #include <list>
 #include <string>
 #include <iostream>
@@ -12,19 +11,20 @@
 
 namespace RuamEngine
 {
-	class Entity;
+    class Entity;
 	class Component;
+	class SceneManager;
 	class Scene {
 	public:
-	    Scene() : m_id(s_idCount++), m_name(s_defaultName) {std::cout << "SCENE " << m_name << " WITH ID " << m_id << " CREATED\n";;}
+	    Scene();
 
-	    Scene(const int id) : m_id(id), m_name(s_defaultName) {std::cout << "SCENE " << m_name << " WITH ID " << m_id << " CREATED\n";;}
+	    Scene(const int id);
 
-	    Scene(const std::string& name) : m_id(s_idCount++), m_name(name) {std::cout << "SCENE " << m_name << " WITH ID " << m_id << " CREATED\n";;}
+	    Scene(const std::string& name);
 
-	    Scene(const int id, const std::string& name) : m_id(id), m_name(name) {std::cout << "SCENE " << m_name << " WITH ID " << m_id << " CREATED\n";;}
+	    Scene(const int id, const std::string& name);
 
-	    ~Scene() {std::cout << "SCENE " << m_name << " WITH ID " << id() << " DESTROYED\n";}
+	    ~Scene();
 
 		unsigned int id() const {
 		    return m_id;

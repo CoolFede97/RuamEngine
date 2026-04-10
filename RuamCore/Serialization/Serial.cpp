@@ -1,12 +1,10 @@
 #include "Serial.h"
 #include "Component.h"
 #include <exception>
-#include <fstream>
-#include <filesystem>
 #include "Entity.h"
-#include "SceneManager.h"
 #include "Transform.h"
 #include "SaveSystem.h"
+#include "Scene.h"
 
 namespace fs = std::filesystem;
 

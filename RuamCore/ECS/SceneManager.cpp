@@ -1,6 +1,6 @@
 #include "SceneManager.h"
 //#include "Serial.h"
-#include "Camera.h"
+#include "EditorCamera.h"
 #include "Editor.h"
 #include "Renderer.h"
 #include "Engine.h"
@@ -10,8 +10,7 @@
 #include "GlobalLight.h"
 #include "SaveSystem.h"
 #include "Scene.h"
-#include "Skybox.h"
-#include "Camera.h"
+#include "Serial.h"
 
 #include <memory>
 
@@ -29,8 +28,6 @@ namespace RuamEngine
 
 	void SceneManager::ChangeActiveScene(const std::string &sceneName)
 	{
-		RuamEngine::Camera::EmptyMainCamera();
-
 		Editor::selectedEntity = nullptr;
 		s_activeScene = nullptr;
 		s_activeScene.reset(Serial::DeserializeJsonScene(SaveSystem::LoadJsonScene(sceneName)));
@@ -99,7 +96,6 @@ namespace RuamEngine
 		player->transform().setPosition(glm::vec3(50.0f, 20.0f, 160.0f));
 		player->transform().setRotation(glm::vec3(0.0f, 180, 0.0f));
 		player->setName("Player2");
-		player->addComponent<Camera>();
 
 		return scene;
 	}

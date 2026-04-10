@@ -8,14 +8,12 @@
 #include <algorithm>
 
 #include "nlohmann/json.hpp"
-
-#include "SceneManager.h"
-#include "Scene.h"
 #include "Component.h"
+
 namespace RuamEngine
 {
 	class Transform;
-
+	class Scene;
 	class Entity {
 	public:
 		Entity(const std::string& name);

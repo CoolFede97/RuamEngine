@@ -12,6 +12,16 @@ namespace RuamEngine
 	unsigned int Scene::s_idCount = 0;
 	const std::string Scene::s_defaultName = "Sample Scene";
 
+	Scene::Scene() : m_id(s_idCount++), m_name(s_defaultName) {std::cout << "Scene " << m_name << " With id " << m_id << " created\n";}
+	Scene::Scene(const int id) : m_id(id), m_name(s_defaultName) {std::cout << "Scene " << m_name << " With id " << m_id << " created\n";}
+	Scene::Scene(const std::string& name) : m_id(s_idCount++), m_name(name) {std::cout << "Scene " << m_name << " With id " << m_id << " created\n";}
+	Scene::Scene(const int id, const std::string& name) : m_id(id), m_name(name) {std::cout << "Scene " << m_name << " With id " << m_id << " created\n";}
+
+	Scene::~Scene()
+	{
+	    std::cout << "SCENE " << m_name << " WITH ID " << id() << " DESTROYED\n";
+	}
+
 	Entity* Scene::createEntity()
 	{
 		std::unique_ptr<Entity> entity = std::make_unique<Entity>();

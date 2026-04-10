@@ -4,10 +4,10 @@
 #include <functional>
 #include <memory>
 #include <map>
+#include "Scene.h"
 
 namespace RuamEngine
 {
-    class Scene;
 	class SceneManager {
 	public:
 		using SceneSPtr = std::shared_ptr<Scene>;

@@ -1,7 +1,7 @@
 #include "ShaderProgram.h"
 #include "FileFunctions.h"
 #include "Renderer.h"
-#include "Camera.h"
+#include "EditorCamera.h"
 namespace RuamEngine
 {
 
@@ -161,16 +161,9 @@ namespace RuamEngine
 
 	void ShaderProgram::updateCameraMatrices()
 	{
-		if (Camera::GetMainCamera() == nullptr)
-		{
-			//std::cout << "Not camera set!\n";
-			setUniformMat4f("u_view", glm::mat4(0.0f));
-			setUniformMat4f("u_projection", glm::mat4(0.0f));
-			return;
-		}
 		bind();
-		setUniformMat4f("u_view", Camera::GetMainCamera()->viewMatrix());
-		setUniformMat4f("u_projection", Camera::GetMainCamera()->projectionMatrix());
+		setUniformMat4f("u_view", EditorCamera::ViewMatrix());
+		setUniformMat4f("u_projection", EditorCamera::ProjectionMatrix());
 	}
 
 	int ShaderProgram::getUniformLocation(const std::string& name)

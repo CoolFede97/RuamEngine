@@ -1,7 +1,7 @@
 #include "ModelRenderer.h"
-#include "Component.h"
 #include "ResourceManager.h"
 #include "RuamUtils.h"
+#include "RuamEngine.h"
 
 namespace RuamEngine
 {

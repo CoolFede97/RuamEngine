@@ -20,7 +20,7 @@ project ("RuamEngine")
 
 # Add source to this project's executable.
 
-add_executable(RuamEngine "RuamEngine.cpp")
+add_executable(RuamEngine "RuamEngine.cpp" "RuamEngine.h")
 
 include(FetchContent)
 include(FindOpenGL)
@@ -316,7 +316,7 @@ target_link_libraries(Audio PUBLIC glm dr_libs Vendor RuamUtils)
 file (GLOB ECS_SRC "${CMAKE_SOURCE_DIR}/RuamCore/ECS/*.cpp")
 file (GLOB COMPONENTS_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Components/*.cpp")
 add_library(ECS STATIC ${ECS_SRC} ${COMPONENTS_SRC})
-target_include_directories(ECS PUBLIC "${CMAKE_SOURCE_DIR}/RuamCore/ECS" "${CMAKE_SOURCE_DIR}/RuamCore/Components")
+target_include_directories(ECS PUBLIC "${CMAKE_SOURCE_DIR}/RuamCore/ECS" "${CMAKE_SOURCE_DIR}/RuamCore/Components" "${CMAKE_SOURCE_DIR}")
 target_link_libraries(ECS PUBLIC Serialization Audio RuamUtils Time Core)
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////

@@ -47,6 +47,9 @@ namespace RuamEngine
         static GLFWwindow* s_window;
         static Vec2 s_lastMousePosPix;
         static Vec2 s_lastMousePosNorm;
+        static Vec2 s_mouseDeltaPix;
+        static Vec2 s_mouseDeltaNorm;
+
 
         static const KeyCode s_supportedKeys[];
         static std::map<KeyCode, bool> s_previousKeys;
@@ -57,7 +60,6 @@ namespace RuamEngine
         static void MouseButtonEvent(GLFWwindow* window, int button, int action, int mods);
         static void ScrollEvent(GLFWwindow* window, double xoffset, double yoffset);
         static void CursorEnterEvent(GLFWwindow* window, int entered);
-
 
         static bool NullWindow();
     };

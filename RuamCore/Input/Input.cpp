@@ -9,6 +9,9 @@ namespace RuamEngine
     GLFWwindow* Input::s_window = nullptr;
     Vec2 Input::s_lastMousePosPix = Vec2(0.0f, 0.0f);
     Vec2 Input::s_lastMousePosNorm = Vec2(0.0f, 0.0f);
+    Vec2 Input::s_mouseDeltaPix = Vec2(0.0f, 0.0f);
+    Vec2 Input::s_mouseDeltaNorm = Vec2(0.0f, 0.0f);
+
     std::map<KeyCode, bool> Input::s_previousKeys;
     const KeyCode Input::s_supportedKeys[] =
     {
@@ -157,11 +160,11 @@ namespace RuamEngine
     }
 
     Vec2 Input::GetMouseDeltaPix() {
-        return GetCursorPosPix() - s_lastMousePosPix;
+        return s_mouseDeltaPix;
     }
 
     Vec2 Input::GetMouseDeltaNorm() {
-        return GetCursorPosNorm() - s_lastMousePosNorm;
+        return s_mouseDeltaNorm;
     }
 
     Vec2 Input::GetCursorPosPix() {
@@ -220,6 +223,11 @@ namespace RuamEngine
         s_window = window;
         glfwSetInputMode(window, GLFW_STICKY_KEYS, GLFW_TRUE);
 
+        if (glfwRawMouseMotionSupported())
+        {
+            glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+        }
+
         glfwSetKeyCallback(s_window, KeyEvent);
         glfwSetCharCallback(s_window, CharEvent);
         glfwSetCursorPosCallback(s_window, CursorPosEvent);
@@ -239,7 +247,13 @@ namespace RuamEngine
         }
 
         // Update mouse position
-        s_lastMousePosPix = GetCursorPosPix();
-        s_lastMousePosNorm = GetCursorPosNorm();
+        Vec2 currentPix = GetCursorPosPix();
+        Vec2 currentNorm = GetCursorPosNorm();
+
+        s_mouseDeltaPix = currentPix - s_lastMousePosPix;
+        s_mouseDeltaNorm = currentNorm - s_lastMousePosNorm;
+
+        s_lastMousePosPix = currentPix;
+        s_lastMousePosNorm = currentNorm;
     }
 }

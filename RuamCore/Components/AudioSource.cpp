@@ -1,6 +1,8 @@
 #include "AudioSource.h"
 #include "RuamUtils.h"
-#include "Camera.h"
+#include "EditorCamera.h"
+#include "Entity.h"
+#include "Transform.h"
 
 namespace RuamEngine
 {
@@ -127,9 +129,8 @@ namespace RuamEngine
 
 	void AudioSource::update() {
 		try {
-			Transform& cam_trans = RuamEngine::Camera::GetMainCamera()->entity()->transform();
 			m_source.setParam(AL_POSITION,
-						-getRelativePosition(cam_trans.position(), cam_trans.rotation(), entity()->transform().position())
+						-getRelativePosition(EditorCamera::Position(), EditorCamera::Rotation(), entity()->transform().position())
 						);
 		} catch(AudioSystem::AL::al_error err) {
 		}

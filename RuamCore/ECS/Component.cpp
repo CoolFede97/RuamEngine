@@ -1,7 +1,7 @@
 #include "Component.h"
 #include "SceneManager.h"
 #include "Entity.h"
-
+#include "Scene.h"
 namespace RuamEngine
 {
 	unsigned int Component::s_idCount = 0;

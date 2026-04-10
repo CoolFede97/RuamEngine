@@ -67,7 +67,6 @@ namespace RuamEngine
             mouseTranslation = {0,0};
             firstClick = false;
         }
-        std::cout << "Mouse translation: " << mouseTranslation << "\n";
         mouseRotation.x -= mouseTranslation.y;
         mouseRotation.y -= mouseTranslation.x;
 

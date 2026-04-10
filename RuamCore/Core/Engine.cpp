@@ -70,7 +70,6 @@ namespace RuamEngine
 
   		while (!Renderer::WindowShouldClose())
   		{
-            // std::cout << "Mouse translation: " << Input::GetMouseDeltaPix() << "\n";
     		CheckIfWantToSaveChanges();
  			if (SceneManager::Scenes().size()>0) SceneManager::ApplyPendingSceneChange();
   		    // std::cout << "Frame count: " << frameCount++ << "\n";

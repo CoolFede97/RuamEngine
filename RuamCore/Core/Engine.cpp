@@ -106,7 +106,7 @@ namespace RuamEngine
  			}
 
  			Input::UpdateInput();
-            EditorCamera::UpdateCameraTransform();
+            Editor::UpdateCameraTransform();
 
  			if (!SceneManager::SceneChange() && SceneManager::ActiveScene())
  			{

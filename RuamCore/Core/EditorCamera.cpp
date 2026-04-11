@@ -10,39 +10,7 @@
 
 namespace RuamEngine
 {
-    const glm::vec3 EditorCamera::s_up = glm::vec3(0.0, 1.0, 0.0);
-    float EditorCamera::s_nearPlane = 0.1f;
-    float EditorCamera::s_farPlane = 3000.0f;
-    float EditorCamera::s_fov = 45.0f;
-    float EditorCamera::s_aspectRatio = 800.0f/600.0f;
-
-    float EditorCamera::s_speed = 50.0f;
-    float EditorCamera::s_rotationSpeed = 0.1f;
-
-    glm::vec3 EditorCamera::s_pos = {0,0,0};
-    glm::vec3 EditorCamera::s_rot = {0,0,0};
-
-    glm::mat4 EditorCamera::ProjectionMatrix()
-	{
-		return glm::perspective(glm::radians(s_fov), s_aspectRatio, s_nearPlane, s_farPlane);
-	}
-	glm::mat4 EditorCamera::ViewMatrix()
-	{
-		glm::vec3 eulerRadians = glm::radians(s_rot);
-		glm::vec3 direction;
-
-		float pitch = eulerRadians.x;
-		float yaw = eulerRadians.y;
-
-		direction.x = cos(pitch) * sin(yaw);
-		direction.y = sin(pitch);
-		direction.z = cos(pitch) * cos(yaw);
-
-		direction = glm::normalize(direction);
-		return glm::lookAt(s_pos, s_pos + direction, s_up);
-	};
-
-	void EditorCamera::UpdateCameraTransform()
+	void EditorCamera::updateCameraTransform()
 	{
 	    static bool firstClick = true;
 
@@ -70,8 +38,8 @@ namespace RuamEngine
         mouseRotation.x -= mouseTranslation.y;
         mouseRotation.y -= mouseTranslation.x;
 
-       	s_rot += static_cast<glm::vec3>(mouseRotation * s_rotationSpeed);
-    	s_rot.x = std::clamp(s_rot.x, -89.0f, 89.0f);
+       	m_rot += static_cast<glm::vec3>(mouseRotation * m_rotationSpeed);
+    	m_rot.x = std::clamp(m_rot.x, -89.0f, 89.0f);
 
     	Vec3 horizontalDirection = {0, 0, 0};
     	if (Input::GetKey(KeyCode::W_Key)) horizontalDirection.z += 1;
@@ -79,10 +47,10 @@ namespace RuamEngine
     	if (Input::GetKey(KeyCode::A_Key)) horizontalDirection.x -= 1;
     	if (Input::GetKey(KeyCode::D_Key)) horizontalDirection.x += 1;
 
-    	Vec3 direction = Vec3::GetDirectionFromEuler(s_rot);
+    	Vec3 direction = Vec3::GetDirectionFromEuler(m_rot);
 
     	Vec3 left = Vec3::Up().CrossProduct(direction).Normalized();
-    	s_pos += static_cast<glm::vec3>(direction * horizontalDirection.z * RuamTime::DeltaTime() * s_speed);
-    	s_pos += static_cast<glm::vec3>(left * -horizontalDirection.x * RuamTime::DeltaTime() * s_speed);
+    	m_pos += static_cast<glm::vec3>(direction * horizontalDirection.z * RuamTime::DeltaTime() * m_speed);
+    	m_pos += static_cast<glm::vec3>(left * -horizontalDirection.x * RuamTime::DeltaTime() * m_speed);
 	}
 }

@@ -159,11 +159,11 @@ namespace RuamEngine
 		setUniform1f("u_cubemap", material.m_cubemap);
 	}
 
-	void ShaderProgram::updateCameraMatrices()
+	void ShaderProgram::updateCameraMatrices(Camera camera)
 	{
 		bind();
-		setUniformMat4f("u_view", EditorCamera::ViewMatrix());
-		setUniformMat4f("u_projection", EditorCamera::ProjectionMatrix());
+		setUniformMat4f("u_view", camera.viewMatrix());
+		setUniformMat4f("u_projection", camera.projectionMatrix());
 	}
 
 	int ShaderProgram::getUniformLocation(const std::string& name)

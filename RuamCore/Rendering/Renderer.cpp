@@ -356,7 +356,7 @@ namespace RuamEngine
     {
         for (auto& [type,drawingData] : m_drawingDatas)
         {
-			drawingData->m_program->updateCameraMatrices();
+			drawingData->m_program->updateCameraMatrices(Editor::Camera());
 
 			for (auto& [materialId, renderUnit] : drawingData->m_renderUnits)
             {

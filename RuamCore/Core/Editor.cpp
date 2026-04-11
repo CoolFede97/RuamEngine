@@ -9,6 +9,7 @@
 #include "SceneManager.h"
 #include "Input.h"
 #include "Transform.h"
+#include "EditorCamera.h"
 
 #include "imgui.h"
 #include <typeindex>
@@ -17,7 +18,9 @@
 
 namespace RuamEngine
 {
-	Entity* Editor::selectedEntity = nullptr;
+	Entity* Editor::s_selectedEntity = nullptr;
+	EditorCamera Editor::s_camera;
+
 	void Editor::UpdateHierarchy()
 	{
 		ImGui::Begin("Hierarchy");
@@ -63,12 +66,12 @@ namespace RuamEngine
 				ImGui::EndPopup();
 			}
 			ImGui::SameLine();
-			if (selectedEntity != nullptr)
+			if (s_selectedEntity != nullptr)
 			{
 				if (Input::GetKeyDown(KeyCode::Delete_Key))
 				{
-					selectedEntity->destroy();
-					selectedEntity = nullptr;
+					s_selectedEntity->destroy();
+					s_selectedEntity = nullptr;
 				}
 			}
 
@@ -88,7 +91,7 @@ namespace RuamEngine
 	{
 		std::list<Transform*> childrenTransform = entity->transform().children();
 
-		bool selected = (selectedEntity == entity);
+		bool selected = (s_selectedEntity == entity);
 
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow |
                         	ImGuiTreeNodeFlags_OpenOnDoubleClick  |
@@ -102,7 +105,7 @@ namespace RuamEngine
 		bool opened = ImGui::TreeNodeEx(entity->name().c_str(), flags);
 		if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
 		{
-            selectedEntity = entity;
+            s_selectedEntity = entity;
 		    ImGui::OpenPopup("EntityOptions");
 		}
 		if (ImGui::BeginPopupContextItem("EntityOptions"))
@@ -110,13 +113,13 @@ namespace RuamEngine
 		    if (ImGui::Button("Delete"))
 			{
 			    std::cout << "Entity deleted: " << entity->name() << "\n";
-				if (selectedEntity == entity) selectedEntity = nullptr;
+				if (s_selectedEntity == entity) s_selectedEntity = nullptr;
 				entity->destroy();
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::EndPopup();
 		}
-		if (ImGui::IsItemClicked()) selectedEntity = entity;
+		if (ImGui::IsItemClicked()) s_selectedEntity = entity;
 
 		if (opened && !childrenTransform.empty())
 		{
@@ -177,11 +180,11 @@ namespace RuamEngine
 
 	void Editor::UpdateInspector()
 	{
-		if (selectedEntity == nullptr) return;
+		if (s_selectedEntity == nullptr) return;
 		ImGui::Begin("Inspector");
 
 		ImGui::SetWindowFontScale(1.5f);
-		ImGui::Text(selectedEntity->name().c_str());
+		ImGui::Text(s_selectedEntity->name().c_str());
 		ImGui::SetWindowFontScale(1.0f);
 		ImGui::SameLine();
 
@@ -190,7 +193,7 @@ namespace RuamEngine
 		Scene* scene = SceneManager::ActiveScene();
 		if (scene != nullptr)
 		{
-			for (Component* com : selectedEntity->getComponents())
+			for (Component* com : s_selectedEntity->getComponents())
 			{
 				ImGui::PushID(com->id());
 				bool opened = ImGui::CollapsingHeader(com->name().c_str(), ImGuiTreeNodeFlags_AllowItemOverlap);
@@ -246,7 +249,7 @@ namespace RuamEngine
 				if (cmpName == "Transform" || cmpName == "Component") continue;
 				if (ImGui::Selectable(cmpName.c_str()))
 				{
-					factory.addComponent(selectedEntity);
+					factory.addComponent(s_selectedEntity);
 					componentAdded = true;
 				}
 			}
@@ -260,6 +263,8 @@ namespace RuamEngine
 	    if (s_inspectorDrawers.find(type) != s_inspectorDrawers.end())	s_inspectorDrawers[type](name, value, callbackOnChange);
 		else std::cerr << "Error: Couldn't find matching function in s_inspectorDrawers for a variable of type " << type.name() << " \n";
 	}
+
+	EditorCamera Editor::Camera() { return s_camera; }
 
 	void Editor::UpdateSceneManager()
 	{
@@ -295,6 +300,11 @@ namespace RuamEngine
 			ImGui::PopID();
 		}
 		DrawCreateSceneButton();
+	}
+
+	void Editor::UpdateCameraTransform()
+	{
+	    s_camera.updateCameraTransform();
 	}
 
 	void Editor::DrawCreateSceneButton()

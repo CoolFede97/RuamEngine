@@ -128,12 +128,12 @@ namespace RuamEngine
 	}
 
 	void AudioSource::update() {
-		try {
-			m_source.setParam(AL_POSITION,
-						-getRelativePosition(EditorCamera::Position(), EditorCamera::Rotation(), entity()->transform().position())
-						);
-		} catch(AudioSystem::AL::al_error err) {
-		}
+		// try {
+		// 	m_source.setParam(AL_POSITION,
+		// 				-getRelativePosition(EditorCamera::Position(), EditorCamera::Rotation(), entity()->transform().position())
+		// 				);
+		// } catch(AudioSystem::AL::al_error err) {
+		// }
 	}
 
 	int AudioSource::status() {

@@ -76,7 +76,7 @@ namespace RuamEngine
 
 		if (it->second.refCount[shaderProgramType] <=0)
         {
-       		DrawingDataSPtr drawingData = Renderer::m_drawingDatas[shaderProgramType];
+       		DrawingDataSPtr drawingData = Renderer::s_drawingDatas[shaderProgramType];
         	std::set<RenderUnitSPtr> unitsToDestroy;
          	std::set<std::string> texturesToDestroy;
          	for (const MeshSPtr& mesh : it->second.model->m_meshes)

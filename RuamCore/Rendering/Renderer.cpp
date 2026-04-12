@@ -1,5 +1,6 @@
 #include "Engine.h"
 #include "Renderer.h"
+#include "GLFW/glfw3.h"
 #include "GlobalLight.h"
 #include "RenderUnit.h"
 #include "RenderingConstants.h"
@@ -7,25 +8,27 @@
 #include "ResourceManager.h"
 #include "ShaderProgram.h"
 #include "Skybox.h"
+#include "Editor.h"
+
 #include <cstddef>
 #include <memory>
-
 namespace RuamEngine
 {
-    RendererConfig Renderer::m_config;
-    GLFWwindow* Renderer::m_window = nullptr;
-    std::unordered_map<unsigned int, ShaderProgramSPtr> Renderer::m_shaderPrograms;
-	std::unordered_map<GLuint, DrawingDataSPtr> Renderer::m_drawingDatas;
-	std::unordered_map<std::string, TextureSPtr> Renderer::m_texturesCache;
-    std::unordered_map<GLenum, std::vector<TextureSPtr>> Renderer::m_texturesByType;
-    std::unordered_map<GLenum, std::vector<unsigned int>> Renderer::m_textureFreeIndexesByType;
-    std::unordered_map<GLenum, std::vector<GLuint64>> Renderer::m_handlesByType;
-    std::unordered_map<GLenum, GLuint> Renderer::m_buffersByType;
-    std::unordered_map<GLenum, int> Renderer::m_bindingsByType;
+    RendererConfig Renderer::s_config;
+    GLFWwindow* Renderer::s_window = nullptr;
+    std::unordered_map<unsigned int, ShaderProgramSPtr> Renderer::s_shaderPrograms;
+	std::unordered_map<GLuint, DrawingDataSPtr> Renderer::s_drawingDatas;
+	std::unordered_map<std::string, TextureSPtr> Renderer::s_texturesCache;
+    std::unordered_map<GLenum, std::vector<TextureSPtr>> Renderer::s_texturesByType;
+    std::unordered_map<GLenum, std::vector<unsigned int>> Renderer::s_textureFreeIndexesByType;
+    std::unordered_map<GLenum, std::vector<GLuint64>> Renderer::s_handlesByType;
+    std::unordered_map<GLenum, GLuint> Renderer::s_buffersByType;
+    std::unordered_map<GLenum, int> Renderer::s_bindingsByType;
 
     // std::vector<glm::mat4> Renderer::matrices = {};
 
-	bool Renderer::texturesUploaded = false;
+	bool Renderer::s_texturesUploaded = false;
+
     void Renderer::Init()
     {
         ASSERT(glfwInit());
@@ -34,21 +37,23 @@ namespace RuamEngine
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 
-        m_window = glfwCreateWindow(m_config.windowWidth, m_config.windowHeight, m_config.windowTitle, m_config.monitor, m_config.share);
-        ASSERT(m_window);
+        s_window = glfwCreateWindow(s_config.windowWidth, s_config.windowHeight, s_config.windowTitle, s_config.monitor, s_config.share);
+        ASSERT(s_window);
 
-        glfwMakeContextCurrent(m_window);
+        glfwMakeContextCurrent(s_window);
+
+        glfwSetFramebufferSizeCallback(s_window, framebuffer_size_callback);
 
         glfwSwapInterval(1);
 
         ASSERT(glewInit() == GLEW_OK);
 
-        if (m_config.depthTest)
+        if (s_config.depthTest)
         {
             GLCall(glEnable(GL_DEPTH_TEST));
             GLCall(glDepthFunc(GL_LEQUAL));
         }
-        if (m_config.blend)
+        if (s_config.blend)
         {
             GLCall(glEnable(GL_BLEND));
             GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
@@ -56,12 +61,12 @@ namespace RuamEngine
 
 
         {
-            m_bindingsByType[GL_TEXTURE_2D] = SSBOType::textures2D;
-            m_bindingsByType[GL_TEXTURE_CUBE_MAP] = SSBOType::cubemaps;
+            s_bindingsByType[GL_TEXTURE_2D] = SSBOType::textures2D;
+            s_bindingsByType[GL_TEXTURE_CUBE_MAP] = SSBOType::cubemaps;
 
-            for (auto& [type, binding] : m_bindingsByType)
+            for (auto& [type, binding] : s_bindingsByType)
             {
-                GLCall(glCreateBuffers(1, &m_buffersByType[type]));
+                GLCall(glCreateBuffers(1, &s_buffersByType[type]));
             }
 			DrawingDataSPtr basicDrawingData = CreateDrawingData(ShaderProgramType::general, "RuamCore/Rendering/Shaders/GeneralVertexShader.glsl", "RuamCore/Rendering/Shaders/GeneralFragmentShader.glsl");
 			DrawingDataSPtr skyboxDrawingData = CreateDrawingData(ShaderProgramType::skybox, "RuamCore/Rendering/Shaders/SkyboxVertexShader.glsl", "RuamCore/Rendering/Shaders/SkyboxFragmentShader.glsl");
@@ -79,7 +84,7 @@ namespace RuamEngine
     }
     void Renderer::EndDraw()
     {
-        glfwSwapBuffers(m_window);
+        glfwSwapBuffers(s_window);
     }
     void Renderer::BeginBatch()
     {
@@ -87,7 +92,7 @@ namespace RuamEngine
     }
     void Renderer::EndBatch()
     {
-        for (auto& [type,drawingData] : m_drawingDatas)
+        for (auto& [type,drawingData] : s_drawingDatas)
         {
             drawingData->submitData();
         }
@@ -98,7 +103,7 @@ namespace RuamEngine
     }
     void Renderer::Flush()
     {
-        for (auto& [type,drawingData] : m_drawingDatas)
+        for (auto& [type,drawingData] : s_drawingDatas)
         {
             drawingData->flush();
         }
@@ -106,7 +111,7 @@ namespace RuamEngine
 
     void Renderer::ClearRenderUnits()
     {
-        for (auto& [type,drawingData] : m_drawingDatas)
+        for (auto& [type,drawingData] : s_drawingDatas)
         {
             drawingData->m_renderUnits.clear();
         }
@@ -114,45 +119,45 @@ namespace RuamEngine
 
     void Renderer::ClearScreen()
     {
-        if (m_config.useClearColor) GLCall(glClear(GL_COLOR_BUFFER_BIT));
-        if (m_config.depthTest) GLCall(glClear(GL_DEPTH_BUFFER_BIT));
+        if (s_config.useClearColor) GLCall(glClear(GL_COLOR_BUFFER_BIT));
+        if (s_config.depthTest) GLCall(glClear(GL_DEPTH_BUFFER_BIT));
     }
 
     void Renderer::SetWindowSize(int width, int height)
     {
-        m_config.windowWidth = width;
-        m_config.windowHeight = height;
-        glfwSetWindowSize(m_window, m_config.windowWidth, m_config.windowHeight);
+        s_config.windowWidth = width;
+        s_config.windowHeight = height;
+        glfwSetWindowSize(s_window, s_config.windowWidth, s_config.windowHeight);
     }
 
     void Renderer::SetWindowTitle(const char* title)
     {
-        m_config.windowTitle = title;
-        glfwSetWindowTitle(m_window, m_config.windowTitle);
+        s_config.windowTitle = title;
+        glfwSetWindowTitle(s_window, s_config.windowTitle);
     }
 
     void Renderer::SetClearColor(const glm::vec4& color)
     {
-        m_config.clearColor = color;
-        GLCall(glClearColor(m_config.clearColor.r, m_config.clearColor.g, m_config.clearColor.b, m_config.clearColor.a));
+        s_config.clearColor = color;
+        GLCall(glClearColor(s_config.clearColor.r, s_config.clearColor.g, s_config.clearColor.b, s_config.clearColor.a));
     }
 
     void Renderer::SetDepthTest(bool enable)
     {
-        m_config.depthTest = enable;
-        if (m_config.depthTest) GLCall(glEnable(GL_DEPTH_TEST));
+        s_config.depthTest = enable;
+        if (s_config.depthTest) GLCall(glEnable(GL_DEPTH_TEST));
         else GLCall(glDisable(GL_DEPTH_TEST));
     }
 
     void Renderer::SetBlend(bool enable, GLenum sfactor, GLenum dfactor)
     {
-        m_config.blend = enable;
-        m_config.blendSFactor = sfactor;
-        m_config.blendDFactor = dfactor;
-        if (m_config.blend)
+        s_config.blend = enable;
+        s_config.blendSFactor = sfactor;
+        s_config.blendDFactor = dfactor;
+        if (s_config.blend)
         {
             GLCall(glEnable(GL_BLEND));
-            GLCall(glBlendFunc(m_config.blendSFactor, m_config.blendDFactor));
+            GLCall(glBlendFunc(s_config.blendSFactor, s_config.blendDFactor));
         }
         else
         {
@@ -166,7 +171,7 @@ namespace RuamEngine
     {
 		ShaderProgramSPtr newProgram = Renderer::CreateProgram(vertexShaderPath, fragmentShaderPath);
         DrawingDataSPtr newDrawingData = std::make_unique<DrawingData>();
-        m_drawingDatas[type] = newDrawingData;
+        s_drawingDatas[type] = newDrawingData;
         newDrawingData->m_program = newProgram;
         return newDrawingData;
 	}
@@ -174,14 +179,14 @@ namespace RuamEngine
     ShaderProgramSPtr Renderer::CreateProgram(const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
     {
         ShaderProgramSPtr newProgram = std::make_shared<ShaderProgram>(vertexShaderPath, fragmentShaderPath);
-        m_shaderPrograms[newProgram->instanceId()] = newProgram;
+        s_shaderPrograms[newProgram->instanceId()] = newProgram;
 		return newProgram;
     }
 
     // If the render unit already exists, it returns the existing index. Otherwise, it creates a new render unit and returns its index.
     RenderUnitSPtr Renderer::CreateRenderUnit(ShaderProgramType shaderProgramType, MaterialWPtr material)
     {
-        DrawingDataSPtr drawingData = m_drawingDatas[shaderProgramType];
+        DrawingDataSPtr drawingData = s_drawingDatas[shaderProgramType];
 		RenderUnitSPtr ru = GetRenderUnit(material, shaderProgramType);
         if (ru != nullptr)
         {
@@ -203,7 +208,7 @@ namespace RuamEngine
     {
         GLenum type = texture->texType();
 
-        if (m_handlesByType[type].size() >= maxTextureCountPerType)
+        if (s_handlesByType[type].size() >= maxTextureCountPerType)
         {
             std::cerr << "ERROR: Max texture limit of type " << type << " reached. The limit is " << maxTextureCountPerType << "\n";
             return 0;
@@ -217,18 +222,18 @@ namespace RuamEngine
 
         unsigned int index;
 
-        if (m_textureFreeIndexesByType[type].size()>0)
+        if (s_textureFreeIndexesByType[type].size()>0)
         {
-        	index = m_textureFreeIndexesByType[type][0];
-	        m_handlesByType[type][m_textureFreeIndexesByType[type][0]] = newHandle;
-	        m_texturesByType[type][m_textureFreeIndexesByType[type][0]] = texture;
-			m_textureFreeIndexesByType[type].erase(m_textureFreeIndexesByType[type].begin());
+        	index = s_textureFreeIndexesByType[type][0];
+	        s_handlesByType[type][s_textureFreeIndexesByType[type][0]] = newHandle;
+	        s_texturesByType[type][s_textureFreeIndexesByType[type][0]] = texture;
+			s_textureFreeIndexesByType[type].erase(s_textureFreeIndexesByType[type].begin());
         }
         else
         {
-		    m_handlesByType[type].push_back(newHandle);
-		    m_texturesByType[type].push_back(texture);
-			index = m_handlesByType[type].size()-1;
+		    s_handlesByType[type].push_back(newHandle);
+		    s_texturesByType[type].push_back(texture);
+			index = s_handlesByType[type].size()-1;
         }
         UpdateTextureType(type);
         return index;
@@ -236,18 +241,18 @@ namespace RuamEngine
 
     void Renderer::UnregisterTexture(unsigned int textureIndex, GLenum type)
     {
-        if (textureIndex >= m_texturesByType[type].size())
+        if (textureIndex >= s_texturesByType[type].size())
         {
             std::cout << "Warning: trying to unregister invalid texture of index " << textureIndex << "\n";
             return;
         }
 
-        GLuint64 handle = m_handlesByType[type][textureIndex];
+        GLuint64 handle = s_handlesByType[type][textureIndex];
         GLCall(glMakeTextureHandleNonResidentARB(handle));
 
-        m_texturesByType[type][textureIndex] = nullptr;
-        m_handlesByType[type][textureIndex] = 0;
-        m_textureFreeIndexesByType[type].push_back(textureIndex);
+        s_texturesByType[type][textureIndex] = nullptr;
+        s_handlesByType[type][textureIndex] = 0;
+        s_textureFreeIndexesByType[type].push_back(textureIndex);
 
         UpdateTextureType(type);
     }
@@ -281,10 +286,10 @@ namespace RuamEngine
 
     void Renderer::DestroyShaderProgram(unsigned int programId)
     {
-        auto it = m_shaderPrograms.find(programId);
-        if (it != m_shaderPrograms.end())
+        auto it = s_shaderPrograms.find(programId);
+        if (it != s_shaderPrograms.end())
         {
-            m_shaderPrograms.erase(programId);
+            s_shaderPrograms.erase(programId);
             std::cout << "Shader Program with id " << programId << " was destroyed successfully\n";
         }
         else std::cout << "Couldn't find shader program of id " << programId << " and therefore couldn't destroy it\n";
@@ -295,7 +300,7 @@ namespace RuamEngine
     // Finds if a render unit already exists in a certain drawing data, if not, returns nullptr
     RenderUnitSPtr Renderer::GetRenderUnit(MaterialWPtr material, ShaderProgramType shaderProgramType)
     {
-        DrawingDataSPtr drawingData = m_drawingDatas[shaderProgramType];
+        DrawingDataSPtr drawingData = s_drawingDatas[shaderProgramType];
         unsigned int materialId = material.lock()->id();
         auto units = drawingData->m_renderUnits;
         auto it = units.find(materialId);
@@ -306,31 +311,31 @@ namespace RuamEngine
     // Should be called before loading any textures (before any UpdateTextures/UpdateTextureType call)
     void Renderer::AllocateTextureTypes()
     {
-        std::cout << "Buffer of textures 2D: " <<m_buffersByType[GL_TEXTURE_CUBE_MAP] << "\n";
-        for (auto& [type, buffer] : m_buffersByType)
+        std::cout << "Buffer of textures 2D: " <<s_buffersByType[GL_TEXTURE_CUBE_MAP] << "\n";
+        for (auto& [type, buffer] : s_buffersByType)
         {
             AllocateTextureType(type);
         }
-        texturesUploaded = true;
+        s_texturesUploaded = true;
     }
 
     void Renderer::AllocateTextureType(GLenum type)
     {
-        ASSERT(m_handlesByType[type].size() < maxTextureCountPerType);
-		ASSERT(!texturesUploaded);
+        ASSERT(s_handlesByType[type].size() < maxTextureCountPerType);
+		ASSERT(!s_texturesUploaded);
         GLCall(glNamedBufferStorage(
-            m_buffersByType[type],
+            s_buffersByType[type],
             sizeof(GLuint64) * maxTextureCountPerType,
             NULL,
             GL_DYNAMIC_STORAGE_BIT
         ));
-        GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, m_bindingsByType[type], m_buffersByType[type]));
+        GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, s_bindingsByType[type], s_buffersByType[type]));
     }
 
     // Should be used after calling UploadTextures()
     void Renderer::UpdateTextures()
     {
-        for (auto& [type, handles] : m_handlesByType)
+        for (auto& [type, handles] : s_handlesByType)
         {
             UpdateTextureType(type);
         }
@@ -338,23 +343,23 @@ namespace RuamEngine
 
 	void Renderer::UpdateTextureType(GLenum type)
 	{
-	    ASSERT(m_handlesByType[type].size() < maxTextureCountPerType);
+	    ASSERT(s_handlesByType[type].size() < maxTextureCountPerType);
 
         GLint size = 0;
-        GLCall(glGetNamedBufferParameteriv(m_buffersByType[type], GL_BUFFER_SIZE, &size));
+        GLCall(glGetNamedBufferParameteriv(s_buffersByType[type], GL_BUFFER_SIZE, &size));
 
         GLCall(glNamedBufferSubData(
-            m_buffersByType[type],
+            s_buffersByType[type],
             0,
-            sizeof(GLuint64) * m_handlesByType[type].size(),
-            (const void*)m_handlesByType[type].data()
+            sizeof(GLuint64) * s_handlesByType[type].size(),
+            (const void*)s_handlesByType[type].data()
         ));
 	}
 
 
     void Renderer::Draw()
     {
-        for (auto& [type,drawingData] : m_drawingDatas)
+        for (auto& [type,drawingData] : s_drawingDatas)
         {
 			drawingData->m_program->updateCameraMatrices(Editor::Camera());
 
@@ -396,4 +401,13 @@ namespace RuamEngine
 		GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit.m_indices->currentSize()/sizeof(unsigned int), renderUnit.m_modelMatricesBuffer->m_data.size()));
     }
 
+    void Renderer::framebuffer_size_callback(GLFWwindow* window, int width, int height)
+    {
+        s_config.windowWidth = width;
+        s_config.windowHeight = height;
+        glViewport(0, 0, width, height);
+        if (height==0) height = 1;
+        float newAspectRatio = static_cast<float>(width) / static_cast<float>(height);
+        Editor::Camera().setAspectRatio(newAspectRatio);
+    }
 }

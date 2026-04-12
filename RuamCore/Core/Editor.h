@@ -27,7 +27,7 @@ namespace RuamEngine
 		static void DrawEntityFamily(Entity* entity);
 		static void DrawMemberInInspector(const std::string& name, const std::type_index& type, void* value, std::function<void()>* callbackOnChange);
 
-		static EditorCamera Camera();
+		static EditorCamera& Camera();
 
 		#define DRAW_MEMBER_NAME(name)  \
     		std::string label = name + ": ";    \

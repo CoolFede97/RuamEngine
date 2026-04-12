@@ -265,7 +265,7 @@ namespace RuamEngine
 		else std::cerr << "Error: Couldn't find matching function in s_inspectorDrawers for a variable of type " << type.name() << " \n";
 	}
 
-	EditorCamera Editor::Camera() { return s_camera; }
+	EditorCamera& Editor::Camera() { return s_camera; }
 
 	void Editor::UpdateSceneManager()
 	{

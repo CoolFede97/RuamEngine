@@ -50,19 +50,19 @@ namespace RuamEngine
         static void SetBlend(bool enable, GLenum sfactor = GL_SRC_ALPHA, GLenum dfactor = GL_ONE_MINUS_SRC_ALPHA);
 
 		// Getters for RendererConfig
-        static int GetWindowWidth() { return m_config.windowWidth; }
-        static int GetWindowHeight()  { return m_config.windowHeight; }
-        static const char* GetWindowTitle()  { return m_config.windowTitle; }
-        static glm::vec4 GetClearColor()  { return m_config.clearColor; }
-        static bool GetUseClearColor()  { return m_config.useClearColor; }
-        static bool GetDepthTest()  { return m_config.depthTest; }
-        static bool GetBlend()  { return m_config.blend; }
-        static GLFWmonitor* GetMonitor()  { return m_config.monitor; }
-        static GLFWwindow* GetShare()  { return m_config.share; }
-        static GLenum GetBlendSFactor()  { return m_config.blendSFactor; }
-        static GLenum GetBlendDFactor()  { return m_config.blendDFactor; }
-		static GLFWwindow* GetWindow() { return m_window; }
-		static int WindowShouldClose() { return glfwWindowShouldClose(m_window); }
+        static int GetWindowWidth() { return s_config.windowWidth; }
+        static int GetWindowHeight()  { return s_config.windowHeight; }
+        static const char* GetWindowTitle()  { return s_config.windowTitle; }
+        static glm::vec4 GetClearColor()  { return s_config.clearColor; }
+        static bool GetUseClearColor()  { return s_config.useClearColor; }
+        static bool GetDepthTest()  { return s_config.depthTest; }
+        static bool GetBlend()  { return s_config.blend; }
+        static GLFWmonitor* GetMonitor()  { return s_config.monitor; }
+        static GLFWwindow* GetShare()  { return s_config.share; }
+        static GLenum GetBlendSFactor()  { return s_config.blendSFactor; }
+        static GLenum GetBlendDFactor()  { return s_config.blendDFactor; }
+		static GLFWwindow* GetWindow() { return s_window; }
+		static int WindowShouldClose() { return glfwWindowShouldClose(s_window); }
 
         // Creators
 		static RenderUnitSPtr CreateRenderUnit(ShaderProgramType shaderProgramType, MaterialWPtr material);
@@ -109,21 +109,23 @@ namespace RuamEngine
         static void Draw();
         static void Draw(RenderUnit& renderUnit);
 
-		static std::unordered_map<GLuint, DrawingDataSPtr> m_drawingDatas;
-		static std::unordered_map<unsigned int, ShaderProgramSPtr> m_shaderPrograms;
-		static std::unordered_map<GLenum, std::vector<TextureSPtr>> m_texturesByType;
-		static std::unordered_map<GLenum, std::vector<unsigned int>> m_textureFreeIndexesByType;
-        static std::unordered_map<std::string, TextureSPtr> m_texturesCache;
+        static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
-        static std::unordered_map<GLenum, std::vector<GLuint64>> m_handlesByType;
-        static std::unordered_map<GLenum, GLuint> m_buffersByType;
-        static std::unordered_map<GLenum, int> m_bindingsByType;
+		static std::unordered_map<GLuint, DrawingDataSPtr> s_drawingDatas;
+		static std::unordered_map<unsigned int, ShaderProgramSPtr> s_shaderPrograms;
+		static std::unordered_map<GLenum, std::vector<TextureSPtr>> s_texturesByType;
+		static std::unordered_map<GLenum, std::vector<unsigned int>> s_textureFreeIndexesByType;
+        static std::unordered_map<std::string, TextureSPtr> s_texturesCache;
 
-        static std::vector<glm::mat4> matrices;
+        static std::unordered_map<GLenum, std::vector<GLuint64>> s_handlesByType;
+        static std::unordered_map<GLenum, GLuint> s_buffersByType;
+        static std::unordered_map<GLenum, int> s_bindingsByType;
 
-        static bool texturesUploaded;
-        static RendererConfig m_config;
-        static GLFWwindow* m_window;
+        static std::vector<glm::mat4> s_matrices;
+
+        static bool s_texturesUploaded;
+        static RendererConfig s_config;
+        static GLFWwindow* s_window;
 
         friend class ResourceManager;
         friend class Engine;

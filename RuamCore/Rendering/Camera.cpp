@@ -33,4 +33,8 @@ namespace RuamEngine
 	{
 	    m_transform = newTransform;
 	}
+	void Camera::setAspectRatio(float newAspectRatio)
+	{
+	    m_aspectRatio = newAspectRatio;
+	}
 }

@@ -1,5 +1,6 @@
 #include "SaveSystem.h"
 
+#include "EditorCamera.h"
 #include "RuamConfig.h"
 #include "SceneManager.h"
 #include "Serial.h"
@@ -60,6 +61,7 @@ namespace RuamEngine
 	void SaveSystem::SaveCurrentScene()
 	{
 		if (SceneManager::ActiveScene() == nullptr) std::cerr << "Error: Trying to save active scene, but active scene is nullptr!\n";
+		SceneManager::ActiveScene()->m_lastSavedCameraTransform = Editor::Camera().transform();
 		SaveJsonScene(Serial::Serialize(SceneManager::ActiveScene()));
 		std::cout << "Changes saved successfully!\n";
 	}

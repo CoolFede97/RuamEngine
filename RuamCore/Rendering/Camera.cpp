@@ -16,7 +16,7 @@ namespace RuamEngine
 	}
 	glm::mat4 Camera::viewMatrix()
 	{
-		glm::vec3 eulerRadians = glm::radians(m_rot);
+		glm::vec3 eulerRadians = glm::radians(m_transform.rot);
 		glm::vec3 direction;
 
 		float pitch = eulerRadians.x;
@@ -27,6 +27,10 @@ namespace RuamEngine
 		direction.z = cos(pitch) * cos(yaw);
 
 		direction = glm::normalize(direction);
-		return glm::lookAt(m_pos, m_pos + direction, m_up);
+		return glm::lookAt(m_transform.pos, m_transform.pos + direction, m_up);
 	};
+	void Camera::setTransform(CameraTransform newTransform)
+	{
+	    m_transform = newTransform;
+	}
 }

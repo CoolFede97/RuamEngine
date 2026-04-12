@@ -1,3 +1,5 @@
+#include "Camera.h"
+#include "JsonConverters.h"
 #include "Serial.h"
 #include "Component.h"
 #include <exception>
@@ -38,7 +40,8 @@ namespace RuamEngine
 		{
 			{"m_name", scene->name()},
 			{"m_id", scene->id()},
-			{"m_entities", Json::array()}
+			{"m_entities", Json::array()},
+			{"m_lastSavedCameraTransform", scene->m_lastSavedCameraTransform}
 		};
 		for (Entity* entity : scene->getEntities())
 		{
@@ -53,7 +56,7 @@ namespace RuamEngine
 		const unsigned int sceneId = jsonScene["m_id"];
 
 		Scene* scene = new Scene(sceneId, jsonScene["m_name"]);
-
+		scene->m_lastSavedCameraTransform = jsonScene["m_lastSavedCameraTransform"].get<CameraTransform>();
 		if (jsonScene["m_entities"].is_null()) return scene;
 
 		for (const Json& jsonEntity : jsonScene["m_entities"])

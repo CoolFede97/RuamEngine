@@ -51,7 +51,7 @@ namespace RuamEngine
 		}
 
 		template<class Comp>
-		Component* addComponentWithJson(const nlohmann::json& j) {
+		Component* addComponentWithJson(const Json& j) {
 			std::unique_ptr<Comp> comp = std::make_unique<Comp>(j, m_id);
 			const std::type_index tidx = typeid(Comp);
 			if (m_components.count(tidx) > 0) m_components.insert({tidx, ComponentVector()});

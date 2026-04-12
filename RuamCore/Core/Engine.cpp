@@ -78,8 +78,9 @@ namespace RuamEngine
  			ImGui_ImplOpenGL3_NewFrame();
  			ImGui_ImplGlfw_NewFrame();
  			ImGui::NewFrame();
+            ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
 
-    		Editor::UpdateHierarchy();
+            Editor::UpdateHierarchy();
             Editor::UpdateInspector();
             Editor::UpdateSceneManager();
             // Time

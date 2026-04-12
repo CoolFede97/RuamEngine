@@ -1,4 +1,5 @@
 #include "Editor.h"
+#include "Camera.h"
 #include "Cursor.h"
 #include "Entity.h"
 #include "Component.h"
@@ -305,6 +306,10 @@ namespace RuamEngine
 	void Editor::UpdateCameraTransform()
 	{
 	    s_camera.updateCameraTransform();
+	}
+	void Editor::SetCameraTransform(CameraTransform cameraTransform)
+	{
+	    s_camera.setTransform(cameraTransform);
 	}
 
 	void Editor::DrawCreateSceneButton()

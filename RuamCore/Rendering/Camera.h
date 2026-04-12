@@ -5,6 +5,12 @@
 
 namespace RuamEngine
 {
+    struct CameraTransform
+    {
+        glm::vec3 pos;
+        glm::vec3 rot;
+    };
+
 	class Camera
 	{
 	protected:
@@ -14,12 +20,13 @@ namespace RuamEngine
 		float m_fov = 45.0f;
 		float m_aspectRatio = 800.0f/600.0f;
 
-		glm::vec3 m_pos = {0,0,0};
-		glm::vec3 m_rot = {0,0,0};
+		CameraTransform m_transform;
 
 	public:
-	    virtual inline glm::vec3 position() {return m_pos;}
-		virtual inline glm::vec3 rotation() {return m_rot;}
+	    virtual inline glm::vec3 position() {return m_transform.pos;}
+		virtual inline glm::vec3 rotation() {return m_transform.rot;}
+		virtual inline CameraTransform transform() {return m_transform; }
+		virtual void setTransform(CameraTransform newTransform);
 		virtual glm::mat4 projectionMatrix();
 		virtual glm::mat4 viewMatrix();
 	};

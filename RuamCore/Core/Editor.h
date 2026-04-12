@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Camera.h"
 #include <functional>
 #include <string>
 #include <typeindex>
@@ -18,6 +19,7 @@ namespace RuamEngine
 		static void UpdateInspector();
 		static void UpdateSceneManager(); // Doesn't update anything from the class SceneManager itself. It refers to the UI.
 		static void UpdateCameraTransform();
+		static void SetCameraTransform(CameraTransform cameraTransform);
 
 		static void DrawAddComponentButton();
 		static void DrawCreateSceneButton();

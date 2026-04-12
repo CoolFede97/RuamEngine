@@ -2,6 +2,7 @@
 //#include "Serial.h"
 #include "EditorCamera.h"
 #include "Editor.h"
+#include "ModelRenderer.h"
 #include "Renderer.h"
 #include "Engine.h"
 
@@ -31,6 +32,7 @@ namespace RuamEngine
 		Editor::s_selectedEntity = nullptr;
 		s_activeScene = nullptr;
 		s_activeScene.reset(Serial::DeserializeJsonScene(SaveSystem::LoadJsonScene(sceneName)));
+		Editor::SetCameraTransform(s_activeScene->m_lastSavedCameraTransform);
 	}
 
 	// void SceneManager::SetActiveScene(Scene* scene)
@@ -87,16 +89,12 @@ namespace RuamEngine
 	SceneSPtr SceneManager::CreateDefaultScene(std::string sceneName)
 	{
 		SceneSPtr scene = std::make_shared<Scene>(0, sceneName);
-		Entity* light = scene->createEntity();
+		Entity* light = scene->createEntity("globalLight");
 		light->addComponent<GlobalLight>();
 		light->transform().setPosition(glm::vec3(0.0f, 100.0f, 0.0f));
-		light->setName("Light");
 
-		Entity* player = scene->createEntity();
-		player->transform().setPosition(glm::vec3(50.0f, 20.0f, 160.0f));
-		player->transform().setRotation(glm::vec3(0.0f, 180, 0.0f));
-		player->setName("Player2");
-
+		Entity* fede = scene->createEntity("fede");
+		fede->addComponent<ModelRenderer>()->setModel("RuamCore/Assets/Models/Fede.obj");
 		return scene;
 	}
 

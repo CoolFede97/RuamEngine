@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Camera.h"
+#include "SaveSystem.h"
 #include <list>
 #include <string>
 #include <iostream>
@@ -63,14 +65,19 @@ namespace RuamEngine
 	    std::map<unsigned int, std::map<std::type_index, std::vector<Component*>>> m_justCreatedComponents;
 
 	    std::list<std::unique_ptr<Entity>> m_entities;
+
 		const std::string m_name;
 	    const unsigned int m_id;
-	    static unsigned int s_idCount;
 
+	    static unsigned int s_idCount;
 		static const std::string s_defaultName;
+
+		CameraTransform m_lastSavedCameraTransform = {{0,0,0},{0,0,0}};
 
 		friend class SceneManager;
 		friend class Entity;
+		friend class SaveSystem;
+		friend class Serial;
 	};
 	using SceneSPtr = std::shared_ptr<Scene>;
 }

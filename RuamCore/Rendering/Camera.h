@@ -23,12 +23,12 @@ namespace RuamEngine
 		CameraTransform m_transform;
 
 	public:
-	    virtual inline glm::vec3 position() {return m_transform.pos;}
-		virtual inline glm::vec3 rotation() {return m_transform.rot;}
-		virtual inline CameraTransform transform() {return m_transform; }
+	    virtual inline glm::vec3 position() const {return m_transform.pos;}
+		virtual inline glm::vec3 rotation() const {return m_transform.rot;}
+		virtual inline CameraTransform transform() const {return m_transform; }
 		virtual void setTransform(CameraTransform newTransform);
-		virtual glm::mat4 projectionMatrix();
-		virtual glm::mat4 viewMatrix();
+		virtual glm::mat4 projectionMatrix() const;
+		virtual glm::mat4 viewMatrix() const;
 		virtual void setAspectRatio(float newAspectRatio);
 	};
 }

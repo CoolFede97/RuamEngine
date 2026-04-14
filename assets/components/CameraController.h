@@ -24,7 +24,7 @@ namespace RuamEngine
 		CAMERA_CONTROLLER_SERIALIZED_MEMBERS(DECL_MEMBER)
 		IMPL_DRAW_SERIALIZED_MEMBERS(CAMERA_CONTROLLER_SERIALIZED_MEMBERS(CALL_INSPECTOR_DRAWER))
 		IMPL_SERIALIZE(CameraController, CAMERA_CONTROLLER_SERIALIZED_MEMBERS(SER_FIELD,,))
-		std::string name() override { return "CameraController"; }
+		std::string name() const override { return "CameraController"; }
 		private:
 		void update() override;
 	};

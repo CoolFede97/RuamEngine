@@ -10,11 +10,11 @@
 
 namespace RuamEngine
 {
-    glm::mat4 Camera::projectionMatrix()
+    glm::mat4 Camera::projectionMatrix() const
 	{
 		return glm::perspective(glm::radians(m_fov), m_aspectRatio, m_nearPlane, m_farPlane);
 	}
-	glm::mat4 Camera::viewMatrix()
+	glm::mat4 Camera::viewMatrix() const
 	{
 		glm::vec3 eulerRadians = glm::radians(m_transform.rot);
 		glm::vec3 direction;

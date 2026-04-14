@@ -29,7 +29,7 @@ namespace RuamEngine
 
 		static void SetLightOffset(float offset);
 
-		std::string name() override { return "GlobalLight"; }
+		std::string name() const override { return "GlobalLight"; }
 
 		void renderStart() override;
 

@@ -133,7 +133,7 @@ namespace RuamEngine
 
         // Doesn't use the macro IMPL_DRAW_SERIALIZED_MEMBERS since this is the virtual one.
         virtual inline void drawSerializedMembers() {;};
-        virtual inline std::string name() { return "Component"; }
+        virtual inline std::string name() const { return "Component"; }
 	protected:
 		const unsigned int m_entityId;
 		const unsigned int m_id;

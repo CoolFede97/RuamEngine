@@ -17,7 +17,7 @@ namespace RuamEngine
 		void update() {
   transform().position().z-=10*RuamTime::DeltaTime();
 		};
-		std::string name() override { return "Sandbox"; }
+		std::string name() const override { return "Sandbox"; }
 		IMPL_SIMPLE_SERIALIZE(Sandbox)
 	private:
 		DECL_REGISTER_COMPONENT(Sandbox)

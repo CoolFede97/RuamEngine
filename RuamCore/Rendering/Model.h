@@ -30,8 +30,8 @@ namespace RuamEngine
 		void processNode(aiNode* node, const aiScene* scene);
 		MeshSPtr processMesh(aiMesh* mesh, const aiScene* scene);
 		// std::vector<Texture2D> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string& typeName);
-		std::vector<Vertex> meshesVertices();
-		std::vector<unsigned int> meshesIndices();
+		std::vector<Vertex> meshesVertices() const;
+		std::vector<unsigned int> meshesIndices() const;
 	};
 	using ModelSPtr = std::shared_ptr<Model>;
 	using ModelWPtr = std::weak_ptr<Model>;

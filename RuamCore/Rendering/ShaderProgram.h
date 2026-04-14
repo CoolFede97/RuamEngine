@@ -40,7 +40,7 @@ namespace RuamEngine
 		void setUniformTextureSlots(const std::string& name);
 		void loadMaterial(const Material& material);
 		void updateCameraMatrices(Camera camera);
-		unsigned int maxTexturesCapacity() { return  maxTextureSlots; }
+		unsigned int maxTexturesCapacity() const { return  maxTextureSlots; }
 		unsigned int instanceId() const { return m_instanceId; }
 		unsigned int rendererID() const { return m_glName; }
 

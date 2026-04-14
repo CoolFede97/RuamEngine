@@ -27,9 +27,6 @@ namespace RuamEngine
 		Transform(Json transformData, const unsigned int entityId);
 		~Transform();
 
-		void start();
-		void update();
-
 		void setPosition(glm::vec3 new_pos);
 		void setPosition(float x, float y, float z);
 		void setRotation(glm::vec3 new_rot);
@@ -57,7 +54,7 @@ namespace RuamEngine
 		Transform* m_parent = nullptr; // If null, there is no parent
 
 		IMPL_DRAW_SERIALIZED_MEMBERS(TRANSFORM_SERIALIZED_MEMBERS(CALL_INSPECTOR_DRAWER))
-		std::string name() override { return "Transform"; }
+		std::string name() const override { return "Transform"; }
 
 	protected:
 		TRANSFORM_SERIALIZED_MEMBERS(DECL_MEMBER)

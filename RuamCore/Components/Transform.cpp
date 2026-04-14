@@ -19,8 +19,6 @@ namespace RuamEngine
 			if (child!=nullptr) child->m_parent = nullptr;
 		}
 	}
-	void Transform::start() {}
-	void Transform::update() {}
 
 	void Transform::setPosition(glm::vec3 new_pos) {
 		m_position = new_pos;

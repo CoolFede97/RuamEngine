@@ -34,7 +34,7 @@ namespace RuamEngine
     	ShaderProgramType m_shaderProgramType = ShaderProgramType::general;
     	std::unordered_map<unsigned int, RenderUnitWPtr> m_cachedRenderUnits;
 
-    	std::string name() override { return "ModelRenderer"; }
+    	std::string name() const override { return "ModelRenderer"; }
     	IMPL_DRAW_SERIALIZED_MEMBERS(MODEL_RENDERER_SERIALIZED_MEMBERS(CALL_INSPECTOR_DRAWER))
     	IMPL_SERIALIZE(ModelRenderer, MODEL_RENDERER_SERIALIZED_MEMBERS(SER_FIELD, ,))
 

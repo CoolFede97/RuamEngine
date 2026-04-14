@@ -159,7 +159,7 @@ namespace RuamEngine
 		return std::make_shared<Mesh>(vertices, indices, sharedMeshMaterial);
 	}
 
-	std::vector<Vertex> Model::meshesVertices()
+	std::vector<Vertex> Model::meshesVertices() const
 	{
 		std::vector<Vertex> allVertices;
 		for (const MeshSPtr& mesh : m_meshes)
@@ -168,7 +168,7 @@ namespace RuamEngine
 		}
 		return allVertices;
 	}
-	std::vector<unsigned int> Model::meshesIndices()
+	std::vector<unsigned int> Model::meshesIndices() const
 	{
 		std::vector<unsigned int> allIndices;
 		for (const MeshSPtr& mesh : m_meshes)

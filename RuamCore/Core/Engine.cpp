@@ -83,11 +83,13 @@ namespace RuamEngine
             Editor::UpdateHierarchy();
             Editor::UpdateInspector();
             Editor::UpdateSceneManager();
+            Editor::UpdateViewport(Renderer::s_frameBuffer.get());
             // Time
  			RuamTime::Update();
 
+            Renderer::s_frameBuffer->bind();
  			Renderer::ClearScreen();
- 			Renderer::BeginBatch();
+            Renderer::BeginBatch();
 
  			EventManager::HandleEvents();
 
@@ -115,6 +117,9 @@ namespace RuamEngine
           		Renderer::Draw();
  			}
 
+            Renderer::s_frameBuffer->unbind();
+            glViewport(0,0,Renderer::GetWindowWidth(), Renderer::GetWindowHeight());
+ 			Renderer::ClearScreen();
             ImGui::Render();
            	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 

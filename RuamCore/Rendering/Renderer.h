@@ -7,6 +7,7 @@
 #include "RenderUnit.h"
 #include "Material.h"
 #include "Texture.h"
+#include "FrameBuffer.h"
 
 #include <unordered_map>
 #include <vector>
@@ -126,6 +127,8 @@ namespace RuamEngine
         static bool s_texturesUploaded;
         static RendererConfig s_config;
         static GLFWwindow* s_window;
+
+        static FrameBufferSPtr s_frameBuffer;
 
         friend class ResourceManager;
         friend class Engine;

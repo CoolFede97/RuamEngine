@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Camera.h"
+#include "FrameBuffer.h"
 #include <functional>
 #include <string>
 #include <typeindex>
@@ -18,6 +19,7 @@ namespace RuamEngine
 		static void UpdateHierarchy();
 		static void UpdateInspector();
 		static void UpdateSceneManager(); // Doesn't update anything from the class SceneManager itself. It refers to the UI.
+		static void UpdateViewport(FrameBuffer* fb);
 		static void UpdateCameraTransform();
 		static void SetCameraTransform(CameraTransform cameraTransform);
 

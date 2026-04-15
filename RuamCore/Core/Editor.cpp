@@ -303,6 +303,30 @@ namespace RuamEngine
 		DrawCreateSceneButton();
 	}
 
+	void Editor::UpdateViewport(FrameBuffer* fb)
+	{
+    	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
+        ImGui::Begin("Escena 3D");
+
+        ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
+
+        if (fb->width() != viewportPanelSize.x || fb->height() != viewportPanelSize.y)
+        {
+            fb->rescale(viewportPanelSize.x, viewportPanelSize.y);
+
+            float newAspect = viewportPanelSize.x / viewportPanelSize.y;
+            Camera().setAspectRatio(newAspect);
+        }
+
+        unsigned int textureID = fb->texture();
+        ImGui::Image(reinterpret_cast<void*>(static_cast<intptr_t>(textureID)),
+                    ImVec2{ (float)fb->width(), (float)fb->height() },
+                    ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+
+        ImGui::End();
+        ImGui::PopStyleVar();
+	}
+
 	void Editor::UpdateCameraTransform()
 	{
 	    s_camera.updateCameraTransform();

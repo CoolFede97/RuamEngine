@@ -85,11 +85,14 @@ namespace RuamEngine
 		template<class Comp>
 		std::vector<Comp*> getComponentsOfType() const
 		{
-			std::vector<Component*> comps;
+			std::vector<Comp*> comps;
 			auto pair = m_components.find(typeid(Comp));
-			for (auto& cmp : pair->second)
+			if (pair != m_components.end())
 			{
-				comps.push_back(cmp.get());
+    			for (auto& cmp : pair->second)
+    			{
+    				comps.push_back(dynamic_cast<Comp*>(cmp.get()));
+    			}
 			}
 			return comps;
 		}

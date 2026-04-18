@@ -3,6 +3,7 @@
 #include "ModelRenderer.h"
 #include "Transform.h"
 #include "Sandbox.h"
+#include "GameCamera.h"
 
 namespace RuamEngine
 {
@@ -12,5 +13,6 @@ namespace RuamEngine
         GlobalLight::GlobalLightRegister();
         ModelRenderer::ModelRendererRegister();
         Sandbox::SandboxRegister();
+        GameCamera::GameCameraRegister();
     }
 }

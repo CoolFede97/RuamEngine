@@ -1,4 +1,5 @@
 #include "Engine.h"
+#include "GameCamera.h"
 #include "KeyCode.h"
 #include "Renderer.h"
 #include "Input.h"
@@ -67,7 +68,6 @@ namespace RuamEngine
        	unsigned int frameCount = 0;
         if (SceneManager::Scenes().size()>0) SceneManager::EnqueueSceneChange(SceneManager::Scenes()[0]);
 
-
   		while (!Renderer::WindowShouldClose())
   		{
     		CheckIfWantToSaveChanges();
@@ -83,12 +83,11 @@ namespace RuamEngine
             Editor::UpdateHierarchy();
             Editor::UpdateInspector();
             Editor::UpdateSceneManager();
-            Editor::UpdateViewport(Renderer::s_frameBuffer.get());
+            Editor::UpdateViewport(Renderer::s_editorFrameBuffer.get(), "Editor", true);
+            Editor::UpdateViewport(Renderer::s_gameFrameBuffer.get(), "Game", false);
             // Time
  			RuamTime::Update();
 
-            Renderer::s_frameBuffer->bind();
- 			Renderer::ClearScreen();
             Renderer::BeginBatch();
 
  			EventManager::HandleEvents();
@@ -113,11 +112,21 @@ namespace RuamEngine
 
  			if (!SceneManager::SceneChange() && SceneManager::ActiveScene())
  			{
+                Renderer::s_editorFrameBuffer->bind();
+     			Renderer::ClearScreen();
       		    Renderer::EndBatch();
-          		Renderer::Draw();
- 			}
+          		Renderer::Draw(Editor::Camera().viewMatrix(), Editor::Camera().projectionMatrix());
+                Renderer::s_editorFrameBuffer->unbind();
 
-            Renderer::s_frameBuffer->unbind();
+                if (GameCamera::GetMainCamera())
+                {
+                    Renderer::s_gameFrameBuffer->bind();
+                    Renderer::ClearScreen();
+                   	Renderer::Draw(GameCamera::GetMainCamera()->viewMatrix(), GameCamera::GetMainCamera()->projectionMatrix());
+                    Renderer::s_gameFrameBuffer->unbind();
+                }
+            }
+
             glViewport(0,0,Renderer::GetWindowWidth(), Renderer::GetWindowHeight());
  			Renderer::ClearScreen();
             ImGui::Render();

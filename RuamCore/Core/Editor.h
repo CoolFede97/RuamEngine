@@ -19,7 +19,7 @@ namespace RuamEngine
 		static void UpdateHierarchy();
 		static void UpdateInspector();
 		static void UpdateSceneManager(); // Doesn't update anything from the class SceneManager itself. It refers to the UI.
-		static void UpdateViewport(FrameBuffer* fb);
+		static void UpdateViewport(FrameBuffer* fb, const char* windowName, bool editorCamera);
 		static void UpdateCameraTransform();
 		static void SetCameraTransform(CameraTransform cameraTransform);
 

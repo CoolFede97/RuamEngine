@@ -17,7 +17,8 @@ namespace RuamEngine
 {
     RendererConfig Renderer::s_config;
     GLFWwindow* Renderer::s_window = nullptr;
-    FrameBufferSPtr Renderer::s_frameBuffer = nullptr;
+    FrameBufferSPtr Renderer::s_editorFrameBuffer = nullptr;
+    FrameBufferSPtr Renderer::s_gameFrameBuffer = nullptr;
     std::unordered_map<unsigned int, ShaderProgramSPtr> Renderer::s_shaderPrograms;
 	std::unordered_map<GLuint, DrawingDataSPtr> Renderer::s_drawingDatas;
 	std::unordered_map<std::string, TextureSPtr> Renderer::s_texturesCache;
@@ -63,7 +64,8 @@ namespace RuamEngine
 
 
         {
-            s_frameBuffer = std::make_shared<FrameBuffer>(s_config.windowWidth, s_config.windowHeight);
+            s_editorFrameBuffer = std::make_shared<FrameBuffer>(s_config.windowWidth, s_config.windowHeight);
+            s_gameFrameBuffer = std::make_shared<FrameBuffer>(s_config.windowWidth, s_config.windowHeight);
 
             s_bindingsByType[GL_TEXTURE_2D] = SSBOType::textures2D;
             s_bindingsByType[GL_TEXTURE_CUBE_MAP] = SSBOType::cubemaps;
@@ -361,11 +363,11 @@ namespace RuamEngine
 	}
 
 
-    void Renderer::Draw()
+    void Renderer::Draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
     {
         for (auto& [type,drawingData] : s_drawingDatas)
         {
-			drawingData->m_program->updateCameraMatrices(Editor::Camera());
+			drawingData->m_program->updateCameraMatrices(viewMatrix, projectionMatrix);
 
 			for (auto& [materialId, renderUnit] : drawingData->m_renderUnits)
             {

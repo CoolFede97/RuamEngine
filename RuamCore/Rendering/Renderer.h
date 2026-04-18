@@ -107,7 +107,7 @@ namespace RuamEngine
         static void AllocateTextureTypes();
         static void AllocateTextureType(GLenum type);
 
-        static void Draw();
+        static void Draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
         static void Draw(RenderUnit& renderUnit);
 
         static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -128,7 +128,8 @@ namespace RuamEngine
         static RendererConfig s_config;
         static GLFWwindow* s_window;
 
-        static FrameBufferSPtr s_frameBuffer;
+        static FrameBufferSPtr s_editorFrameBuffer;
+        static FrameBufferSPtr s_gameFrameBuffer;
 
         friend class ResourceManager;
         friend class Engine;

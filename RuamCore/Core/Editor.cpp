@@ -4,6 +4,7 @@
 #include "Entity.h"
 #include "Component.h"
 #include "EventManager.h"
+#include "GameCamera.h"
 #include "KeyCode.h"
 #include "SaveSystem.h"
 #include "Scene.h"
@@ -303,10 +304,10 @@ namespace RuamEngine
 		DrawCreateSceneButton();
 	}
 
-	void Editor::UpdateViewport(FrameBuffer* fb)
+	void Editor::UpdateViewport(FrameBuffer* fb, const char* windowName, bool editorCamera)
 	{
     	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
-        ImGui::Begin("Escena 3D");
+        ImGui::Begin(windowName);
 
         ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 
@@ -315,7 +316,17 @@ namespace RuamEngine
             fb->rescale(viewportPanelSize.x, viewportPanelSize.y);
 
             float newAspect = viewportPanelSize.x / viewportPanelSize.y;
-            Camera().setAspectRatio(newAspect);
+            if (editorCamera) Camera().setAspectRatio(newAspect);
+            else
+            {
+                for (Entity* entity : SceneManager::ActiveScene()->getEntities())
+                {
+                    for (GameCamera* cameraCmp : entity->getComponentsOfType<GameCamera>())
+                    {
+                        cameraCmp->setAspectRatio(newAspect);
+                    }
+                }
+            }
         }
 
         unsigned int textureID = fb->texture();

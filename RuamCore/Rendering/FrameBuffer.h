@@ -4,11 +4,17 @@
 #include "Vec2.h"
 namespace RuamEngine
 {
+    struct CameraMatrices
+    {
+        glm::mat4 viewMatrix;
+        glm::mat4 projectionMatrix;
+    };
     class FrameBuffer
     {
         unsigned int m_glName;
         unsigned int m_texture;
         unsigned int m_renderBuffer;
+        CameraMatrices m_cameraMatrices;
         int m_width = 0;
         int m_height = 0;
 

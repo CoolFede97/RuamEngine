@@ -77,7 +77,6 @@ namespace RuamEngine
             std::cerr << "Error: Frame buffer status check failed!\n";
             return false;
         }
-        std::cout << "Frame buffer status is successful!\n";
         return true;
     }
 }

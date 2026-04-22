@@ -134,6 +134,7 @@ namespace RuamEngine
         friend class ResourceManager;
         friend class Engine;
         friend class RenderUnit;
+        friend class Editor;
     };
 
 }

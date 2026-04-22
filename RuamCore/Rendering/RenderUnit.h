@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Material.h"
+#include "RenderingCore.h"
+#include "SSBO.h"
 #include "ShaderProgram.h"
 #include "RenderingElements.h"
 #include "RenderingConstants.h"
@@ -24,9 +26,9 @@ namespace RuamEngine
 		ShaderProgramSPtr m_program = nullptr;
         MaterialWPtr m_material = {};
         VertexArrayUPtr m_vertexArray = std::make_unique<VertexArray>();
-        SSBOPointer<Vertex> m_vertices = std::make_unique<SSBO<Vertex>>(maxVertexCount, GL_DYNAMIC_STORAGE_BIT);
-        SSBOPointer<unsigned int> m_indices = std::make_unique<SSBO<unsigned int>>(maxIndexCount, GL_DYNAMIC_STORAGE_BIT);
-        SSBOPointer<glm::mat4> m_modelMatricesBuffer = std::make_unique<SSBO<glm::mat4>>(maxVertexCount, GL_DYNAMIC_STORAGE_BIT);
+        SSBOUPtr<Vertex> m_vertices = std::make_unique<SSBO<Vertex>>(maxVertexCount, GL_DYNAMIC_STORAGE_BIT);
+        SSBOUPtr<unsigned int> m_indices = std::make_unique<SSBO<unsigned int>>(maxIndexCount, GL_DYNAMIC_STORAGE_BIT);
+        SSBOUPtr<glm::mat4> m_modelMatricesBuffer = std::make_unique<SSBO<glm::mat4>>(maxVertexCount, GL_DYNAMIC_STORAGE_BIT);
     	std::vector<unsigned int> m_meshesRegistered; // Stores all the meshes instance id
 
 		bool m_staticStorage = false;
@@ -36,10 +38,24 @@ namespace RuamEngine
 		void bindBuffersBase();
 
         //bool AddBatchData(const std::vector<Vertex> vertices, unsigned int vertexDataSize, const std::vector<unsigned int> indices, unsigned int indexDataSize);
-        bool addBatchData(const std::vector<Vertex>& vertices, std::vector<unsigned int> indices, const std::vector<glm::mat4>& modelMatrices);
-        bool addModelMatrix(const std::vector<glm::mat4>& modelMatrices);
+        void addBatchData(const std::vector<Vertex>& vertices, std::vector<unsigned int> indices, const std::vector<glm::mat4>& modelMatrices);
+        void addModelMatrices(const std::vector<glm::mat4>& modelMatrices);
         void flush();
     private:
+        template<typename T>
+        void resizeSSBO(SSBOUPtr<T>& ssbo) // doubles buffer size
+        {
+            SSBOUPtr<T> newSSBO = std::make_unique<SSBO<T>>((ssbo->maxSize()/sizeof(T))*2, GL_DYNAMIC_STORAGE_BIT);
+
+            GLCall(glBindBuffer(GL_COPY_WRITE_BUFFER, newSSBO.get()->glName()));
+            GLCall(glBindBuffer(GL_COPY_READ_BUFFER, ssbo.get()->glName()));
+
+            GLCall(glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0, ssbo->maxSize()));
+
+            ssbo = std::move(newSSBO);
+            std::cout << "SSBO resized!\n";
+        }
+
         unsigned int m_indexCount = 0;
         bool m_uploaded = false;
     };

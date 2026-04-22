@@ -3,7 +3,6 @@
 #include "Cursor.h"
 #include "Entity.h"
 #include "Component.h"
-#include "EventManager.h"
 #include "GameCamera.h"
 #include "KeyCode.h"
 #include "SaveSystem.h"
@@ -316,7 +315,10 @@ namespace RuamEngine
             fb->rescale(viewportPanelSize.x, viewportPanelSize.y);
 
             float newAspect = viewportPanelSize.x / viewportPanelSize.y;
-            if (editorCamera) Camera().setAspectRatio(newAspect);
+            if (editorCamera)
+            {
+                Camera().setAspectRatio(newAspect);
+            }
             else
             {
                 for (Entity* entity : SceneManager::ActiveScene()->getEntities())

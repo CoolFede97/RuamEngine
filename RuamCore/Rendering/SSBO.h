@@ -1,8 +1,7 @@
 #pragma once
 
 #include "RenderingCore.h"
-#include "Vertex.h"
-
+#include <vector>
 #include <memory>
 
 namespace RuamEngine
@@ -72,11 +71,16 @@ namespace RuamEngine
 			m_currentBytes = 0;
 		}
 
+		bool checkIfEnoughSpace(unsigned int elementsToAddAmount)
+		{
+		    if (currentSize() + elementsToAddAmount * sizeof(T) > maxSize()) return false;
+			return true;
+		}
 		unsigned int glName() const { return m_glName; }
 		unsigned int currentSize() const { return m_currentBytes; }
 		unsigned int maxSize() const { return m_maxBytes; }
 
 	};
 	template<typename T>
-	using SSBOPointer = std::unique_ptr<SSBO<T>>;
+	using SSBOUPtr = std::unique_ptr<SSBO<T>>;
 }

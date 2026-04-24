@@ -55,6 +55,7 @@ namespace RuamEngine
 
 	void RenderUnit::addBatchData(const std::vector<Vertex>& vertices, std::vector<unsigned int> indices, const std::vector<glm::mat4>& modelMatrices)
 	{
+	    if (m_vertices)
 		ASSERT(vertices.size() * sizeof(Vertex) <= m_vertices->maxSize());
 		ASSERT(indices.size() * sizeof(unsigned int) <= m_indices->maxSize());
 		ASSERT(modelMatrices.size() * mat4Size <= m_modelMatricesBuffer->maxSize());
@@ -65,13 +66,13 @@ namespace RuamEngine
 		}
 		m_indexCount += vertices.size();
 
-		if (!m_vertices->checkIfEnoughSpace(vertices.size())) resizeSSBO(m_vertices);
+		if (!m_vertices->checkIfEnoughSpace(vertices.size())) resizeSSBO(m_vertices, false);
 		m_vertices->addBatchData(vertices);
 
-		if (!m_indices->checkIfEnoughSpace(indices.size())) resizeSSBO(m_indices);
+		if (!m_indices->checkIfEnoughSpace(indices.size())) resizeSSBO(m_indices, false);
         m_indices->addBatchData(indices);
 
-        if (!m_modelMatricesBuffer->checkIfEnoughSpace(modelMatrices.size())) resizeSSBO(m_modelMatricesBuffer);
+        if (!m_modelMatricesBuffer->checkIfEnoughSpace(modelMatrices.size())) resizeSSBO(m_modelMatricesBuffer, false);
 		m_modelMatricesBuffer->addBatchData(modelMatrices);
 	}
 
@@ -81,7 +82,7 @@ namespace RuamEngine
 		std::cout << "Fullness: " << m_modelMatricesBuffer->currentSize()+modelMatrices.size() * mat4Size << " / " << m_modelMatricesBuffer->maxSize() << "\n";
 		ASSERT(modelMatrices.size() * mat4Size <= m_modelMatricesBuffer->maxSize());
 		bool fullBatch = false;
-		if (!m_modelMatricesBuffer->checkIfEnoughSpace(modelMatrices.size())) resizeSSBO(m_modelMatricesBuffer);
+		if (!m_modelMatricesBuffer->checkIfEnoughSpace(modelMatrices.size())) resizeSSBO(m_modelMatricesBuffer, false);
 	    m_modelMatricesBuffer->addBatchData(modelMatrices);
 	}
 

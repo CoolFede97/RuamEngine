@@ -4,8 +4,9 @@
 #include "RenderingCore.h"
 #include "SSBO.h"
 #include "ShaderProgram.h"
-#include "RenderingElements.h"
 #include "RenderingConstants.h"
+#include "Vertex.h"
+#include "VertexArray.h"
 #include <memory>
 
 namespace RuamEngine
@@ -43,15 +44,17 @@ namespace RuamEngine
         void flush();
     private:
         template<typename T>
-        void resizeSSBO(SSBOUPtr<T>& ssbo) // doubles buffer size
+        void resizeSSBO(SSBOUPtr<T>& ssbo, bool oneShotAmplifier) // doubles buffer size
         {
-            SSBOUPtr<T> newSSBO = std::make_unique<SSBO<T>>((ssbo->maxSize()/sizeof(T))*2, GL_DYNAMIC_STORAGE_BIT);
+            unsigned int amplifier = oneShotAmplifier ? ssboOneShotCapacityAmplifier : ssboCapacityAmplifier;
+            SSBOUPtr<T> newSSBO = std::make_unique<SSBO<T>>((ssbo->maxSize()/sizeof(T))*amplifier, GL_DYNAMIC_STORAGE_BIT);
+            newSSBO.get()->m_data = ssbo.get()->m_data;
+            newSSBO.get()->m_currentBytes = ssbo.get()->m_currentBytes;
 
             GLCall(glBindBuffer(GL_COPY_WRITE_BUFFER, newSSBO.get()->glName()));
             GLCall(glBindBuffer(GL_COPY_READ_BUFFER, ssbo.get()->glName()));
 
             GLCall(glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0, ssbo->maxSize()));
-
             ssbo = std::move(newSSBO);
             std::cout << "SSBO resized!\n";
         }

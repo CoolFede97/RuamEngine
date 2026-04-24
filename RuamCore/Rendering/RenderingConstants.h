@@ -12,4 +12,6 @@ namespace RuamEngine
 	static const unsigned int mat4Size = sizeof(glm::mat4);
 	static const unsigned int maxMat4Size = maxVertexCount * mat4Size;
 	static const unsigned int maxTextureCountPerType = 3000;
+	static const unsigned int ssboCapacityAmplifier = 2; // When trying to add data to a ssbo and there is not enough space for more, change its max size
+	static const unsigned int ssboOneShotCapacityAmplifier = 5; // When trying to add data to a ssbo and this data has a bigger size than the max capacity of the ssbo, change its max size
 }

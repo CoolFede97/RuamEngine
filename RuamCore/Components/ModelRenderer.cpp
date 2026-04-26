@@ -54,7 +54,7 @@ namespace RuamEngine
        		RenderUnitSPtr ru = GetShared(m_cachedRenderUnits[GetShared(mesh->m_material)->id()]);
        		if (ru != nullptr)
        		{
-       			ru->addModelMatrices({ modelMatrix });
+       			ru->pushModelMatrices({ modelMatrix });
        			return;
        		}
        	}
@@ -68,7 +68,7 @@ namespace RuamEngine
        		std::vector<unsigned int>::iterator usedRU = std::find(renderUnitsUsed.begin(), renderUnitsUsed.end(), ruSharedMaterial->id());
        		if (usedRU == renderUnitsUsed.end())
        		{
-       			ru->addModelMatrices({ modelMatrix });
+       			ru->pushModelMatrices({ modelMatrix });
        			renderUnitsUsed.push_back(ruSharedMaterial->id());
        		}
        	}
@@ -103,7 +103,7 @@ namespace RuamEngine
    			m_cachedRenderUnits[GetShared(mesh->m_material)->id()] = ru;
       		auto meshId = std::find(ru->m_meshesRegistered.begin(), ru->m_meshesRegistered.end(), mesh->id());
         	if (meshId != ru->m_meshesRegistered.end()) continue;
-         	ru->addBatchData(mesh->m_vertices, mesh->m_indices, {});
+         	ru->pushBatchData(mesh->m_vertices, mesh->m_indices, {});
           	ru->m_staticStorage = true;
           	ru->m_meshesRegistered.push_back(mesh->id());
    		}

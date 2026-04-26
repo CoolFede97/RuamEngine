@@ -18,9 +18,9 @@ namespace RuamEngine
 				m_indices->submitData();
 			}
 		}
-		if (m_modelMatricesBuffer->currentSize() > 0)
+		if (m_modelMatrices->currentSize() > 0)
 		{
-			m_modelMatricesBuffer->submitData();
+			m_modelMatrices->submitData();
 		}
 
 		if (m_staticStorage && !m_uploaded && (m_vertices->currentSize() > 0 || m_indices->currentSize() > 0))
@@ -33,10 +33,10 @@ namespace RuamEngine
 	{
 		m_vertices->bindBufferBase(SSBOType::vertices);
 		m_indices->bindBufferBase(SSBOType::indices);
-		m_modelMatricesBuffer->bindBufferBase(SSBOType::modelMatrices);
+		m_modelMatrices->bindBufferBase(SSBOType::modelMatrices);
 	}
 
-	/*bool RenderUnit::AddBatchData(const std::vector<Vertex> vertices, unsigned int vertexDataSize, const std::vector<unsigned int> indices, unsigned int indexDataSize)
+	/*bool RenderUnit::pushBatchData(const std::vector<Vertex> vertices, unsigned int vertexDataSize, const std::vector<unsigned int> indices, unsigned int indexDataSize)
 	{
 		bool fullBatch = false;
 		ASSERT(indexDataSize <= m_indexBuffer->GetMaxSize());
@@ -48,17 +48,16 @@ namespace RuamEngine
 			Flush();
 			fullBatch = true;
 		}
-		m_vertices->AddBatchData(vertices);
-		m_indices->AddBatchData(indices);
+		m_vertices->pushBatchData(vertices);
+		m_indices->pushBatchData(indices);
 		return fullBatch;
 	}*/
 
-	void RenderUnit::addBatchData(const std::vector<Vertex>& vertices, std::vector<unsigned int> indices, const std::vector<glm::mat4>& modelMatrices)
+	void RenderUnit::pushBatchData(const std::vector<Vertex>& vertices, std::vector<unsigned int> indices, const std::vector<glm::mat4>& modelMatrices)
 	{
-	    if (m_vertices)
-		ASSERT(vertices.size() * sizeof(Vertex) <= m_vertices->maxSize());
-		ASSERT(indices.size() * sizeof(unsigned int) <= m_indices->maxSize());
-		ASSERT(modelMatrices.size() * mat4Size <= m_modelMatricesBuffer->maxSize());
+		if (m_vertices->checkIfPushIsBiggerThanMaxSize(vertices.size())) resizeSSBO(m_vertices, true);
+		if (m_indices->checkIfPushIsBiggerThanMaxSize(indices.size())) resizeSSBO(m_indices, true);
+		if (m_modelMatrices->checkIfPushIsBiggerThanMaxSize(modelMatrices.size())) resizeSSBO(m_modelMatrices, true);
 
 		for (unsigned int i = 0; i < indices.size() ; i++)
 		{
@@ -66,29 +65,28 @@ namespace RuamEngine
 		}
 		m_indexCount += vertices.size();
 
-		if (!m_vertices->checkIfEnoughSpace(vertices.size())) resizeSSBO(m_vertices, false);
-		m_vertices->addBatchData(vertices);
+		if (!m_vertices->checkIfEnoughSpaceForPush(vertices.size())) resizeSSBO(m_vertices, false);
+		m_vertices->pushBatchData(vertices);
 
-		if (!m_indices->checkIfEnoughSpace(indices.size())) resizeSSBO(m_indices, false);
-        m_indices->addBatchData(indices);
+		if (!m_indices->checkIfEnoughSpaceForPush(indices.size())) resizeSSBO(m_indices, false);
+        m_indices->pushBatchData(indices);
 
-        if (!m_modelMatricesBuffer->checkIfEnoughSpace(modelMatrices.size())) resizeSSBO(m_modelMatricesBuffer, false);
-		m_modelMatricesBuffer->addBatchData(modelMatrices);
+        if (!m_modelMatrices->checkIfEnoughSpaceForPush(modelMatrices.size())) resizeSSBO(m_modelMatrices, false);
+		m_modelMatrices->pushBatchData(modelMatrices);
 	}
 
-	void RenderUnit::addModelMatrices(const std::vector<glm::mat4>& modelMatrices)
+	void RenderUnit::pushModelMatrices(const std::vector<glm::mat4>& modelMatrices)
 	{
-	    // std::cout << "Fullness: " << m_modelMatricesBuffer->currentSize() << " / " << m_modelMatricesBuffer->maxSize() << "\n";
-		std::cout << "Fullness: " << m_modelMatricesBuffer->currentSize()+modelMatrices.size() * mat4Size << " / " << m_modelMatricesBuffer->maxSize() << "\n";
-		ASSERT(modelMatrices.size() * mat4Size <= m_modelMatricesBuffer->maxSize());
+		std::cout << "Fullness: " << m_modelMatrices->currentSize()+modelMatrices.size() * mat4Size << " / " << m_modelMatrices->maxSize() << "\n";
+		ASSERT(modelMatrices.size() * mat4Size <= m_modelMatrices->maxSize());
 		bool fullBatch = false;
-		if (!m_modelMatricesBuffer->checkIfEnoughSpace(modelMatrices.size())) resizeSSBO(m_modelMatricesBuffer, false);
-	    m_modelMatricesBuffer->addBatchData(modelMatrices);
+		if (!m_modelMatrices->checkIfEnoughSpaceForPush(modelMatrices.size())) resizeSSBO(m_modelMatrices, false);
+	    m_modelMatrices->pushBatchData(modelMatrices);
 	}
 
 	void RenderUnit::flush()
 	{
-		if (!m_staticPosition) m_modelMatricesBuffer->flush();
+		if (!m_staticPosition) m_modelMatrices->flush();
 		if (!m_staticStorage)
 		{
 			m_indexCount = 0;

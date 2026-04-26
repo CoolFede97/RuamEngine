@@ -383,28 +383,9 @@ namespace RuamEngine
                 // Bind the SSBOs for this specific render unit
                 renderUnit->submitData();
 				renderUnit->bindBuffersBase();
-                GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit->m_indices->currentSize()/sizeof(unsigned int), renderUnit->m_modelMatricesBuffer->m_data.size()));
+                GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit->m_indices->currentSize()/sizeof(unsigned int), renderUnit->m_modelMatrices->m_data.size()));
             }
         }
-    }
-
-    void Renderer::Draw(RenderUnit& renderUnit)
-    {
-    	// The vertex array is useless and doesn't contain any information since I use SSBOs to pass the data into the shader.
-    	// It's just there in order to satisfy OpenGL because it need to have one bound
-     	renderUnit.m_vertexArray->bind();
-
-		ShaderProgramSPtr program = renderUnit.m_drawingData.lock()->m_program;
-		program->bind();
-		GlobalLight::LoadLightSettings(program);
-
-		program->loadMaterial(*renderUnit.m_material.lock());
-
-		// Bind the SSBOs for this specific render unit
-		renderUnit.submitData();
-		renderUnit.bindBuffersBase();
-
-		GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit.m_indices->currentSize()/sizeof(unsigned int), renderUnit.m_modelMatricesBuffer->m_data.size()));
     }
 
     void Renderer::framebuffer_size_callback(GLFWwindow* window, int width, int height)

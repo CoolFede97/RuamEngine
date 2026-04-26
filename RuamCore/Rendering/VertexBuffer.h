@@ -19,7 +19,7 @@ namespace RuamEngine
 		~VertexBuffer();
 
 		// Should be used for buffers from the renderer batch
-		void addBatchData(const std::vector<float>& data, unsigned int size);
+		void pushBatchData(const std::vector<float>& data, unsigned int size);
 
 		// Shouldn't be used when using batch rendering
 		void setSubData(const void* data, unsigned int offset, unsigned int size);

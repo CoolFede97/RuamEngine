@@ -51,7 +51,7 @@ namespace RuamEngine
         m_renderUnit = Renderer::CreateRenderUnit(ShaderProgramType::skybox, m_material);
         m_renderUnit->m_staticPosition = true;
         m_renderUnit->m_staticStorage = true;
-        m_renderUnit->addBatchData(m_vertices, m_indices, {glm::mat4(1.0f)});
+        m_renderUnit->pushBatchData(m_vertices, m_indices, {glm::mat4(1.0f)});
         m_material.lock()->m_cubemap = m_cubemap;
     }
 }

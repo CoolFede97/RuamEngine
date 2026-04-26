@@ -29,7 +29,7 @@ namespace RuamEngine
         VertexArrayUPtr m_vertexArray = std::make_unique<VertexArray>();
         SSBOUPtr<Vertex> m_vertices = std::make_unique<SSBO<Vertex>>(maxVertexCount, GL_DYNAMIC_STORAGE_BIT);
         SSBOUPtr<unsigned int> m_indices = std::make_unique<SSBO<unsigned int>>(maxIndexCount, GL_DYNAMIC_STORAGE_BIT);
-        SSBOUPtr<glm::mat4> m_modelMatricesBuffer = std::make_unique<SSBO<glm::mat4>>(maxVertexCount, GL_DYNAMIC_STORAGE_BIT);
+        SSBOUPtr<glm::mat4> m_modelMatrices = std::make_unique<SSBO<glm::mat4>>(maxVertexCount, GL_DYNAMIC_STORAGE_BIT);
     	std::vector<unsigned int> m_meshesRegistered; // Stores all the meshes instance id
 
 		bool m_staticStorage = false;
@@ -38,15 +38,15 @@ namespace RuamEngine
         void submitData();
 		void bindBuffersBase();
 
-        //bool AddBatchData(const std::vector<Vertex> vertices, unsigned int vertexDataSize, const std::vector<unsigned int> indices, unsigned int indexDataSize);
-        void addBatchData(const std::vector<Vertex>& vertices, std::vector<unsigned int> indices, const std::vector<glm::mat4>& modelMatrices);
-        void addModelMatrices(const std::vector<glm::mat4>& modelMatrices);
+        //bool pushBatchData(const std::vector<Vertex> vertices, unsigned int vertexDataSize, const std::vector<unsigned int> indices, unsigned int indexDataSize);
+        void pushBatchData(const std::vector<Vertex>& vertices, std::vector<unsigned int> indices, const std::vector<glm::mat4>& modelMatrices);
+        void pushModelMatrices(const std::vector<glm::mat4>& modelMatrices);
         void flush();
     private:
         template<typename T>
-        void resizeSSBO(SSBOUPtr<T>& ssbo, bool oneShotAmplifier) // doubles buffer size
+        void resizeSSBO(SSBOUPtr<T>& ssbo, bool batchExceedsCapacity)
         {
-            unsigned int amplifier = oneShotAmplifier ? ssboOneShotCapacityAmplifier : ssboCapacityAmplifier;
+            unsigned int amplifier = batchExceedsCapacity ? ssboOversizeMultiplier : ssboAmplifier;
             SSBOUPtr<T> newSSBO = std::make_unique<SSBO<T>>((ssbo->maxSize()/sizeof(T))*amplifier, GL_DYNAMIC_STORAGE_BIT);
             newSSBO.get()->m_data = ssbo.get()->m_data;
             newSSBO.get()->m_currentBytes = ssbo.get()->m_currentBytes;

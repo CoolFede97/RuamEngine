@@ -46,7 +46,7 @@ namespace RuamEngine
 		}
 
 		// Should be used for buffers from the renderer batch
-		void addBatchData(const std::vector<T>& data)
+		void pushBatchData(const std::vector<T>& data)
 		{
 			m_data.insert(m_data.end(), data.begin(), data.end());
 			m_currentBytes += data.size() * sizeof(T);
@@ -71,15 +71,15 @@ namespace RuamEngine
 			m_currentBytes = 0;
 		}
 
-		bool checkIfEnoughSpace(unsigned int elementsToAddAmount)
+		bool checkIfEnoughSpaceForPush(unsigned int elementsToPushAmount)
 		{
-		    if (currentSize() + elementsToAddAmount * sizeof(T) > maxSize()) return false;
+		    if (currentSize() + elementsToPushAmount * sizeof(T) > maxSize()) return false;
 			return true;
 		}
-		// bool checkIf1(unsigned int elementsToAddAmount) // Think of a better name
-		// {
-		//     return elementsToAddAmount * sizeof(T) <= maxSize();
-		// }
+		bool checkIfPushIsBiggerThanMaxSize(unsigned int elementsToAddAmount) // Think of a better name
+		{
+		    return elementsToAddAmount * sizeof(T) <= maxSize();
+		}
 		unsigned int glName() const { return m_glName; }
 		unsigned int currentSize() const { return m_currentBytes; }
 		unsigned int maxSize() const { return m_maxBytes; }

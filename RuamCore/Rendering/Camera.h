@@ -29,6 +29,7 @@ namespace RuamEngine
 		virtual void setTransform(CameraTransform newTransform);
 		virtual glm::mat4 projectionMatrix() const;
 		virtual glm::mat4 viewMatrix() const;
+		virtual float aspectRatio() const;
 		virtual void setAspectRatio(float newAspectRatio);
 	};
 }

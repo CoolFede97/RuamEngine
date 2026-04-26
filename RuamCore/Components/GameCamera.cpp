@@ -5,11 +5,11 @@ namespace RuamEngine
 {
     GameCamera* GameCamera::s_mainCamera = nullptr;
 
-	glm::mat4 GameCamera::projectionMatrix()
+	glm::mat4 GameCamera::projectionMatrix() const
 	{
 		return glm::perspective(glm::radians(m_fov), m_aspectRatio, m_nearPlane, m_farPlane);
 	}
-	glm::mat4 GameCamera::viewMatrix()
+	glm::mat4 GameCamera::viewMatrix() const
 	{
 		glm::vec3 pos = entity()->transform().position();
 		glm::vec3 eulerRadians = glm::radians(entity()->transform().rotation());
@@ -25,6 +25,11 @@ namespace RuamEngine
 		direction = glm::normalize(direction);
 		return glm::lookAt(pos, pos + direction, m_up);
 	};
+
+	float GameCamera::aspectRatio() const
+	{
+	    return m_aspectRatio;
+	}
 
 	void GameCamera::setAspectRatio(float newAspectRatio)
 	{

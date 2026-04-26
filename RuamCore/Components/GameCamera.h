@@ -23,11 +23,11 @@ namespace RuamEngine
 
 		IMPL_DRAW_SERIALIZED_MEMBERS(CAMERA_SERIALIZED_MEMBERS(CALL_INSPECTOR_DRAWER))
 
-		glm::mat4 projectionMatrix();
-		glm::mat4 viewMatrix();
+		glm::mat4 projectionMatrix() const;
+		glm::mat4 viewMatrix() const;
+		float aspectRatio() const;
 
 		void setAspectRatio(float newAspectRatio);
-
 		void setAsMainCamera();
 		static void EmptyMainCamera();
 		static GameCamera* GetMainCamera();

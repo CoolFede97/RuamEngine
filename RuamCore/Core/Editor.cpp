@@ -309,26 +309,26 @@ namespace RuamEngine
         ImGui::Begin(windowName);
 
         ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
+        float aspectRatio = viewportPanelSize.x / viewportPanelSize.y;
+
+        if (editorCamera)
+        {
+            if (Camera().aspectRatio()!=aspectRatio) Camera().setAspectRatio(aspectRatio);
+        }
+        else if (GameCamera::GetMainCamera() && GameCamera::GetMainCamera()->aspectRatio()!=aspectRatio)
+        {
+            for (Entity* entity : SceneManager::ActiveScene()->getEntities())
+            {
+                for (GameCamera* cameraCmp : entity->getComponentsOfType<GameCamera>())
+                {
+                    cameraCmp->setAspectRatio(aspectRatio);
+                }
+            }
+        }
 
         if (fb->width() != viewportPanelSize.x || fb->height() != viewportPanelSize.y)
         {
             fb->rescale(viewportPanelSize.x, viewportPanelSize.y);
-
-            float newAspect = viewportPanelSize.x / viewportPanelSize.y;
-            if (editorCamera)
-            {
-                Camera().setAspectRatio(newAspect);
-            }
-            else
-            {
-                for (Entity* entity : SceneManager::ActiveScene()->getEntities())
-                {
-                    for (GameCamera* cameraCmp : entity->getComponentsOfType<GameCamera>())
-                    {
-                        cameraCmp->setAspectRatio(newAspect);
-                    }
-                }
-            }
         }
 
         unsigned int textureID = fb->texture();

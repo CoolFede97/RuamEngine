@@ -29,6 +29,10 @@ namespace RuamEngine
 		direction = glm::normalize(direction);
 		return glm::lookAt(m_transform.pos, m_transform.pos + direction, m_up);
 	};
+	float Camera::aspectRatio() const
+	{
+	    return m_aspectRatio;
+	}
 	void Camera::setTransform(CameraTransform newTransform)
 	{
 	    m_transform = newTransform;

@@ -280,7 +280,7 @@ namespace RuamEngine
 		    ImGui::Selectable(sceneName.c_str(), isSelected);
 			if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
 			{
-				SceneManager::EnqueueSceneChange(sceneName);
+				SceneManager::EnqueueSceneChange(sceneName, true);
 			}
 			else if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
 			{
@@ -385,7 +385,7 @@ namespace RuamEngine
 					SceneSPtr newScene = SceneManager::CreateDefaultScene(newSceneName);
 					SaveSystem::SaveScene(newScene.get());
 					SceneManager::UpdateScenes();
-					SceneManager::EnqueueSceneChange(newScene->name());
+					SceneManager::EnqueueSceneChange(newScene->name(), true);
 					std::cout << "Scene created\n";
 					ImGui::CloseCurrentPopup();
 				}

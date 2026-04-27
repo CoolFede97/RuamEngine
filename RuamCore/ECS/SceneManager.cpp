@@ -22,6 +22,7 @@ namespace RuamEngine
 	std::vector<std::string> SceneManager::s_scenes;
 	SceneManager::SceneUPtr SceneManager::s_activeScene = nullptr;
 	bool SceneManager::s_pendingSceneChange = false;
+	bool SceneManager::s_pendingLoadCameraPos = false;
 	std::string SceneManager::s_pendingSceneName;
 	const std::vector<std::string>& SceneManager::Scenes()
 	{
@@ -34,7 +35,11 @@ namespace RuamEngine
 		GameCamera::EmptyMainCamera();
 		s_activeScene = nullptr;
 		s_activeScene.reset(Serial::DeserializeJsonScene(SaveSystem::LoadJsonScene(sceneName)));
-		Editor::SetCameraTransform(s_activeScene->m_lastSavedCameraTransform);
+		if (s_pendingLoadCameraPos)
+		{
+		    Editor::SetCameraTransform(s_activeScene->m_lastSavedCameraTransform);
+            s_pendingLoadCameraPos = true;
+		}
 	}
 
 	// void SceneManager::SetActiveScene(Scene* scene)
@@ -43,10 +48,11 @@ namespace RuamEngine
 	// 	s_activeScene.reset(scene);
 	// }
 
-	void SceneManager::EnqueueSceneChange(const std::string& sceneName)
+	void SceneManager::EnqueueSceneChange(const std::string& sceneName, bool loadCameraPos)
 	{
 		if (s_pendingSceneChange) return;
 		s_pendingSceneName = sceneName;
+		s_pendingLoadCameraPos = loadCameraPos;
 		s_pendingSceneChange = true;
 	}
 

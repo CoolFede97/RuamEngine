@@ -18,7 +18,7 @@ namespace RuamEngine
 		static const std::vector<std::string>& Scenes();
 
 		static void ChangeActiveScene(const std::string &sceneName);
-		static void EnqueueSceneChange(const std::string& sceneName);
+		static void EnqueueSceneChange(const std::string& sceneName, bool loadCameraPos);
 		static void ApplyPendingSceneChange();
 
 		static void UpdateScenes();
@@ -44,8 +44,8 @@ namespace RuamEngine
 		static std::vector<std::string> s_scenes;
 		// static bool s_scene_change;
 		static bool s_pendingSceneChange;
+		static bool s_pendingLoadCameraPos; // determines whether the editor's camera pos will be reseted when loading a scene
 		static std::string s_pendingSceneName;
-
 		friend class Editor;
 	};
 }

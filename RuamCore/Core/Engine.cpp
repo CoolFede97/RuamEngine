@@ -66,7 +66,7 @@ namespace RuamEngine
         }
         s_started = true;
        	unsigned int frameCount = 0;
-        if (SceneManager::Scenes().size()>0) SceneManager::EnqueueSceneChange(SceneManager::Scenes()[0]);
+        if (SceneManager::Scenes().size()>0) SceneManager::EnqueueSceneChange(SceneManager::Scenes()[0], true);
 
   		while (!Renderer::WindowShouldClose())
   		{
@@ -100,7 +100,7 @@ namespace RuamEngine
                     if (s_state == EngineState::EditorMode) s_state = EngineState::GameMode;
                     else
                     {
-                        SceneManager::EnqueueSceneChange(SceneManager::ActiveScene()->name());
+                        SceneManager::EnqueueSceneChange(SceneManager::ActiveScene()->name(), false);
                         s_state = EngineState::EditorMode;
                     }
                 }

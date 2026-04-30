@@ -55,9 +55,9 @@ namespace RuamEngine
 
 	void RenderUnit::pushBatchData(const std::vector<Vertex>& vertices, std::vector<unsigned int> indices, const std::vector<glm::mat4>& modelMatrices)
 	{
-		if (m_vertices->checkIfPushIsBiggerThanMaxSize(vertices.size())) resizeSSBO(m_vertices, true);
-		if (m_indices->checkIfPushIsBiggerThanMaxSize(indices.size())) resizeSSBO(m_indices, true);
-		if (m_modelMatrices->checkIfPushIsBiggerThanMaxSize(modelMatrices.size())) resizeSSBO(m_modelMatrices, true);
+		if (m_vertices->checkIfPushIsBiggerThanMaxSize(vertices.size())) resizeSSBO(m_vertices, true, vertices.size());
+		if (m_indices->checkIfPushIsBiggerThanMaxSize(indices.size())) resizeSSBO(m_indices, true, indices.size());
+		if (m_modelMatrices->checkIfPushIsBiggerThanMaxSize(modelMatrices.size())) resizeSSBO(m_modelMatrices, true, modelMatrices.size());
 
 		for (unsigned int i = 0; i < indices.size() ; i++)
 		{
@@ -65,13 +65,13 @@ namespace RuamEngine
 		}
 		m_indexCount += vertices.size();
 
-		if (!m_vertices->checkIfEnoughSpaceForPush(vertices.size())) resizeSSBO(m_vertices, false);
+		if (!m_vertices->checkIfEnoughSpaceForPush(vertices.size())) resizeSSBO(m_vertices, false, m_vertices->maxElements());
 		m_vertices->pushBatchData(vertices);
 
-		if (!m_indices->checkIfEnoughSpaceForPush(indices.size())) resizeSSBO(m_indices, false);
+		if (!m_indices->checkIfEnoughSpaceForPush(indices.size())) resizeSSBO(m_indices, false, m_indices->maxElements());
         m_indices->pushBatchData(indices);
 
-        if (!m_modelMatrices->checkIfEnoughSpaceForPush(modelMatrices.size())) resizeSSBO(m_modelMatrices, false);
+        if (!m_modelMatrices->checkIfEnoughSpaceForPush(modelMatrices.size())) resizeSSBO(m_modelMatrices, false, m_modelMatrices->maxElements());
 		m_modelMatrices->pushBatchData(modelMatrices);
 	}
 
@@ -80,7 +80,7 @@ namespace RuamEngine
 		std::cout << "Fullness: " << m_modelMatrices->currentSize()+modelMatrices.size() * mat4Size << " / " << m_modelMatrices->maxSize() << "\n";
 		ASSERT(modelMatrices.size() * mat4Size <= m_modelMatrices->maxSize());
 		bool fullBatch = false;
-		if (!m_modelMatrices->checkIfEnoughSpaceForPush(modelMatrices.size())) resizeSSBO(m_modelMatrices, false);
+		if (!m_modelMatrices->checkIfEnoughSpaceForPush(modelMatrices.size())) resizeSSBO(m_modelMatrices, false, m_modelMatrices->maxElements());
 	    m_modelMatrices->pushBatchData(modelMatrices);
 	}
 

@@ -321,7 +321,7 @@ namespace RuamEngine
             {
                 for (GameCamera* cameraCmp : entity->getComponentsOfType<GameCamera>())
                 {
-                    cameraCmp->setAspectRatio(aspectRatio);
+                   cameraCmp->setAspectRatio(aspectRatio);
                 }
             }
         }

@@ -29,6 +29,7 @@ namespace RuamEngine
 		SSBO(unsigned int maxCount, unsigned int usage)
 		{
 			GLCall(glCreateBuffers(1, &m_glName));
+			std::cout << "Size: " << sizeof(T)*maxCount << "\n";
 			GLCall(
 				glNamedBufferStorage
 				(
@@ -78,11 +79,13 @@ namespace RuamEngine
 		}
 		bool checkIfPushIsBiggerThanMaxSize(unsigned int elementsToAddAmount) // Think of a better name
 		{
-		    return elementsToAddAmount * sizeof(T) <= maxSize();
+		    return elementsToAddAmount * sizeof(T) > maxSize();
 		}
 		unsigned int glName() const { return m_glName; }
 		unsigned int currentSize() const { return m_currentBytes; }
 		unsigned int maxSize() const { return m_maxBytes; }
+		unsigned int maxElements() const { return m_maxBytes/sizeof(T); }
+		unsigned int currentElements() const { return m_data.size(); }
 
 		friend class RenderUnit;
 	};

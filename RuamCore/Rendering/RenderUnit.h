@@ -44,19 +44,26 @@ namespace RuamEngine
         void flush();
     private:
         template<typename T>
-        void resizeSSBO(SSBOUPtr<T>& ssbo, bool batchExceedsCapacity)
+        void resizeSSBO(SSBOUPtr<T>& ssbo, bool pushExceedsCapacity, unsigned int elementsToSupport)
         {
-            unsigned int amplifier = batchExceedsCapacity ? ssboOversizeMultiplier : ssboAmplifier;
-            SSBOUPtr<T> newSSBO = std::make_unique<SSBO<T>>((ssbo->maxSize()/sizeof(T))*amplifier, GL_DYNAMIC_STORAGE_BIT);
-            newSSBO.get()->m_data = ssbo.get()->m_data;
-            newSSBO.get()->m_currentBytes = ssbo.get()->m_currentBytes;
+            unsigned int amplifier = pushExceedsCapacity ? ssboOversizeMultiplier : ssboAmplifier;
+            for (unsigned int amplifyTry = 1; amplifyTry <=amplificationTries; amplifyTry++)
+            {
+                if ((ssbo->maxSize())*amplifier*amplifyTry<elementsToSupport) continue;
+                SSBOUPtr<T> newSSBO = std::make_unique<SSBO<T>>(ssbo->maxElements()*amplifier*amplifyTry, GL_DYNAMIC_STORAGE_BIT);
+                newSSBO.get()->m_data = ssbo.get()->m_data;
+                newSSBO.get()->m_currentBytes = ssbo.get()->m_currentBytes;
 
-            GLCall(glBindBuffer(GL_COPY_WRITE_BUFFER, newSSBO.get()->glName()));
-            GLCall(glBindBuffer(GL_COPY_READ_BUFFER, ssbo.get()->glName()));
+                GLCall(glBindBuffer(GL_COPY_WRITE_BUFFER, newSSBO.get()->glName()));
+                GLCall(glBindBuffer(GL_COPY_READ_BUFFER, ssbo.get()->glName()));
 
-            GLCall(glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0, ssbo->maxSize()));
-            ssbo = std::move(newSSBO);
-            std::cout << "SSBO resized!\n";
+                GLCall(glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0, ssbo->maxSize()));
+                ssbo = std::move(newSSBO);
+                std::cout << "SSBO resized!\n";
+                return;
+            }
+            std::cerr << "SSBO was resized " << amplificationTries << " times and still it can't support the elements requiered: " << elementsToSupport << " bytes\n";
+            return;
         }
 
         unsigned int m_indexCount = 0;

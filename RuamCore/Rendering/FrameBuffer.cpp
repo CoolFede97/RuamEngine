@@ -22,7 +22,6 @@ namespace RuamEngine
         glCreateFramebuffers(1, &m_glName);
         glBindFramebuffer(GL_FRAMEBUFFER, m_glName);
 
-        // Create texture
         glCreateTextures(GL_TEXTURE_2D, 1, &m_texture);
         glBindTexture(GL_TEXTURE_2D, m_texture);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
@@ -31,8 +30,6 @@ namespace RuamEngine
 
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture, 0);
 
-
-        // Create render buffer
         glCreateRenderbuffers(1, &m_renderBuffer);
         glBindRenderbuffer(GL_RENDERBUFFER, m_renderBuffer);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
@@ -42,6 +39,9 @@ namespace RuamEngine
     }
     void FrameBuffer::rescale(int width, int height)
     {
+        if (width <= 0) width = 1;
+        if (height <= 0) height = 1;
+
         if (m_width == width && m_height == height)
         {
             std::cout << "Warning: Tried to rescale a frame buffer, but it already has the size inserted\n";

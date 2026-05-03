@@ -110,11 +110,12 @@ namespace RuamEngine
  			Input::UpdateInput();
             Editor::UpdateCameraTransform();
 
+      		Renderer::EndBatch();
+
  			if (!SceneManager::SceneChange() && SceneManager::ActiveScene())
  			{
                 Renderer::s_editorFrameBuffer->bind();
      			Renderer::ClearScreen();
-      		    Renderer::EndBatch();
           		Renderer::Draw(Editor::Camera().viewMatrix(), Editor::Camera().projectionMatrix());
                 Renderer::s_editorFrameBuffer->unbind();
 

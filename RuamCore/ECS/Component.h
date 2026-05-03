@@ -41,6 +41,7 @@ virtual operator Json() const override \
 
 #define DECL_REGISTER_COMPONENT(ComponentName) \
 	static void ComponentName##Register(); \
+	std::string name() const override { return #ComponentName; } \
 	friend class ComponentsInitializer;
 
 #define DEF_REGISTER_COMPONENT(ComponentName) \
@@ -133,7 +134,6 @@ namespace RuamEngine
 
         // Doesn't use the macro IMPL_DRAW_SERIALIZED_MEMBERS since this is the virtual one.
         virtual inline void drawSerializedMembers() {;};
-        virtual inline std::string name() const { return "Component"; }
 	protected:
 		const unsigned int m_entityId;
 		const unsigned int m_id;
@@ -144,7 +144,9 @@ namespace RuamEngine
 		bool m_destroyFlag = false;
 
 	public:
-	    DECL_REGISTER_COMPONENT(Component)
+        static void ComponentRegister();
+    	virtual std::string name() const { return "Component"; }
+    	friend class ComponentsInitializer;
 	};
 
 	using ComponentUPtr = std::unique_ptr<Component>;

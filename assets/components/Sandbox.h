@@ -34,7 +34,6 @@ namespace RuamEngine
 		}
   // transform().position().z-=10*RuamTime::DeltaTime();
 		};
-		std::string name() const override { return "Sandbox"; }
 		IMPL_SIMPLE_SERIALIZE(Sandbox)
 	private:
 		DECL_REGISTER_COMPONENT(Sandbox)

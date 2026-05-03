@@ -34,7 +34,6 @@ namespace RuamEngine
 
 		void renderStart() override;
 
-		std::string name() const override { return "GameCamera"; }
 		IMPL_SERIALIZE(GameCamera, CAMERA_SERIALIZED_MEMBERS(SER_FIELD, ,))
 	private:
 		DECL_REGISTER_COMPONENT(GameCamera)

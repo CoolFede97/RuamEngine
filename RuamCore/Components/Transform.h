@@ -54,7 +54,6 @@ namespace RuamEngine
 		Transform* m_parent = nullptr; // If null, there is no parent
 
 		IMPL_DRAW_SERIALIZED_MEMBERS(TRANSFORM_SERIALIZED_MEMBERS(CALL_INSPECTOR_DRAWER))
-		std::string name() const override { return "Transform"; }
 
 	protected:
 		TRANSFORM_SERIALIZED_MEMBERS(DECL_MEMBER)

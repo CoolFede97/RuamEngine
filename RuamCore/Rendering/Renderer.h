@@ -113,9 +113,7 @@ namespace RuamEngine
 
 		static std::unordered_map<GLuint, DrawingDataSPtr> s_drawingDatas;
 		static std::unordered_map<unsigned int, ShaderProgramSPtr> s_shaderPrograms;
-		static std::unordered_map<GLenum, std::vector<TextureSPtr>> s_texturesByType;
-		static std::unordered_map<GLenum, std::vector<unsigned int>> s_textureFreeIndexesByType;
-        static std::unordered_map<std::string, TextureSPtr> s_texturesCache;
+		static std::unordered_map<GLenum, std::vector<unsigned int>> s_handlesFreeIndexesByType;
 
         static std::unordered_map<GLenum, std::vector<GLuint64>> s_handlesByType;
         static std::unordered_map<GLenum, GLuint> s_buffersByType;

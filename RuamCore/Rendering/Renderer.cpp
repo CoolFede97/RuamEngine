@@ -21,9 +21,7 @@ namespace RuamEngine
     FrameBufferSPtr Renderer::s_gameFrameBuffer = nullptr;
     std::unordered_map<unsigned int, ShaderProgramSPtr> Renderer::s_shaderPrograms;
 	std::unordered_map<GLuint, DrawingDataSPtr> Renderer::s_drawingDatas;
-	std::unordered_map<std::string, TextureSPtr> Renderer::s_texturesCache;
-    std::unordered_map<GLenum, std::vector<TextureSPtr>> Renderer::s_texturesByType;
-    std::unordered_map<GLenum, std::vector<unsigned int>> Renderer::s_textureFreeIndexesByType;
+    std::unordered_map<GLenum, std::vector<unsigned int>> Renderer::s_handlesFreeIndexesByType;
     std::unordered_map<GLenum, std::vector<GLuint64>> Renderer::s_handlesByType;
     std::unordered_map<GLenum, GLuint> Renderer::s_buffersByType;
     std::unordered_map<GLenum, int> Renderer::s_bindingsByType;
@@ -228,17 +226,15 @@ namespace RuamEngine
 
         unsigned int index;
 
-        if (s_textureFreeIndexesByType[type].size()>0)
+        if (s_handlesFreeIndexesByType[type].size()>0)
         {
-        	index = s_textureFreeIndexesByType[type][0];
-	        s_handlesByType[type][s_textureFreeIndexesByType[type][0]] = newHandle;
-	        s_texturesByType[type][s_textureFreeIndexesByType[type][0]] = texture;
-			s_textureFreeIndexesByType[type].erase(s_textureFreeIndexesByType[type].begin());
+        	index = s_handlesFreeIndexesByType[type][0];
+	        s_handlesByType[type][s_handlesFreeIndexesByType[type][0]] = newHandle;
+			s_handlesFreeIndexesByType[type].erase(s_handlesFreeIndexesByType[type].begin());
         }
         else
         {
 		    s_handlesByType[type].push_back(newHandle);
-		    s_texturesByType[type].push_back(texture);
 			index = s_handlesByType[type].size()-1;
         }
         UpdateTextureType(type);
@@ -247,7 +243,7 @@ namespace RuamEngine
 
     void Renderer::UnregisterTexture(unsigned int textureIndex, GLenum type)
     {
-        if (textureIndex >= s_texturesByType[type].size())
+        if (textureIndex >= s_handlesByType[type].size())
         {
             std::cout << "Warning: trying to unregister invalid texture of index " << textureIndex << "\n";
             return;
@@ -256,9 +252,8 @@ namespace RuamEngine
         GLuint64 handle = s_handlesByType[type][textureIndex];
         GLCall(glMakeTextureHandleNonResidentARB(handle));
 
-        s_texturesByType[type][textureIndex] = nullptr;
         s_handlesByType[type][textureIndex] = 0;
-        s_textureFreeIndexesByType[type].push_back(textureIndex);
+        s_handlesFreeIndexesByType[type].push_back(textureIndex);
 
         UpdateTextureType(type);
     }

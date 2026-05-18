@@ -1,0 +1,24 @@
+Separate cubemap from material.
+
+Lua stuff
+
+Get rid of bindless textures and create (not gen) functions so that more computers can use RuamEngine. The same for named functions (should use binding ones)
+
+When right clicking on editor camera, mouse can hover over inspector and those ui elements.
+
+Make an actual GetMouseDown, GetMouseUp and a GetMouse
+
+Make sure I save which scene the game started with when entering play mode (because the scene might change during game mode, but when coming back to editor it should start at the original scene)
+
+Create component button (creates a default component in a new file in assets)
+- Next step: Check how to create the actual file. It's not as trivial as thought. I need to create a file with the component name. How can I update the code? I mean, it needs to be compiled and that shit during runtime.
+
+Can't change entities name
+
+Lighting doesn't seem to update when moving entities (despite updating when moving the light)
+
+Make user be able to click an entity on the editor so as to select it
+
+The selected entitiy shouldn't be null when passing from play mode to editor mode. This probably relates to the issue of a blink in the game viewport when transitioning from game mode to editor mode. Things getting destroyed I guess.
+
+Make an ui warning when trying to save scene during game mode

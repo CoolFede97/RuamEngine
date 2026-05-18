@@ -6,7 +6,6 @@
 
 namespace RuamEngine
 {
-    GLuint Skybox::m_cubemap = 0;
     MaterialWPtr Skybox::m_material = {};
     RenderUnitSPtr Skybox::m_renderUnit = nullptr;
     bool Skybox::s_initialized = false;
@@ -41,17 +40,15 @@ namespace RuamEngine
 
     void Skybox::SetSkybox(std::vector<std::string>& paths)
     {
-        m_cubemap = ResourceManager::LoadTexture<Cubemap>(paths).lock()->rendererIndex();
     }
 
     void Skybox::Init()
     {
         s_initialized = true;
-        m_material = ResourceManager::CreateMaterial();
+        m_material = ResourceManager::CreateMaterial(skyboxDefaultPath);
         m_renderUnit = Renderer::CreateRenderUnit(ShaderProgramType::skybox, m_material);
         m_renderUnit->m_staticPosition = true;
         m_renderUnit->m_staticStorage = true;
         m_renderUnit->pushBatchData(m_vertices, m_indices, {glm::mat4(1.0f)});
-        m_material.lock()->m_cubemap = m_cubemap;
     }
 }

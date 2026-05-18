@@ -13,12 +13,16 @@
 
 namespace RuamEngine
 {
+    inline std::string diffuseTexDefaultPath = "RuamCore/Assets/Sprites/DefaultSprite.png";
+    inline std::string specularTexDefaultPath = "RuamCore/Assets/Sprites/DefaultSprite.png";
+    inline std::string reflectionTexDefaultPath = "RuamCore/Assets/Sprites/DefaultSprite.png";
+    inline std::string skyboxDefaultPath = "RuamCore/Assets/Sprites/Skybox.png";
+
     class ResourceManager
     {
     public:
         static void Init();
         static void Shutdown();
-
 
         // Textures handling ---------------------------------------------------------------------------------
         template <typename T>
@@ -32,15 +36,12 @@ namespace RuamEngine
             }
 
             TextureSPtr newTexture = std::make_shared<T>(relativePath);
-            unsigned int rendererIndex = Renderer::RegisterTexture(newTexture);
-            newTexture->setRendererIndex(rendererIndex);
 
             TextureEntry newEntry;
-            newEntry.rendererIndex = rendererIndex;
             newEntry.texture = newTexture;
             newEntry.refCount = 1;
 
-            m_textureCache[newTexture->path()] = newEntry;
+            m_textureCache[relativePath] = newEntry;
             return newTexture;
         }
         template <typename T>
@@ -55,10 +56,7 @@ namespace RuamEngine
             }
 
             TextureSPtr newTexture = std::make_shared<T>(relativePaths);
-            unsigned int rendererIdx = Renderer::RegisterTexture(newTexture);
-
             TextureEntry newEntry;
-            newEntry.rendererIndex = rendererIdx;
             newEntry.texture = newTexture;
             newEntry.refCount = 1;
 
@@ -79,7 +77,6 @@ namespace RuamEngine
 
             if (it->second.refCount <=0)
             {
-                Renderer::UnregisterTexture(it->second.rendererIndex, it->second.texture->texType());
                 m_textureCache.erase(it);
             }
 
@@ -93,7 +90,7 @@ namespace RuamEngine
         static ModelWPtr GetModel(const std::string& relativePath);
 
         // Material handling ---------------------------------------------------------------------------------
-        static MaterialWPtr CreateMaterial();
+        static MaterialWPtr CreateMaterial(const std::string& diffuseTexPath, const std::string& specularTexPath = diffuseTexDefaultPath, const std::string& reflectionTexPath = reflectionTexDefaultPath);
         static void DestroyMaterial(unsigned int materialId);
         static MaterialWPtr GetMaterial(unsigned int materialId);
 
@@ -103,7 +100,6 @@ namespace RuamEngine
         {
             TextureSPtr texture;
             int refCount = 0;
-            unsigned int rendererIndex = 0; // No the OpenGL ID, but the index in the Renderer vector
         };
 
         struct ModelEntry

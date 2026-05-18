@@ -1,27 +1,19 @@
 #version 450 core
 
-#extension GL_ARB_bindless_texture : require
-#extension GL_ARB_gpu_shader_int64 : enable
-
-const int SSBOType_textures2D = 3;
-
-layout(binding = SSBOType_textures2D, std430) readonly buffer ssbo3
-{
-    sampler2D textures[];
-};
-
-smooth in vec4 frag_pos;
-smooth in vec2 frag_uv;
-flat in int frag_instance;
+layout(binding = 0) uniform sampler2D u_diffuse;
+layout(binding = 1) uniform sampler2D u_specular;
+layout(binding = 2) uniform sampler2D u_reflection;
+layout(binding = 3) uniform samplerCube u_cubemap;
 
 out vec4 final_color;
 
+flat in int frag_instance;
+
+smooth in vec4 frag_pos;
 smooth in vec3 frag_normal;
+smooth in vec2 frag_uv;
 
 uniform vec4 u_baseColor;
-uniform float u_diffuse;
-uniform float u_specular;
-uniform float u_reflection;
 uniform float u_shininess;
 
 uniform vec4 u_globalLightColor;
@@ -30,10 +22,9 @@ uniform float u_lightOffset;
 
 void main()
 {
-    // sample the textures to get colors
-    vec4 diffuse = texture(textures[int(u_diffuse)], frag_uv);
-    vec4 specular = texture(textures[int(u_specular)], frag_uv);
-    vec4 reflection = texture(textures[int(u_reflection)], frag_uv);
+    vec4 diffuse = texture(u_diffuse, frag_uv);
+    vec4 specular = texture(u_specular, frag_uv);
+    vec4 reflection = texture(u_reflection, frag_uv);
 
     vec4 lightColor = vec4(u_globalLightColor[0], u_globalLightColor[1], u_globalLightColor[2], u_globalLightColor[3]);
 

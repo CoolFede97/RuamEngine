@@ -15,7 +15,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Para que no se traten las warnings como errores
 add_compile_options(-Wno-error=array-bounds)
-
+set(ASSIMP_WARNINGS_AS_ERRORS OFF CACHE BOOL "" FORCE)
 project ("RuamEngine")
 
 # Add source to this project's executable.

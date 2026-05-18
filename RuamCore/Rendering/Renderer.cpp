@@ -21,12 +21,6 @@ namespace RuamEngine
     FrameBufferSPtr Renderer::s_gameFrameBuffer = nullptr;
     std::unordered_map<unsigned int, ShaderProgramSPtr> Renderer::s_shaderPrograms;
 	std::unordered_map<GLuint, DrawingDataSPtr> Renderer::s_drawingDatas;
-    std::unordered_map<GLenum, std::vector<unsigned int>> Renderer::s_handlesFreeIndexesByType;
-    std::unordered_map<GLenum, std::vector<GLuint64>> Renderer::s_handlesByType;
-    std::unordered_map<GLenum, GLuint> Renderer::s_buffersByType;
-    std::unordered_map<GLenum, int> Renderer::s_bindingsByType;
-
-    // std::vector<glm::mat4> Renderer::matrices = {};
 
 	bool Renderer::s_texturesUploaded = false;
 
@@ -65,17 +59,8 @@ namespace RuamEngine
             s_editorFrameBuffer = std::make_shared<FrameBuffer>(s_config.windowWidth, s_config.windowHeight);
             s_gameFrameBuffer = std::make_shared<FrameBuffer>(s_config.windowWidth, s_config.windowHeight);
 
-            s_bindingsByType[GL_TEXTURE_2D] = SSBOType::textures2D;
-            s_bindingsByType[GL_TEXTURE_CUBE_MAP] = SSBOType::cubemaps;
-
-            for (auto& [type, binding] : s_bindingsByType)
-            {
-                GLCall(glCreateBuffers(1, &s_buffersByType[type]));
-            }
 			DrawingDataSPtr basicDrawingData = CreateDrawingData(ShaderProgramType::general, "RuamCore/Rendering/Shaders/GeneralVertexShader.glsl", "RuamCore/Rendering/Shaders/GeneralFragmentShader.glsl");
 			DrawingDataSPtr skyboxDrawingData = CreateDrawingData(ShaderProgramType::skybox, "RuamCore/Rendering/Shaders/SkyboxVertexShader.glsl", "RuamCore/Rendering/Shaders/SkyboxFragmentShader.glsl");
-
-            AllocateTextureTypes();
 
             ResourceManager::Init();
             Skybox::Init();
@@ -204,73 +189,6 @@ namespace RuamEngine
         return newRenderUnit;
 	}
 
-    // Registrations -------------------------------------------------------------
-
-    // Shouldn't be called directly.
-    // Returns the index of the handle in m_handlesByType[type].
-    unsigned int Renderer::RegisterTexture(const TextureSPtr& texture)
-    {
-        GLenum type = texture->texType();
-
-        if (s_handlesByType[type].size() >= maxTextureCountPerType)
-        {
-            std::cerr << "ERROR: Max texture limit of type " << type << " reached. The limit is " << maxTextureCountPerType << "\n";
-            return 0;
-        }
-
-        GLuint64 newHandle;
-        GLCall(newHandle = glGetTextureHandleARB(texture->glName()));
-        ASSERT(newHandle != 0);
-
-        GLCall(glMakeTextureHandleResidentARB(newHandle));
-
-        unsigned int index;
-
-        if (s_handlesFreeIndexesByType[type].size()>0)
-        {
-        	index = s_handlesFreeIndexesByType[type][0];
-	        s_handlesByType[type][s_handlesFreeIndexesByType[type][0]] = newHandle;
-			s_handlesFreeIndexesByType[type].erase(s_handlesFreeIndexesByType[type].begin());
-        }
-        else
-        {
-		    s_handlesByType[type].push_back(newHandle);
-			index = s_handlesByType[type].size()-1;
-        }
-        UpdateTextureType(type);
-        return index;
-    }
-
-    void Renderer::UnregisterTexture(unsigned int textureIndex, GLenum type)
-    {
-        if (textureIndex >= s_handlesByType[type].size())
-        {
-            std::cout << "Warning: trying to unregister invalid texture of index " << textureIndex << "\n";
-            return;
-        }
-
-        GLuint64 handle = s_handlesByType[type][textureIndex];
-        GLCall(glMakeTextureHandleNonResidentARB(handle));
-
-        s_handlesByType[type][textureIndex] = 0;
-        s_handlesFreeIndexesByType[type].push_back(textureIndex);
-
-        UpdateTextureType(type);
-    }
-
-    // Destructions -------------------------------------------------------------
-
-    // void Renderer::DestroyMaterial(unsigned int materialId)
-    // {
-    //     auto it = m_materials.find(materialId);
-    //     if (it != m_materials.end())
-    //     {
-    //         m_materials.erase(it);
-    //         std::cout << "Material with id " << materialId << " was destroyed successfully\n";
-    //     }
-    //     else std::cout << "Warning: Couldn't find Material of id " << materialId << ", and couldn't destroy it as a consequence\n";
-    // }
-
     void Renderer::DestroyRenderUnit(RenderUnitSPtr renderUnit, DrawingDataSPtr drawingData)
     {
     	unsigned int materialId = renderUnit->m_material.lock()->id();
@@ -309,54 +227,6 @@ namespace RuamEngine
         if (it != units.end()) return it->second;
         else return nullptr;
     }
-    // Should be called before loading any textures (before any UpdateTextures/UpdateTextureType call)
-    void Renderer::AllocateTextureTypes()
-    {
-        std::cout << "Buffer of textures 2D: " <<s_buffersByType[GL_TEXTURE_CUBE_MAP] << "\n";
-        for (auto& [type, buffer] : s_buffersByType)
-        {
-            AllocateTextureType(type);
-        }
-        s_texturesUploaded = true;
-    }
-
-    void Renderer::AllocateTextureType(GLenum type)
-    {
-        ASSERT(s_handlesByType[type].size() < maxTextureCountPerType);
-		ASSERT(!s_texturesUploaded);
-        GLCall(glNamedBufferStorage(
-            s_buffersByType[type],
-            sizeof(GLuint64) * maxTextureCountPerType,
-            NULL,
-            GL_DYNAMIC_STORAGE_BIT
-        ));
-        GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, s_bindingsByType[type], s_buffersByType[type]));
-    }
-
-    // Should be used after calling UploadTextures()
-    void Renderer::UpdateTextures()
-    {
-        for (auto& [type, handles] : s_handlesByType)
-        {
-            UpdateTextureType(type);
-        }
-	}
-
-	void Renderer::UpdateTextureType(GLenum type)
-	{
-	    ASSERT(s_handlesByType[type].size() < maxTextureCountPerType);
-
-        GLint size = 0;
-        GLCall(glGetNamedBufferParameteriv(s_buffersByType[type], GL_BUFFER_SIZE, &size));
-
-        GLCall(glNamedBufferSubData(
-            s_buffersByType[type],
-            0,
-            sizeof(GLuint64) * s_handlesByType[type].size(),
-            (const void*)s_handlesByType[type].data()
-        ));
-	}
-
 
     void Renderer::Draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
     {

@@ -92,20 +92,9 @@ namespace RuamEngine
         static void DestroyMaterial(unsigned int materialId);
         static void DestroyShaderProgram(unsigned int programId);
 
-        // Updaters
-		static void UpdateTextures();
-        static void UpdateTextureType(GLenum type);
-
         // Creators
         static DrawingDataSPtr CreateDrawingData(GLuint type, const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
 		static ShaderProgramSPtr CreateProgram(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
-
-
-		static unsigned int RegisterTexture(const TextureSPtr& texture);
-        static void UnregisterTexture(unsigned int textureIndex, GLenum type);
-
-        static void AllocateTextureTypes();
-        static void AllocateTextureType(GLenum type);
 
         static void Draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 
@@ -113,11 +102,6 @@ namespace RuamEngine
 
 		static std::unordered_map<GLuint, DrawingDataSPtr> s_drawingDatas;
 		static std::unordered_map<unsigned int, ShaderProgramSPtr> s_shaderPrograms;
-		static std::unordered_map<GLenum, std::vector<unsigned int>> s_handlesFreeIndexesByType;
-
-        static std::unordered_map<GLenum, std::vector<GLuint64>> s_handlesByType;
-        static std::unordered_map<GLenum, GLuint> s_buffersByType;
-        static std::unordered_map<GLenum, int> s_bindingsByType;
 
         static std::vector<glm::mat4> s_matrices;
 

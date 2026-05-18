@@ -3,6 +3,8 @@
 
 #include "Mesh.h"
 #include "Material.h"
+#include "FileFunctions.h"
+#include "assimp/material.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -29,7 +31,9 @@ namespace RuamEngine
 		void loadModel(std::string& path);
 		void processNode(aiNode* node, const aiScene* scene);
 		MeshSPtr processMesh(aiMesh* mesh, const aiScene* scene);
-		// std::vector<Texture2D> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string& typeName);
+
+		void tryGetTexturePath(aiTextureType texType, aiMaterial* material, aiString& texAiPath, std::string& outRelativePath);
+
 		std::vector<Vertex> meshesVertices() const;
 		std::vector<unsigned int> meshesIndices() const;
 	};

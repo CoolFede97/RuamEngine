@@ -61,7 +61,6 @@ namespace RuamEngine
 
         m_modelCache[relativePath] = newEntry;
 
-        Renderer::UpdateTextureType(GL_TEXTURE_2D);
         return newModel;
     }
     void ResourceManager::UnloadModel(const std::string& relativePath, ShaderProgramType shaderProgramType)
@@ -121,13 +120,20 @@ namespace RuamEngine
 
     // Material handling ---------------------------------------------------------------------------------
 
-    MaterialWPtr ResourceManager::CreateMaterial()
+    MaterialWPtr ResourceManager::CreateMaterial(const std::string& diffuseTexPath, const std::string& specularTexPath, const std::string& reflectionTexPath)
     {
-   		MaterialSPtr newMaterial = std::make_shared<Material>();
-     	MaterialEntry newEntry;
-     	newEntry.material = newMaterial;
-     	newEntry.refCount++;
-		m_materialCache[newMaterial->id()] = newEntry;
+        MaterialSPtr newMaterial = std::make_shared<Material>();
+        newMaterial->m_cubemap = LoadTexture<Cubemap>({
+			"RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png"
+			});
+        newMaterial->m_diffuseTexture = LoadTexture<Texture2D>(diffuseTexPath);
+        newMaterial->m_specularTexture = LoadTexture<Texture2D>(specularTexPath);
+        newMaterial->m_reflectionTexture = LoadTexture<Texture2D>(reflectionTexPath);
+
+       	MaterialEntry newEntry;
+       	newEntry.material = newMaterial;
+       	newEntry.refCount++;
+        m_materialCache[newMaterial->id()] = newEntry;
 		return newMaterial;
     }
     void ResourceManager::DestroyMaterial(unsigned int materialId)

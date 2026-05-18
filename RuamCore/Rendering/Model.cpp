@@ -1,7 +1,9 @@
 #include "Model.h"
 #include "ResourceManager.h"
+#include "RuamUtils.h"
 #include "Vec3.h"
 #include "FileFunctions.h"
+#include "assimp/material.h"
 
 #include <memory>
 namespace RuamEngine
@@ -40,6 +42,8 @@ namespace RuamEngine
 			processNode(node->mChildren[i], scene);
 		}
 	}
+
+
 	MeshSPtr Model::processMesh(aiMesh* mesh, const aiScene* scene)
 	{
 		std::vector<Vertex> vertices;
@@ -95,68 +99,44 @@ namespace RuamEngine
 		}
 		if (!materialFound)
 		{
-			sharedMeshMaterial = ResourceManager::CreateMaterial().lock();
+    		std::string relativeDiffusePath = diffuseTexDefaultPath;
+    		std::string relativeSpecularPath = specularTexDefaultPath;
+    		std::string relativeReflectionPath = reflectionTexDefaultPath;
+
 			m_localToGlobalMaterials.emplace(mesh->mMaterialIndex, sharedMeshMaterial);
+    		if (mesh->mMaterialIndex >= 0)
+    		{
+    			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+    			aiString texAiPath;
+
+                tryGetTexturePath(aiTextureType_DIFFUSE, material, texAiPath, relativeDiffusePath);
+                tryGetTexturePath(aiTextureType_SPECULAR, material, texAiPath, relativeSpecularPath);
+                tryGetTexturePath(aiTextureType_REFLECTION, material, texAiPath, relativeReflectionPath);
+
+                sharedMeshMaterial = GetShared(ResourceManager::CreateMaterial(relativeDiffusePath, relativeSpecularPath, relativeReflectionPath));
+    		}
+    		else std::cout << "No materials\n";
 		}
 
-		if (mesh->mMaterialIndex >= 0)
-		{
-			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-			aiString texAiPath;
-
-			if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texAiPath) == AI_SUCCESS)
-			{
-				std::string assimpPath = texAiPath.C_Str();
-				if (assimpPath.empty() || assimpPath[0] == '*')
-				{
-					std::cout << "This kind of texture path is not supported: " << assimpPath << "\n";
-					ASSERT(false);
-				}
-				else
-				{
-					std::string absoluteModelPath = std::filesystem::path(m_path).parent_path().string();
-					std::string relativeDiffusePath = RelativizePath(absoluteModelPath) + "/" + assimpPath;
-					sharedMeshMaterial->m_diffuseTexture = ResourceManager::LoadTexture<Texture2D>(relativeDiffusePath);
-					sharedMeshMaterial->m_diffuseIndex = sharedMeshMaterial->m_diffuseTexture.lock()->rendererIndex();
-				}
-			}
-
-			if (material->GetTexture(aiTextureType_SPECULAR, 0, &texAiPath) == AI_SUCCESS)
-			{
-				std::string assimpPath = texAiPath.C_Str();
-				if (assimpPath.empty() || assimpPath[0] == '*')
-				{
-					std::cout << "This kind of texture path is not supported: " << assimpPath << "\n";
-					ASSERT(false);
-				}
-				else
-				{
-					std::string absoluteModelPath = std::filesystem::path(m_path).parent_path().string();
-					std::string relativeSpecularPath = RelativizePath(absoluteModelPath) + "/" + assimpPath;
-					sharedMeshMaterial->m_specularTexture = ResourceManager::LoadTexture<Texture2D>(relativeSpecularPath);
-					sharedMeshMaterial->m_specularIndex = sharedMeshMaterial->m_specularTexture.lock()->rendererIndex();
-				}
-			}
-
-			if (material->GetTexture(aiTextureType_REFLECTION, 0, &texAiPath) == AI_SUCCESS)
-			{
-				std::string assimpPath = texAiPath.C_Str();
-				if (assimpPath.empty() || assimpPath[0] == '*')
-				{
-					std::cout << "This kind of texture path is not supported: " << assimpPath << "\n";
-					ASSERT(false);
-				}
-				else
-				{
-					std::string absoluteModelPath = std::filesystem::path(m_path).parent_path().string();
-					std::string relativeReflectionPath = RelativizePath(absoluteModelPath) + "/" + assimpPath;
-					sharedMeshMaterial->m_reflectionTexture = ResourceManager::LoadTexture<Texture2D>(relativeReflectionPath);
-					sharedMeshMaterial->m_reflectionIndex = sharedMeshMaterial->m_reflectionTexture.lock()->rendererIndex();
-				}
-			}
-		}
-		else std::cout << "No materials\n";
 		return std::make_shared<Mesh>(vertices, indices, sharedMeshMaterial);
+	}
+
+	void Model::tryGetTexturePath(aiTextureType texType, aiMaterial* material, aiString& texAiPath, std::string& outRelativePath)
+	{
+        if (material->GetTexture(texType, 0, &texAiPath) == AI_SUCCESS)
+        {
+            std::string assimpPath = texAiPath.C_Str();
+            if (assimpPath.empty() || assimpPath[0] == '*')
+            {
+          		std::cout << "This kind of texture path is not supported: " << assimpPath << "\n";
+          		ASSERT(false);
+            }
+            else
+            {
+          		std::string absoluteModelPath = std::filesystem::path(m_path).parent_path().string();
+          		outRelativePath = RelativizePath(absoluteModelPath) + "/" + assimpPath;
+            }
+        }
 	}
 
 	std::vector<Vertex> Model::meshesVertices() const

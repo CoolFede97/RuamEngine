@@ -2,6 +2,7 @@
 #include "FileFunctions.h"
 #include "Renderer.h"
 #include "EditorCamera.h"
+#include "RenderingCore.h"
 namespace RuamEngine
 {
 
@@ -153,10 +154,20 @@ namespace RuamEngine
 		bind();
 
 		setUniform4f("u_baseColor", material.baseColor.x, material.baseColor.y, material.baseColor.z, material.baseColor.w);
-		setUniform1f("u_diffuse", material.m_diffuseIndex);
-		setUniform1f("u_specular", material.m_specularIndex);
+
+		GLCall(glActiveTexture(GL_TEXTURE0));
+		GLCall(glBindTexture(GL_TEXTURE_2D, GetShared(material.m_diffuseTexture)->glName()));
+
+		GLCall(glActiveTexture(GL_TEXTURE1));
+		GLCall(glBindTexture(GL_TEXTURE_2D, GetShared(material.m_specularTexture)->glName()));
+
+		GLCall(glActiveTexture(GL_TEXTURE2));
+		GLCall(glBindTexture(GL_TEXTURE_2D, GetShared(material.m_reflectionTexture)->glName()));
+
+		GLCall(glActiveTexture(GL_TEXTURE3));
+		GLCall(glBindTexture(GL_TEXTURE_CUBE_MAP, GetShared(material.m_cubemap)->glName()));
+
 		setUniform1f("u_shininess", material.m_shininess);
-		setUniform1f("u_cubemap", material.m_cubemap);
 	}
 
 	void ShaderProgram::updateCameraMatrices(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)

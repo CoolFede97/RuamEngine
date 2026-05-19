@@ -1,4 +1,6 @@
 Separate cubemap from material.
+    - Make ResourceManager be responsible for creating ShaderPrograms.
+    - Make a dedicated part in Draw() for drawing skybox but binding the ShaderProgram from the static class Skybox and binding the  cubemap texture from it too
 
 Lua stuff
 

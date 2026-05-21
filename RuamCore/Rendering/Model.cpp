@@ -10,6 +10,11 @@ namespace RuamEngine
 {
 	unsigned int Model::s_idCount = 0;
 
+	Model::~Model()
+	{
+	    std::cout << "Model of path " << m_path << " destroyed!\n";
+	}
+
 	Model::Model(std::string path)
 		: m_path(GlobalizePath(path)), m_instanceId(s_idCount++)
 	{

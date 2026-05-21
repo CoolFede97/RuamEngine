@@ -19,6 +19,7 @@ namespace RuamEngine
 	class Model
 	{
 	public:
+	    ~Model();
 		Model(std::string path);
 		std::vector<MeshSPtr> m_meshes;
 		std::unordered_map<unsigned int, MaterialWPtr> m_localToGlobalMaterials = {};

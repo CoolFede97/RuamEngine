@@ -13,6 +13,7 @@ namespace RuamEngine
     Cubemap::Cubemap(const std::vector<std::string>& relativePaths)
     : m_localBuffers({})
     {
+        ASSERT(relativePaths.size()==6);
         m_filePaths = GlobalizePaths(relativePaths);
 
         std::string unifiedPath = UnifyPaths(relativePaths);

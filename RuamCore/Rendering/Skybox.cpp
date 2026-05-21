@@ -45,9 +45,18 @@ namespace RuamEngine
         5, 1, 0
     };
 
+    void Skybox::ChangeCubemap(const std::string& cubemapPath)
+    {
+        s_cubemap = ResourceManager::LoadTexture<Cubemap>(cubemapPath);
+    }
+    void Skybox::ChangeCubemap(const std::vector<std::string>& cubemapPaths)
+    {
+        s_cubemap = ResourceManager::LoadTexture<Cubemap>(cubemapPaths);
+    }
+
     void Skybox::Init()
     {
-        s_shaderProgram = ResourceManager::CreateShaderProgram("RuamCore/Rendering/Shaders/SkyboxVertexShader.glsl", "RuamCore/Rendering/Shaders/SkyboxFragmentShader.glsl");
+        s_shaderProgram = ResourceManager::CreateShaderProgram(skyboxVertexShaderDefaultPath, skyboxFragmentShaderDefaultPath);
         m_vertexArray = std::make_unique<VertexArray>();
         s_verticesSSBO = std::make_unique<SSBO<Vertex>>(maxVertexCount, GL_DYNAMIC_STORAGE_BIT);
         s_indicesSSBO = std::make_unique<SSBO<unsigned int>>(maxIndexCount, GL_DYNAMIC_STORAGE_BIT);
@@ -57,7 +66,7 @@ namespace RuamEngine
         s_indicesSSBO->pushBatchData(s_indices);
         s_indicesSSBO->submitData();
         s_cubemap = ResourceManager::LoadTexture<Cubemap>({
-			"RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png"
+			skyboxDefaultPath,skyboxDefaultPath,skyboxDefaultPath,skyboxDefaultPath,skyboxDefaultPath,skyboxDefaultPath
 			});
     }
 

@@ -21,6 +21,8 @@ namespace RuamEngine
 
 	public:
 		static void Init();
+		static void ChangeCubemap(const std::string& cubemapPath);
+		static void ChangeCubemap(const std::vector<std::string>& cubemapPaths);
 		static void Draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 	};
 }

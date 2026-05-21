@@ -1,8 +1,4 @@
-Make Skybox well (it's pretty hard-coded, what a piece of shit idk why I'm making a Game Engine)
-
 Lua stuff
-
-Get rid of bindless textures and create (not gen) functions so that more computers can use RuamEngine. The same for named functions (should use binding ones)
 
 When right clicking on editor camera, mouse can hover over inspector and those ui elements.
 

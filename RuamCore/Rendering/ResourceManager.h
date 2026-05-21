@@ -20,6 +20,9 @@ namespace RuamEngine
     inline std::string reflectionTexDefaultPath = "RuamCore/Assets/Sprites/DefaultSprite.png";
     inline std::string skyboxDefaultPath = "RuamCore/Assets/Sprites/Skybox.png";
 
+    inline std::string skyboxVertexShaderDefaultPath = "RuamCore/Rendering/Shaders/SkyboxVertexShader.glsl";
+    inline std::string skyboxFragmentShaderDefaultPath = "RuamCore/Rendering/Shaders/SkyboxFragmentShader.glsl";
+
     class ResourceManager
     {
     public:

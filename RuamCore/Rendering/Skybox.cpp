@@ -1,18 +1,25 @@
 #include "Skybox.h"
 #include "Cubemap.h"
 #include "Renderer.h"
+#include "RenderingConstants.h"
 #include "RenderingCore.h"
 #include "ResourceManager.h"
+#include "SSBO.h"
+#include "ShaderProgram.h"
+#include <memory>
 
 namespace RuamEngine
 {
-    MaterialWPtr Skybox::m_material = {};
-    RenderUnitSPtr Skybox::m_renderUnit = nullptr;
     bool Skybox::s_initialized = false;
+    ShaderProgramSPtr Skybox::s_shaderProgram;
+    VertexArrayUPtr Skybox::m_vertexArray;
+    SSBOUPtr<Vertex> Skybox::s_verticesSSBO;
+    SSBOUPtr<unsigned int> Skybox::s_indicesSSBO;
+    GLuint Skybox::s_cubemap;
 
-    std::vector<Vertex> Skybox::m_vertices = Vertex::createCube();
+    std::vector<Vertex> Skybox::s_vertices = Vertex::createCube();
 
-    std::vector<unsigned int> Skybox::m_indices = {
+    std::vector<unsigned int> Skybox::s_indices = {
         // Back (+Z)
         4, 6, 5,
         6, 4, 7,
@@ -38,17 +45,30 @@ namespace RuamEngine
         5, 1, 0
     };
 
-    void Skybox::SetSkybox(std::vector<std::string>& paths)
-    {
-    }
-
     void Skybox::Init()
     {
+        s_shaderProgram = ResourceManager::CreateShaderProgram("RuamCore/Rendering/Shaders/SkyboxVertexShader.glsl", "RuamCore/Rendering/Shaders/SkyboxFragmentShader.glsl");
+        m_vertexArray = std::make_unique<VertexArray>();
+        s_verticesSSBO = std::make_unique<SSBO<Vertex>>(maxVertexCount, GL_DYNAMIC_STORAGE_BIT);
+        s_indicesSSBO = std::make_unique<SSBO<unsigned int>>(maxIndexCount, GL_DYNAMIC_STORAGE_BIT);
         s_initialized = true;
-        m_material = ResourceManager::CreateMaterial(skyboxDefaultPath);
-        m_renderUnit = Renderer::CreateRenderUnit(ShaderProgramType::skybox, m_material);
-        m_renderUnit->m_staticPosition = true;
-        m_renderUnit->m_staticStorage = true;
-        m_renderUnit->pushBatchData(m_vertices, m_indices, {glm::mat4(1.0f)});
+        s_verticesSSBO->pushBatchData(s_vertices);
+        s_verticesSSBO->submitData();
+        s_indicesSSBO->pushBatchData(s_indices);
+        s_indicesSSBO->submitData();
+        s_cubemap = ResourceManager::LoadTexture<Cubemap>({
+			"RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png"
+			}).lock()->glName();
+    }
+
+    void Skybox::Draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
+    {
+        s_shaderProgram->updateCameraMatrices(viewMatrix, projectionMatrix);
+        m_vertexArray->bind();
+        s_verticesSSBO->bindBufferBase(SSBOType::vertices);
+        s_indicesSSBO->bindBufferBase(SSBOType::indices);
+        GLCall(glActiveTexture(GL_TEXTURE3));
+		GLCall(glBindTexture(GL_TEXTURE_CUBE_MAP, s_cubemap));
+		GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, s_indicesSSBO->currentSize()/sizeof(unsigned int), 1));
     }
 }

@@ -14,7 +14,6 @@ namespace RuamEngine
 
         float m_shininess = 1.0f;
 
-        TextureWPtr m_cubemap = {};
         TextureWPtr m_diffuseTexture = {};
         TextureWPtr m_specularTexture = {};
         TextureWPtr m_reflectionTexture = {};

@@ -123,9 +123,6 @@ namespace RuamEngine
     MaterialWPtr ResourceManager::CreateMaterial(const std::string& diffuseTexPath, const std::string& specularTexPath, const std::string& reflectionTexPath)
     {
         MaterialSPtr newMaterial = std::make_shared<Material>();
-        newMaterial->m_cubemap = LoadTexture<Cubemap>({
-			"RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png"
-			});
         newMaterial->m_diffuseTexture = LoadTexture<Texture2D>(diffuseTexPath);
         newMaterial->m_specularTexture = LoadTexture<Texture2D>(specularTexPath);
         newMaterial->m_reflectionTexture = LoadTexture<Texture2D>(reflectionTexPath);
@@ -162,5 +159,12 @@ namespace RuamEngine
 		}
      	it->second.refCount++;
     	return it->second.material;
+    }
+
+    // Shader Program handling ---------------------------------------------------------------------------------
+    ShaderProgramSPtr ResourceManager::CreateShaderProgram(const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
+    {
+        ShaderProgramSPtr newProgram = std::make_shared<ShaderProgram>(vertexShaderPath, fragmentShaderPath);
+		return newProgram;
     }
 }

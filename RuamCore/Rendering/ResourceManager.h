@@ -94,6 +94,9 @@ namespace RuamEngine
         static void DestroyMaterial(unsigned int materialId);
         static MaterialWPtr GetMaterial(unsigned int materialId);
 
+        // Shader Program handling ---------------------------------------------------------------------------------
+        static ShaderProgramSPtr CreateShaderProgram(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
+
     private:
 
         struct TextureEntry

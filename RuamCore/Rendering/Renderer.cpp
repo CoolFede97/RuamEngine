@@ -158,19 +158,12 @@ namespace RuamEngine
     // Creators -------------------------------------------------------------
     DrawingDataSPtr Renderer::CreateDrawingData(GLuint type, const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
     {
-		ShaderProgramSPtr newProgram = Renderer::CreateProgram(vertexShaderPath, fragmentShaderPath);
+		ShaderProgramSPtr newProgram = ResourceManager::CreateShaderProgram(vertexShaderPath, fragmentShaderPath);
         DrawingDataSPtr newDrawingData = std::make_unique<DrawingData>();
         s_drawingDatas[type] = newDrawingData;
         newDrawingData->m_program = newProgram;
         return newDrawingData;
 	}
-
-    ShaderProgramSPtr Renderer::CreateProgram(const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
-    {
-        ShaderProgramSPtr newProgram = std::make_shared<ShaderProgram>(vertexShaderPath, fragmentShaderPath);
-        s_shaderPrograms[newProgram->instanceId()] = newProgram;
-		return newProgram;
-    }
 
     // If the render unit already exists, it returns the existing index. Otherwise, it creates a new render unit and returns its index.
     RenderUnitSPtr Renderer::CreateRenderUnit(ShaderProgramType shaderProgramType, MaterialWPtr material)
@@ -230,6 +223,7 @@ namespace RuamEngine
 
     void Renderer::Draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
     {
+        Skybox::Draw(viewMatrix, projectionMatrix);
         for (auto& [type,drawingData] : s_drawingDatas)
         {
 			drawingData->m_program->updateCameraMatrices(viewMatrix, projectionMatrix);

@@ -94,7 +94,6 @@ namespace RuamEngine
 
         // Creators
         static DrawingDataSPtr CreateDrawingData(GLuint type, const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
-		static ShaderProgramSPtr CreateProgram(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
 
         static void Draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 

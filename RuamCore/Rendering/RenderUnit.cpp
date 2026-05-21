@@ -77,7 +77,6 @@ namespace RuamEngine
 
 	void RenderUnit::pushModelMatrices(const std::vector<glm::mat4>& modelMatrices)
 	{
-		std::cout << "Fullness: " << m_modelMatrices->currentSize()+modelMatrices.size() * mat4Size << " / " << m_modelMatrices->maxSize() << "\n";
 		ASSERT(modelMatrices.size() * mat4Size <= m_modelMatrices->maxSize());
 		bool fullBatch = false;
 		if (!m_modelMatrices->checkIfEnoughSpaceForPush(modelMatrices.size())) resizeSSBO(m_modelMatrices, false, m_modelMatrices->maxElements());

@@ -164,9 +164,6 @@ namespace RuamEngine
 		GLCall(glActiveTexture(GL_TEXTURE2));
 		GLCall(glBindTexture(GL_TEXTURE_2D, GetShared(material.m_reflectionTexture)->glName()));
 
-		GLCall(glActiveTexture(GL_TEXTURE3));
-		GLCall(glBindTexture(GL_TEXTURE_CUBE_MAP, GetShared(material.m_cubemap)->glName()));
-
 		setUniform1f("u_shininess", material.m_shininess);
 	}
 

@@ -156,13 +156,13 @@ namespace RuamEngine
 		setUniform4f("u_baseColor", material.baseColor.x, material.baseColor.y, material.baseColor.z, material.baseColor.w);
 
 		GLCall(glActiveTexture(GL_TEXTURE0));
-		GLCall(glBindTexture(GL_TEXTURE_2D, GetShared(material.m_diffuseTexture)->glName()));
+		GLCall(glBindTexture(GL_TEXTURE_2D, material.m_diffuseTexture->glName()));
 
 		GLCall(glActiveTexture(GL_TEXTURE1));
-		GLCall(glBindTexture(GL_TEXTURE_2D, GetShared(material.m_specularTexture)->glName()));
+		GLCall(glBindTexture(GL_TEXTURE_2D,material.m_specularTexture->glName()));
 
 		GLCall(glActiveTexture(GL_TEXTURE2));
-		GLCall(glBindTexture(GL_TEXTURE_2D, GetShared(material.m_reflectionTexture)->glName()));
+		GLCall(glBindTexture(GL_TEXTURE_2D, material.m_reflectionTexture->glName()));
 
 		setUniform1f("u_shininess", material.m_shininess);
 	}

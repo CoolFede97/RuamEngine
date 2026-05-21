@@ -113,7 +113,7 @@ namespace RuamEngine
                 tryGetTexturePath(aiTextureType_SPECULAR, material, texAiPath, relativeSpecularPath);
                 tryGetTexturePath(aiTextureType_REFLECTION, material, texAiPath, relativeReflectionPath);
 
-                sharedMeshMaterial = GetShared(ResourceManager::CreateMaterial(relativeDiffusePath, relativeSpecularPath, relativeReflectionPath));
+                sharedMeshMaterial = ResourceManager::CreateMaterial(relativeDiffusePath, relativeSpecularPath, relativeReflectionPath);
     		}
     		else std::cout << "No materials\n";
 		}

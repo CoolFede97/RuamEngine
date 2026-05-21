@@ -2,6 +2,7 @@
 #define STB_IMAGE_STATIC
 #include "stb_image.h"
 #include "FileFunctions.h"
+#include "ResourceManager.h"
 
 namespace RuamEngine
 {
@@ -49,6 +50,11 @@ namespace RuamEngine
 
 	Texture2D::~Texture2D()
 	{
+        auto it = ResourceManager::m_textureCache.find(m_filePath);
+     	if (it != ResourceManager::m_textureCache.end())
+        {
+       		ResourceManager::m_textureCache.erase(it);
+        }
 		std::cout << "Texture2D at path " << m_filePath << " Destroyed!\n";
 		GLCall(glDeleteTextures(1, &m_glName));
 	}

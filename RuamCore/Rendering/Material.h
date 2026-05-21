@@ -10,13 +10,14 @@ namespace RuamEngine
     public:
 
         Material();
+        ~Material();
         Vec4 baseColor = Vec4(1.0f, 1.0f, 1.0f, 1.0f); // blanco por defecto
 
         float m_shininess = 1.0f;
 
-        TextureWPtr m_diffuseTexture = {};
-        TextureWPtr m_specularTexture = {};
-        TextureWPtr m_reflectionTexture = {};
+        TextureSPtr m_diffuseTexture = {};
+        TextureSPtr m_specularTexture = {};
+        TextureSPtr m_reflectionTexture = {};
 
 	    unsigned int id() const { return m_id; } // Is the instance id
     private:

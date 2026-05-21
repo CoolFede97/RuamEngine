@@ -9,37 +9,32 @@
 #include <set>
 namespace RuamEngine
 {
-    std::unordered_map<unsigned int, ResourceManager::MaterialEntry> ResourceManager::m_materialCache;
-    std::unordered_map<std::string, ResourceManager::TextureEntry> ResourceManager::m_textureCache;
+    std::unordered_map<unsigned int, MaterialWPtr> ResourceManager::m_materialCache;
+    std::unordered_map<std::string, TextureWPtr> ResourceManager::m_textureCache;
     std::unordered_map<std::string, ResourceManager::ModelEntry> ResourceManager::m_modelCache;
 
     void ResourceManager::Init()
     {
         LoadTexture<Texture2D>("RuamCore/Assets/Sprites/DefaultSprite.png");
-        std::vector<std::string> skyboxes =
-			{
-			"RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png"
-			};
-        LoadTexture<Cubemap>(skyboxes);
     }
 
     // Texture handling ---------------------------------------------------------------------------------
 
     // Returns nullptr if the texture is not found
-    TextureWPtr ResourceManager::GetTexture(const std::string &relativePath)
+    TextureSPtr ResourceManager::GetTexture(const std::string &relativePath)
     {
         auto it = m_textureCache.find(relativePath);
-        if (it != m_textureCache.end()) return it->second.texture;
-        return {};
+        if (it != m_textureCache.end()) return it->second.lock();
+        return nullptr;
     }
 
     // Returns nullptr if the texture is not found
-    TextureWPtr ResourceManager::GetTexture(const std::vector<std::string>& relativePaths)
+    TextureSPtr ResourceManager::GetTexture(const std::vector<std::string>& relativePaths)
     {
         std::string unifiedPath = UnifyPaths(relativePaths);
         auto it = m_textureCache.find(unifiedPath);
-        if (it != m_textureCache.end()) return it->second.texture;
-        return {};
+        if (it != m_textureCache.end()) return it->second.lock();
+        return nullptr;
     }
 
     // Model handling ---------------------------------------------------------------------------------
@@ -77,7 +72,6 @@ namespace RuamEngine
         {
        		DrawingDataSPtr drawingData = Renderer::s_drawingDatas[shaderProgramType];
         	std::set<RenderUnitSPtr> unitsToDestroy;
-         	std::set<std::string> texturesToDestroy;
          	for (const MeshSPtr& mesh : it->second.model->m_meshes)
 			{
 				RenderUnitSPtr ru = Renderer::GetRenderUnit(mesh->m_material, shaderProgramType);
@@ -86,18 +80,10 @@ namespace RuamEngine
 					unitsToDestroy.insert(ru);
 
 				}
-				MaterialSPtr mat = GetShared(mesh->m_material);
-				if (auto diffuseTex = mat->m_diffuseTexture.lock()) texturesToDestroy.insert(diffuseTex->path());
-				if (auto specularTex = mat->m_specularTexture.lock()) texturesToDestroy.insert(specularTex->path());
-				if (auto reflectionTex = mat->m_reflectionTexture.lock()) texturesToDestroy.insert(reflectionTex->path());
 			}
 			for (auto& ru : unitsToDestroy)
 			{
            		Renderer::DestroyRenderUnit(ru, drawingData);
-			}
-			for (auto& path : texturesToDestroy)
-			{
-				UnloadTexture<Texture2D>(path);
 			}
         }
 
@@ -120,45 +106,24 @@ namespace RuamEngine
 
     // Material handling ---------------------------------------------------------------------------------
 
-    MaterialWPtr ResourceManager::CreateMaterial(const std::string& diffuseTexPath, const std::string& specularTexPath, const std::string& reflectionTexPath)
+    MaterialSPtr ResourceManager::CreateMaterial(const std::string& diffuseTexPath, const std::string& specularTexPath, const std::string& reflectionTexPath)
     {
         MaterialSPtr newMaterial = std::make_shared<Material>();
         newMaterial->m_diffuseTexture = LoadTexture<Texture2D>(diffuseTexPath);
         newMaterial->m_specularTexture = LoadTexture<Texture2D>(specularTexPath);
         newMaterial->m_reflectionTexture = LoadTexture<Texture2D>(reflectionTexPath);
 
-       	MaterialEntry newEntry;
-       	newEntry.material = newMaterial;
-       	newEntry.refCount++;
-        m_materialCache[newMaterial->id()] = newEntry;
+        m_materialCache[newMaterial->id()] = newMaterial;
 		return newMaterial;
     }
-    void ResourceManager::DestroyMaterial(unsigned int materialId)
+    MaterialSPtr ResourceManager::GetMaterial(unsigned int materialId)
     {
-    	auto it = m_materialCache.find(materialId);
-     	if (it == m_materialCache.end())
-		{
-			std::cout << "Warning: There is not such a material with id " << materialId << " to destroy\n";
-            return;
-		}
-      	it->second.refCount--;
-
-       	if (it->second.refCount<=0)
+        auto it = m_materialCache.find(materialId);
+        if (it != m_materialCache.end())
         {
-       		m_materialCache.erase(materialId);
+            if (!it->second.expired()) return it->second.lock();
         }
-
-    }
-    MaterialWPtr ResourceManager::GetMaterial(unsigned int materialId)
-    {
-   		auto it = m_materialCache.find(materialId);
-    	if (it == m_materialCache.end())
-		{
-			std::cout << "Warning: There is not such a material with id " << materialId << " to destroy\n";
-           return {};
-		}
-     	it->second.refCount++;
-    	return it->second.material;
+        else return nullptr;
     }
 
     // Shader Program handling ---------------------------------------------------------------------------------

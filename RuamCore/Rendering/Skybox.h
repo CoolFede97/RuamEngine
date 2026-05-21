@@ -12,7 +12,7 @@ namespace RuamEngine
 	    static ShaderProgramSPtr s_shaderProgram;
 		static VertexArrayUPtr m_vertexArray;
 	    static bool s_initialized;
-		static GLuint s_cubemap;
+		static TextureSPtr s_cubemap;
 		static SSBOUPtr<Vertex> s_verticesSSBO;
 		static SSBOUPtr<unsigned int> s_indicesSSBO;
 

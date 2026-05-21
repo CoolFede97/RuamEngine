@@ -8,7 +8,7 @@ namespace RuamEngine
 	class Mesh
 	{
 	public:
-		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, MaterialWPtr material);
+		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, MaterialSPtr material);
 		~Mesh();
 
 		Mesh(const Mesh& other);
@@ -21,7 +21,7 @@ namespace RuamEngine
 
 		std::vector<Vertex> m_vertices;
 		std::vector<unsigned int> m_indices;
-		MaterialWPtr m_material;
+		MaterialSPtr m_material;
 
 		unsigned int id() const { return m_id; }
 	private:

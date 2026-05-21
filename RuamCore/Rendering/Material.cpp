@@ -1,4 +1,5 @@
 #include "Material.h"
+#include "ResourceManager.h"
 
 namespace RuamEngine
 {
@@ -8,5 +9,12 @@ namespace RuamEngine
 	{
 
 	}
-
+	Material::~Material()
+	{
+	    auto it = ResourceManager::m_materialCache.find(m_id);
+     	if (it != ResourceManager::m_materialCache.end())
+        {
+       		ResourceManager::m_materialCache.erase(it);
+        }
+	}
 }

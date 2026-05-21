@@ -15,7 +15,7 @@ namespace RuamEngine
     VertexArrayUPtr Skybox::m_vertexArray;
     SSBOUPtr<Vertex> Skybox::s_verticesSSBO;
     SSBOUPtr<unsigned int> Skybox::s_indicesSSBO;
-    GLuint Skybox::s_cubemap;
+    TextureSPtr Skybox::s_cubemap = nullptr;
 
     std::vector<Vertex> Skybox::s_vertices = Vertex::createCube();
 
@@ -58,7 +58,7 @@ namespace RuamEngine
         s_indicesSSBO->submitData();
         s_cubemap = ResourceManager::LoadTexture<Cubemap>({
 			"RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png","RuamCore/Assets/Sprites/Skybox.png"
-			}).lock()->glName();
+			});
     }
 
     void Skybox::Draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
@@ -68,7 +68,7 @@ namespace RuamEngine
         s_verticesSSBO->bindBufferBase(SSBOType::vertices);
         s_indicesSSBO->bindBufferBase(SSBOType::indices);
         GLCall(glActiveTexture(GL_TEXTURE3));
-		GLCall(glBindTexture(GL_TEXTURE_CUBE_MAP, s_cubemap));
+		GLCall(glBindTexture(GL_TEXTURE_CUBE_MAP, s_cubemap->glName()));
 		GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, s_indicesSSBO->currentSize()/sizeof(unsigned int), 1));
     }
 }

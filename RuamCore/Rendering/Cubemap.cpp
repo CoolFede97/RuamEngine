@@ -5,6 +5,7 @@
 #define STB_IMAGE_STATIC
 #include "stb_image.h"
 #include "RenderingCore.h"
+#include "ResourceManager.h"
 
 namespace RuamEngine
 {
@@ -166,6 +167,12 @@ namespace RuamEngine
     }
     Cubemap::~Cubemap()
     {
+        auto it = ResourceManager::m_textureCache.find(m_filePath);
+     	if (it != ResourceManager::m_textureCache.end())
+        {
+       		ResourceManager::m_textureCache.erase(it);
+        }
+        std::cout << "Cubemap at path " << m_filePath << " Destroyed!\n";
         GLCall(glDeleteTextures(1, &m_glName));
     }
 }

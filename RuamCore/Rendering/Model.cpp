@@ -108,7 +108,6 @@ namespace RuamEngine
     		std::string relativeSpecularPath = specularTexDefaultPath;
     		std::string relativeReflectionPath = reflectionTexDefaultPath;
 
-			m_localToGlobalMaterials.emplace(mesh->mMaterialIndex, sharedMeshMaterial);
     		if (mesh->mMaterialIndex >= 0)
     		{
     			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
@@ -119,6 +118,7 @@ namespace RuamEngine
                 tryGetTexturePath(aiTextureType_REFLECTION, material, texAiPath, relativeReflectionPath);
 
                 sharedMeshMaterial = ResourceManager::CreateMaterial(relativeDiffusePath, relativeSpecularPath, relativeReflectionPath);
+                m_localToGlobalMaterials.emplace(mesh->mMaterialIndex, sharedMeshMaterial);
     		}
     		else std::cout << "No materials\n";
 		}

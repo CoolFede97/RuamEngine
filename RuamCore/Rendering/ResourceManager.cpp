@@ -51,7 +51,7 @@ namespace RuamEngine
         ModelSPtr newModel = std::make_shared<Model>(relativePath);
 
         ModelEntry newEntry;
-        newEntry.refCount[shaderProgramType]++;
+        newEntry.refCount[shaderProgramType] = 1;
         newEntry.model = newModel;
 
         m_modelCache[relativePath] = newEntry;

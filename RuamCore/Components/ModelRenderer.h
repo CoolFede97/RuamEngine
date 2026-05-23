@@ -13,7 +13,7 @@ namespace RuamEngine
     class Vertex;
 
     #define MODEL_RENDERER_SERIALIZED_MEMBERS(X, ...) \
-    	X(m_meshPath, std::string, "", [this]()->void{ this ->loadModel();})
+    	X(m_modelPath, std::string, "", [this]()->void{ this ->loadModel();})
 
     class ModelRenderer : public Component
     {
@@ -22,6 +22,7 @@ namespace RuamEngine
     private:
     	float m_vertices = 0;
     	float m_indices = 0;
+        std::string m_lastModelPath = "";
 
      	void renderUpdate() override;
 

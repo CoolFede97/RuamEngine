@@ -7,14 +7,14 @@ namespace RuamEngine
 {
 	ModelRenderer::ModelRenderer(Json modelRendererData, const unsigned int entityId) : Component(entityId)
 	{
-		if (modelRendererData.contains("m_meshPath")) m_meshPath = modelRendererData["m_meshPath"].get<std::string>();
+		if (modelRendererData.contains("m_modelPath")) m_modelPath = modelRendererData["m_modelPath"].get<std::string>();
 		loadModel();
 	}
     ModelRenderer::~ModelRenderer()
    	{
-   		if (!m_meshPath.empty())
+   		if (!m_modelPath.empty())
    		{
-   			ResourceManager::UnloadModel(m_meshPath, m_shaderProgramType);
+   			ResourceManager::UnloadModel(m_modelPath, m_shaderProgramType);
    			m_cachedRenderUnits.clear();
    		}
    	}
@@ -76,7 +76,8 @@ namespace RuamEngine
 
 	void ModelRenderer::setModel(const std::string& relativePath)
    	{
-     	m_meshPath = relativePath;
+        m_lastModelPath = m_modelPath;
+     	m_modelPath = relativePath;
   		loadModel();
    	}
     void ModelRenderer::loadModel()
@@ -85,11 +86,11 @@ namespace RuamEngine
   		{
             m_cachedRenderUnits.clear();
  	        m_model.reset();
-    		ResourceManager::UnloadModel(m_meshPath, m_shaderProgramType);
+    		ResourceManager::UnloadModel(m_lastModelPath, m_shaderProgramType);
 			m_vertices = 0;
 			m_indices = 0;
     	}
-   		m_model = ResourceManager::LoadModel(m_meshPath, m_shaderProgramType);
+   		m_model = ResourceManager::LoadModel(m_modelPath, m_shaderProgramType);
         for (const MeshSPtr& mesh : GetShared(m_model)->m_meshes)
    		{
    			m_vertices+=mesh->m_vertices.size();

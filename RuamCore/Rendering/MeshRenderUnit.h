@@ -22,8 +22,6 @@ namespace RuamEngine
 
         MeshRenderUnit();
 
-	    // This shader must be the same as the drawingData that contains this renderUnit
-	    DrawingDataWPtr m_drawingData = {};
 		ShaderProgramSPtr m_program = nullptr;
         MaterialWPtr m_material = {};
         VertexArrayUPtr m_vertexArray = std::make_unique<VertexArray>();

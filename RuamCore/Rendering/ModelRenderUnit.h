@@ -8,7 +8,6 @@ namespace RuamEngine
     class ModelRenderUnit
     {
         public:
-            ModelRenderUnit(const std::string& modelPath);
 
     };
 }

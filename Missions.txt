@@ -1,3 +1,5 @@
+Make transform be the responsible one for getting global position. Not ModelRenderer
+
 Lua stuff
 
 When right clicking on editor camera, mouse can hover over inspector and those ui elements.

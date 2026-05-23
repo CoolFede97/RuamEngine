@@ -22,8 +22,6 @@ namespace RuamEngine
     std::unordered_map<unsigned int, ShaderProgramSPtr> Renderer::s_shaderPrograms;
 	std::unordered_map<GLuint, DrawingDataSPtr> Renderer::s_drawingDatas;
 
-	bool Renderer::s_texturesUploaded = false;
-
     void Renderer::Init()
     {
         ASSERT(glfwInit());

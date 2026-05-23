@@ -102,9 +102,6 @@ namespace RuamEngine
 		static std::unordered_map<GLuint, DrawingDataSPtr> s_drawingDatas;
 		static std::unordered_map<unsigned int, ShaderProgramSPtr> s_shaderPrograms;
 
-        static std::vector<glm::mat4> s_matrices;
-
-        static bool s_texturesUploaded;
         static RendererConfig s_config;
         static GLFWwindow* s_window;
 

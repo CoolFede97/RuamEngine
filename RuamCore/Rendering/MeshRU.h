@@ -16,30 +16,21 @@ namespace RuamEngine
 	using DrawingDataSPtr = std::shared_ptr<DrawingData>;
 	using DrawingDataWPtr = std::weak_ptr<DrawingData>;
 
-    class MeshRenderUnit
+    class MeshRU
     {
     public:
 
-        MeshRenderUnit();
+        MeshRU();
 
-		ShaderProgramSPtr m_program = nullptr;
         MaterialWPtr m_material = {};
         VertexArrayUPtr m_vertexArray = std::make_unique<VertexArray>();
         SSBOUPtr<Vertex> m_vertices = std::make_unique<SSBO<Vertex>>(maxVertexCount, GL_DYNAMIC_STORAGE_BIT);
         SSBOUPtr<unsigned int> m_indices = std::make_unique<SSBO<unsigned int>>(maxIndexCount, GL_DYNAMIC_STORAGE_BIT);
-        SSBOUPtr<glm::mat4> m_modelMatrices = std::make_unique<SSBO<glm::mat4>>(maxVertexCount, GL_DYNAMIC_STORAGE_BIT);
-    	std::vector<unsigned int> m_meshesRegistered; // Stores all the meshes instance id
-
-		bool m_staticStorage = false;
-		bool m_staticPosition = false;
 
         void submitData();
 		void bindBuffersBase();
 
-        //bool pushBatchData(const std::vector<Vertex> vertices, unsigned int vertexDataSize, const std::vector<unsigned int> indices, unsigned int indexDataSize);
         void pushBatchData(const std::vector<Vertex>& vertices, std::vector<unsigned int> indices, const std::vector<glm::mat4>& modelMatrices);
-        void pushModelMatrices(const std::vector<glm::mat4>& modelMatrices);
-        void flush();
     private:
         template<typename T>
         void resizeSSBO(SSBOUPtr<T>& ssbo, bool pushExceedsCapacity, unsigned int elementsToSupport)
@@ -67,6 +58,6 @@ namespace RuamEngine
         unsigned int m_indexCount = 0;
         bool m_uploaded = false;
     };
-    using MeshRenderUnitSPtr = std::shared_ptr<MeshRenderUnit>;
-    using MeshRenderUnitWPtr = std::weak_ptr<MeshRenderUnit>;
+    using MeshRUSPtr = std::shared_ptr<MeshRU>;
+    using MeshRUWPtr = std::weak_ptr<MeshRU>;
 }

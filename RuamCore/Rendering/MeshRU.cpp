@@ -31,24 +31,7 @@ namespace RuamEngine
 		m_indices->bindBufferBase(SSBOType::indices);
 	}
 
-	/*bool RenderUnit::pushBatchData(const std::vector<Vertex> vertices, unsigned int vertexDataSize, const std::vector<unsigned int> indices, unsigned int indexDataSize)
-	{
-		bool fullBatch = false;
-		ASSERT(indexDataSize <= m_indexBuffer->GetMaxSize());
-
-		if (m_indexBuffer->GetCurrentSize() + indexDataSize > m_indexBuffer->GetMaxSize())
-		{
-			SubmitData();
-			Renderer::Draw(*this);
-			Flush();
-			fullBatch = true;
-		}
-		m_vertices->pushBatchData(vertices);
-		m_indices->pushBatchData(indices);
-		return fullBatch;
-	}*/
-
-	void MeshRU::pushBatchData(const std::vector<Vertex>& vertices, std::vector<unsigned int> indices, const std::vector<glm::mat4>& modelMatrices)
+	void MeshRU::pushBatchData(const std::vector<Vertex>& vertices, std::vector<unsigned int> indices)
 	{
 		if (m_vertices->checkIfPushIsBiggerThanMaxSize(vertices.size())) resizeSSBO(m_vertices, true, vertices.size());
 		if (m_indices->checkIfPushIsBiggerThanMaxSize(indices.size())) resizeSSBO(m_indices, true, indices.size());
@@ -66,8 +49,9 @@ namespace RuamEngine
         m_indices->pushBatchData(indices);
 	}
 
-	MeshRU::MeshRU()
+	MeshRU::MeshRU(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
 	{
-
+	    pushBatchData(vertices, indices);
+		submitData();
 	}
 }

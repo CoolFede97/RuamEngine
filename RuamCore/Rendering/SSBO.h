@@ -81,6 +81,7 @@ namespace RuamEngine
 		{
 		    return elementsToAddAmount * sizeof(T) > maxSize();
 		}
+		std::vector<T> data() const { return m_data; }
 		unsigned int glName() const { return m_glName; }
 		unsigned int currentSize() const { return m_currentBytes; }
 		unsigned int maxSize() const { return m_maxBytes; }
@@ -88,7 +89,12 @@ namespace RuamEngine
 		unsigned int currentElements() const { return m_data.size(); }
 
 		friend class RenderUnit;
+		friend class MeshRU;
 	};
 	template<typename T>
 	using SSBOUPtr = std::unique_ptr<SSBO<T>>;
+	template<typename T>
+	using SSBOSPtr = std::shared_ptr<SSBO<T>>;
+	template<typename T>
+	using SSBOWPtr = std::weak_ptr<SSBO<T>>;
 }

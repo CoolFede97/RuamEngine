@@ -1,14 +1,18 @@
 #pragma once
 
+#include "ModelRU.h"
+#include "Model.h"
 #include "RenderingCore.h"
 #include "RenderingElements.h"
 
 #include "DrawingData.h"
 #include "RenderUnit.h"
 #include "Material.h"
+#include "ShaderProgram.h"
 #include "Texture.h"
 #include "FrameBuffer.h"
 
+#include <memory>
 #include <unordered_map>
 #include <vector>
 
@@ -74,7 +78,10 @@ namespace RuamEngine
         // Finders
         static unsigned int FindMaterial(MaterialWPtr material);
         static RenderUnitSPtr GetRenderUnit(MaterialWPtr material, ShaderProgramType shaderProgramType);
+        static ModelRUSPtr GetModelRU(const std::string& modelPath);
 
+        // Loaders
+        static ModelRUSPtr LoadModelRU(ModelSPtr model);
 
     private:
         static void Init();
@@ -95,6 +102,7 @@ namespace RuamEngine
         // Creators
         static DrawingDataSPtr CreateDrawingData(GLuint type, const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
 
+
         static void Draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 
         static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -102,6 +110,14 @@ namespace RuamEngine
 		static std::unordered_map<GLuint, DrawingDataSPtr> s_drawingDatas;
 		static std::unordered_map<unsigned int, ShaderProgramSPtr> s_shaderPrograms;
 
+		static std::unordered_map<std::string, ModelRUWPtr> s_modelRUs;
+
+		using ShaderId = unsigned int; // instance id
+		using ModelRUId = std::string; // model path
+		using MatricesSSBO = SSBOSPtr<glm::mat4>;
+    public:
+		static std::unordered_map<ShaderId, std::unordered_map<ModelRUId, MatricesSSBO>> s_modelRUsMap;
+    private:
         static RendererConfig s_config;
         static GLFWwindow* s_window;
 

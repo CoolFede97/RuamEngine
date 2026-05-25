@@ -21,8 +21,10 @@ namespace RuamEngine
 	public:
 	    ~Model();
 		Model(std::string path);
+		const inline std::string path() const { return m_path; }
 		std::vector<MeshSPtr> m_meshes;
 		std::unordered_map<unsigned int, MaterialWPtr> m_localToGlobalMaterials = {};
+		inline const unsigned int instanceId() const { return m_instanceId; }
 	private:
 		std::string m_path;
 		unsigned int m_instanceId;

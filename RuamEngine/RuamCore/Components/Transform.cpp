@@ -19,8 +19,6 @@ namespace RuamEngine
 			if (child!=nullptr) child->m_parent = nullptr;
 		}
 	}
-	void Transform::start() {}
-	void Transform::update() {}
 
 	void Transform::setPosition(glm::vec3 new_pos) {
 		m_position = new_pos;
@@ -70,11 +68,11 @@ namespace RuamEngine
 		return m_rotation;
 	}
 
-	const std::list<Transform*>& Transform::chrildren() const {
+	const std::list<Transform*>& Transform::children() const {
 		return m_children;
 	}
 
-	Transform* Transform::parent()
+	Transform* Transform::parent() const
 	{
 	    return m_parent;
 	}
@@ -125,5 +123,5 @@ namespace RuamEngine
 		std::advance(iter, idx);
 		return *iter;
 	}
-	REGISTER_COMPONENT(Transform);
+	DEF_REGISTER_COMPONENT(Transform);
 }

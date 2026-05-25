@@ -1,7 +1,10 @@
 #include "ModelRenderer.h"
+#include "RenderingConstants.h"
+#include "RenderingCore.h"
 #include "ResourceManager.h"
 #include "RuamUtils.h"
 #include "RuamEngine.h"
+#include <memory>
 
 namespace RuamEngine
 {
@@ -14,13 +17,12 @@ namespace RuamEngine
    	{
    		if (!m_modelPath.empty())
    		{
-   			ResourceManager::UnloadModel(m_modelPath, m_shaderProgramType);
    			m_cachedRenderUnits.clear();
    		}
    	}
     void ModelRenderer::renderUpdate()
 	{
-		if (m_vertices<= 0 || !m_model.lock()) return;
+		if (!m_model) return;
        	glm::mat4 modelMatrix(1.0f);
 
        	glm::vec3 parentsPos = {0,0,0};
@@ -46,68 +48,25 @@ namespace RuamEngine
        	modelMatrix = glm::rotate(modelMatrix, glm::radians(entity()->transform().rotation().z + parentsRotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
        	modelMatrix = glm::scale(modelMatrix, entity()->transform().scale() * parentsScale);
 
-       	ModelSPtr modelShared = GetShared(m_model);
-
-        if (modelShared->m_localToGlobalMaterials.size() == 1)
-       	{
-       		MeshSPtr mesh = modelShared->m_meshes[0];
-       		RenderUnitSPtr ru = GetShared(m_cachedRenderUnits[mesh->m_material->id()]);
-       		if (ru != nullptr)
-       		{
-       			ru->pushModelMatrices({ modelMatrix });
-       			return;
-       		}
-       	}
-
-       	std::vector<unsigned int> renderUnitsUsed = {};
-       	for (const MeshSPtr& mesh : GetShared(m_model)->m_meshes)
-       	{
-       		RenderUnitSPtr ru = GetShared(m_cachedRenderUnits[mesh->m_material->id()]);
-
-       		MaterialSPtr ruSharedMaterial = GetShared(ru->m_material);
-       		std::vector<unsigned int>::iterator usedRU = std::find(renderUnitsUsed.begin(), renderUnitsUsed.end(), ruSharedMaterial->id());
-       		if (usedRU == renderUnitsUsed.end())
-       		{
-       			ru->pushModelMatrices({ modelMatrix });
-       			renderUnitsUsed.push_back(ruSharedMaterial->id());
-       		}
-       	}
+        GetShared(m_matricesSSBO)->pushBatchData({modelMatrix});
 	}
 
 	void ModelRenderer::setModel(const std::string& relativePath)
    	{
-        m_lastModelPath = m_modelPath;
      	m_modelPath = relativePath;
   		loadModel();
    	}
     void ModelRenderer::loadModel()
    	{
- 	    if (!m_model.expired())
-  		{
-            m_cachedRenderUnits.clear();
- 	        m_model.reset();
-    		ResourceManager::UnloadModel(m_lastModelPath, m_shaderProgramType);
-			m_vertices = 0;
-			m_indices = 0;
-    	}
-   		m_model = ResourceManager::LoadModel(m_modelPath, m_shaderProgramType);
-        for (const MeshSPtr& mesh : GetShared(m_model)->m_meshes)
-   		{
-   			m_vertices+=mesh->m_vertices.size();
-   			m_indices+=mesh->m_indices.size();
+        m_model = ResourceManager::LoadModel(m_modelPath);
+        m_modelRU = Renderer::LoadModelRU(m_model);
+        auto& ssbo = Renderer::s_modelRUsMap[m_shaderProgramType][m_model->path()];
+        if (!ssbo)
+        {
+            ssbo = std::make_shared<SSBO<glm::mat4>>(maxVertexCount, GL_DYNAMIC_STORAGE_BIT);
+        }
+        m_matricesSSBO = ssbo;
 
-      		RenderUnitSPtr ru = Renderer::GetRenderUnit(mesh->m_material, m_shaderProgramType);
-      		if (ru == nullptr)
-   			{
-   				ru = Renderer::CreateRenderUnit(m_shaderProgramType, mesh->m_material);
-   			}
-   			m_cachedRenderUnits[mesh->m_material->id()] = ru;
-      		auto meshId = std::find(ru->m_meshesRegistered.begin(), ru->m_meshesRegistered.end(), mesh->id());
-        	if (meshId != ru->m_meshesRegistered.end()) continue;
-         	ru->pushBatchData(mesh->m_vertices, mesh->m_indices, {});
-          	ru->m_staticStorage = true;
-          	ru->m_meshesRegistered.push_back(mesh->id());
-   		}
    	}
     DEF_REGISTER_COMPONENT(ModelRenderer);
 }

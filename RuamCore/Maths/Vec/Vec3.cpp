@@ -47,9 +47,7 @@ Vec3 Vec3::To(Vec3 target) const {
 }
 
 float Vec3::DotProduct(Vec3 other) const {
-    Vec3 a = Normalized();
-    Vec3 b = other.Normalized();
-    return static_cast<float>(a.x * b.x + a.y * b.y + a.z * b.z);
+    return static_cast<float>(x * other.x + y * other.y + z * other.z);
 }
 
 Vec3 Vec3::CrossProduct(Vec3 other) const

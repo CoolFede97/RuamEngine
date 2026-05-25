@@ -7,6 +7,8 @@
 #include "RenderingConstants.h"
 #include "RenderingCore.h"
 #include "ResourceManager.h"
+#include "SSBO.h"
+#include "MeshRU.h"
 #include "ShaderProgram.h"
 #include "Skybox.h"
 #include "Editor.h"
@@ -21,6 +23,11 @@ namespace RuamEngine
     FrameBufferSPtr Renderer::s_gameFrameBuffer = nullptr;
     std::unordered_map<unsigned int, ShaderProgramSPtr> Renderer::s_shaderPrograms;
 	std::unordered_map<GLuint, DrawingDataSPtr> Renderer::s_drawingDatas;
+	using ShaderId = unsigned int; // instance id
+	using ModelRUId = std::string; // model path
+	using MatricesSSBO = SSBOSPtr<glm::mat4>;
+	std::unordered_map<ShaderId, std::unordered_map<ModelRUId, MatricesSSBO>> Renderer::s_modelRUsMap = {};
+	std::unordered_map<std::string, ModelRUWPtr> Renderer::s_modelRUs = {};
 
     void Renderer::Init()
     {
@@ -72,6 +79,11 @@ namespace RuamEngine
     void Renderer::EndDraw()
     {
         glfwSwapBuffers(s_window);
+        for (auto& [shaderType, map] : s_modelRUsMap)
+        {
+            s_drawingDatas[shaderType]->m_program->bind();
+            for (auto& [modelPath, matricesSSBO] : map) matricesSSBO->flush();
+        }
     }
     void Renderer::BeginBatch()
     {
@@ -180,6 +192,25 @@ namespace RuamEngine
         return newRenderUnit;
 	}
 
+	ModelRUSPtr Renderer::LoadModelRU(ModelSPtr model)
+	{
+        auto it = s_modelRUs.find(model->path());
+        if (it != s_modelRUs.end())
+        {
+            if (!it->second.expired()) return it->second.lock();
+        }
+	    ModelRUSPtr newModelRU = std::make_shared<ModelRU>();
+		newModelRU->setInstanceId(model->instanceId());
+		for (MeshSPtr mesh : model->m_meshes)
+		{
+		    MeshRUSPtr newMeshRU = std::make_shared<MeshRU>(mesh->m_vertices, mesh->m_indices);
+			newMeshRU->m_material = mesh->m_material;
+			newModelRU->m_meshRUs.push_back(newMeshRU);
+		}
+		s_modelRUs[model->path()] = newModelRU;
+		return newModelRU;
+	}
+
     void Renderer::DestroyRenderUnit(RenderUnitSPtr renderUnit, DrawingDataSPtr drawingData)
     {
     	unsigned int materialId = renderUnit->m_material.lock()->id();
@@ -219,30 +250,66 @@ namespace RuamEngine
         else return nullptr;
     }
 
+    ModelRUSPtr Renderer::GetModelRU(const std::string& modelPath)
+    {
+        auto it = s_modelRUs.find(modelPath);
+		if (it != s_modelRUs.end())
+	    {
+			if (!it->second.expired()) return it->second.lock();
+	    }
+		return nullptr;
+    }
+
     void Renderer::Draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
     {
         Skybox::Draw(viewMatrix, projectionMatrix);
-        for (auto& [type,drawingData] : s_drawingDatas)
+        for (auto& [shaderType, map] : s_modelRUsMap)
         {
-			drawingData->m_program->updateCameraMatrices(viewMatrix, projectionMatrix);
-
-			for (auto& [materialId, renderUnit] : drawingData->m_renderUnits)
+            auto program = s_drawingDatas[shaderType]->m_program;
+            s_drawingDatas[shaderType]->m_program->updateCameraMatrices(viewMatrix, projectionMatrix);
+            for (auto& [modelPath, matricesSSBO] : map)
             {
-             	// The vertex array is useless and doesn't contain any information since I use SSBOs to pass the data into the shader.
-             	// It's just there in order to satisfy OpenGL because it need to have one bound
-           		renderUnit->m_vertexArray->bind();
-
-                ShaderProgramSPtr program = drawingData->m_program;
-                program->bind();
-                GlobalLight::LoadLightSettings(program);
-                program->loadMaterial(*renderUnit->m_material.lock());
-
-                // Bind the SSBOs for this specific render unit
-                renderUnit->submitData();
-				renderUnit->bindBuffersBase();
-                GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit->m_indices->currentSize()/sizeof(unsigned int), renderUnit->m_modelMatrices->m_data.size()));
+                ModelRUSPtr modelRU = GetModelRU(modelPath);
+                if (matricesSSBO)
+                {
+                    matricesSSBO->submitData();
+                    matricesSSBO->bindBufferBase(SSBOType::modelMatrices);
+                }
+                if (modelRU)
+                {
+                    for (MeshRUSPtr meshRU : modelRU->m_meshRUs)
+                    {
+                        meshRU->m_vertexArray->bind();
+                        GlobalLight::LoadLightSettings(s_drawingDatas[shaderType]->m_program);
+                        s_drawingDatas[shaderType]->m_program->loadMaterial(*GetShared(meshRU->m_material));
+                        meshRU->submitData();
+                        meshRU->bindBuffersBase();
+                        GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, meshRU->m_indices->currentSize()/sizeof(unsigned int), matricesSSBO->m_data.size()));
+                    }
+                }
             }
         }
+   //      for (auto& [type,drawingData] : s_drawingDatas)
+   //      {
+			// drawingData->m_program->updateCameraMatrices(viewMatrix, projectionMatrix);
+
+			// for (auto& [materialId, renderUnit] : drawingData->m_renderUnits)
+   //          {
+   //           	// The vertex array is useless and doesn't contain any information since I use SSBOs to pass the data into the shader.
+   //           	// It's just there in order to satisfy OpenGL because it need to have one bound
+   //         		renderUnit->m_vertexArray->bind();
+
+   //              ShaderProgramSPtr program = drawingData->m_program;
+   //              program->bind();
+   //              GlobalLight::LoadLightSettings(program);
+   //              program->loadMaterial(*renderUnit->m_material.lock());
+
+   //              // Bind the SSBOs for this specific render unit
+   //              renderUnit->submitData();
+			// 	renderUnit->bindBuffersBase();
+   //              GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, renderUnit->m_indices->currentSize()/sizeof(unsigned int), renderUnit->m_modelMatrices->m_data.size()));
+   //          }
+   //      }
     }
 
     void Renderer::framebuffer_size_callback(GLFWwindow* window, int width, int height)

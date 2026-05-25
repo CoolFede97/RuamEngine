@@ -69,5 +69,5 @@ void main()
     frag_pos = modelTransforms[gl_InstanceID] * position;
     frag_uv = GetUV(realIndex);
     frag_instance = gl_InstanceID;
-    frag_normal = normalize(GetNormal(realIndex));
+    frag_normal = normalize(mat3(modelTransforms[gl_InstanceID]) * GetNormal(realIndex));
 };

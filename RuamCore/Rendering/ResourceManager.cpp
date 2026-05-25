@@ -11,7 +11,7 @@ namespace RuamEngine
 {
     std::unordered_map<unsigned int, MaterialWPtr> ResourceManager::m_materialCache;
     std::unordered_map<std::string, TextureWPtr> ResourceManager::m_textureCache;
-    std::unordered_map<std::string, ResourceManager::ModelEntry> ResourceManager::m_modelCache;
+    std::unordered_map<std::string, ModelWPtr> ResourceManager::m_modelCache;
 
     void ResourceManager::Init()
     {
@@ -39,69 +39,28 @@ namespace RuamEngine
 
     // Model handling ---------------------------------------------------------------------------------
 
-    ModelWPtr ResourceManager::LoadModel(const std::string& relativePath, ShaderProgramType shaderProgramType)
+    ModelSPtr ResourceManager::LoadModel(const std::string& relativePath)
     {
         auto it = m_modelCache.find(relativePath);
         if (it != m_modelCache.end())
         {
-            it->second.refCount[shaderProgramType]++;
-            return it->second.model;
+            if (!it->second.expired()) return it->second.lock();
         }
 
         ModelSPtr newModel = std::make_shared<Model>(relativePath);
 
-        ModelEntry newEntry;
-        newEntry.refCount[shaderProgramType] = 1;
-        newEntry.model = newModel;
-
-        m_modelCache[relativePath] = newEntry;
+        m_modelCache[relativePath] = newModel;
 
         return newModel;
     }
-    void ResourceManager::UnloadModel(const std::string& relativePath, ShaderProgramType shaderProgramType)
-    {
-	    auto it = m_modelCache.find(relativePath);
-	    if (it == m_modelCache.end())
-	    {
-	        std::cout << "Warning: There is not such a model with path " << relativePath << " to unload\n";
-	        return;
-	    }
-	    it->second.refCount[shaderProgramType]--;
-
-		if (it->second.refCount[shaderProgramType] <=0)
-        {
-       		DrawingDataSPtr drawingData = Renderer::s_drawingDatas[shaderProgramType];
-        	std::set<RenderUnitSPtr> unitsToDestroy;
-         	for (const MeshSPtr& mesh : it->second.model->m_meshes)
-			{
-				RenderUnitSPtr ru = Renderer::GetRenderUnit(mesh->m_material, shaderProgramType);
-				if (ru != nullptr)
-				{
-					unitsToDestroy.insert(ru);
-
-				}
-			}
-			for (auto& ru : unitsToDestroy)
-			{
-           		Renderer::DestroyRenderUnit(ru, drawingData);
-			}
-        }
-
-		bool noMoreReferences = true;
-		for (auto [type, count] : m_modelCache[relativePath].refCount)
-		{
-			if (count>0) noMoreReferences = false;
-		}
-		if (noMoreReferences) m_modelCache.erase(it);
-    }
-    ModelWPtr ResourceManager::GetModel(const std::string& relativePath)
+    ModelSPtr ResourceManager::GetModel(const std::string& relativePath)
     {
 	   	auto it = m_modelCache.find(relativePath);
 		if (it != m_modelCache.end())
 	    {
-	        return it->second.model;
+			if (!it->second.expired()) return it->second.lock();
 	    }
-		return {};
+		return nullptr;
     }
 
     // Material handling ---------------------------------------------------------------------------------

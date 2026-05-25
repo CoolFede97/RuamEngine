@@ -49,9 +49,7 @@ Vec4 Vec4::To(Vec4 target) const {
 }
 
 float Vec4::DotProduct(Vec4 other) const {
-    Vec4 a = Normalized();
-    Vec4 b = other.Normalized();
-    return static_cast<float>(a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w);
+    return static_cast<float>(x * other.x + y * other.y + z * other.z + w * other.w);
 }
 
 // Common directions

@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 #include "Model.h"
-
+#include "ModelRU.h"
 
 namespace RuamEngine
 {
@@ -22,7 +22,11 @@ namespace RuamEngine
     private:
     	float m_vertices = 0;
     	float m_indices = 0;
-        std::string m_lastModelPath = "";
+
+        ModelSPtr m_model = nullptr;
+        ModelRUSPtr m_modelRU = nullptr;
+        SSBOWPtr<glm::mat4> m_matricesSSBO = {};
+        ShaderProgramType m_shaderProgramType = ShaderProgramType::general;
 
      	void renderUpdate() override;
 
@@ -31,8 +35,8 @@ namespace RuamEngine
 
     public:
 	   	ModelRenderer(Json modelRendererData, const unsigned int entityId);
-    	ModelWPtr m_model;
-    	ShaderProgramType m_shaderProgramType = ShaderProgramType::general;
+    	// ModelWPtr m_model;
+    	// ShaderProgramType m_shaderProgramType = ShaderProgramType::general;
     	std::unordered_map<unsigned int, RenderUnitWPtr> m_cachedRenderUnits;
 
     	IMPL_DRAW_SERIALIZED_MEMBERS(MODEL_RENDERER_SERIALIZED_MEMBERS(CALL_INSPECTOR_DRAWER))

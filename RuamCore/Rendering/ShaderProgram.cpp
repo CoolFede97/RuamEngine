@@ -152,9 +152,7 @@ namespace RuamEngine
 	void ShaderProgram::loadMaterial(const Material& material)
 	{
 		bind();
-
 		setUniform4f("u_baseColor", material.baseColor.x, material.baseColor.y, material.baseColor.z, material.baseColor.w);
-
 		GLCall(glActiveTexture(GL_TEXTURE0));
 		GLCall(glBindTexture(GL_TEXTURE_2D, material.m_diffuseTexture->glName()));
 

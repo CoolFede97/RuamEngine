@@ -39,7 +39,7 @@ namespace RuamEngine
 		void addChild(Transform* child);
 		void removeChild(unsigned int idx);
 		const std::list<Transform*>& children() const;
-
+		Transform* parent() const;
 		glm::vec3& position();
 		glm::vec3& scale();
 		glm::vec3& rotation();

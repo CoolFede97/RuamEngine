@@ -47,9 +47,7 @@ Vec2 Vec2::To(Vec2 target) const {
 }
 
 float Vec2::DotProduct(Vec2 other) const {
-    Vec2 a = Normalized();
-    Vec2 b = other.Normalized();
-    return static_cast<float>(a.x * b.x + a.y * b.y);
+    return static_cast<float>(x * other.x + y * other.y);
 }
 
 Vec2 Vec2::Right() { return Vec2(1, 0); }

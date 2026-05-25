@@ -20,7 +20,7 @@ namespace RuamEngine
     {
     public:
 
-        MeshRU();
+        MeshRU(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
 
         MaterialWPtr m_material = {};
         VertexArrayUPtr m_vertexArray = std::make_unique<VertexArray>();
@@ -30,7 +30,7 @@ namespace RuamEngine
         void submitData();
 		void bindBuffersBase();
 
-        void pushBatchData(const std::vector<Vertex>& vertices, std::vector<unsigned int> indices, const std::vector<glm::mat4>& modelMatrices);
+        void pushBatchData(const std::vector<Vertex>& vertices, std::vector<unsigned int> indices);
     private:
         template<typename T>
         void resizeSSBO(SSBOUPtr<T>& ssbo, bool pushExceedsCapacity, unsigned int elementsToSupport)
@@ -40,8 +40,8 @@ namespace RuamEngine
             {
                 if ((ssbo->maxSize())*amplifier*amplifyTry<elementsToSupport) continue;
                 SSBOUPtr<T> newSSBO = std::make_unique<SSBO<T>>(ssbo->maxElements()*amplifier*amplifyTry, GL_DYNAMIC_STORAGE_BIT);
-                newSSBO.get()->m_data = ssbo.get()->m_data;
-                newSSBO.get()->m_currentBytes = ssbo.get()->m_currentBytes;
+                newSSBO.get()->m_data = ssbo.get()->data();
+                newSSBO.get()->m_currentBytes = ssbo.get()->currentSize();
 
                 GLCall(glBindBuffer(GL_COPY_WRITE_BUFFER, newSSBO.get()->glName()));
                 GLCall(glBindBuffer(GL_COPY_READ_BUFFER, ssbo.get()->glName()));

@@ -309,8 +309,8 @@ namespace RuamEngine
         ImGui::Begin(windowName);
 
         ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-        if (viewportPanelSize.x<=0) viewportPanelSize.x = 1;
-        if (viewportPanelSize.y<=0) viewportPanelSize.y = 1;
+        if (viewportPanelSize.x<=0) viewportPanelSize.x = 1.0;
+        if (viewportPanelSize.y<=0) viewportPanelSize.y = 1.0;
         float aspectRatio = viewportPanelSize.x / viewportPanelSize.y;
 
         if (editorCamera)

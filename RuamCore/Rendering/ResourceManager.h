@@ -65,9 +65,8 @@ namespace RuamEngine
         static TextureSPtr GetTexture(const std::vector<std::string>& relativePaths);
 
         // Model handling ---------------------------------------------------------------------------------
-        static ModelWPtr LoadModel(const std::string& relativePath, ShaderProgramType shaderProgramType);
-        static void UnloadModel(const std::string& relativePath, ShaderProgramType shaderProgramType);
-        static ModelWPtr GetModel(const std::string& relativePath);
+        static ModelSPtr LoadModel(const std::string& relativePath);
+        static ModelSPtr GetModel(const std::string& relativePath);
 
         // Material handling ---------------------------------------------------------------------------------
         static MaterialSPtr CreateMaterial(const std::string& diffuseTexPath, const std::string& specularTexPath = diffuseTexDefaultPath, const std::string& reflectionTexPath = reflectionTexDefaultPath);
@@ -78,15 +77,9 @@ namespace RuamEngine
 
     private:
 
-        struct ModelEntry
-        {
-        	ModelSPtr model;
-         	std::unordered_map<ShaderProgramType, int> refCount;
-        };
-
 public:
         static std::unordered_map<std::string, TextureWPtr> m_textureCache;
-        static std::unordered_map<std::string, ModelEntry> m_modelCache;
+        static std::unordered_map<std::string, ModelWPtr> m_modelCache;
         static std::unordered_map<unsigned int, MaterialWPtr> m_materialCache;
 
         friend class Material;

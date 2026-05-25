@@ -40,13 +40,21 @@ namespace RuamEngine
 		void removeChild(unsigned int idx);
 		const std::list<Transform*>& children() const;
 		Transform* parent() const;
-		glm::vec3& position();
-		glm::vec3& scale();
-		glm::vec3& rotation();
+		glm::vec3& position(); // returns local pos
+		glm::vec3& scale(); // returns local scale
+		glm::vec3& rotation(); // returns local rotation
 
-		const glm::vec3& position() const;
-		const glm::vec3& scale() const;
-		const glm::vec3& rotation() const;
+		const glm::vec3& position() const; // returns local pos
+		const glm::vec3& scale() const; // returns local scale
+		const glm::vec3& rotation() const; // returns local rotation
+
+		glm::vec3& globalPosition(); // returns global pos
+		glm::vec3& globalScale(); // returns global scale
+		glm::vec3& globalRotation(); // returns global rotation
+
+		const glm::vec3& globalPosition() const; // returns global pos
+		const glm::vec3& globalScale() const; // returns global scale
+		const glm::vec3& globalRotation() const; // returns global rotation
 
 		Transform* operator[](size_t idx);
 

@@ -68,6 +68,40 @@ namespace RuamEngine
 		return m_rotation;
 	}
 
+	glm::vec3& Transform::globalPosition()
+	{
+	 //    Transform* lastParent = nullptr;
+		// glm::vec3
+		// if (m_parent)
+		// {
+		//     lastParent = m_parent;
+		//     while (true)
+		// 	{
+		// 	    if (!lastParent) break;
+
+		// 	}
+		// }
+	}
+	glm::vec3& Transform::globalScale()
+	{
+
+	}
+	glm::vec3& Transform::globalRotation()
+	{
+
+	}
+	const glm::vec3& Transform::globalPosition() const
+	{
+
+	}
+	const glm::vec3& Transform::globalScale() const
+	{
+
+	}
+	const glm::vec3& Transform::globalRotation() const
+	{
+
+	}
 	void Transform::setParent(Transform* parent) {
 		if (m_parent == parent) return;
 

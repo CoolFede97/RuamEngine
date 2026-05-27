@@ -1,7 +1,6 @@
 #include "Transform.h"
 #include "Component.h"
 #include "Entity.h"
-
 namespace RuamEngine
 {
 	Transform::Transform(const unsigned int entityId) : Component(entityId), m_position(0, 0, 0) {}
@@ -20,7 +19,34 @@ namespace RuamEngine
 		}
 	}
 
-	void Transform::setPosition(glm::vec3 new_pos) {
+	void Transform::translate(const glm::vec3& vec)
+	{
+	    m_position += vec;
+	}
+	void Transform::translate(float x, float y, float z)
+	{
+	    m_position += glm::vec3(x,y,z);
+	}
+
+	void Transform::rotate(const glm::vec3& vec)
+	{
+        m_rotation+=vec;
+	}
+	void Transform::rotate(float x, float y, float z)
+	{
+	    m_rotation+=glm::vec3(x,y,z);
+	}
+
+	void Transform::scale(const glm::vec3& vec)
+	{
+	    m_scale*=vec;
+	}
+	void Transform::scale(float x, float y, float z)
+	{
+	    m_scale*=glm::vec3(x,y,z);
+	}
+
+	void Transform::setPosition(const glm::vec3& new_pos) {
 		m_position = new_pos;
 	}
 
@@ -28,7 +54,7 @@ namespace RuamEngine
 		m_position = glm::vec3(x, y, z);
 	}
 
-	void Transform::setRotation(glm::vec3 new_rot) {
+	void Transform::setRotation(const glm::vec3& new_rot) {
 		m_rotation = new_rot;
 	}
 
@@ -36,7 +62,7 @@ namespace RuamEngine
 		m_rotation = glm::vec3(x, y, z);
 	}
 
-	void Transform::setScale(glm::vec3 new_scale) {
+	void Transform::setScale(const glm::vec3& new_scale) {
 		m_scale = new_scale;
 	}
 
@@ -44,63 +70,38 @@ namespace RuamEngine
 		m_scale = glm::vec3(x, y, z);
 	}
 
-	glm::vec3& Transform::position() {
-		return m_position;
-	}
-
-	glm::vec3& Transform::scale() {
-		return m_scale;
-	}
-
-	glm::vec3& Transform::rotation() {
-		return m_rotation;
-	}
-
-	const glm::vec3& Transform::position() const {
-		return m_position;
-	}
-
-	const glm::vec3& Transform::scale() const {
-		return m_scale;
-	}
-
-	const glm::vec3& Transform::rotation() const {
-		return m_rotation;
-	}
-
-	glm::vec3& Transform::globalPosition()
+	glm::vec3 Transform::globalPosition()
 	{
-	 //    Transform* lastParent = nullptr;
-		// glm::vec3
-		// if (m_parent)
-		// {
-		//     lastParent = m_parent;
-		//     while (true)
-		// 	{
-		// 	    if (!lastParent) break;
-
-		// 	}
-		// }
+	    Transform* lastParent = m_parent;
+		glm::vec3 finalPos = m_position;
+	    while (lastParent)
+		{
+			finalPos+=lastParent->position();
+			lastParent=lastParent->parent();
+		}
+		return finalPos;
 	}
-	glm::vec3& Transform::globalScale()
+	glm::vec3 Transform::globalScale()
 	{
-
+        Transform* lastParent = m_parent;
+        glm::vec3 finalScale = m_scale;
+        while (lastParent)
+        {
+            finalScale*=lastParent->scale();
+            lastParent=lastParent->parent();
+        }
+        return finalScale;
 	}
-	glm::vec3& Transform::globalRotation()
+	glm::vec3 Transform::globalRotation()
 	{
-
-	}
-	const glm::vec3& Transform::globalPosition() const
-	{
-
-	}
-	const glm::vec3& Transform::globalScale() const
-	{
-
-	}
-	const glm::vec3& Transform::globalRotation() const
-	{
-
+        Transform* lastParent = m_parent;
+        glm::vec3 finalRot = m_rotation;
+        while (lastParent)
+        {
+            finalRot+=lastParent->rotation();
+            lastParent=lastParent->parent();
+        }
+        return finalRot;
 	}
 	void Transform::setParent(Transform* parent) {
 		if (m_parent == parent) return;

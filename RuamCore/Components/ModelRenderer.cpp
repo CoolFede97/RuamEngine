@@ -25,28 +25,15 @@ namespace RuamEngine
 		if (!m_model) return;
        	glm::mat4 modelMatrix(1.0f);
 
-       	glm::vec3 parentsPos = {0,0,0};
-       	glm::vec3 parentsRotation = {0,0,0};
-       	glm::vec3 parentsScale = {1,1,1};
-       	Transform* lastParent = nullptr;
-       	if (transform().m_parent != nullptr)
-       	{
-       		lastParent = transform().m_parent;
-       		while (true)
-       		{
-       			if (lastParent==nullptr) break;
-       			parentsPos+=lastParent->position();
-       			parentsRotation+=lastParent->rotation();
-       			parentsScale*=lastParent->scale();
-       			lastParent = lastParent->m_parent;
-       		}
-       	}
+       	glm::vec3 globalPosition = transform().globalPosition();
+       	glm::vec3 globalRotation = transform().globalRotation();
+       	glm::vec3 globalScale = transform().globalScale();
 
-       	modelMatrix = glm::translate(modelMatrix, entity()->transform().position() + parentsPos);
-       	modelMatrix = glm::rotate(modelMatrix, glm::radians(entity()->transform().rotation().x + parentsRotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-       	modelMatrix = glm::rotate(modelMatrix, glm::radians(entity()->transform().rotation().y + parentsRotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-       	modelMatrix = glm::rotate(modelMatrix, glm::radians(entity()->transform().rotation().z + parentsRotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-       	modelMatrix = glm::scale(modelMatrix, entity()->transform().scale() * parentsScale);
+       	modelMatrix = glm::translate(modelMatrix, entity()->transform().position() + globalPosition);
+       	modelMatrix = glm::rotate(modelMatrix, glm::radians(entity()->transform().rotation().x + globalRotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+       	modelMatrix = glm::rotate(modelMatrix, glm::radians(entity()->transform().rotation().y + globalRotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+       	modelMatrix = glm::rotate(modelMatrix, glm::radians(entity()->transform().rotation().z + globalRotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+       	modelMatrix = glm::scale(modelMatrix, entity()->transform().scale() * globalScale);
 
         GetShared(m_matricesSSBO)->pushBatchData({modelMatrix});
 	}

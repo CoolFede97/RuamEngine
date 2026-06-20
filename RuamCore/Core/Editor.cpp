@@ -81,7 +81,7 @@ namespace RuamEngine
 			std::list<Entity*> entities = scene->getEntities();
 			for (Entity* entity : entities)
 			{
-				if (entity->transform().m_parent) continue;
+				if (entity->transform()->m_parent) continue;
 				DrawEntityFamily(entity);
 			}
 		}
@@ -90,7 +90,7 @@ namespace RuamEngine
 
 	void Editor::DrawEntityFamily(Entity *entity)
 	{
-		std::list<Transform*> childrenTransform = entity->transform().children();
+		std::list<Transform*> childrenTransform = entity->transform()->children();
 
 		bool selected = (s_selectedEntity == entity);
 

@@ -135,9 +135,8 @@ namespace RuamEngine
 
 		bool destroyFlag() const;
 
-		Transform& transform();
+		inline Transform* transform() const { return m_transform; };
 
-		const Transform& transform() const;
 	private:
 
 		void forEachActiveComponent(std::function<void(Component*)> fn);

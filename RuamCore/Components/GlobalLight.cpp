@@ -32,7 +32,7 @@ namespace RuamEngine
 	{
 	    program->setUniform4f("u_globalLightColor", m_color.x, m_color.y, m_color.z, m_color.w);
 		program->setUniform1f("u_lightOffset", m_lightOffset);
-		program->setUniform3f("u_globalLightPos", s_mainLight->entity()->transform().position().x, s_mainLight->entity()->transform().position().y, s_mainLight->entity()->transform().position().z);
+		program->setUniform3f("u_globalLightPos", s_mainLight->entity()->transform()->position().x, s_mainLight->entity()->transform()->position().y, s_mainLight->entity()->transform()->position().z);
 	}
 	DEF_REGISTER_COMPONENT(GlobalLight)
 }

@@ -57,7 +57,6 @@ namespace RuamEngine
 		glm::vec3 globalPosition(); // returns global pos. computed value
 		glm::vec3 globalScale(); // returns global scale. computed value
 		glm::vec3 globalRotation(); // returns global rotation. computed value
-
 		Transform* operator[](size_t idx);
 
 		std::list<Transform*> m_children;

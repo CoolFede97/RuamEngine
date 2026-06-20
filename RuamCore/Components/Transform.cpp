@@ -1,6 +1,9 @@
 #include "Transform.h"
 #include "Component.h"
 #include "Entity.h"
+
+#include "glm/gtx/euler_angles.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 namespace RuamEngine
 {
 	Transform::Transform(const unsigned int entityId) : Component(entityId), m_position(0, 0, 0) {}
@@ -73,35 +76,44 @@ namespace RuamEngine
 	glm::vec3 Transform::globalPosition()
 	{
 	    Transform* lastParent = m_parent;
-		glm::vec3 finalPos = m_position;
+		glm::vec3 globalPos = m_position;
 	    while (lastParent)
 		{
-			finalPos+=lastParent->position();
+            glm::vec3 parentRotation = lastParent->rotation();
+            glm::mat4  parentRotationMatrix = glm::eulerAngleXYZ(
+                glm::radians(parentRotation.x),
+                glm::radians(parentRotation.y),
+                glm::radians(parentRotation.z)
+            );
+            glm::vec3 scaledPos = lastParent->scale() * globalPos;
+            glm::vec3 rotatedPos = glm::vec3(parentRotationMatrix * glm::vec4(scaledPos, 1.0f));
+
+            globalPos=lastParent->position() + rotatedPos;
 			lastParent=lastParent->parent();
 		}
-		return finalPos;
+		return globalPos;
 	}
 	glm::vec3 Transform::globalScale()
 	{
         Transform* lastParent = m_parent;
-        glm::vec3 finalScale = m_scale;
+        glm::vec3 globalScale = m_scale;
         while (lastParent)
         {
-            finalScale*=lastParent->scale();
+            globalScale*=lastParent->scale();
             lastParent=lastParent->parent();
         }
-        return finalScale;
+        return globalScale;
 	}
 	glm::vec3 Transform::globalRotation()
 	{
         Transform* lastParent = m_parent;
-        glm::vec3 finalRot = m_rotation;
+        glm::vec3 globalRot = m_rotation;
         while (lastParent)
         {
-            finalRot+=lastParent->rotation();
+            globalRot+=lastParent->rotation();
             lastParent=lastParent->parent();
         }
-        return finalRot;
+        return globalRot;
 	}
 	void Transform::setParent(Transform* parent) {
 		if (m_parent == parent) return;
@@ -120,7 +132,7 @@ namespace RuamEngine
 	}
 
 	void Transform::addChild(Transform* child) {
-		if (child==nullptr)
+	    if (child==nullptr)
 		{
 			std::cerr << "Error: Can't add child if child is nullptr!\n";
 			return;

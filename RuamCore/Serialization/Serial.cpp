@@ -12,11 +12,11 @@ namespace fs = std::filesystem;
 
 namespace RuamEngine
 {
-	void Serial::DeserializeTransform(const Json& jsonTransform, Transform& transfrom)
+	void Serial::DeserializeTransform(const Json& jsonTransform, Transform* transfrom)
 	{
-		if (jsonTransform.contains("m_position")) transfrom.setPosition(jsonTransform["m_position"].get<glm::vec3>());
-		if (jsonTransform.contains("m_rotation")) transfrom.setRotation(jsonTransform["m_rotation"].get<glm::vec3>());
-		if (jsonTransform.contains("m_scale")) transfrom.setScale(jsonTransform["m_scale"].get<glm::vec3>());
+		if (jsonTransform.contains("m_position")) transfrom->setPosition(jsonTransform["m_position"].get<glm::vec3>());
+		if (jsonTransform.contains("m_rotation")) transfrom->setRotation(jsonTransform["m_rotation"].get<glm::vec3>());
+		if (jsonTransform.contains("m_scale")) transfrom->setScale(jsonTransform["m_scale"].get<glm::vec3>());
 	}
 
 	Json Serial::Serialize(const Entity* entity)

@@ -23,7 +23,7 @@ namespace RuamEngine
 		return SceneManager::ActiveScene()->getEntityById(m_entityId);
 	}
 
-	Transform& Component::transform() const
+	Transform* Component::transform() const
 	{
 		return entity()->transform();
 	}

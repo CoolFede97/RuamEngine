@@ -115,7 +115,7 @@ namespace RuamEngine
 
 		unsigned int id() const;
 		Entity* entity() const;
-		Transform& transform() const; // returns the entity's transform
+		Transform* transform() const; // returns the entity's transform
 
 		bool enabled() const { return m_enabled; }
 		bool destroyFlag() const { return m_destroyFlag; }

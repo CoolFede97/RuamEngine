@@ -17,7 +17,7 @@ namespace RuamEngine
     class Serial
     {
     public:
-    	static void DeserializeTransform(const Json& jsonTransform, Transform& transfrom);
+    	static void DeserializeTransform(const Json& jsonTransform, Transform* transfrom);
 
 		static Json Serialize(const Entity* entity);
 

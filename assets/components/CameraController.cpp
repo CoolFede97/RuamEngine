@@ -23,8 +23,8 @@ namespace RuamEngine
 			if (Input::GetKey(KeyCode::Right_Arrow)) m_mouseRotation.y -= 1;
 
 
-			entity()->transform().rotate(static_cast<glm::vec3>(m_mouseRotation * RuamTime::DeltaTime() * m_rotationSpeed));
-			entity()->transform().rotate(std::clamp(entity()->transform().rotation().x, -89.0f, 89.0f),0,0);
+			entity()->transform()->rotate(static_cast<glm::vec3>(m_mouseRotation * RuamTime::DeltaTime() * m_rotationSpeed));
+			entity()->transform()->rotate(std::clamp(entity()->transform()->rotation().x, -89.0f, 89.0f),0,0);
 
 			m_horizontalDirection = {0, 0, 0};
 			if (Input::GetKey(KeyCode::W_Key)) m_horizontalDirection.z += 1;
@@ -32,11 +32,11 @@ namespace RuamEngine
 			if (Input::GetKey(KeyCode::A_Key)) m_horizontalDirection.x -= 1;
 			if (Input::GetKey(KeyCode::D_Key)) m_horizontalDirection.x += 1;
 
-			m_direction = Vec3::GetDirectionFromEuler(entity()->transform().rotation());
+			m_direction = Vec3::GetDirectionFromEuler(entity()->transform()->rotation());
 
 			Vec3 left = Vec3::Up().CrossProduct(m_direction).Normalized();
-			entity()->transform().translate(static_cast<glm::vec3>(m_direction * m_horizontalDirection.z * RuamTime::DeltaTime() * m_speed));
-			entity()->transform().translate(static_cast<glm::vec3>(left * -m_horizontalDirection.x * RuamTime::DeltaTime() * m_speed));
+			entity()->transform()->translate(static_cast<glm::vec3>(m_direction * m_horizontalDirection.z * RuamTime::DeltaTime() * m_speed));
+			entity()->transform()->translate(static_cast<glm::vec3>(left * -m_horizontalDirection.x * RuamTime::DeltaTime() * m_speed));
 
 		};
     // REGISTER_COMPONENT(CameraController);

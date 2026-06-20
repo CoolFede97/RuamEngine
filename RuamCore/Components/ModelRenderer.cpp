@@ -25,15 +25,15 @@ namespace RuamEngine
 		if (!m_model) return;
        	glm::mat4 modelMatrix(1.0f);
 
-       	glm::vec3 globalPosition = transform().globalPosition();
-       	glm::vec3 globalRotation = transform().globalRotation();
-       	glm::vec3 globalScale = transform().globalScale();
+       	glm::vec3 globalPosition = transform()->globalPosition();
+       	glm::vec3 globalRotation = transform()->globalRotation();
+       	glm::vec3 globalScale = transform()->globalScale();
 
-       	modelMatrix = glm::translate(modelMatrix, entity()->transform().position() + globalPosition);
-       	modelMatrix = glm::rotate(modelMatrix, glm::radians(entity()->transform().rotation().x + globalRotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-       	modelMatrix = glm::rotate(modelMatrix, glm::radians(entity()->transform().rotation().y + globalRotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-       	modelMatrix = glm::rotate(modelMatrix, glm::radians(entity()->transform().rotation().z + globalRotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-       	modelMatrix = glm::scale(modelMatrix, entity()->transform().scale() * globalScale);
+       	modelMatrix = glm::translate(modelMatrix, globalPosition);
+       	modelMatrix = glm::rotate(modelMatrix, glm::radians(globalRotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+       	modelMatrix = glm::rotate(modelMatrix, glm::radians(globalRotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+       	modelMatrix = glm::rotate(modelMatrix, glm::radians(globalRotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+       	modelMatrix = glm::scale(modelMatrix, globalScale);
 
         GetShared(m_matricesSSBO)->pushBatchData({modelMatrix});
 	}

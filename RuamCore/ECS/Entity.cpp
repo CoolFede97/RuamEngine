@@ -78,9 +78,9 @@ namespace RuamEngine
 		{
 			for (auto& cmp : cmpVector) cmp->destroy();
 		}
-		if (transform().children().size()>0)
+		if (transform()->children().size()>0)
 		{
-			for (auto& childTransform : transform().children())
+			for (auto& childTransform : transform()->children())
 			{
 				childTransform->entity()->destroy();
 			}
@@ -100,16 +100,6 @@ namespace RuamEngine
 	bool Entity::isEnabled() const
 	{
 		return m_enabled;
-	}
-
-	Transform &Entity::transform()
-	{
-		return *m_transform;
-	}
-
-	const Transform &Entity::transform() const
-	{
-		return *m_transform;
 	}
 
 	std::vector<Component*> Entity::getComponents() const

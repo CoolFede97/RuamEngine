@@ -6,7 +6,7 @@
 
 namespace RuamEngine
 {
-	unsigned int Entity::s_idCount = 0;
+	unsigned int Entity::s_idCount = 1;
 	const std::string Entity::s_defaultName = "GameObject";
 
 	Entity::Entity(const std::string& name)

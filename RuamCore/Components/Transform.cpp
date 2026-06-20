@@ -123,6 +123,7 @@ namespace RuamEngine
 
 		if (parent != nullptr)
 		{
+		    m_parentId = parent->entity()->id();
 			auto it = std::find(parent->m_children.begin(), parent->m_children.end(), this);
 			if (it == parent->m_children.end())
 			{

@@ -270,7 +270,6 @@ namespace RuamEngine
 	void Editor::UpdateSceneManager()
 	{
 		ImGui::Begin("Scenes");
-
 		for (std::string sceneName : SceneManager::Scenes())
 		{
 		    ImGui::PushID(sceneName.c_str());

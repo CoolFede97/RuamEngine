@@ -2,6 +2,7 @@
 
 #include "Component.h"
 
+#include "Serial.h"
 #include "glm/glm.hpp"
 #include "JsonConverters.h"
 #include <list>
@@ -15,7 +16,8 @@ namespace RuamEngine
 	#define TRANSFORM_SERIALIZED_MEMBERS(X, ...) \
 	X(m_position, glm::vec3, glm::vec3(0,0,0), nullptr)__VA_ARGS__	\
 	X(m_rotation, glm::vec3, glm::vec3(0,0,0), nullptr)__VA_ARGS__	\
-	X(m_scale, glm::vec3, glm::vec3(1,1,1), nullptr)	\
+	X(m_scale, glm::vec3, glm::vec3(1,1,1), nullptr)__VA_ARGS__	\
+	X(m_parentId, unsigned int, 0, nullptr)
 
 	class Transform : public Component
 	{
@@ -73,6 +75,6 @@ namespace RuamEngine
 
 	IMPL_SERIALIZE(Transform,
 		TRANSFORM_SERIALIZED_MEMBERS(SER_FIELD, ,))
-
+	friend class Serial;
 	};
 }

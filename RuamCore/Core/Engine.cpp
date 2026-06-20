@@ -3,6 +3,7 @@
 #include "KeyCode.h"
 #include "Renderer.h"
 #include "Input.h"
+#include "RenderingCore.h"
 #include "RuamTime.h"
 #include "Editor.h"
 #include "EventManager.h"
@@ -130,6 +131,7 @@ namespace RuamEngine
 
             glViewport(0,0,Renderer::GetWindowWidth(), Renderer::GetWindowHeight());
  			Renderer::ClearScreen();
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
             ImGui::Render();
            	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 

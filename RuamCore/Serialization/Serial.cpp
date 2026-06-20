@@ -17,6 +17,7 @@ namespace RuamEngine
 		if (jsonTransform.contains("m_position")) transfrom->setPosition(jsonTransform["m_position"].get<glm::vec3>());
 		if (jsonTransform.contains("m_rotation")) transfrom->setRotation(jsonTransform["m_rotation"].get<glm::vec3>());
 		if (jsonTransform.contains("m_scale")) transfrom->setScale(jsonTransform["m_scale"].get<glm::vec3>());
+		if (jsonTransform.contains("m_parentId")) transfrom->m_parentId = jsonTransform["m_parentId"].get<unsigned int>();
 	}
 
 	Json Serial::Serialize(const Entity* entity)

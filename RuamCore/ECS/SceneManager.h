@@ -4,6 +4,7 @@
 #include <functional>
 #include <memory>
 #include <map>
+#include "SaveSystem.h"
 #include "Scene.h"
 
 namespace RuamEngine
@@ -17,13 +18,13 @@ namespace RuamEngine
 
 		static const std::vector<std::string>& Scenes();
 
-		static void ChangeActiveScene(const std::string &sceneName);
 		static void EnqueueSceneChange(const std::string& sceneName, bool loadCameraPos);
-		static void ApplyPendingSceneChange();
+		static void CheckForSceneChange();
+
+		static void EnqueSceneDeletion(std::string& sceneName);
+		static void CheckForSceneDeletion();
 
 		static void UpdateScenes();
-		static void EnqueSceneDeletion(std::string& sceneName);
-		static void DeleteScene();
 
 		static bool CheckIfSceneAlreadyExists(std::string sceneName);
 
@@ -33,15 +34,18 @@ namespace RuamEngine
 
 		static void AddSceneCreator(const std::string& sceneName);
 
-		static SceneSPtr CreateDefaultScene(std::string sceneName = "defaultScene");
 
 		static bool SceneChange();
 		static bool SceneDeletion();
 
 		static SceneUPtr s_activeScene;
 	private:
+		static void ChangeActiveScene(const std::string &sceneName);
+		static void DeleteScene();
+
+		static SceneSPtr CreateDefaultScene(std::string sceneName = "defaultScene");
+
 		static void ResetActiveScene(); // Makes active scene be nullptr
-		static void SetSceneChange(bool state);
 
 		static std::vector<std::string> s_scenes;
 		// static bool s_scene_change;
@@ -51,5 +55,6 @@ namespace RuamEngine
 		static bool s_pendingSceneDeletion;
 		static std::string s_pendingSceneDeletionName;
 		friend class Editor;
+		friend class SaveSystem;
 	};
 }

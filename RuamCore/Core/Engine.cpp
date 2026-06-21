@@ -72,7 +72,7 @@ namespace RuamEngine
   		while (!Renderer::WindowShouldClose())
   		{
     		CheckIfWantToSaveChanges();
- 			if (SceneManager::Scenes().size()>0) SceneManager::ApplyPendingSceneChange();
+ 			SceneManager::CheckForSceneChange();
   		    // std::cout << "Frame count: " << frameCount++ << "\n";
 
  			ImGui_ImplOpenGL3_NewFrame();
@@ -143,7 +143,7 @@ namespace RuamEngine
 
             Renderer::EndDraw();
             glfwPollEvents();
-            SceneManager::DeleteScene(); // If a scene was to be deleted (an order made with ImGui)
+            SceneManager::CheckForSceneDeletion();
     	}
     	// Cleanup
         SceneManager::s_activeScene = nullptr;

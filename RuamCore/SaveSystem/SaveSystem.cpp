@@ -52,7 +52,7 @@ namespace RuamEngine
 
 		if (fs::exists(filePath))
 		{
-		    if (fs::remove(filePath)) std::cout << "Scene " << sceneName << "was erased succesfully\n";
+		    if (fs::remove(filePath)) std::cout << "Scene " << sceneName << " was erased succesfully\n";
 			else std::cout << "Failed to delete scene " << sceneName << "\n";
 		}
 		else std::cout << "Couldn't find file when trying to erase scene " << fileName << "\n";

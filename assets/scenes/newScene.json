@@ -1,69 +1,113 @@
 {
-  "m_entities": [
+ "m_entities": [
+  {
+   "m_components": [
     {
-      "m_components": [
-        {
-          "TYPE": "GlobalLight",
-          "m_id": 7
-        },
-        {
-          "TYPE": "Transform",
-          "m_id": 6,
-          "m_parentId": 0,
-          "m_position": [0.0, 100.0, 0.0],
-          "m_rotation": [0.0, 0.0, 0.0],
-          "m_scale": [1.0, 1.0, 1.0]
-        }
-      ],
-      "m_id": 3,
-      "m_name": "globalLight"
+     "TYPE": "GlobalLight",
+     "m_id": 19
     },
     {
-      "m_components": [
-        {
-          "TYPE": "ModelRenderer",
-          "m_id": 9,
-          "m_modelPath": "RuamCore/Assets/Models/Fede.obj"
-        },
-        {
-          "TYPE": "Transform",
-          "m_id": 8,
-          "m_parentId": 0,
-          "m_position": [0.0, 0.0, 0.0],
-          "m_rotation": [0.0, 0.0, 0.0],
-          "m_scale": [1.0, 1.0, 1.0]
-        }
-      ],
-      "m_id": 4,
-      "m_name": "fede"
-    },
-    {
-      "m_components": [
-        {
-          "TYPE": "GameCamera",
-          "m_aspectRatio": 2.7134146690368652,
-          "m_farPlane": 3000.0,
-          "m_fov": 45.0,
-          "m_id": 11,
-          "m_nearPlane": 0.10000000149011612
-        },
-        {
-          "TYPE": "Transform",
-          "m_id": 10,
-          "m_parentId": 0,
-          "m_position": [0.0, 0.0, 0.0],
-          "m_rotation": [0.0, 0.0, 0.0],
-          "m_scale": [1.0, 1.0, 1.0]
-        }
-      ],
-      "m_id": 5,
-      "m_name": "camera"
+     "TYPE": "Transform",
+     "m_id": 18,
+     "m_parentId": 0,
+     "m_position": [
+      0.0,
+      100.0,
+      0.0
+     ],
+     "m_rotation": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "m_scale": [
+      1.0,
+      1.0,
+      1.0
+     ]
     }
+   ],
+   "m_id": 10,
+   "m_name": "globalLight"
+  },
+  {
+   "m_components": [
+    {
+     "TYPE": "ModelRenderer",
+     "m_id": 21,
+     "m_modelPath": "RuamCore/Assets/Models/Fede.obj"
+    },
+    {
+     "TYPE": "Transform",
+     "m_id": 20,
+     "m_parentId": 0,
+     "m_position": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "m_rotation": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "m_scale": [
+      1.0,
+      1.0,
+      1.0
+     ]
+    }
+   ],
+   "m_id": 11,
+   "m_name": "fede"
+  },
+  {
+   "m_components": [
+    {
+     "TYPE": "GameCamera",
+     "m_aspectRatio": 2.7134146690368652,
+     "m_farPlane": 3000.0,
+     "m_fov": 45.0,
+     "m_id": 23,
+     "m_nearPlane": 0.10000000149011612
+    },
+    {
+     "TYPE": "Transform",
+     "m_id": 22,
+     "m_parentId": 0,
+     "m_position": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "m_rotation": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "m_scale": [
+      1.0,
+      1.0,
+      1.0
+     ]
+    }
+   ],
+   "m_id": 12,
+   "m_name": "camera"
+  }
+ ],
+ "m_id": 0,
+ "m_lastSavedCameraTransform": [
+  [
+   0.0,
+   0.0,
+   0.0
   ],
-  "m_id": 0,
-  "m_lastSavedCameraTransform": [
-    [0.0, 0.0, 0.0],
-    [0.0, 0.0, 0.0]
-  ],
-  "m_name": "newScene"
+  [
+   0.0,
+   0.0,
+   0.0
+  ]
+ ],
+ "m_name": "newScene"
 }

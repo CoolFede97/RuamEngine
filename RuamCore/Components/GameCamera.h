@@ -22,7 +22,7 @@ namespace RuamEngine
 	public:
 
 		IMPL_DRAW_SERIALIZED_MEMBERS(CAMERA_SERIALIZED_MEMBERS(CALL_INSPECTOR_DRAWER))
-
+		~GameCamera();
 		glm::mat4 projectionMatrix() const;
 		glm::mat4 viewMatrix() const;
 		float aspectRatio() const;

@@ -23,7 +23,9 @@ namespace RuamEngine
 	SceneManager::SceneUPtr SceneManager::s_activeScene = nullptr;
 	bool SceneManager::s_pendingSceneChange = false;
 	bool SceneManager::s_pendingLoadCameraPos = false;
-	std::string SceneManager::s_pendingSceneName;
+	std::string SceneManager::s_pendingSceneChangeName;
+	bool SceneManager::s_pendingSceneDeletion = false;
+	std::string SceneManager::s_pendingSceneDeletionName = "";
 	const std::vector<std::string>& SceneManager::Scenes()
 	{
 		return s_scenes;
@@ -51,14 +53,14 @@ namespace RuamEngine
 	void SceneManager::EnqueueSceneChange(const std::string& sceneName, bool loadCameraPos)
 	{
 		if (s_pendingSceneChange) return;
-		s_pendingSceneName = sceneName;
+		s_pendingSceneChangeName = sceneName;
 		s_pendingLoadCameraPos = loadCameraPos;
 		s_pendingSceneChange = true;
 	}
 
 	void SceneManager::ApplyPendingSceneChange()
 	{
-		if (s_pendingSceneChange) ChangeActiveScene(s_pendingSceneName);
+		if (s_pendingSceneChange) ChangeActiveScene(s_pendingSceneChangeName);
 		SetSceneChange(false);
 	}
 
@@ -71,11 +73,27 @@ namespace RuamEngine
 		}
 	}
 
-	void SceneManager::RemoveScene(std::string& sceneName)
+	void SceneManager::EnqueSceneDeletion(std::string& sceneName)
 	{
-	    // Remove reorders the elements so that the ones with the value of sceneName end up in the end.
-		// Then erase erases from the beginning of those whose value is sceneName to the end.
-	    s_scenes.erase(std::remove(s_scenes.begin(),s_scenes.end(), sceneName), s_scenes.end());
+	    s_pendingSceneDeletionName = sceneName;
+		s_pendingSceneDeletion = true;
+	}
+
+	void SceneManager::DeleteScene()
+	{
+	    if (s_pendingSceneDeletion)
+		{
+    	    SceneManager::ResetActiveScene();
+    		SaveSystem::EraseScene(s_pendingSceneDeletionName);
+
+            // Remove reorders the elements so that the ones with the value of sceneName end up in the end.
+    		// Then erase erases from the beginning of those whose value is sceneName to the end.
+		    s_scenes.erase(std::remove(s_scenes.begin(),s_scenes.end(), s_pendingSceneDeletionName), s_scenes.end());
+		    std::cout << "Scene deleted: " << s_pendingSceneDeletionName << "\n";
+			if (s_scenes.size()>0) ChangeActiveScene(s_scenes[0]);
+		}
+		s_pendingSceneDeletion = false;
+		s_pendingSceneDeletionName = "";
 	}
 
 	bool SceneManager::CheckIfSceneAlreadyExists(std::string sceneName)

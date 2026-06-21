@@ -1,3 +1,5 @@
+Make scene deletion work well
+
 Lua stuff
 
 When right clicking on editor camera, mouse can hover over inspector and those ui elements.

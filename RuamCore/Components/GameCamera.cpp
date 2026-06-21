@@ -1,10 +1,26 @@
 #include "GameCamera.h"
+#include "Entity.h"
 #include "RuamEngine.h"
+#include "Scene.h"
+#include "SceneManager.h"
 
 namespace RuamEngine
 {
     GameCamera* GameCamera::s_mainCamera = nullptr;
 
+    GameCamera::~GameCamera()
+    {
+        if (!SceneManager::ActiveScene()) return;
+        else if (s_mainCamera->id() == id())
+        {
+            EmptyMainCamera();
+            for (Entity* entity : SceneManager::ActiveScene()->getEntities())
+            {
+                GameCamera* gameCamera = entity->getComponent<GameCamera>();
+                if (gameCamera) gameCamera->setAsMainCamera();
+            }
+        }
+    }
 	glm::mat4 GameCamera::projectionMatrix() const
 	{
 		return glm::perspective(glm::radians(m_fov), m_aspectRatio, m_nearPlane, m_farPlane);

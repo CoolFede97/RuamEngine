@@ -75,7 +75,6 @@ namespace RuamEngine
  			if (SceneManager::Scenes().size()>0) SceneManager::ApplyPendingSceneChange();
   		    // std::cout << "Frame count: " << frameCount++ << "\n";
 
- 			// ImGUI
  			ImGui_ImplOpenGL3_NewFrame();
  			ImGui_ImplGlfw_NewFrame();
  			ImGui::NewFrame();
@@ -128,7 +127,14 @@ namespace RuamEngine
                     Renderer::s_gameFrameBuffer->unbind();
                 }
             }
-
+            else if (!SceneManager::ActiveScene())
+            {
+                Renderer::s_editorFrameBuffer->bind();
+     			Renderer::ClearScreen();
+                Renderer::s_gameFrameBuffer->bind();
+     			Renderer::ClearScreen();
+                Renderer::s_gameFrameBuffer->unbind();
+            }
             glViewport(0,0,Renderer::GetWindowWidth(), Renderer::GetWindowHeight());
  			Renderer::ClearScreen();
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -137,6 +143,7 @@ namespace RuamEngine
 
             Renderer::EndDraw();
             glfwPollEvents();
+            SceneManager::DeleteScene(); // If a scene was to be deleted (an order made with ImGui)
     	}
     	// Cleanup
         SceneManager::s_activeScene = nullptr;

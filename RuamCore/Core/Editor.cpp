@@ -289,10 +289,7 @@ namespace RuamEngine
 			{
 			    if (ImGui::Button("Delete"))
 				{
-				    std::cout << "Scene deleted: " << sceneName << "\n";
-					SaveSystem::EraseScene(sceneName);
-					SceneManager::ResetActiveScene();
-					SceneManager::RemoveScene(sceneName);
+					SceneManager::EnqueSceneDeletion(sceneName);
 					ImGui::CloseCurrentPopup();
 				}
 				ImGui::EndPopup();
@@ -316,13 +313,17 @@ namespace RuamEngine
         {
             if (Camera().aspectRatio()!=aspectRatio) Camera().setAspectRatio(aspectRatio);
         }
-        else if (GameCamera::GetMainCamera() && GameCamera::GetMainCamera()->aspectRatio()!=aspectRatio)
+        else if (SceneManager::ActiveScene())
         {
-            for (Entity* entity : SceneManager::ActiveScene()->getEntities())
+            if (!GameCamera::GetMainCamera()) std::cout << "Error: There is no GameCamera!\n";
+            else if (GameCamera::GetMainCamera()->aspectRatio()!=aspectRatio)
             {
-                for (GameCamera* cameraCmp : entity->getComponentsOfType<GameCamera>())
+                for (Entity* entity : SceneManager::ActiveScene()->getEntities())
                 {
-                   cameraCmp->setAspectRatio(aspectRatio);
+                    for (GameCamera* cameraCmp : entity->getComponentsOfType<GameCamera>())
+                    {
+                    cameraCmp->setAspectRatio(aspectRatio);
+                    }
                 }
             }
         }

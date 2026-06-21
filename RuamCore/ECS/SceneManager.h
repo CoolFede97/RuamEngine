@@ -22,7 +22,8 @@ namespace RuamEngine
 		static void ApplyPendingSceneChange();
 
 		static void UpdateScenes();
-		static void RemoveScene(std::string& sceneName);
+		static void EnqueSceneDeletion(std::string& sceneName);
+		static void DeleteScene();
 
 		static bool CheckIfSceneAlreadyExists(std::string sceneName);
 
@@ -35,6 +36,7 @@ namespace RuamEngine
 		static SceneSPtr CreateDefaultScene(std::string sceneName = "defaultScene");
 
 		static bool SceneChange();
+		static bool SceneDeletion();
 
 		static SceneUPtr s_activeScene;
 	private:
@@ -45,7 +47,9 @@ namespace RuamEngine
 		// static bool s_scene_change;
 		static bool s_pendingSceneChange;
 		static bool s_pendingLoadCameraPos; // determines whether the editor's camera pos will be reseted when loading a scene
-		static std::string s_pendingSceneName;
+		static std::string s_pendingSceneChangeName;
+		static bool s_pendingSceneDeletion;
+		static std::string s_pendingSceneDeletionName;
 		friend class Editor;
 	};
 }

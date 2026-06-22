@@ -87,10 +87,8 @@ namespace RuamEngine
 
 	void Scene::tick()
 	{
-		m_entities.erase(
-			std::remove_if(m_entities.begin(), m_entities.end(), [](std::unique_ptr<Entity>& e){ return e->destroyFlag(); }),
-			m_entities.end()
-		);
+	    // START ----------------------------------------------------------------------------------------------------
+
 		m_componentsToStart = m_justCreatedComponents;
 		if (m_justCreatedComponents.size()>0) m_justCreatedComponents.clear();
 		for (auto& [entityId, map] : m_componentsToStart)
@@ -103,6 +101,8 @@ namespace RuamEngine
 			}
 		}
 		if (m_componentsToStart.size()>0) m_componentsToStart.clear();
+
+		// UPDATE ---------------------------------------------------------------------------------------------------
 
 		if (Engine::State()==EngineState::GameMode) forEachActiveEntity([](Entity* entity)->void{entity->update();});
 		forEachActiveEntity([](Entity* entity)->void{entity->renderUpdate();});
@@ -139,6 +139,13 @@ namespace RuamEngine
 			if (!cmp->enabled()) continue;
 			fn(cmp);
 		}
+	}
+	void Scene::checkForEntitiesDestruction()
+	{
+        m_entities.erase(
+		std::remove_if(m_entities.begin(), m_entities.end(), [](std::unique_ptr<Entity>& e){ return e->destroyFlag(); }),
+		m_entities.end()
+        );
 	}
 	std::list<Entity*> Scene::getEntities() const
 	{

@@ -1,4 +1,6 @@
-Make scene deletion work well
+May be separate some Renderer stuff to GPUResourceManager such as in WorldMaker
+
+Make resizeSSBO one time called
 
 Lua stuff
 

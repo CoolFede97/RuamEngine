@@ -16,6 +16,7 @@ namespace RuamEngine
         static void Start();
 
         static void CheckIfWantToSaveChanges();
+        static void ImGuiStartNewFrame();
 
         static void LoadRuamConfig();
         inline static RuamConfig Config() {return s_config;};

@@ -60,6 +60,8 @@ namespace RuamEngine
 		void forEachActiveEntity(std::function<void(Entity*)> fn);
 		void forEachActiveComponentToStart(unsigned int entityId, std::type_index cmpType, std::vector<Component*>& cmpVec, std::function<void(Component*)> fn);
 
+		void checkForEntitiesDestruction();
+
 		// Key of the object that owns the component, then the type of component and you get a vector of components
 	    std::map<unsigned int, std::map<std::type_index, std::vector<Component*>>> m_componentsToStart;
 	    std::map<unsigned int, std::map<std::type_index, std::vector<Component*>>> m_justCreatedComponents;
@@ -78,6 +80,7 @@ namespace RuamEngine
 		friend class Entity;
 		friend class SaveSystem;
 		friend class Serial;
+		friend class Engine;
 	};
 	using SceneSPtr = std::shared_ptr<Scene>;
 }

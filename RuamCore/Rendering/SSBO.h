@@ -23,13 +23,38 @@ namespace RuamEngine
 		unsigned int m_maxBytes = 0;
 		unsigned int m_currentBytes = 0;
 		unsigned int m_usage = GL_DYNAMIC_STORAGE_BIT;
+
+		void resize(unsigned int elementsToSupport)
+		{
+		    ASSERT(elementsToSupport >= currentElements());
+            unsigned int newSSBO;
+            GLCall(glCreateBuffers(1, &newSSBO));
+      		GLCall(
+     			glNamedBufferStorage
+     			(
+    				newSSBO,
+    				sizeof(T) * elementsToSupport,
+    				0,
+    				m_usage
+     			));
+                glCopyNamedBufferSubData(
+                m_glName,
+                newSSBO,
+                0,
+                0,
+                m_currentBytes
+            );
+            m_maxBytes = elementsToSupport * sizeof(T);
+            GLCall(glDeleteBuffers(1, &m_glName));
+            m_glName = newSSBO;
+            std::cout << "SSBO resized!\n";
+		}
 	public:
 		std::vector<T> m_data = {};
 
 		SSBO(unsigned int maxCount, unsigned int usage)
 		{
 			GLCall(glCreateBuffers(1, &m_glName));
-			std::cout << "Size: " << sizeof(T)*maxCount << "\n";
 			GLCall(
 				glNamedBufferStorage
 				(
@@ -47,8 +72,9 @@ namespace RuamEngine
 		}
 
 		// Should be used for buffers from the renderer batch
-		void pushBatchData(const std::vector<T>& data)
+		void pushData(const std::vector<T>& data)
 		{
+		    if (currentElements() + data.size() > maxElements()) resize(currentElements()+data.size());
 			m_data.insert(m_data.end(), data.begin(), data.end());
 			m_currentBytes += data.size() * sizeof(T);
 		}

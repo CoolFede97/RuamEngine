@@ -13,13 +13,6 @@ namespace RuamEngine
 		if (modelRendererData.contains("m_modelPath")) m_modelPath = modelRendererData["m_modelPath"].get<std::string>();
 		loadModel();
 	}
-    ModelRenderer::~ModelRenderer()
-   	{
-   		if (!m_modelPath.empty())
-   		{
-   			m_cachedRenderUnits.clear();
-   		}
-   	}
     void ModelRenderer::renderUpdate()
 	{
 		if (!m_model) return;
@@ -35,7 +28,7 @@ namespace RuamEngine
        	modelMatrix = glm::rotate(modelMatrix, glm::radians(globalRotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
        	modelMatrix = glm::scale(modelMatrix, globalScale);
 
-        GetShared(m_matricesSSBO)->pushBatchData({modelMatrix});
+        GetShared(m_matricesSSBO)->pushData({modelMatrix});
 	}
 
 	void ModelRenderer::setModel(const std::string& relativePath)
@@ -50,7 +43,7 @@ namespace RuamEngine
         auto& ssbo = Renderer::s_modelRUsMap[m_shaderProgramType][m_model->path()];
         if (!ssbo)
         {
-            ssbo = std::make_shared<SSBO<glm::mat4>>(maxVertexCount, GL_DYNAMIC_STORAGE_BIT);
+            ssbo = std::make_shared<SSBO<glm::mat4>>(baseVertexCount, GL_DYNAMIC_STORAGE_BIT);
         }
         m_matricesSSBO = ssbo;
 

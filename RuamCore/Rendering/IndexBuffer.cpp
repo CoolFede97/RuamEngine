@@ -42,7 +42,7 @@ namespace RuamEngine
     // You probably want to avoid using this function directly
     void IndexBuffer::setSubData(const unsigned int* data, unsigned int offset, unsigned int size)
     {
-        ASSERT(offset + size <= maxIndexCount * sizeof(unsigned int));
+        ASSERT(offset + size <= baseIndexCount * sizeof(unsigned int));
 
         bind();
 

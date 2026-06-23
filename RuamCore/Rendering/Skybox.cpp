@@ -58,12 +58,12 @@ namespace RuamEngine
     {
         s_shaderProgram = ResourceManager::CreateShaderProgram(skyboxVertexShaderDefaultPath, skyboxFragmentShaderDefaultPath);
         m_vertexArray = std::make_unique<VertexArray>();
-        s_verticesSSBO = std::make_unique<SSBO<Vertex>>(maxVertexCount, GL_DYNAMIC_STORAGE_BIT);
-        s_indicesSSBO = std::make_unique<SSBO<unsigned int>>(maxIndexCount, GL_DYNAMIC_STORAGE_BIT);
+        s_verticesSSBO = std::make_unique<SSBO<Vertex>>(baseVertexCount, GL_DYNAMIC_STORAGE_BIT);
+        s_indicesSSBO = std::make_unique<SSBO<unsigned int>>(baseIndexCount, GL_DYNAMIC_STORAGE_BIT);
         s_initialized = true;
-        s_verticesSSBO->pushBatchData(s_vertices);
+        s_verticesSSBO->pushData(s_vertices);
         s_verticesSSBO->submitData();
-        s_indicesSSBO->pushBatchData(s_indices);
+        s_indicesSSBO->pushData(s_indices);
         s_indicesSSBO->submitData();
         s_cubemap = ResourceManager::LoadTexture<Cubemap>({
 			skyboxDefaultPath,skyboxDefaultPath,skyboxDefaultPath,skyboxDefaultPath,skyboxDefaultPath,skyboxDefaultPath

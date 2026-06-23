@@ -17,7 +17,6 @@ namespace RuamEngine
         DrawingData();
         ~DrawingData();
         ShaderProgramSPtr m_program = nullptr;
-        std::map<unsigned int, RenderUnitSPtr> m_renderUnits = {}; // The key is the material id
 
         void submitData();
         void submitData(RenderUnit& renderUnit);

@@ -115,7 +115,7 @@ namespace RuamEngine
 
     bool Input::GetKeyDown(KeyCode key)
     {
-    	return glfwGetKey(s_window, key) == GLFW_PRESS && !s_previousKeys[key];
+    	return GetKey(key) && !s_previousKeys[key];
     }
 
     bool Input::GetKeyUp(KeyCode key)

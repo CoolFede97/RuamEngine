@@ -4,11 +4,11 @@
    "m_components": [
     {
      "TYPE": "GlobalLight",
-     "m_id": 13
+     "m_id": 22
     },
     {
      "TYPE": "Transform",
-     "m_id": 12,
+     "m_id": 21,
      "m_parentId": 0,
      "m_position": [
       0.0,
@@ -27,19 +27,23 @@
      ]
     }
    ],
-   "m_id": 7,
+   "m_id": 10,
    "m_name": "globalLight"
   },
   {
    "m_components": [
     {
      "TYPE": "ModelRenderer",
-     "m_id": 15,
+     "m_id": 24,
      "m_modelPath": "RuamCore/Assets/Models/Fede.obj"
     },
     {
+     "TYPE": "Sandbox",
+     "m_id": 25
+    },
+    {
      "TYPE": "Transform",
-     "m_id": 14,
+     "m_id": 23,
      "m_parentId": 0,
      "m_position": [
       0.0,
@@ -58,7 +62,7 @@
      ]
     }
    ],
-   "m_id": 8,
+   "m_id": 11,
    "m_name": "fede"
   },
   {
@@ -68,12 +72,12 @@
      "m_aspectRatio": 2.7134146690368652,
      "m_farPlane": 3000.0,
      "m_fov": 45.0,
-     "m_id": 17,
+     "m_id": 27,
      "m_nearPlane": 0.10000000149011612
     },
     {
      "TYPE": "Transform",
-     "m_id": 16,
+     "m_id": 26,
      "m_parentId": 0,
      "m_position": [
       0.0,
@@ -92,20 +96,20 @@
      ]
     }
    ],
-   "m_id": 9,
+   "m_id": 12,
    "m_name": "camera"
   }
  ],
  "m_id": 0,
  "m_lastSavedCameraTransform": [
   [
-   0.0,
-   0.0,
-   0.0
+   1.9390220642089844,
+   6.017897129058838,
+   -11.751080513000488
   ],
   [
-   0.0,
-   0.0,
+   -27.900007247924805,
+   3.3000006675720215,
    0.0
   ]
  ],

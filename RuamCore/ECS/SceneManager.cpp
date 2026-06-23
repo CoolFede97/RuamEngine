@@ -4,6 +4,7 @@
 #include "Editor.h"
 #include "GameCamera.h"
 #include "ModelRenderer.h"
+#include "Sandbox.h"
 #include "Renderer.h"
 #include "Engine.h"
 
@@ -126,6 +127,7 @@ namespace RuamEngine
 		light->transform()->setPosition(glm::vec3(0.0f, 100.0f, 0.0f));
 
 		Entity* fede = scene->createEntity("fede");
+		fede->addComponent<Sandbox>();
 		fede->addComponent<ModelRenderer>()->setModel("RuamCore/Assets/Models/Fede.obj");
 
 		Entity* camera = scene->createEntity("camera");

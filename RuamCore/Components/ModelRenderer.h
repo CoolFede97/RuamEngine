@@ -35,14 +35,9 @@ namespace RuamEngine
 
     public:
 	   	ModelRenderer(Json modelRendererData, const unsigned int entityId);
-    	// ModelWPtr m_model;
-    	// ShaderProgramType m_shaderProgramType = ShaderProgramType::general;
-    	std::unordered_map<unsigned int, RenderUnitWPtr> m_cachedRenderUnits;
 
     	IMPL_DRAW_SERIALIZED_MEMBERS(MODEL_RENDERER_SERIALIZED_MEMBERS(CALL_INSPECTOR_DRAWER))
     	IMPL_SERIALIZE(ModelRenderer, MODEL_RENDERER_SERIALIZED_MEMBERS(SER_FIELD, ,))
-
-    	~ModelRenderer();
 
     	void setModel(const std::string& relativePath);
     	void loadModel();

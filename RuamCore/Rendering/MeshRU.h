@@ -24,37 +24,14 @@ namespace RuamEngine
 
         MaterialWPtr m_material = {};
         VertexArrayUPtr m_vertexArray = std::make_unique<VertexArray>();
-        SSBOUPtr<Vertex> m_vertices = std::make_unique<SSBO<Vertex>>(maxVertexCount, GL_DYNAMIC_STORAGE_BIT);
-        SSBOUPtr<unsigned int> m_indices = std::make_unique<SSBO<unsigned int>>(maxIndexCount, GL_DYNAMIC_STORAGE_BIT);
+        SSBOUPtr<Vertex> m_vertices = std::make_unique<SSBO<Vertex>>(baseVertexCount, GL_DYNAMIC_STORAGE_BIT);
+        SSBOUPtr<unsigned int> m_indices = std::make_unique<SSBO<unsigned int>>(baseIndexCount, GL_DYNAMIC_STORAGE_BIT);
 
         void submitData();
 		void bindBuffersBase();
 
-        void pushBatchData(const std::vector<Vertex>& vertices, std::vector<unsigned int> indices);
+        void pushData(const std::vector<Vertex>& vertices, std::vector<unsigned int> indices);
     private:
-        template<typename T>
-        void resizeSSBO(SSBOUPtr<T>& ssbo, bool pushExceedsCapacity, unsigned int elementsToSupport)
-        {
-            unsigned int amplifier = pushExceedsCapacity ? ssboOversizeMultiplier : ssboAmplifier;
-            for (unsigned int amplifyTry = 1; amplifyTry <=amplificationTries; amplifyTry++)
-            {
-                if ((ssbo->maxSize())*amplifier*amplifyTry<elementsToSupport) continue;
-                SSBOUPtr<T> newSSBO = std::make_unique<SSBO<T>>(ssbo->maxElements()*amplifier*amplifyTry, GL_DYNAMIC_STORAGE_BIT);
-                newSSBO.get()->m_data = ssbo.get()->data();
-                newSSBO.get()->m_currentBytes = ssbo.get()->currentSize();
-
-                GLCall(glBindBuffer(GL_COPY_WRITE_BUFFER, newSSBO.get()->glName()));
-                GLCall(glBindBuffer(GL_COPY_READ_BUFFER, ssbo.get()->glName()));
-
-                GLCall(glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0, ssbo->maxSize()));
-                ssbo = std::move(newSSBO);
-                std::cout << "SSBO resized!\n";
-                return;
-            }
-            std::cerr << "SSBO was resized " << amplificationTries << " times and still it can't support the elements requiered: " << elementsToSupport << " bytes\n";
-            return;
-        }
-
         unsigned int m_indexCount = 0;
         bool m_uploaded = false;
     };

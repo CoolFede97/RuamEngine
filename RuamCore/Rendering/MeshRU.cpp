@@ -31,27 +31,22 @@ namespace RuamEngine
 		m_indices->bindBufferBase(SSBOType::indices);
 	}
 
-	void MeshRU::pushBatchData(const std::vector<Vertex>& vertices, std::vector<unsigned int> indices)
+	void MeshRU::pushData(const std::vector<Vertex>& vertices, std::vector<unsigned int> indices)
 	{
-		if (m_vertices->checkIfPushIsBiggerThanMaxSize(vertices.size())) resizeSSBO(m_vertices, true, vertices.size());
-		if (m_indices->checkIfPushIsBiggerThanMaxSize(indices.size())) resizeSSBO(m_indices, true, indices.size());
-
 		for (unsigned int i = 0; i < indices.size() ; i++)
 		{
 			indices[i] += m_indexCount;
 		}
 		m_indexCount += vertices.size();
 
-		if (!m_vertices->checkIfEnoughSpaceForPush(vertices.size())) resizeSSBO(m_vertices, false, m_vertices->maxElements());
-		m_vertices->pushBatchData(vertices);
+		m_vertices->pushData(vertices);
 
-		if (!m_indices->checkIfEnoughSpaceForPush(indices.size())) resizeSSBO(m_indices, false, m_indices->maxElements());
-        m_indices->pushBatchData(indices);
+        m_indices->pushData(indices);
 	}
 
 	MeshRU::MeshRU(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
 	{
-	    pushBatchData(vertices, indices);
+	    pushData(vertices, indices);
 		submitData();
 	}
 }

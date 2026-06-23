@@ -82,12 +82,9 @@ namespace RuamEngine
             Editor::UpdateSceneManager();
             Editor::UpdateViewport(Renderer::s_editorFrameBuffer.get(), "Editor", true);
             Editor::UpdateViewport(Renderer::s_gameFrameBuffer.get(), "Game", false);
-            Input::UpdateInput();
             Editor::UpdateCameraTransform();
             // Time
  			RuamTime::Update();
-
-            Renderer::BeginBatch();
 
  			EventManager::HandleEvents();
 
@@ -97,17 +94,20 @@ namespace RuamEngine
  			{
                 if (Input::GetKey(KeyCode::LeftControl_Key) && Input::GetKeyDown(KeyCode::P_Key))
                 {
-                    if (s_state == EngineState::EditorMode) s_state = EngineState::GameMode;
+                    if (s_state == EngineState::EditorMode)
+                    {
+                        s_state = EngineState::GameMode;
+                        std::cout << "Entered into Game Mode\n";
+                    }
                     else
                     {
                         SceneManager::EnqueueSceneChange(scene->name(), false);
                         s_state = EngineState::EditorMode;
+                        std::cout << "Entered into Editor Mode\n";
                     }
                 }
 				scene->tick();
  			}
-
-      		Renderer::EndBatch();
 
             Renderer::s_editorFrameBuffer->bind();
  			Renderer::ClearScreen();
@@ -132,10 +132,13 @@ namespace RuamEngine
             }
 
             GLCall(glViewport(0,0,Renderer::GetWindowWidth(), Renderer::GetWindowHeight()));
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            Renderer::ClearScreen();
             ImGui::Render();
            	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
             Renderer::EndDraw();
+            Input::UpdateInput();
             glfwPollEvents();
             if (scene) scene->checkForEntitiesDestruction();
             SceneManager::CheckForSceneDeletion();

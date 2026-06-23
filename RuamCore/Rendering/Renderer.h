@@ -6,7 +6,6 @@
 #include "RenderingElements.h"
 
 #include "DrawingData.h"
-#include "RenderUnit.h"
 #include "Material.h"
 #include "ShaderProgram.h"
 #include "Texture.h"
@@ -69,15 +68,8 @@ namespace RuamEngine
 		static GLFWwindow* GetWindow() { return s_window; }
 		static int WindowShouldClose() { return glfwWindowShouldClose(s_window); }
 
-        // Creators
-		static RenderUnitSPtr CreateRenderUnit(ShaderProgramType shaderProgramType, MaterialWPtr material);
-
-        // Destroyers
-		static void DestroyRenderUnit(RenderUnitSPtr renderUnit, DrawingDataSPtr drawingData);
-
         // Finders
         static unsigned int FindMaterial(MaterialWPtr material);
-        static RenderUnitSPtr GetRenderUnit(MaterialWPtr material, ShaderProgramType shaderProgramType);
         static ModelRUSPtr GetModelRU(const std::string& modelPath);
 
         // Loaders
@@ -88,12 +80,7 @@ namespace RuamEngine
         static void Shutdown();
 
         static void EndDraw();
-        static void BeginBatch();
-        static void EndBatch();
-		static void EndBatch(RenderUnit& renderUnit);
         static void ClearScreen();
-        static void Flush();
-        static void ClearRenderUnits();
 
         // Destroyers
         static void DestroyMaterial(unsigned int materialId);
@@ -126,7 +113,6 @@ namespace RuamEngine
 
         friend class ResourceManager;
         friend class Engine;
-        friend class RenderUnit;
         friend class Editor;
     };
 

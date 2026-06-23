@@ -3,7 +3,6 @@
 #include "FrameBuffer.h"
 #include "GLFW/glfw3.h"
 #include "GlobalLight.h"
-#include "RenderUnit.h"
 #include "RenderingConstants.h"
 #include "RenderingCore.h"
 #include "ResourceManager.h"
@@ -85,36 +84,6 @@ namespace RuamEngine
             for (auto& [modelPath, matricesSSBO] : map) matricesSSBO->flush();
         }
     }
-    void Renderer::BeginBatch()
-    {
-        Flush();
-    }
-    void Renderer::EndBatch()
-    {
-        for (auto& [type,drawingData] : s_drawingDatas)
-        {
-            drawingData->submitData();
-        }
-    }
-    void Renderer::EndBatch(RenderUnit& renderUnit)
-    {
-        renderUnit.submitData();
-    }
-    void Renderer::Flush()
-    {
-        for (auto& [type,drawingData] : s_drawingDatas)
-        {
-            drawingData->flush();
-        }
-    }
-
-    void Renderer::ClearRenderUnits()
-    {
-        for (auto& [type,drawingData] : s_drawingDatas)
-        {
-            drawingData->m_renderUnits.clear();
-        }
-    }
 
     void Renderer::ClearScreen()
     {
@@ -175,23 +144,6 @@ namespace RuamEngine
         return newDrawingData;
 	}
 
-    // If the render unit already exists, it returns the existing index. Otherwise, it creates a new render unit and returns its index.
-    RenderUnitSPtr Renderer::CreateRenderUnit(ShaderProgramType shaderProgramType, MaterialWPtr material)
-    {
-        DrawingDataSPtr drawingData = s_drawingDatas[shaderProgramType];
-		RenderUnitSPtr ru = GetRenderUnit(material, shaderProgramType);
-        if (ru != nullptr)
-        {
-            return ru;
-        }
-        RenderUnitSPtr newRenderUnit = std::make_shared<RenderUnit>();
-		newRenderUnit->m_material = material;
-		newRenderUnit->m_drawingData = drawingData;
-		newRenderUnit->m_program = drawingData->m_program;
-        drawingData->m_renderUnits[material.lock()->id()] = newRenderUnit;
-        return newRenderUnit;
-	}
-
 	ModelRUSPtr Renderer::LoadModelRU(ModelSPtr model)
 	{
         auto it = s_modelRUs.find(model->path());
@@ -211,20 +163,6 @@ namespace RuamEngine
 		return newModelRU;
 	}
 
-    void Renderer::DestroyRenderUnit(RenderUnitSPtr renderUnit, DrawingDataSPtr drawingData)
-    {
-    	unsigned int materialId = renderUnit->m_material.lock()->id();
-        auto& units = drawingData->m_renderUnits;
-        auto it = units.find(materialId);
-
-        if (it != units.end())
-        {
-            units.erase(it);
-            std::cout << "A Render Unit was destroyed successfully\n";
-        }
-        else std::cout << "Warning: Couldn't find render unit and therefore couldn't destroy it\n";
-    }
-
     void Renderer::DestroyShaderProgram(unsigned int programId)
     {
         auto it = s_shaderPrograms.find(programId);
@@ -234,20 +172,6 @@ namespace RuamEngine
             std::cout << "Shader Program with id " << programId << " was destroyed successfully\n";
         }
         else std::cout << "Couldn't find shader program of id " << programId << " and therefore couldn't destroy it\n";
-    }
-
-    // Finders -------------------------------------------------------------
-
-    // Finds if a render unit already exists in a certain drawing data, if not, returns nullptr
-    RenderUnitSPtr Renderer::GetRenderUnit(MaterialWPtr material, ShaderProgramType shaderProgramType)
-    {
-        DrawingDataSPtr drawingData = s_drawingDatas[shaderProgramType];
-        unsigned int materialId = material.lock()->id();
-        auto units = drawingData->m_renderUnits;
-        auto it = units.find(materialId);
-
-        if (it != units.end()) return it->second;
-        else return nullptr;
     }
 
     ModelRUSPtr Renderer::GetModelRU(const std::string& modelPath)

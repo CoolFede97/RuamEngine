@@ -5,14 +5,10 @@ namespace RuamEngine
 {
 	static const unsigned int maxVertexAtribs = (3 + 4 + 2 + 1); // Position, Color, TexCoords, TexID
 	static const unsigned int maxVertexSize = sizeof(float) * maxVertexAtribs; // 3 position, 4 color, 2 tex coords, 1 tex id
-	static const unsigned int maxQuadCount = 10;
-	static const unsigned int maxVertexCount = maxQuadCount * 3;
-	static const unsigned int maxIndexCount = maxQuadCount * 6;
+	static const unsigned int baseQuadCount = 10;
+	static const unsigned int baseVertexCount = baseQuadCount * 3;
+	static const unsigned int baseIndexCount = baseQuadCount * 6;
 	static const unsigned int maxTextureSlots = 32; // Note for CoolFede97: Remember to change this according to the machine you are using!
 	static const unsigned int mat4Size = sizeof(glm::mat4);
-	static const unsigned int maxMat4Size = maxVertexCount * mat4Size;
-	static const unsigned int maxTextureCountPerType = 3000;
-	static const unsigned int amplificationTries = 20; // If in 5 tries the data still exceeds the capacity of the ssbo, throw and error
-	static const unsigned int ssboAmplifier = 2; // When trying to add data to a ssbo and there is not enough space for more, change its max size
-	static const unsigned int ssboOversizeMultiplier = 5; // When trying to add data to a ssbo and this data has a bigger size than the max capacity of the ssbo, change its max size
+	static const unsigned int maxMat4Size = baseVertexCount * mat4Size;
 }

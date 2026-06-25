@@ -80,7 +80,6 @@ namespace RuamEngine
         glfwSwapBuffers(s_window);
         for (auto& [shaderType, map] : s_modelRUsMap)
         {
-            s_drawingDatas[shaderType]->m_program->bind();
             for (auto& [modelPath, matricesSSBO] : map) matricesSSBO->flush();
         }
     }
@@ -146,7 +145,7 @@ namespace RuamEngine
 
 	ModelRUSPtr Renderer::LoadModelRU(ModelSPtr model)
 	{
-        auto it = s_modelRUs.find(model->path());
+        auto it = s_modelRUs.find(model->relativePath());
         if (it != s_modelRUs.end())
         {
             if (!it->second.expired()) return it->second.lock();
@@ -159,7 +158,7 @@ namespace RuamEngine
 			newMeshRU->m_material = mesh->m_material;
 			newModelRU->m_meshRUs.push_back(newMeshRU);
 		}
-		s_modelRUs[model->path()] = newModelRU;
+		s_modelRUs[model->relativePath()] = newModelRU;
 		return newModelRU;
 	}
 

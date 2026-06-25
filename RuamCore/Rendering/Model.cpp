@@ -12,17 +12,17 @@ namespace RuamEngine
 
 	Model::~Model()
 	{
-	    std::cout << "Model of path " << m_path << " destroyed!\n";
+        ResourceManager::RemoveModelIfExpired(m_relativePath);
 	}
 
-	Model::Model(std::string path)
-		: m_path(GlobalizePath(path)), m_instanceId(s_idCount++)
+	Model::Model(const std::string& path)
+		: m_relativePath(path), m_globalPath(GlobalizePath(path)), m_instanceId(s_idCount++)
 	{
-		loadModel(m_path);
+		loadModel(m_globalPath);
 		m_vertices = meshesVertices();
 		m_indices = meshesIndices();
 	}
-	void Model::loadModel(std::string& path)
+	void Model::loadModel(const std::string& path)
 	{
 		Assimp::Importer importer;
 		const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate);
@@ -138,7 +138,7 @@ namespace RuamEngine
             }
             else
             {
-          		std::string absoluteModelPath = std::filesystem::path(m_path).parent_path().string();
+          		std::string absoluteModelPath = std::filesystem::path(m_globalPath).parent_path().string();
           		outRelativePath = RelativizePath(absoluteModelPath) + "/" + assimpPath;
             }
         }

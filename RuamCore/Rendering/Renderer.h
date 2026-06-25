@@ -69,7 +69,6 @@ namespace RuamEngine
 		static int WindowShouldClose() { return glfwWindowShouldClose(s_window); }
 
         // Finders
-        static unsigned int FindMaterial(MaterialWPtr material);
         static ModelRUSPtr GetModelRU(const std::string& modelPath);
 
         // Loaders
@@ -83,7 +82,6 @@ namespace RuamEngine
         static void ClearScreen();
 
         // Destroyers
-        static void DestroyMaterial(unsigned int materialId);
         static void DestroyShaderProgram(unsigned int programId);
 
         // Creators

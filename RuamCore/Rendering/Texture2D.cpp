@@ -9,12 +9,12 @@ namespace RuamEngine
 	Texture2D::Texture2D(const std::string& relativePath)
 		: m_localBuffer(nullptr)
 	{
-	    m_filePath = GlobalizePath(relativePath);
+	    m_filePath = relativePath;
 		GLCall(glCreateTextures(GL_TEXTURE_2D, 1, &m_glName));
 
 		stbi_set_flip_vertically_on_load(1);
 
-		m_localBuffer = stbi_load(m_filePath.c_str(), &m_width, &m_height, &m_BPP, 4);
+		m_localBuffer = stbi_load(GlobalizePath(m_filePath).c_str(), &m_width, &m_height, &m_BPP, 4);
 
 		if (m_localBuffer == NULL)
 		{
@@ -50,12 +50,7 @@ namespace RuamEngine
 
 	Texture2D::~Texture2D()
 	{
-        auto it = ResourceManager::m_textureCache.find(m_filePath);
-     	if (it != ResourceManager::m_textureCache.end())
-        {
-       		ResourceManager::m_textureCache.erase(it);
-        }
-		std::cout << "Texture2D at path " << m_filePath << " Destroyed!\n";
+	    ResourceManager::RemoveTextureIfExpired(m_filePath);
 		GLCall(glDeleteTextures(1, &m_glName));
 	}
 

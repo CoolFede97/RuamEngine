@@ -15,7 +15,7 @@ namespace RuamEngine
         GLuint64 m_handle = 0;
 
     public:
-        virtual ~Texture() = default;
+        virtual ~Texture();
 
         virtual void bind(unsigned int slot = 0) const = 0;
         virtual void unbind() const = 0;

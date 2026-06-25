@@ -14,7 +14,7 @@ namespace RuamEngine
     : m_localBuffers({})
     {
         ASSERT(relativePaths.size()==6);
-        m_filePaths = GlobalizePaths(relativePaths);
+        m_filePaths = relativePaths;
 
         std::string unifiedPath = UnifyPaths(relativePaths);
         m_filePath = unifiedPath;
@@ -25,7 +25,7 @@ namespace RuamEngine
 
         for (unsigned int i = 0; i < relativePaths.size(); i++)
         {
-            m_localBuffers.push_back(stbi_load(m_filePaths[i].c_str(), &m_faceLength, &m_faceLength, &m_BPP, 4));
+            m_localBuffers.push_back(stbi_load(GlobalizePath(m_filePaths[i]).c_str(), &m_faceLength, &m_faceLength, &m_BPP, 4));
 
             if (m_localBuffers[i] == nullptr)
             {
@@ -168,12 +168,7 @@ namespace RuamEngine
     }
     Cubemap::~Cubemap()
     {
-        auto it = ResourceManager::m_textureCache.find(m_filePath);
-     	if (it != ResourceManager::m_textureCache.end())
-        {
-       		ResourceManager::m_textureCache.erase(it);
-        }
-        std::cout << "Cubemap at path " << m_filePath << " Destroyed!\n";
+        ResourceManager::RemoveTextureIfExpired(m_filePath);
         GLCall(glDeleteTextures(1, &m_glName));
     }
 }

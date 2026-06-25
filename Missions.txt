@@ -1,3 +1,5 @@
+Make destroy, enabled y eso efectuarse al final del frame nomás
+
 May be separate some Renderer stuff to GPUResourceManager such as in WorldMaker
 
 Lua stuff

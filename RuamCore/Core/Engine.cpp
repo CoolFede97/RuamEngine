@@ -142,7 +142,7 @@ namespace RuamEngine
             Renderer::EndDraw();
             Input::UpdateInput();
             glfwPollEvents();
-            if (scene) scene->checkForEntitiesDestruction();
+            if (scene) scene->flushDestroyedEntitiesAndComponents();
             SceneManager::CheckForSceneDeletion();
     	}
     	// Cleanup

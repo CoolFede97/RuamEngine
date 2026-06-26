@@ -22,7 +22,7 @@ namespace RuamEngine
 		~Entity();
 
 		using ComponentVector = std::vector<std::unique_ptr<Component>>;
-		using ComponentListMap = std::map<std::type_index, ComponentVector>;
+		using ComponentVectorMap = std::map<std::type_index, ComponentVector>;
 
 		void addCompToJustCreatedComponents(std::type_index tidx);
 
@@ -146,7 +146,7 @@ namespace RuamEngine
 	    std::string m_name;
 		Transform* m_transform = nullptr;
 		Scene* m_parentScene = nullptr;
-		ComponentListMap m_components;
+		ComponentVectorMap m_components;
 
 		bool m_enabled = true;
 		bool m_destroyFlag = false;

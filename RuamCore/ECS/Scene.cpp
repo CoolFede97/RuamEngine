@@ -140,12 +140,20 @@ namespace RuamEngine
 			fn(cmp);
 		}
 	}
-	void Scene::checkForEntitiesDestruction()
+	void Scene::flushDestroyedEntitiesAndComponents()
 	{
         m_entities.erase(
 		std::remove_if(m_entities.begin(), m_entities.end(), [](std::unique_ptr<Entity>& e){ return e->destroyFlag(); }),
 		m_entities.end()
         );
+        for (auto& entity : m_entities)
+        {
+            for (auto& [type, cmpVector] : entity->m_components)
+            cmpVector.erase(
+    		std::remove_if(cmpVector.begin(), cmpVector.end(), [](std::unique_ptr<Component>& component){ return component->destroyFlag(); }),
+    		cmpVector.end()
+            );
+        }
 	}
 	std::list<Entity*> Scene::getEntities() const
 	{

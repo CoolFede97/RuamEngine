@@ -176,6 +176,16 @@ namespace RuamEngine
 					if (callbackOnChange != nullptr) (*callbackOnChange)();
 				}
 			}
+		},
+		{
+			std::type_index(typeid(unsigned int)), [](const std::string& name, void* value, std::function<void()>* callbackOnChange)
+			{
+			    DRAW_MEMBER_NAME(name);
+				if (ImGui::DragScalar(labelCopy.c_str(), ImGuiDataType_U32, value, 1.0f))
+                {
+                    if (callbackOnChange) (*callbackOnChange)();
+                }
+			}
 		}
 	};
 
@@ -290,6 +300,7 @@ namespace RuamEngine
 			    if (ImGui::Button("Delete"))
 				{
 					SceneManager::EnqueSceneDeletion(sceneName);
+					s_selectedEntity = nullptr;
 					ImGui::CloseCurrentPopup();
 				}
 				ImGui::EndPopup();

@@ -62,7 +62,6 @@ namespace RuamEngine
 			for (auto& cmp : pair.second)
 			{
 				if (SceneManager::SceneChange()) return;
-				if (cmp->destroyFlag()) continue;
 				if (cmp->createdOnThisFrame()) continue;
 				if (!cmp->enabled()) continue;
 
@@ -117,7 +116,6 @@ namespace RuamEngine
 
 	void Entity::addCompToJustCreatedComponents(std::type_index tidx)
 	{
-		if (m_parentScene == nullptr) std::cout << "No existe perri\n";
 		m_parentScene->m_justCreatedComponents[m_id][tidx].push_back(m_components[tidx].back().get());
 	}
 

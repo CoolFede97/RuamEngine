@@ -63,6 +63,7 @@ namespace RuamEngine
 	{
 		if (s_pendingSceneChange && SceneManager::Scenes().size()>0) ChangeActiveScene(s_pendingSceneChangeName);
 		s_pendingSceneChange = false;
+		s_pendingSceneChangeName = "";
 	}
 
 	void SceneManager::UpdateScenes()
@@ -83,6 +84,8 @@ namespace RuamEngine
 	void SceneManager::CheckForSceneDeletion()
 	{
 	    if (s_pendingSceneDeletion && SceneManager::Scenes().size()>0) DeleteScene();
+		s_pendingSceneDeletion = false;
+		s_pendingSceneDeletionName = "";
 	}
 	void SceneManager::DeleteScene()
 	{
@@ -97,8 +100,6 @@ namespace RuamEngine
 		    std::cout << "Scene deleted: " << s_pendingSceneDeletionName << "\n";
 			if (s_scenes.size()>0) ChangeActiveScene(s_scenes[0]);
 		}
-		s_pendingSceneDeletion = false;
-		s_pendingSceneDeletionName = "";
 	}
 
 	bool SceneManager::CheckIfSceneAlreadyExists(std::string sceneName)

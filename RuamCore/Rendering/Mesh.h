@@ -4,24 +4,16 @@
 #include "VertexArray.h"
 #include "SSBO.h"
 #include "RenderingConstants.h"
+#include "Vertex.h"
 
 #include <vector>
 namespace RuamEngine
 {
-    class Vertex;
 	class Mesh
 	{
 	public:
 		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, MaterialSPtr material);
 		~Mesh();
-
-		// Mesh(const Mesh& other);
-
-		// Mesh& operator=(const Mesh& other);
-
-		// Mesh(Mesh&& other) noexcept;
-
-		// Mesh& operator=(Mesh&& other) noexcept;
 
 		MaterialSPtr m_material;
 

@@ -2,7 +2,6 @@
 
 #include "ResourceManager.h"
 #include "ShaderProgram.h"
-#include "RenderUnit.h"
 #include "Component.h"
 #include <string>
 #include <vector>

@@ -4,7 +4,6 @@
 #include "RenderingCore.h"
 #include "RenderingElements.h"
 
-#include "DrawingData.h"
 #include "Material.h"
 #include "ShaderProgram.h"
 #include "Texture.h"
@@ -73,9 +72,6 @@ namespace RuamEngine
 
         static void EndDraw();
         static void ClearScreen();
-
-        // Destroyers
-        static void DestroyShaderProgram(unsigned int programId);
 
         static void Draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 

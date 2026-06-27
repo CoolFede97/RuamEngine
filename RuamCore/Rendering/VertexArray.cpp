@@ -1,5 +1,4 @@
 #include "VertexArray.h"
-#include "VertexBufferLayout.h"
 
 namespace RuamEngine
 {

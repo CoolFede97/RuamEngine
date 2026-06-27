@@ -1,7 +1,7 @@
 #pragma once
 
 #include "RenderingCore.h"
-#include "VertexBufferLayout.h"
+#include <memory>
 
 namespace RuamEngine
 {

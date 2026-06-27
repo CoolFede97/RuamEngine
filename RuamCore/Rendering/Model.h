@@ -31,17 +31,13 @@ namespace RuamEngine
 		std::string m_globalPath;
 		unsigned int m_instanceId;
 		static unsigned int s_idCount;
-		std::vector<Vertex> m_vertices;
-		std::vector<unsigned int> m_indices;
 		void loadModel(const std::string& path);
 		void processNode(aiNode* node, const aiScene* scene);
 		MeshSPtr processMesh(aiMesh* mesh, const aiScene* scene);
 
 		void tryGetTexturePath(aiTextureType texType, aiMaterial* material, aiString& texAiPath, std::string& outRelativePath);
-
-		std::vector<Vertex> meshesVertices() const;
-		std::vector<unsigned int> meshesIndices() const;
 	};
 	using ModelSPtr = std::shared_ptr<Model>;
 	using ModelWPtr = std::weak_ptr<Model>;
+	using ModelPath = std::string;
 }

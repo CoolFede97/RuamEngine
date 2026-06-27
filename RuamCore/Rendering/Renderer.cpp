@@ -7,7 +7,6 @@
 #include "RenderingCore.h"
 #include "ResourceManager.h"
 #include "SSBO.h"
-#include "MeshRU.h"
 #include "ShaderProgram.h"
 #include "Skybox.h"
 #include "Editor.h"
@@ -20,10 +19,7 @@ namespace RuamEngine
     GLFWwindow* Renderer::s_window = nullptr;
     FrameBufferSPtr Renderer::s_editorFrameBuffer = nullptr;
     FrameBufferSPtr Renderer::s_gameFrameBuffer = nullptr;
-	using ModelRUId = Renderer::ModelRUId; // model path
-	using MatricesSSBO = Renderer::MatricesSSBO;
-	std::unordered_map<ShaderProgramName, std::unordered_map<ModelRUId, MatricesSSBO>> Renderer::s_modelRUsMap = {};
-	std::unordered_map<std::string, ModelRUWPtr> Renderer::s_modelRUs = {};
+	std::unordered_map<ShaderProgramName, std::unordered_map<ModelPath, MatricesSSBO>> Renderer::s_modelRUsMap = {};
 
     void Renderer::Init()
     {
@@ -126,35 +122,6 @@ namespace RuamEngine
         }
     }
 
-	ModelRUSPtr Renderer::LoadModelRU(ModelSPtr model)
-	{
-        auto it = s_modelRUs.find(model->relativePath());
-        if (it != s_modelRUs.end())
-        {
-            if (!it->second.expired()) return it->second.lock();
-        }
-	    ModelRUSPtr newModelRU = std::make_shared<ModelRU>();
-		newModelRU->setInstanceId(model->instanceId());
-		for (MeshSPtr mesh : model->m_meshes)
-		{
-		    MeshRUSPtr newMeshRU = std::make_shared<MeshRU>(mesh->m_vertices, mesh->m_indices);
-			newMeshRU->m_material = mesh->m_material;
-			newModelRU->m_meshRUs.push_back(newMeshRU);
-		}
-		s_modelRUs[model->relativePath()] = newModelRU;
-		return newModelRU;
-	}
-
-    ModelRUSPtr Renderer::GetModelRU(const std::string& modelPath)
-    {
-        auto it = s_modelRUs.find(modelPath);
-		if (it != s_modelRUs.end())
-	    {
-			if (!it->second.expired()) return it->second.lock();
-	    }
-		return nullptr;
-    }
-
     void Renderer::Draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
     {
         Skybox::Draw(viewMatrix, projectionMatrix);
@@ -170,22 +137,22 @@ namespace RuamEngine
             }
             for (auto& [modelPath, matricesSSBO] : map)
             {
-                ModelRUSPtr modelRU = GetModelRU(modelPath);
+                ModelSPtr model = ResourceManager::GetModel(modelPath);
                 if (matricesSSBO)
                 {
                     matricesSSBO->submitData();
                     matricesSSBO->bindBufferBase(SSBOType::modelMatrices);
                 }
-                if (modelRU)
+                if (model)
                 {
-                    for (MeshRUSPtr meshRU : modelRU->m_meshRUs)
+                    for (MeshSPtr mesh : model->m_meshes)
                     {
-                        meshRU->m_vertexArray->bind();
+                        mesh->m_vertexArray->bind();
                         GlobalLight::LoadLightSettings(shaderProgram);
-                        shaderProgram->loadMaterial(*GetShared(meshRU->m_material));
-                        meshRU->submitData();
-                        meshRU->bindBuffersBase();
-                        GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, meshRU->m_indices->currentSize()/sizeof(unsigned int), matricesSSBO->m_data.size()));
+                        shaderProgram->loadMaterial(mesh->m_material.get());
+                        mesh->submitData();
+                        mesh->bindBuffersBase();
+                        GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, mesh->m_indices->currentSize()/sizeof(unsigned int), matricesSSBO->m_data.size()));
                     }
                 }
             }

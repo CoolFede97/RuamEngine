@@ -1,6 +1,5 @@
 #pragma once
 
-#include "ModelRU.h"
 #include "Model.h"
 #include "RenderingCore.h"
 #include "RenderingElements.h"
@@ -68,12 +67,6 @@ namespace RuamEngine
 		static GLFWwindow* GetWindow() { return s_window; }
 		static int WindowShouldClose() { return glfwWindowShouldClose(s_window); }
 
-        // Finders
-        static ModelRUSPtr GetModelRU(const std::string& modelPath);
-
-        // Loaders
-        static ModelRUSPtr LoadModelRU(ModelSPtr model);
-
     private:
         static void Init();
         static void Shutdown();
@@ -88,12 +81,8 @@ namespace RuamEngine
 
         static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
-		static std::unordered_map<std::string, ModelRUWPtr> s_modelRUs;
-
     public:
-		using ModelRUId = std::string; // model path
-		using MatricesSSBO = SSBOSPtr<glm::mat4>;
-		static std::unordered_map<ShaderProgramName, std::unordered_map<ModelRUId, MatricesSSBO>> s_modelRUsMap;
+		static std::unordered_map<ShaderProgramName, std::unordered_map<ModelPath, MatricesSSBO>> s_modelRUsMap;
     private:
         static RendererConfig s_config;
         static GLFWwindow* s_window;

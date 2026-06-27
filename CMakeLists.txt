@@ -141,6 +141,7 @@ add_library(dr_libs::dr_libs ALIAS dr_libs)
 
 # Assimp
 
+
 FetchContent_Declare(
     assimp
     GIT_REPOSITORY https://github.com/assimp/assimp.git
@@ -151,7 +152,13 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_G
   add_compile_options(-Wno-error=dangling-reference)
 endif()
 
+set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ZLIB ON CACHE BOOL "" FORCE)
+
 FetchContent_MakeAvailable(assimp)
+
+target_include_directories(assimp PRIVATE /usr/include/minizip)
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
 

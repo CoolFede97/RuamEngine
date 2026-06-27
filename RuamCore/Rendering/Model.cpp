@@ -19,8 +19,6 @@ namespace RuamEngine
 		: m_relativePath(path), m_globalPath(GlobalizePath(path)), m_instanceId(s_idCount++)
 	{
 		loadModel(m_globalPath);
-		m_vertices = meshesVertices();
-		m_indices = meshesIndices();
 	}
 	void Model::loadModel(const std::string& path)
 	{
@@ -142,27 +140,5 @@ namespace RuamEngine
           		outRelativePath = RelativizePath(absoluteModelPath) + "/" + assimpPath;
             }
         }
-	}
-
-	std::vector<Vertex> Model::meshesVertices() const
-	{
-		std::vector<Vertex> allVertices;
-		for (const MeshSPtr& mesh : m_meshes)
-		{
-			allVertices.insert(allVertices.end(), mesh->m_vertices.begin(), mesh->m_vertices.end());
-		}
-		return allVertices;
-	}
-	std::vector<unsigned int> Model::meshesIndices() const
-	{
-		std::vector<unsigned int> allIndices;
-		for (const MeshSPtr& mesh : m_meshes)
-		{
-			for (unsigned int index : mesh->m_indices)
-			{
-				allIndices.push_back(index);
-			}
-		}
-		return allIndices;
 	}
 }

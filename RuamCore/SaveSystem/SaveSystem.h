@@ -16,14 +16,14 @@ namespace RuamEngine
 	class SaveSystem
 	{
 	public:
-		static Json LoadJsonScene(const std::string& sceneName);
-		static void SaveJsonScene(const Json& jsonScene);
+		static nlohmann::json LoadJsonScene(const std::string& sceneName);
+		static void SaveJsonScene(const nlohmann::json& jsonScene);
 		static void SaveCurrentScene();
 		static void SaveScene(Scene* scene);
 		static void EraseScene(std::string sceneName);
 		static std::vector<std::string> LoadAllSavedSceneNames();
 
-		static Json LoadJsonRuamConfig();
+		static nlohmann::json LoadJsonRuamConfig();
 		static void MakeSureDefaultSceneExists();
 
 		static void SaveRuamConfig();

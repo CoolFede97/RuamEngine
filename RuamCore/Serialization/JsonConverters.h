@@ -6,12 +6,12 @@
 
 namespace glm
 {
-	inline void to_json(Json& json, const vec4& vector)
+	inline void to_json(nlohmann::json& json, const vec4& vector)
 	{
-		json = Json::array({vector.x, vector.y, vector.z, vector.w});
+		json = nlohmann::json::array({vector.x, vector.y, vector.z, vector.w});
 	}
 
-	inline void from_json(const Json& json, vec4& vector)
+	inline void from_json(const nlohmann::json& json, vec4& vector)
 	{
 		if (json.is_array() && json.size()>=4)
 		{
@@ -22,12 +22,12 @@ namespace glm
 		}
 	}
 
-	inline void to_json(Json& json, const vec3& vector)
+	inline void to_json(nlohmann::json& json, const vec3& vector)
 	{
-		json = Json::array({vector.x, vector.y, vector.z});
+		json = nlohmann::json::array({vector.x, vector.y, vector.z});
 	}
 
-	inline void from_json(const Json& json, vec3& vector)
+	inline void from_json(const nlohmann::json& json, vec3& vector)
 	{
 		if (json.is_array() && json.size()>=3)
 		{
@@ -37,12 +37,12 @@ namespace glm
 		}
 	}
 
-	inline void to_json(Json& json, const vec2& vector)
+	inline void to_json(nlohmann::json& json, const vec2& vector)
 	{
-		json = Json::array({vector.x, vector.y});
+		json = nlohmann::json::array({vector.x, vector.y});
 	}
 
-	inline void from_json(const Json& json, vec2& vector)
+	inline void from_json(const nlohmann::json& json, vec2& vector)
 	{
 		if (json.is_array() && json.size()>=2)
 		{
@@ -55,11 +55,11 @@ namespace glm
 
 namespace RuamEngine
 {
-	inline void to_json(Json& json, const CameraTransform& cameraTransform)
+	inline void to_json(nlohmann::json& json, const CameraTransform& cameraTransform)
 	{
-	    json = Json::array({cameraTransform.pos, cameraTransform.rot});
+	    json = nlohmann::json::array({cameraTransform.pos, cameraTransform.rot});
 	}
-	inline void from_json(const Json& json, CameraTransform& cameraTransform)
+	inline void from_json(const nlohmann::json& json, CameraTransform& cameraTransform)
 	{
 	    if (json.is_array() && json.size() == 2)
 		{

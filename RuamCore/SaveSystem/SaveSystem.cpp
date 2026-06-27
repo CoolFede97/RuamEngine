@@ -12,7 +12,7 @@
 
 namespace RuamEngine
 {
-	Json SaveSystem::LoadJsonScene(const std::string& sceneName)
+	nlohmann::json SaveSystem::LoadJsonScene(const std::string& sceneName)
 	{
 		std::string fileName = sceneName + ".json";
 		fs::path filePath = scenesDir / fileName;
@@ -23,13 +23,13 @@ namespace RuamEngine
 			return {};
 		}
 		std::ifstream file(filePath);
-		Json jsonScene;
+		nlohmann::json jsonScene;
 		file >> jsonScene;
 
 		return jsonScene;
 	}
 
-	void SaveSystem::SaveJsonScene(const Json &jsonScene)
+	void SaveSystem::SaveJsonScene(const nlohmann::json &jsonScene)
 	{
 		fs::create_directories(scenesDir);
 
@@ -84,7 +84,7 @@ namespace RuamEngine
 				try
 				{
 					std::ifstream file(entry.path());
-					Json jsonScene;
+					nlohmann::json jsonScene;
 					file >> jsonScene;
 
 					if (jsonScene.contains("m_id") && jsonScene.contains("m_name"))
@@ -102,7 +102,7 @@ namespace RuamEngine
 		return sceneNames;
 	}
 
-	Json SaveSystem::LoadJsonRuamConfig()
+	nlohmann::json SaveSystem::LoadJsonRuamConfig()
 	{
 		if (!fs::exists(ruamConfigPath))
 		{
@@ -115,7 +115,7 @@ namespace RuamEngine
 		else
 		{
 			std::ifstream file(ruamConfigPath);
-			Json jsonConfig;
+			nlohmann::json jsonConfig;
 			file >> jsonConfig;
 			return jsonConfig;
 		}
@@ -141,7 +141,7 @@ namespace RuamEngine
 		{
 			std::cerr << "Failed to find ruamConfig at path: " << ruamConfigPath << "! A new one is about to be created now\n";
 			RuamConfig ruamConfig;
-			Json jsonRuamConfig = Serial::Serialize(ruamConfig);
+			nlohmann::json jsonRuamConfig = Serial::Serialize(ruamConfig);
 
 			std::ofstream file(ruamConfigPath);
 			if (!file)
@@ -158,7 +158,7 @@ namespace RuamEngine
 			{
 				std::cerr << "Failed to open file: " << ruamConfigPath << " when trying to save ruam config\n";
 			}
-			Json jsonRuamConfig = Serial::Serialize(Engine::Config());
+			nlohmann::json jsonRuamConfig = Serial::Serialize(Engine::Config());
 			file << jsonRuamConfig.dump(1);
 			file.close();
 		}

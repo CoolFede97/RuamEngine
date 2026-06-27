@@ -12,7 +12,7 @@ namespace fs = std::filesystem;
 
 namespace RuamEngine
 {
-	void Serial::DeserializeTransform(const Json& jsonTransform, Transform* transfrom)
+	void Serial::DeserializeTransform(const nlohmann::json& jsonTransform, Transform* transfrom)
 	{
 		if (jsonTransform.contains("m_position")) transfrom->setPosition(jsonTransform["m_position"].get<glm::vec3>());
 		if (jsonTransform.contains("m_rotation")) transfrom->setRotation(jsonTransform["m_rotation"].get<glm::vec3>());
@@ -20,28 +20,28 @@ namespace RuamEngine
 		if (jsonTransform.contains("m_parentId")) transfrom->m_parentId = jsonTransform["m_parentId"].get<unsigned int>();
 	}
 
-	Json Serial::Serialize(const Entity* entity)
+	nlohmann::json Serial::Serialize(const Entity* entity)
 	{
-		Json jsonEntity =
+		nlohmann::json jsonEntity =
 		{
 			{"m_name", entity->name()},
 			{"m_id", entity->id()},
-			{"m_components", Json::array()}
+			{"m_components", nlohmann::json::array()}
 		};
 		for (Component* cmp : entity->getComponents())
 		{
-			Json jsonCmp = *cmp;
+			nlohmann::json jsonCmp = *cmp;
 			jsonEntity["m_components"].push_back(jsonCmp);
 		}
 		return jsonEntity;
 	}
-	Json Serial::Serialize(const Scene* scene)
+	nlohmann::json Serial::Serialize(const Scene* scene)
 	{
-		Json jsonScene =
+		nlohmann::json jsonScene =
 		{
 			{"m_name", scene->name()},
 			{"m_id", scene->id()},
-			{"m_entities", Json::array()},
+			{"m_entities", nlohmann::json::array()},
 			{"m_lastSavedCameraTransform", scene->m_lastSavedCameraTransform}
 		};
 		for (Entity* entity : scene->getEntities())
@@ -52,7 +52,7 @@ namespace RuamEngine
 	}
 
 
-	Scene* Serial::DeserializeJsonScene(Json jsonScene)
+	Scene* Serial::DeserializeJsonScene(nlohmann::json jsonScene)
 	{
 		const unsigned int sceneId = jsonScene["m_id"];
 
@@ -60,7 +60,7 @@ namespace RuamEngine
 		scene->m_lastSavedCameraTransform = jsonScene["m_lastSavedCameraTransform"].get<CameraTransform>();
 		if (jsonScene["m_entities"].is_null()) return scene;
 
-		for (const Json& jsonEntity : jsonScene["m_entities"])
+		for (const nlohmann::json& jsonEntity : jsonScene["m_entities"])
 		{
 			try
 			{
@@ -68,7 +68,7 @@ namespace RuamEngine
 				Entity* entity = scene->createEntity(entityName);
 				if (jsonEntity["m_components"].size()<=1) continue;
 
-				for (const Json& jsonCmp : jsonEntity["m_components"])
+				for (const nlohmann::json& jsonCmp : jsonEntity["m_components"])
 				{
 					std::string cmpType = jsonCmp["TYPE"];
 
@@ -99,11 +99,11 @@ namespace RuamEngine
 		return scene;
 	}
 
-	Json Serial::Serialize(const RuamConfig& config)
+	nlohmann::json Serial::Serialize(const RuamConfig& config)
 	{
-		Json jsonConfig =
+		nlohmann::json jsonConfig =
 		{
-			{"scenesPaths", Json::array()}
+			{"scenesPaths", nlohmann::json::array()}
 		};
 		for (auto& sceneName : config.sceneNames)
 		{
@@ -113,7 +113,7 @@ namespace RuamEngine
 	};
 
 	// Make sure everything is okay with the jsonConfig you are passsing as argument (e.g. it has at least one scene)
-	RuamConfig Serial::DeserializeRuamConfig(const Json& jsonConfig)
+	RuamConfig Serial::DeserializeRuamConfig(const nlohmann::json& jsonConfig)
 	{
 		RuamConfig ruamConfig;
 		for (std::string sceneName : jsonConfig["scenesPaths"])

@@ -7,7 +7,6 @@
 #include <string>
 #include <vector>
 #include "Model.h"
-#include "ModelRU.h"
 
 namespace RuamEngine
 {
@@ -25,7 +24,6 @@ namespace RuamEngine
     	float m_indices = 0;
 
         ModelSPtr m_model = nullptr;
-        ModelRUSPtr m_modelRU = nullptr;
         SSBOWPtr<glm::mat4> m_matricesSSBO = {};
         ShaderProgramSPtr m_shaderProgram = nullptr;
 
@@ -35,7 +33,7 @@ namespace RuamEngine
     	MODEL_RENDERER_SERIALIZED_MEMBERS(DECL_MEMBER)
 
     public:
-	   	ModelRenderer(Json modelRendererData, const unsigned int entityId);
+	   	ModelRenderer(nlohmann::json modelRendererData, const unsigned int entityId);
 
     	IMPL_DRAW_SERIALIZED_MEMBERS(MODEL_RENDERER_SERIALIZED_MEMBERS(CALL_INSPECTOR_DRAWER))
     	IMPL_SERIALIZE(ModelRenderer, MODEL_RENDERER_SERIALIZED_MEMBERS(SER_FIELD, ,))

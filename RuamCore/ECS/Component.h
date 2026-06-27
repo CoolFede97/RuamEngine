@@ -16,9 +16,9 @@
 //
 #define IMPL_SIMPLE_SERIALIZE(ComponentName) \
 public: \
-virtual operator Json() const override \
+virtual operator nlohmann::json() const override \
 { \
-	return Json \
+	return nlohmann::json \
 	{ \
 		{"m_id", m_id}, \
 		{"TYPE", #ComponentName} \
@@ -29,9 +29,9 @@ virtual operator Json() const override \
 //
 #define IMPL_SERIALIZE(ComponentName, ...) \
 public: \
-virtual operator Json() const override \
+virtual operator nlohmann::json() const override \
 { \
-	return Json \
+	return nlohmann::json \
 	{ \
 		__VA_ARGS__ \
 		,{"m_id", m_id}, \
@@ -54,7 +54,7 @@ virtual operator Json() const override \
 			{ \
 				return entity->addComponent<ComponentName>(); \
 			}, \
-			[](const Json& componentData, Entity* entity) -> Component* \
+			[](const nlohmann::json& componentData, Entity* entity) -> Component* \
 			{ \
 				return entity->addComponentWithJson<ComponentName>(componentData); \
 			} \
@@ -92,7 +92,7 @@ namespace RuamEngine
 	struct ComponentFactory
 	{
 		std::function<Component*(Entity*)> addComponent;
-		std::function<Component*(const Json&, Entity*)> addComponentWithJson;
+		std::function<Component*(const nlohmann::json&, Entity*)> addComponentWithJson;
 	};
 
 	class Component {
@@ -103,7 +103,7 @@ namespace RuamEngine
 		virtual ~Component() = default;
 		explicit Component(const unsigned int entityId) : m_entityId(entityId), m_id(s_idCount++) {
 		}
-		explicit Component(Json componentData, const unsigned int entityId) : m_entityId(entityId), m_id(s_idCount++) {
+		explicit Component(nlohmann::json componentData, const unsigned int entityId) : m_entityId(entityId), m_id(s_idCount++) {
 		}
 		virtual void start() {};  // This is called only in playmode
 		virtual void update() {}; // This is called only in playmode
@@ -125,8 +125,8 @@ namespace RuamEngine
 		void markNotCreatedOnThisFrame() { m_createdOnThisFrame = false; }
 		void setEnabled(bool status) { m_enabled = status; };
 
-		virtual operator Json() const {
-            return Json{
+		virtual operator nlohmann::json() const {
+            return nlohmann::json{
                 {"m_id", m_id},
                 {"TYPE", "Component"}
             };

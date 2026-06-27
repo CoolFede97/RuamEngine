@@ -8,7 +8,7 @@
 
 namespace RuamEngine
 {
-	ModelRenderer::ModelRenderer(Json modelRendererData, const unsigned int entityId) : Component(entityId)
+	ModelRenderer::ModelRenderer(nlohmann::json modelRendererData, const unsigned int entityId) : Component(entityId)
 	{
 		if (modelRendererData.contains("m_modelPath")) m_modelPath = modelRendererData["m_modelPath"].get<std::string>();
 		loadModel();
@@ -39,7 +39,6 @@ namespace RuamEngine
     void ModelRenderer::loadModel()
    	{
         m_model = ResourceManager::LoadModel(m_modelPath);
-        m_modelRU = Renderer::LoadModelRU(m_model);
         m_shaderProgram = ResourceManager::LoadShaderProgram(generalVertexShaderDefaultPath, generalFragmentShaderDefaultPath);
         auto& ssbo = Renderer::s_modelRUsMap[m_shaderProgram->name()][m_model->relativePath()];
         if (!ssbo)

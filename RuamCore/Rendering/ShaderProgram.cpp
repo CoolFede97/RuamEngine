@@ -151,20 +151,20 @@ namespace RuamEngine
 		GLCall(glUniform1iv(loc, maxTextureSlots, samplers.data()));
 	}
 
-	void ShaderProgram::loadMaterial(const Material& material)
+	void ShaderProgram::loadMaterial(Material* material)
 	{
 		bind();
-		setUniform4f("u_baseColor", material.baseColor.x, material.baseColor.y, material.baseColor.z, material.baseColor.w);
+		setUniform4f("u_baseColor", material->baseColor.x, material->baseColor.y, material->baseColor.z, material->baseColor.w);
 		GLCall(glActiveTexture(GL_TEXTURE0));
-		GLCall(glBindTexture(GL_TEXTURE_2D, material.m_diffuseTexture->glName()));
+		GLCall(glBindTexture(GL_TEXTURE_2D, material->m_diffuseTexture->glName()));
 
 		GLCall(glActiveTexture(GL_TEXTURE1));
-		GLCall(glBindTexture(GL_TEXTURE_2D,material.m_specularTexture->glName()));
+		GLCall(glBindTexture(GL_TEXTURE_2D,material->m_specularTexture->glName()));
 
 		GLCall(glActiveTexture(GL_TEXTURE2));
-		GLCall(glBindTexture(GL_TEXTURE_2D, material.m_reflectionTexture->glName()));
+		GLCall(glBindTexture(GL_TEXTURE_2D, material->m_reflectionTexture->glName()));
 
-		setUniform1f("u_shininess", material.m_shininess);
+		setUniform1f("u_shininess", material->m_shininess);
 	}
 
 	void ShaderProgram::updateCameraMatrices(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)

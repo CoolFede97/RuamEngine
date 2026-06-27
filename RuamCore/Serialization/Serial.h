@@ -17,16 +17,16 @@ namespace RuamEngine
     class Serial
     {
     public:
-    	static void DeserializeTransform(const Json& jsonTransform, Transform* transfrom);
+    	static void DeserializeTransform(const nlohmann::json& jsonTransform, Transform* transfrom);
 
-		static Json Serialize(const Entity* entity);
+		static nlohmann::json Serialize(const Entity* entity);
 
-		static Json Serialize(const Scene* scene);
-		static Scene* DeserializeJsonScene(Json jsonScene);
+		static nlohmann::json Serialize(const Scene* scene);
+		static Scene* DeserializeJsonScene(nlohmann::json jsonScene);
 
-		static Json Serialize(const RuamConfig& config);
-		static RuamConfig DeserializeRuamConfig(const Json& jsonConfig);
-		static Json LoadRuamConfigAsJson();
+		static nlohmann::json Serialize(const RuamConfig& config);
+		static RuamConfig DeserializeRuamConfig(const nlohmann::json& jsonConfig);
+		static nlohmann::json LoadRuamConfigAsJson();
     };
 
 }

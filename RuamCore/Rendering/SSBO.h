@@ -123,4 +123,6 @@ namespace RuamEngine
 	using SSBOSPtr = std::shared_ptr<SSBO<T>>;
 	template<typename T>
 	using SSBOWPtr = std::weak_ptr<SSBO<T>>;
+
+	using MatricesSSBO = SSBOSPtr<glm::mat4>;
 }

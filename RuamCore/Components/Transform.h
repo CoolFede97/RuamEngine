@@ -25,7 +25,7 @@ namespace RuamEngine
 		using Component::Component;
 
 		Transform(unsigned int entityId);
-		Transform(Json transformData, const unsigned int entityId);
+		Transform(nlohmann::json transformData, const unsigned int entityId);
 		~Transform();
 
 		void translate(const glm::vec3& vec);

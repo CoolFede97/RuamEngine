@@ -3,6 +3,7 @@
 #include "Renderer.h"
 #include "EditorCamera.h"
 #include "RenderingCore.h"
+#include "ResourceManager.h"
 namespace RuamEngine
 {
 
@@ -11,15 +12,16 @@ namespace RuamEngine
 
 
 	ShaderProgram::ShaderProgram(const std::string& vertexPath, const std::string& fragmentPath)
-		: m_vFilePath(GlobalizePath(vertexPath)), m_fFilePath(GlobalizePath(fragmentPath)), m_instanceId(s_idInstanceCount++), m_glName(0)
+		: m_vertexShaderPath(vertexPath), m_fragmentShaderPath(fragmentPath), m_instanceId(s_idInstanceCount++), m_glName(0)
 	{
+        m_name = UnifyPaths({vertexPath, fragmentPath});
 		m_glName = createProgram(vertexPath, fragmentPath);
 		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureSlots);
 	}
 
 	ShaderProgram::~ShaderProgram()
 	{
-		std::cout << "Shader Destroyed!\n";
+	    ResourceManager::RemoveShaderProgramIfExpired(m_vertexShaderPath, m_fragmentShaderPath);
 	}
 
 	unsigned int ShaderProgram::compileShader(unsigned int type, const std::string& source)

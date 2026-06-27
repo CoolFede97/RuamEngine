@@ -13,12 +13,6 @@
 
 namespace RuamEngine
 {
-	enum ShaderProgramType
-    {
-        general = 0,
-        skybox = 1
-    };
-
 	class ShaderProgram
 	{
 		// caching for uniforms
@@ -31,6 +25,11 @@ namespace RuamEngine
 		void bind() const;
 		void unbind() const;
 
+		// Getters
+		inline std::string name() { return m_name; }
+		inline std::string vertexShaderPath() { return m_vertexShaderPath; }
+		inline std::string fragmentShaderPath() { return m_fragmentShaderPath; }
+
 		// Set Uniforms
 		void setUniform1i(const std::string& name, int value);
 		void setUniform1f(const std::string& name, float value);
@@ -42,7 +41,7 @@ namespace RuamEngine
 		void updateCameraMatrices(glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 		unsigned int maxTexturesCapacity() const { return  maxTextureSlots; }
 		unsigned int instanceId() const { return m_instanceId; }
-		unsigned int rendererID() const { return m_glName; }
+		unsigned int glName() const { return m_glName; }
 
 	private:
 		unsigned int compileShader(unsigned int type, const std::string& source);
@@ -52,10 +51,15 @@ namespace RuamEngine
 		unsigned int m_instanceId;
 		unsigned int static s_idInstanceCount;
 		std::unordered_map<std::string, int> m_UniformLocationCache;
-		std::string m_vFilePath;
-		std::string m_fFilePath;
+		std::string m_vertexShaderPath;
+		std::string m_fragmentShaderPath;
+		std::string m_name; // the union of all shader paths
 		static GLint maxTextureSlots;
 	};
 
 	using ShaderProgramSPtr = std::shared_ptr<ShaderProgram>;
+	using ShaderProgramWPtr = std::weak_ptr<ShaderProgram>;
+
+	using ShaderProgramName = std::string; // the union of all shader paths
+
 }

@@ -4,6 +4,7 @@
 #include "FileFunctions.h"
 // #include "RenderUnit.h"
 #include "Renderer.h"
+#include "ShaderProgram.h"
 #include "Texture.h"
 #include "Material.h"
 #include "Model.h"
@@ -20,6 +21,8 @@ namespace RuamEngine
     inline std::string reflectionTexDefaultPath = "RuamCore/Assets/Sprites/DefaultSprite.png";
     inline std::string skyboxDefaultPath = "RuamCore/Assets/Sprites/Skybox.png";
 
+    inline std::string generalVertexShaderDefaultPath = "RuamCore/Rendering/Shaders/GeneralVertexShader.glsl";
+    inline std::string generalFragmentShaderDefaultPath = "RuamCore/Rendering/Shaders/GeneralFragmentShader.glsl";
     inline std::string skyboxVertexShaderDefaultPath = "RuamCore/Rendering/Shaders/SkyboxVertexShader.glsl";
     inline std::string skyboxFragmentShaderDefaultPath = "RuamCore/Rendering/Shaders/SkyboxFragmentShader.glsl";
 
@@ -76,7 +79,10 @@ namespace RuamEngine
         static void RemoveMaterialIfExpired(unsigned int materialId);
 
         // Shader Program handling ---------------------------------------------------------------------------------
-        static ShaderProgramSPtr CreateShaderProgram(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
+        static ShaderProgramSPtr LoadShaderProgram(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
+        static ShaderProgramSPtr GetShaderProgram(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
+        static ShaderProgramSPtr GetShaderProgram(const std::string& shaderProgramName);
+        static void RemoveShaderProgramIfExpired(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
 
     private:
 
@@ -84,7 +90,7 @@ public:
         static std::unordered_map<std::string, TextureWPtr> s_textureCache;
         static std::unordered_map<std::string, ModelWPtr> s_modelCache;
         static std::unordered_map<unsigned int, MaterialWPtr> s_materialCache;
-
+        static std::unordered_map<ShaderProgramName, ShaderProgramWPtr> s_shaderProgramsCache;
         friend class Material;
         friend class Texture2D;
         friend class Cubemap;

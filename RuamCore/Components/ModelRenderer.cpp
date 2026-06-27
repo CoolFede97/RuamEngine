@@ -40,7 +40,8 @@ namespace RuamEngine
    	{
         m_model = ResourceManager::LoadModel(m_modelPath);
         m_modelRU = Renderer::LoadModelRU(m_model);
-        auto& ssbo = Renderer::s_modelRUsMap[m_shaderProgramType][m_model->relativePath()];
+        m_shaderProgram = ResourceManager::LoadShaderProgram(generalVertexShaderDefaultPath, generalFragmentShaderDefaultPath);
+        auto& ssbo = Renderer::s_modelRUsMap[m_shaderProgram->name()][m_model->relativePath()];
         if (!ssbo)
         {
             ssbo = std::make_shared<SSBO<glm::mat4>>(baseVertexCount, GL_DYNAMIC_STORAGE_BIT);

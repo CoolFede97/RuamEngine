@@ -84,24 +84,16 @@ namespace RuamEngine
         // Destroyers
         static void DestroyShaderProgram(unsigned int programId);
 
-        // Creators
-        static DrawingDataSPtr CreateDrawingData(GLuint type, const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
-
-
         static void Draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 
         static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
-		static std::unordered_map<GLuint, DrawingDataSPtr> s_drawingDatas;
-		static std::unordered_map<unsigned int, ShaderProgramSPtr> s_shaderPrograms;
-
 		static std::unordered_map<std::string, ModelRUWPtr> s_modelRUs;
 
-		using ShaderId = unsigned int; // instance id
+    public:
 		using ModelRUId = std::string; // model path
 		using MatricesSSBO = SSBOSPtr<glm::mat4>;
-    public:
-		static std::unordered_map<ShaderId, std::unordered_map<ModelRUId, MatricesSSBO>> s_modelRUsMap;
+		static std::unordered_map<ShaderProgramName, std::unordered_map<ModelRUId, MatricesSSBO>> s_modelRUsMap;
     private:
         static RendererConfig s_config;
         static GLFWwindow* s_window;

@@ -20,12 +20,9 @@ namespace RuamEngine
     GLFWwindow* Renderer::s_window = nullptr;
     FrameBufferSPtr Renderer::s_editorFrameBuffer = nullptr;
     FrameBufferSPtr Renderer::s_gameFrameBuffer = nullptr;
-    std::unordered_map<unsigned int, ShaderProgramSPtr> Renderer::s_shaderPrograms;
-	std::unordered_map<GLuint, DrawingDataSPtr> Renderer::s_drawingDatas;
-	using ShaderId = unsigned int; // instance id
-	using ModelRUId = std::string; // model path
-	using MatricesSSBO = SSBOSPtr<glm::mat4>;
-	std::unordered_map<ShaderId, std::unordered_map<ModelRUId, MatricesSSBO>> Renderer::s_modelRUsMap = {};
+	using ModelRUId = Renderer::ModelRUId; // model path
+	using MatricesSSBO = Renderer::MatricesSSBO;
+	std::unordered_map<ShaderProgramName, std::unordered_map<ModelRUId, MatricesSSBO>> Renderer::s_modelRUsMap = {};
 	std::unordered_map<std::string, ModelRUWPtr> Renderer::s_modelRUs = {};
 
     void Renderer::Init()
@@ -62,9 +59,6 @@ namespace RuamEngine
         {
             s_editorFrameBuffer = std::make_shared<FrameBuffer>(s_config.windowWidth, s_config.windowHeight);
             s_gameFrameBuffer = std::make_shared<FrameBuffer>(s_config.windowWidth, s_config.windowHeight);
-
-			DrawingDataSPtr basicDrawingData = CreateDrawingData(ShaderProgramType::general, "RuamCore/Rendering/Shaders/GeneralVertexShader.glsl", "RuamCore/Rendering/Shaders/GeneralFragmentShader.glsl");
-			DrawingDataSPtr skyboxDrawingData = CreateDrawingData(ShaderProgramType::skybox, "RuamCore/Rendering/Shaders/SkyboxVertexShader.glsl", "RuamCore/Rendering/Shaders/SkyboxFragmentShader.glsl");
 
             ResourceManager::Init();
             Skybox::Init();
@@ -132,17 +126,6 @@ namespace RuamEngine
         }
     }
 
-
-    // Creators -------------------------------------------------------------
-    DrawingDataSPtr Renderer::CreateDrawingData(GLuint type, const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
-    {
-		ShaderProgramSPtr newProgram = ResourceManager::CreateShaderProgram(vertexShaderPath, fragmentShaderPath);
-        DrawingDataSPtr newDrawingData = std::make_unique<DrawingData>();
-        s_drawingDatas[type] = newDrawingData;
-        newDrawingData->m_program = newProgram;
-        return newDrawingData;
-	}
-
 	ModelRUSPtr Renderer::LoadModelRU(ModelSPtr model)
 	{
         auto it = s_modelRUs.find(model->relativePath());
@@ -162,17 +145,6 @@ namespace RuamEngine
 		return newModelRU;
 	}
 
-    void Renderer::DestroyShaderProgram(unsigned int programId)
-    {
-        auto it = s_shaderPrograms.find(programId);
-        if (it != s_shaderPrograms.end())
-        {
-            s_shaderPrograms.erase(programId);
-            std::cout << "Shader Program with id " << programId << " was destroyed successfully\n";
-        }
-        else std::cout << "Couldn't find shader program of id " << programId << " and therefore couldn't destroy it\n";
-    }
-
     ModelRUSPtr Renderer::GetModelRU(const std::string& modelPath)
     {
         auto it = s_modelRUs.find(modelPath);
@@ -186,10 +158,16 @@ namespace RuamEngine
     void Renderer::Draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
     {
         Skybox::Draw(viewMatrix, projectionMatrix);
-        for (auto& [shaderType, map] : s_modelRUsMap)
+        std::vector<ShaderProgramName> shaderProgramsToErase = {};
+        for (auto& [shaderName, map] : s_modelRUsMap)
         {
-            auto program = s_drawingDatas[shaderType]->m_program;
-            s_drawingDatas[shaderType]->m_program->updateCameraMatrices(viewMatrix, projectionMatrix);
+            ShaderProgramSPtr shaderProgram = ResourceManager::GetShaderProgram(shaderName);
+            if (shaderProgram) shaderProgram->updateCameraMatrices(viewMatrix, projectionMatrix);
+            else
+            {
+                shaderProgramsToErase.push_back(shaderName);
+                continue;
+            }
             for (auto& [modelPath, matricesSSBO] : map)
             {
                 ModelRUSPtr modelRU = GetModelRU(modelPath);
@@ -203,8 +181,8 @@ namespace RuamEngine
                     for (MeshRUSPtr meshRU : modelRU->m_meshRUs)
                     {
                         meshRU->m_vertexArray->bind();
-                        GlobalLight::LoadLightSettings(s_drawingDatas[shaderType]->m_program);
-                        s_drawingDatas[shaderType]->m_program->loadMaterial(*GetShared(meshRU->m_material));
+                        GlobalLight::LoadLightSettings(shaderProgram);
+                        shaderProgram->loadMaterial(*GetShared(meshRU->m_material));
                         meshRU->submitData();
                         meshRU->bindBuffersBase();
                         GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, meshRU->m_indices->currentSize()/sizeof(unsigned int), matricesSSBO->m_data.size()));
@@ -212,6 +190,7 @@ namespace RuamEngine
                 }
             }
         }
+        for (std::string shaderProgramName : shaderProgramsToErase) s_modelRUsMap.erase(shaderProgramName);
     }
 
     void Renderer::framebuffer_size_callback(GLFWwindow* window, int width, int height)

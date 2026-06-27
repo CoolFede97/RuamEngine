@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ResourceManager.h"
 #include "ShaderProgram.h"
 #include "RenderUnit.h"
 #include "Component.h"
@@ -26,7 +27,7 @@ namespace RuamEngine
         ModelSPtr m_model = nullptr;
         ModelRUSPtr m_modelRU = nullptr;
         SSBOWPtr<glm::mat4> m_matricesSSBO = {};
-        ShaderProgramType m_shaderProgramType = ShaderProgramType::general;
+        ShaderProgramSPtr m_shaderProgram = nullptr;
 
      	void renderUpdate() override;
 

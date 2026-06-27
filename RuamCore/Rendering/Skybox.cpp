@@ -56,7 +56,7 @@ namespace RuamEngine
 
     void Skybox::Init()
     {
-        s_shaderProgram = ResourceManager::CreateShaderProgram(skyboxVertexShaderDefaultPath, skyboxFragmentShaderDefaultPath);
+        s_shaderProgram = std::make_shared<ShaderProgram>(skyboxVertexShaderDefaultPath, skyboxFragmentShaderDefaultPath);
         m_vertexArray = std::make_unique<VertexArray>();
         s_verticesSSBO = std::make_unique<SSBO<Vertex>>(baseVertexCount, GL_DYNAMIC_STORAGE_BIT);
         s_indicesSSBO = std::make_unique<SSBO<unsigned int>>(baseIndexCount, GL_DYNAMIC_STORAGE_BIT);

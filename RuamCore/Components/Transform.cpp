@@ -13,6 +13,7 @@ namespace RuamEngine
 		if (transformData.contains("m_position")) m_position = transformData["m_position"].get<glm::vec3>();
 		if (transformData.contains("m_rotation")) m_rotation = transformData["m_rotation"].get<glm::vec3>();
 		if (transformData.contains("m_scale")) m_scale = transformData["m_scale"].get<glm::vec3>();
+		if (transformData.contains("m_parentId")) m_parentId = transformData["m_parentId"].get<unsigned int>();
 	}
 	Transform::~Transform()
 	{

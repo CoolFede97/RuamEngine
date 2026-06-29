@@ -14,7 +14,7 @@ namespace RuamEngine
 
 		stbi_set_flip_vertically_on_load(1);
 
-		m_localBuffer = stbi_load(GlobalizePath(m_filePath).c_str(), &m_width, &m_height, &m_BPP, 4);
+		m_localBuffer = stbi_load(globalizePath(m_filePath).c_str(), &m_width, &m_height, &m_BPP, 4);
 
 		if (m_localBuffer == NULL)
 		{

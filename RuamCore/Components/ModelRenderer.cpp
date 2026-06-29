@@ -1,4 +1,5 @@
 #include "ModelRenderer.h"
+#include "Model.h"
 #include "RenderingConstants.h"
 #include "RenderingCore.h"
 #include "ResourceManager.h"
@@ -8,11 +9,7 @@
 
 namespace RuamEngine
 {
-	ModelRenderer::ModelRenderer(nlohmann::json modelRendererData, const unsigned int entityId) : Component(entityId)
-	{
-		if (modelRendererData.contains("m_modelPath")) m_modelPath = modelRendererData["m_modelPath"].get<std::string>();
-		loadModel();
-	}
+    void ModelRenderer::renderStart() { if (!m_modelPath.empty()) loadModel(); }
     void ModelRenderer::renderUpdate()
 	{
 		if (!m_model) return;
@@ -46,7 +43,6 @@ namespace RuamEngine
             ssbo = std::make_shared<SSBO<glm::mat4>>(baseVertexCount, GL_DYNAMIC_STORAGE_BIT);
         }
         m_matricesSSBO = ssbo;
-
    	}
     DEF_REGISTER_COMPONENT(ModelRenderer);
 }

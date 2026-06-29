@@ -16,7 +16,7 @@ namespace RuamEngine
         ASSERT(relativePaths.size()==6);
         m_filePaths = relativePaths;
 
-        std::string unifiedPath = UnifyPaths(relativePaths);
+        std::string unifiedPath = unifyPaths(relativePaths);
         m_filePath = unifiedPath;
 
         GLCall(glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &m_glName));
@@ -25,7 +25,7 @@ namespace RuamEngine
 
         for (unsigned int i = 0; i < relativePaths.size(); i++)
         {
-            m_localBuffers.push_back(stbi_load(GlobalizePath(m_filePaths[i]).c_str(), &m_faceLength, &m_faceLength, &m_BPP, 4));
+            m_localBuffers.push_back(stbi_load(globalizePath(m_filePaths[i]).c_str(), &m_faceLength, &m_faceLength, &m_BPP, 4));
 
             if (m_localBuffers[i] == nullptr)
             {
@@ -62,7 +62,7 @@ namespace RuamEngine
 
     Cubemap::Cubemap(const std::string& relativePath)
     {
-        m_filePaths.push_back(GlobalizePath(relativePath));
+        m_filePaths.push_back(globalizePath(relativePath));
         m_filePath = m_filePaths[0];
 
         GLCall(glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &m_glName));

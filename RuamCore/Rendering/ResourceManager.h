@@ -51,7 +51,7 @@ namespace RuamEngine
         template <typename T>
         static TextureSPtr LoadTexture(const std::vector<std::string>& relativePaths)
         {
-            std::string unifiedPath = UnifyPaths(relativePaths);
+            std::string unifiedPath = unifyPaths(relativePaths);
             auto it = s_textureCache.find(unifiedPath);
             if (it != s_textureCache.end())
             {

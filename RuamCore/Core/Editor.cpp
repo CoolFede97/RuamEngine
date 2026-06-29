@@ -136,27 +136,27 @@ namespace RuamEngine
 	std::unordered_map<std::type_index, SerializedMemberDrawer> Editor::s_inspectorDrawers =
 	{
 		{
-			std::type_index(typeid(float)), [](const std::string& name, void* value, std::function<void()>* callbackOnChange)
+			std::type_index(typeid(float)), [](const std::string& name, void* value, std::function<void()> callbackOnChange)
 			{
 			    DRAW_MEMBER_NAME(name);
 				if (ImGui::DragFloat(labelCopy.c_str(), static_cast<float*>(value), 0.1f))
 				{
-				    if (callbackOnChange != nullptr) (*callbackOnChange)();
+				    if (callbackOnChange != nullptr) callbackOnChange();
 				};
 			}
 		},
 		{
-			std::type_index(typeid(glm::vec3)), [](const std::string& name, void* value, std::function<void()>* callbackOnChange)
+			std::type_index(typeid(glm::vec3)), [](const std::string& name, void* value, std::function<void()> callbackOnChange)
 			{
 				DRAW_MEMBER_NAME(name);
 				if (ImGui::DragFloat3(labelCopy.c_str(), &static_cast<glm::vec3*>(value)->x, 0.1f))
 				{
-                    if (callbackOnChange != nullptr) (*callbackOnChange)();
+                    if (callbackOnChange != nullptr) callbackOnChange();
 				}
 			}
 		},
 		{
-			std::type_index(typeid(std::string)), [](const std::string& name, void* value, std::function<void()>* callbackOnChange)
+			std::type_index(typeid(std::string)), [](const std::string& name, void* value, std::function<void()> callbackOnChange)
 			{
 				DRAW_MEMBER_NAME(name);
 				std::string* str = static_cast<std::string*>(value);
@@ -173,17 +173,17 @@ namespace RuamEngine
 				if (ImGui::InputText(labelCopy.c_str(), buffer.data(), buffer.size(), ImGuiInputTextFlags_EnterReturnsTrue))
 				{
 				    *str = buffer.data();
-					if (callbackOnChange != nullptr) (*callbackOnChange)();
+					if (callbackOnChange != nullptr) callbackOnChange();
 				}
 			}
 		},
 		{
-			std::type_index(typeid(unsigned int)), [](const std::string& name, void* value, std::function<void()>* callbackOnChange)
+			std::type_index(typeid(unsigned int)), [](const std::string& name, void* value, std::function<void()> callbackOnChange)
 			{
 			    DRAW_MEMBER_NAME(name);
 				if (ImGui::DragScalar(labelCopy.c_str(), ImGuiDataType_U32, value, 1.0f))
                 {
-                    if (callbackOnChange) (*callbackOnChange)();
+                    if (callbackOnChange) callbackOnChange();
                 }
 			}
 		}
@@ -269,7 +269,7 @@ namespace RuamEngine
 		}
 	}
 
-	void Editor::DrawMemberInInspector(const std::string& name, const std::type_index& type, void* value, std::function<void()>* callbackOnChange)
+	void Editor::DrawMemberInInspector(const std::string& name, const std::type_index& type, void* value, std::function<void()> callbackOnChange)
 	{
 	    if (s_inspectorDrawers.find(type) != s_inspectorDrawers.end())	s_inspectorDrawers[type](name, value, callbackOnChange);
 		else std::cerr << "Error: Couldn't find matching function in s_inspectorDrawers for a variable of type " << type.name() << " \n";

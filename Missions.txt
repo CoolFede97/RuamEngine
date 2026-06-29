@@ -1,5 +1,3 @@
-May be separate some Renderer stuff to GPUResourceManager such as in WorldMaker
-
 Lua stuff
 
 When right clicking on editor camera, mouse can hover over inspector and those ui elements.

@@ -6,22 +6,19 @@ namespace RuamEngine
 {
     class GameCamera : public Component
     {
-        #define CAMERA_SERIALIZED_MEMBERS(X, ...) \
-    	X(m_nearPlane, float, 0.1f, nullptr)__VA_ARGS__	\
-    	X(m_farPlane, float, 3000.0f, nullptr)__VA_ARGS__	\
-    	X(m_fov, float, 45.0f, nullptr)__VA_ARGS__	\
-    	X(m_aspectRatio, float, 800.0f/600.0f, nullptr)
-
 		using Component::Component;
 
 	    static GameCamera* s_mainCamera;
 
 		const glm::vec3 m_up = glm::vec3(0.0, 1.0, 0.0);
-		CAMERA_SERIALIZED_MEMBERS(DECL_MEMBER)
+		float m_nearPlane = 0.1f;
+		float m_farPlane = 3000.0f;
+		float m_fov = 45.0f;
+		float m_aspectRatio = 800.0f/600.0f;
 
 	public:
 
-		IMPL_DRAW_SERIALIZED_MEMBERS(CAMERA_SERIALIZED_MEMBERS(CALL_INSPECTOR_DRAWER))
+	    GameCamera(nlohmann::json transformData, const unsigned int entityId);
 		~GameCamera();
 		glm::mat4 projectionMatrix() const;
 		glm::mat4 viewMatrix() const;
@@ -34,7 +31,17 @@ namespace RuamEngine
 
 		void renderStart() override;
 
-		IMPL_SERIALIZE(GameCamera, CAMERA_SERIALIZED_MEMBERS(SER_FIELD, ,))
+		std::vector<FieldInfo> fields() override
+		{
+		    return
+    		{
+                makeFieldInfo<float>("m_nearPlane", m_nearPlane),
+                makeFieldInfo<float>("m_farPlane", m_farPlane),
+                makeFieldInfo<float>("m_fov", m_fov),
+                makeFieldInfo<float>("m_aspectRatio", m_aspectRatio)
+    		};
+		}
+
 	private:
 		DECL_REGISTER_COMPONENT(GameCamera)
 	};

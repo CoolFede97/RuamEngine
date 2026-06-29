@@ -10,7 +10,6 @@
 #include "ShaderProgram.h"
 #include "Skybox.h"
 #include "Editor.h"
-
 #include <cstddef>
 #include <memory>
 namespace RuamEngine
@@ -121,7 +120,6 @@ namespace RuamEngine
             GLCall(glDisable(GL_BLEND));
         }
     }
-
     void Renderer::Draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
     {
         Skybox::Draw(viewMatrix, projectionMatrix);

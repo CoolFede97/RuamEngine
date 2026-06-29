@@ -14,7 +14,7 @@ namespace RuamEngine
 	ShaderProgram::ShaderProgram(const std::string& vertexPath, const std::string& fragmentPath)
 		: m_vertexShaderPath(vertexPath), m_fragmentShaderPath(fragmentPath), m_instanceId(s_idInstanceCount++), m_glName(0)
 	{
-        m_name = UnifyPaths({vertexPath, fragmentPath});
+        m_name = unifyPaths({vertexPath, fragmentPath});
 		m_glName = createProgram(vertexPath, fragmentPath);
 		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureSlots);
 	}
@@ -56,8 +56,8 @@ namespace RuamEngine
 	unsigned int ShaderProgram::createProgram(const std::string& vertexPath, const std::string& fragmentPath)
 	{
 		unsigned int program = glCreateProgram();
-		unsigned int vs = compileShader(GL_VERTEX_SHADER, RelativeFileToString(vertexPath));
-		unsigned int fs = compileShader(GL_FRAGMENT_SHADER, RelativeFileToString(fragmentPath));
+		unsigned int vs = compileShader(GL_VERTEX_SHADER, relativefileToString(vertexPath));
+		unsigned int fs = compileShader(GL_FRAGMENT_SHADER, relativefileToString(fragmentPath));
 
 		// A program is a group of glsl that can run on the GPU
 		GLCall(glAttachShader(program, vs));

@@ -27,5 +27,12 @@ namespace RuamEngine
 	{
 		return entity()->transform();
 	}
+	void Component::drawSerializedMembers()
+	{
+	    for (FieldInfo field : fields())
+		{
+		    Editor::DrawMemberInInspector(field.name, field.type, field.value, field.callbackOnChange);
+		}
+	}
 	DEF_REGISTER_COMPONENT(Component)
 }

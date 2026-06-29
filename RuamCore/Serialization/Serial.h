@@ -19,10 +19,12 @@ namespace RuamEngine
     public:
     	static void DeserializeTransform(const nlohmann::json& jsonTransform, Transform* transfrom);
 
+        static nlohmann::json Serialize(Component* cmp);
 		static nlohmann::json Serialize(const Entity* entity);
 
 		static nlohmann::json Serialize(const Scene* scene);
 		static Scene* DeserializeJsonScene(nlohmann::json jsonScene);
+		static void DeserializeJsonComponent(nlohmann::json jsonCmp, Component* cmp);
 
 		static nlohmann::json Serialize(const RuamConfig& config);
 		static RuamConfig DeserializeRuamConfig(const nlohmann::json& jsonConfig);

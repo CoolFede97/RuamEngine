@@ -11,9 +11,6 @@ namespace RuamEngine
 {
     class Vertex;
 
-    #define MODEL_RENDERER_SERIALIZED_MEMBERS(X, ...) \
-    	X(m_modelPath, std::string, "", [this]()->void{ this ->loadModel();})
-
     class ModelRenderer : public Component
     {
     	using Component::Component;
@@ -21,22 +18,22 @@ namespace RuamEngine
     private:
     	float m_vertices = 0;
     	float m_indices = 0;
-
+        std::string m_modelPath = "";
         ModelSPtr m_model = nullptr;
         SSBOWPtr<glm::mat4> m_matricesSSBO = {};
         ShaderProgramSPtr m_shaderProgram = nullptr;
 
      	void renderUpdate() override;
 
-      protected:
-    	MODEL_RENDERER_SERIALIZED_MEMBERS(DECL_MEMBER)
-
     public:
-	   	ModelRenderer(nlohmann::json modelRendererData, const unsigned int entityId);
-
-    	IMPL_DRAW_SERIALIZED_MEMBERS(MODEL_RENDERER_SERIALIZED_MEMBERS(CALL_INSPECTOR_DRAWER))
-    	IMPL_SERIALIZE(ModelRenderer, MODEL_RENDERER_SERIALIZED_MEMBERS(SER_FIELD, ,))
-
+   		std::vector<FieldInfo> fields() override
+		{
+		    return
+       		{
+                makeFieldInfo<std::string>("m_modelPath", m_modelPath, [this]()->void{ this->loadModel();})
+            };
+		}
+		void renderStart();
     	void setModel(const std::string& relativePath);
     	void loadModel();
     private:

@@ -8,14 +8,14 @@
 #include <filesystem>
 #include <vector>
 
-std::string FileToString(const std::string& absoluteFilePath);
+std::string fileToString(const std::string& absoluteFilePath);
 
-std::string RelativeFileToString(const std::string& relativeFilePath);
+std::string relativefileToString(const std::string& relativeFilePath);
 
-std::string GlobalizePath(const std::string& relativeFilePath);
+std::string globalizePath(const std::string& relativeFilePath);
 
-std::vector<std::string> GlobalizePaths(const std::vector<std::string>& relativeFilePaths);
+std::vector<std::string> globalizePaths(const std::vector<std::string>& relativeFilePaths);
 
-std::string UnifyPaths(const std::vector<std::string>& relativePaths);
+std::string unifyPaths(const std::vector<std::string>& relativePaths);
 
-std::string RelativizePath(const std::string& absoluteFilePath);
+std::string relativizePath(const std::string& absoluteFilePath);

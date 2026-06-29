@@ -22,7 +22,6 @@ namespace RuamEngine
 		static Vec4 m_color;
 		static float m_lightOffset;
 	public:
-		IMPL_SIMPLE_SERIALIZE(GlobalLight)
 		using Component::Component;
 		~GlobalLight();
 		static void SetLightColor(Vec4 color);

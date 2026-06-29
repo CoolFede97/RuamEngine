@@ -1,4 +1,5 @@
 #pragma once
+#include "ComponentField.h"
 #include "ComponentsInitializer.h"
 #include "nlohmann/json.hpp"
 #include <map>
@@ -6,38 +7,6 @@
 #include <string>
 
 #include "Editor.h"
-
-// ==== MACROS de Serialización ====
-//
-// Macro 1: SER_FIELD
-#define SER_FIELD(name, type, initialValue /* unused */, callbackOnInspectorChange /* unused */) {#name, name}
-
-// Macro 2: IMPL_SIMPLE_SERIALIZE
-//
-#define IMPL_SIMPLE_SERIALIZE(ComponentName) \
-public: \
-virtual operator nlohmann::json() const override \
-{ \
-	return nlohmann::json \
-	{ \
-		{"m_id", m_id}, \
-		{"TYPE", #ComponentName} \
-	}; \
-} \
-
-// Macro 3: IMPL_SERIALIZE
-//
-#define IMPL_SERIALIZE(ComponentName, ...) \
-public: \
-virtual operator nlohmann::json() const override \
-{ \
-	return nlohmann::json \
-	{ \
-		__VA_ARGS__ \
-		,{"m_id", m_id}, \
-		{"TYPE", #ComponentName} \
-	}; \
-} \
 
 #define DECL_REGISTER_COMPONENT(ComponentName) \
 	static void ComponentName##Register(); \
@@ -53,35 +22,9 @@ virtual operator nlohmann::json() const override \
 			[](Entity* entity) -> Component* \
 			{ \
 				return entity->addComponent<ComponentName>(); \
-			}, \
-			[](const nlohmann::json& componentData, Entity* entity) -> Component* \
-			{ \
-				return entity->addComponentWithJson<ComponentName>(componentData); \
 			} \
 		})); \
 	} \
-
-// Macros para declaración de miembros
-#define DECL_MEMBER(name, type, initialValue, callbackOnInspectorChange /* unused */) type name = initialValue;
-
-
-#define CALL_INSPECTOR_DRAWER(name, type, initialValue, callbackOnInspectorChange) \
-    if constexpr (!std::is_same_v<decltype(callbackOnInspectorChange), std::nullptr_t>) \
-    {   \
-        temp_callback = callbackOnInspectorChange;  \
-        callbacks[#name] = &temp_callback;  \
-    }   \
-    Editor::DrawMemberInInspector(#name, typeid(type), &name, callbacks[#name]);
-
-// Draw serialized members in the inspector
-#define IMPL_DRAW_SERIALIZED_MEMBERS(inspectorDrawerCalls)	\
-    friend class Editor;    \
-    std::unordered_map<std::string, std::function<void()>*> callbacks = {};  \
-    std::function<void()> temp_callback;    \
-	inline void drawSerializedMembers() override	\
-	{	\
-		inspectorDrawerCalls	\
-	}
 
 namespace RuamEngine
 {
@@ -99,7 +42,7 @@ namespace RuamEngine
 	public:
 
 		inline static std::map<std::string, ComponentFactory> componentRegistry;
-
+		static constexpr bool s_unique = false;
 		virtual ~Component() = default;
 		explicit Component(const unsigned int entityId) : m_entityId(entityId), m_id(s_idCount++) {
 		}
@@ -125,6 +68,8 @@ namespace RuamEngine
 		void markNotCreatedOnThisFrame() { m_createdOnThisFrame = false; }
 		void setEnabled(bool status) { m_enabled = status; };
 
+		virtual std::vector<FieldInfo> fields() { return {}; };
+
 		virtual operator nlohmann::json() const {
             return nlohmann::json{
                 {"m_id", m_id},
@@ -133,7 +78,7 @@ namespace RuamEngine
         }
 
         // Doesn't use the macro IMPL_DRAW_SERIALIZED_MEMBERS since this is the virtual one.
-        virtual inline void drawSerializedMembers() {;};
+        virtual void drawSerializedMembers();
 	protected:
 		const unsigned int m_entityId;
 		const unsigned int m_id;

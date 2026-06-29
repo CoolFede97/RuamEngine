@@ -16,7 +16,7 @@ namespace RuamEngine
 	}
 
 	Model::Model(const std::string& path)
-		: m_relativePath(path), m_globalPath(GlobalizePath(path)), m_instanceId(s_idCount++)
+		: m_relativePath(path), m_globalPath(globalizePath(path)), m_instanceId(s_idCount++)
 	{
 		loadModel(m_globalPath);
 	}
@@ -137,7 +137,7 @@ namespace RuamEngine
             else
             {
           		std::string absoluteModelPath = std::filesystem::path(m_globalPath).parent_path().string();
-          		outRelativePath = RelativizePath(absoluteModelPath) + "/" + assimpPath;
+          		outRelativePath = relativizePath(absoluteModelPath) + "/" + assimpPath;
             }
         }
 	}

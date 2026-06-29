@@ -13,12 +13,6 @@
 
 namespace RuamEngine
 {
-	#define TRANSFORM_SERIALIZED_MEMBERS(X, ...) \
-	X(m_position, glm::vec3, glm::vec3(0,0,0), nullptr)__VA_ARGS__	\
-	X(m_rotation, glm::vec3, glm::vec3(0,0,0), nullptr)__VA_ARGS__	\
-	X(m_scale, glm::vec3, glm::vec3(1,1,1), nullptr)__VA_ARGS__	\
-	X(m_parentId, unsigned int, 0, nullptr)
-
 	class Transform : public Component
 	{
 	public:
@@ -63,18 +57,25 @@ namespace RuamEngine
 
 		std::list<Transform*> m_children;
 		Transform* m_parent = nullptr; // If null, there is no parent
-
-		IMPL_DRAW_SERIALIZED_MEMBERS(TRANSFORM_SERIALIZED_MEMBERS(CALL_INSPECTOR_DRAWER))
-
-	protected:
-		TRANSFORM_SERIALIZED_MEMBERS(DECL_MEMBER)
+		static constexpr bool s_unique = true;
+		std::vector<FieldInfo> fields() override
+		{
+		    return
+    		{
+                makeFieldInfo<glm::vec3>("m_position", m_position),
+                makeFieldInfo<glm::vec3>("m_rotation", m_rotation),
+                makeFieldInfo<glm::vec3>("m_scale", m_scale)
+    		};
+		}
 
 	private:
+	    glm::vec3 m_position = glm::vec3(0,0,0);
+	    glm::vec3 m_rotation = glm::vec3(0,0,0);
+	    glm::vec3 m_scale = glm::vec3(1,1,1);
+		unsigned int m_parentId = 0;
 		DECL_REGISTER_COMPONENT(Transform)
 	public:
 
-	IMPL_SERIALIZE(Transform,
-		TRANSFORM_SERIALIZED_MEMBERS(SER_FIELD, ,))
 	friend class Serial;
 	};
 }

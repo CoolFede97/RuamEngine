@@ -8,7 +8,7 @@
 #include <unordered_map>
 namespace RuamEngine
 {
-    using SerializedMemberDrawer = std::function<void(const std::string&, void*, std::function<void()>*)>;
+    using SerializedMemberDrawer = std::function<void(const std::string&, void*, std::function<void()>)>;
 
 	class Entity;
 	class EditorCamera;
@@ -27,7 +27,7 @@ namespace RuamEngine
 		static void DrawCreateSceneButton();
 
 		static void DrawEntityFamily(Entity* entity);
-		static void DrawMemberInInspector(const std::string& name, const std::type_index& type, void* value, std::function<void()>* callbackOnChange);
+		static void DrawMemberInInspector(const std::string& name, const std::type_index& type, void* value, std::function<void()> callbackOnChange);
 
 		static EditorCamera& Camera() { return s_camera; };
 

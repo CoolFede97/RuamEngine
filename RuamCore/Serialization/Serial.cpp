@@ -7,19 +7,23 @@
 #include "Transform.h"
 #include "SaveSystem.h"
 #include "Scene.h"
-
+#include "ModelRenderer.h"
 namespace fs = std::filesystem;
 
 namespace RuamEngine
 {
-	void Serial::DeserializeTransform(const nlohmann::json& jsonTransform, Transform* transfrom)
+	nlohmann::json Serial::Serialize(Component* cmp)
 	{
-		if (jsonTransform.contains("m_position")) transfrom->setPosition(jsonTransform["m_position"].get<glm::vec3>());
-		if (jsonTransform.contains("m_rotation")) transfrom->setRotation(jsonTransform["m_rotation"].get<glm::vec3>());
-		if (jsonTransform.contains("m_scale")) transfrom->setScale(jsonTransform["m_scale"].get<glm::vec3>());
-		if (jsonTransform.contains("m_parentId")) transfrom->m_parentId = jsonTransform["m_parentId"].get<unsigned int>();
-	}
+	    nlohmann::json json;
+		json["TYPE"] = cmp->name();
+		json["m_id"] = cmp->id();
 
+		for (FieldInfo fieldInfo : cmp->fields())
+		{
+		    json[fieldInfo.name] = fieldInfo.serialize();
+		}
+		return json;
+	}
 	nlohmann::json Serial::Serialize(const Entity* entity)
 	{
 		nlohmann::json jsonEntity =
@@ -30,7 +34,7 @@ namespace RuamEngine
 		};
 		for (Component* cmp : entity->getComponents())
 		{
-			nlohmann::json jsonCmp = *cmp;
+			nlohmann::json jsonCmp = Serialize(cmp);
 			jsonEntity["m_components"].push_back(jsonCmp);
 		}
 		return jsonEntity;
@@ -77,17 +81,11 @@ namespace RuamEngine
 						std::cerr << "Failed to find the component type " << cmpType << " in the component registry!\n";
 						continue;
 					}
-					if (cmpType != "Transform")
-					{
-						auto constructor = Component::componentRegistry[cmpType].addComponentWithJson;
+					auto constructor = Component::componentRegistry[cmpType].addComponent;
 
-						// Uses the constructor defined by the user that takes the Json Component as parameter to add the component to the entity
-						constructor(jsonCmp, entity);
-					}
-					else
-					{
-						DeserializeTransform(jsonCmp, entity->transform());
-					}
+					// Uses the constructor defined by the user that takes the Json Component as parameter to add the component to the entity
+					Component* cmp = constructor(entity);
+					DeserializeJsonComponent(jsonCmp, cmp);
 				}
 			}
 			catch (const std::exception& exception)
@@ -111,6 +109,14 @@ namespace RuamEngine
 		}
 		return jsonConfig;
 	};
+
+	void Serial::DeserializeJsonComponent(nlohmann::json jsonCmp, Component* cmp)
+	{
+	    for (FieldInfo& fieldInfo : cmp->fields())
+		{
+		    fieldInfo.deserialize(jsonCmp);
+		}
+	}
 
 	// Make sure everything is okay with the jsonConfig you are passsing as argument (e.g. it has at least one scene)
 	RuamConfig Serial::DeserializeRuamConfig(const nlohmann::json& jsonConfig)

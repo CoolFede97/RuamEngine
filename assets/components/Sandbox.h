@@ -35,7 +35,6 @@ namespace RuamEngine
 		}
   // transform()->position().z-=10*RuamTime::DeltaTime();
 		};
-		IMPL_SIMPLE_SERIALIZE(Sandbox)
 	private:
 		DECL_REGISTER_COMPONENT(Sandbox)
 	};

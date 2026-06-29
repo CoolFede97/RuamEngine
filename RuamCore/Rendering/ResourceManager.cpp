@@ -30,7 +30,7 @@ namespace RuamEngine
     // Returns nullptr if the texture is not found
     TextureSPtr ResourceManager::GetTexture(const std::vector<std::string>& relativePaths)
     {
-        std::string unifiedPath = UnifyPaths(relativePaths);
+        std::string unifiedPath = unifyPaths(relativePaths);
         auto it = s_textureCache.find(unifiedPath);
         if (it != s_textureCache.end()) return it->second.lock();
         return nullptr;
@@ -48,7 +48,7 @@ namespace RuamEngine
     }
     void ResourceManager::RemoveTextureIfExpired(const std::vector<std::string>& relativePaths)
     {
-        std::string relativePath = UnifyPaths(relativePaths);
+        std::string relativePath = unifyPaths(relativePaths);
         auto it = s_textureCache.find(relativePath);
 
         if (it != s_textureCache.end() && it->second.expired())
@@ -129,14 +129,19 @@ namespace RuamEngine
 
     ShaderProgramSPtr ResourceManager::LoadShaderProgram(const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
     {
-        std::string unifiedPath = UnifyPaths({vertexShaderPath, fragmentShaderPath});
+        std::string unifiedPath = unifyPaths({vertexShaderPath, fragmentShaderPath});
+        auto it = s_shaderProgramsCache.find(unifiedPath);
+        if (it != s_shaderProgramsCache.end())
+        {
+            if (!it->second.expired()) return it->second.lock();
+        }
         ShaderProgramSPtr newShaderProgram = std::make_shared<ShaderProgram>(vertexShaderPath, fragmentShaderPath);
         s_shaderProgramsCache[unifiedPath] = newShaderProgram;
         return newShaderProgram;
     }
     ShaderProgramSPtr ResourceManager::GetShaderProgram(const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
     {
-        std::string unifiedPath = UnifyPaths({vertexShaderPath, fragmentShaderPath});
+        std::string unifiedPath = unifyPaths({vertexShaderPath, fragmentShaderPath});
         auto it = s_shaderProgramsCache.find(unifiedPath);
         if (it != s_shaderProgramsCache.end())
         {
@@ -155,7 +160,7 @@ namespace RuamEngine
     }
     void ResourceManager::RemoveShaderProgramIfExpired(const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
     {
-        std::string unifiedPath = UnifyPaths({vertexShaderPath, fragmentShaderPath});
+        std::string unifiedPath = unifyPaths({vertexShaderPath, fragmentShaderPath});
         auto it = s_shaderProgramsCache.find(unifiedPath);
 
         if (it != s_shaderProgramsCache.end() && it->second.expired())

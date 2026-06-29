@@ -28,6 +28,10 @@ namespace RuamEngine
 
 		template<class Comp>
 		Comp* addComponent() {
+		    if constexpr(Comp::s_unique)
+			{
+			    if (auto* c = getComponent<Comp>()) return c;
+			}
 			std::unique_ptr<Comp> comp = std::make_unique<Comp>(m_id);
 			const std::type_index tidx = typeid(Comp);
 			if (m_components.count(tidx) <= 0) m_components.insert({tidx, ComponentVector()});
@@ -40,6 +44,10 @@ namespace RuamEngine
 
 		template<class Comp, typename... Args>
 		Comp* addComponent(Args&&... args) {
+            if constexpr(Comp::s_unique)
+            {
+                if (auto* c = getComponent<Comp>()) return c;
+            }
 			std::unique_ptr<Comp> comp = std::make_unique<Comp>(m_id, std::forward<Args>(args...)...);
 			const std::type_index tidx = typeid(Comp);
 			if (m_components.count(tidx) <= 0) m_components.insert({tidx, ComponentVector()});
@@ -48,18 +56,6 @@ namespace RuamEngine
 			addCompToJustCreatedComponents(tidx);
 
 			return dynamic_cast<Comp*>(m_components[tidx].back().get());
-		}
-
-		template<class Comp>
-		Component* addComponentWithJson(const nlohmann::json& j) {
-			std::unique_ptr<Comp> comp = std::make_unique<Comp>(j, m_id);
-			const std::type_index tidx = typeid(Comp);
-			if (m_components.count(tidx) > 0) m_components.insert({tidx, ComponentVector()});
-
-			m_components[tidx].push_back(std::move(comp));
-			addCompToJustCreatedComponents(tidx);
-
-			return m_components[tidx].back().get();
 		}
 
 		// Returns ptr because a ref can't be null

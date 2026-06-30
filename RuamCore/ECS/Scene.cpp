@@ -28,7 +28,7 @@ namespace RuamEngine
 		entity->m_parentScene = this;
 		entity->m_transform = entity->addComponent<Transform>();
 		Entity* entity_ptr = entity.get();
-	    m_entities.push_back(std::move(entity));
+	    m_pendingEntities.push_back(std::move(entity));
 	    return entity_ptr;
 	}
 
@@ -39,7 +39,7 @@ namespace RuamEngine
 		entity->m_transform = entity->addComponent<Transform>();
 		entity->setName(name);
 		Entity* entity_ptr = entity.get();
-		m_entities.push_back(std::move(entity));
+		m_pendingEntities.push_back(std::move(entity));
 		return entity_ptr;
 	}
 
@@ -53,7 +53,7 @@ namespace RuamEngine
 	    auto index = m_entities.cbegin();
 	    std::advance(index, idx);
 		Entity* entity_ptr = entity.get();
-	    m_entities.insert(index, std::move(entity));
+		m_pendingEntities.push_back(std::move(entity));
 		return entity_ptr;
 	}
 
@@ -90,7 +90,7 @@ namespace RuamEngine
 	    // START ----------------------------------------------------------------------------------------------------
 
 		m_componentsToStart = m_justCreatedComponents;
-		if (m_justCreatedComponents.size()>0) m_justCreatedComponents.clear();
+		m_justCreatedComponents.clear();
 		for (auto& [entityId, map] : m_componentsToStart)
 		{
 			for (auto& [cmpType, cmpVec] : map)
@@ -100,7 +100,7 @@ namespace RuamEngine
 				for ( auto& cmp : cmpVec) cmp->markNotCreatedOnThisFrame();
 			}
 		}
-		if (m_componentsToStart.size()>0) m_componentsToStart.clear();
+		m_componentsToStart.clear();
 
 		// UPDATE ---------------------------------------------------------------------------------------------------
 
@@ -140,12 +140,23 @@ namespace RuamEngine
 			fn(cmp);
 		}
 	}
-	void Scene::flushDestroyedEntitiesAndComponents()
+	void Scene::handlePendingEntities()
+	{
+	    for (auto& entity : m_pendingEntities)
+		{
+		    m_entities.push_back(std::move(entity));
+		}
+		m_pendingEntities.clear();
+	}
+	void Scene::flushDestroyedEntities()
 	{
         m_entities.erase(
 		std::remove_if(m_entities.begin(), m_entities.end(), [](std::unique_ptr<Entity>& e){ return e->destroyFlag(); }),
 		m_entities.end()
         );
+	}
+	void Scene::flushDestroyedComponents()
+	{
         for (auto& entity : m_entities)
         {
             for (auto& [type, cmpVector] : entity->m_components)

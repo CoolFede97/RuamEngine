@@ -151,4 +151,6 @@ namespace RuamEngine
 
 		friend class Scene;
 	};
+
+	using EntityUPtr = std::unique_ptr<Entity>;
 }

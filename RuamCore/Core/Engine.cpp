@@ -73,11 +73,21 @@ namespace RuamEngine
 
   		while (!Renderer::WindowShouldClose())
   		{
+  		    // std::cout << "Frame count: " << frameCount++ << "\n";
     		CheckIfWantToSaveChanges();
  			SceneManager::CheckForSceneChange();
-  		    // std::cout << "Frame count: " << frameCount++ << "\n";
 
             ImGuiStartNewFrame();
+
+            Scene* scene = SceneManager::ActiveScene();
+
+            if (scene)
+            {
+                scene->handlePendingEntities();
+
+                scene->flushDestroyedEntities(); // This one goes first because it filters more components
+                scene->flushDestroyedComponents();
+            }
 
             Editor::UpdateHierarchy();
             Editor::UpdateInspector();
@@ -90,8 +100,7 @@ namespace RuamEngine
 
  			EventManager::HandleEvents();
 
-            Scene* scene = SceneManager::ActiveScene();
-            // std::cout << "Frame count: " << frameCount++ << "\n";
+
  			if (scene)
  			{
                 if (Input::GetKey(KeyCode::LeftControl_Key) && Input::GetKeyDown(KeyCode::P_Key))
@@ -142,7 +151,7 @@ namespace RuamEngine
             Renderer::EndDraw();
             Input::UpdateInput();
             glfwPollEvents();
-            if (scene) scene->flushDestroyedEntitiesAndComponents();
+
             SceneManager::CheckForSceneDeletion();
     	}
     	// Cleanup

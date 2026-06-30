@@ -21,20 +21,13 @@ namespace RuamEngine
 		using Component::Component;
 
 	public:
-	unsigned int entityCount = 0;
-	Vec3 lastEntityPos = {0,0,0};
-		void update() {
-		if (Input::GetKeyDown(KeyCode::SpaceBar_Key))
+	    unsigned int entityCount = 0;
+	    Vec3 lastEntityPos = {0,0,0};
+		void update() override;
+		std::vector<FieldInfo> fields() override
 		{
-  Entity* newEntity = SceneManager::ActiveScene()->createEntity("fede"+std::to_string(entityCount));
-  entityCount++;
-  newEntity->addComponent<ModelRenderer>()->setModel("RuamCore/Assets/Models/Fede.obj");
-  newEntity->transform()->setPosition(lastEntityPos+Vec3(4,0,0));
-  lastEntityPos = newEntity->transform()->position();
-  SceneManager::ActiveScene()->getEntityByName("fede")->transform()->addChild(newEntity->transform());
+            return {makeFieldInfo<unsigned int>("entityCount", entityCount)};
 		}
-  // transform()->position().z-=10*RuamTime::DeltaTime();
-		};
 	private:
 		DECL_REGISTER_COMPONENT(Sandbox)
 	};

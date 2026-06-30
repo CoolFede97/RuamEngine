@@ -43,11 +43,6 @@ namespace RuamEngine
 
 	void Entity::update()
 	{
-		for (auto& [cmpType, cmpVector] : m_components)
-		cmpVector.erase(
-			std::remove_if(cmpVector.begin(), cmpVector.end(), [](std::unique_ptr<Component>& cmp){ return cmp->destroyFlag(); }),
-			cmpVector.end()
-		);
 		forEachActiveComponent([](Component* cmp)->void {cmp->update();});
 	}
 	void Entity::renderUpdate()
@@ -62,7 +57,11 @@ namespace RuamEngine
 			for (auto& cmp : pair.second)
 			{
 				if (SceneManager::SceneChange()) return;
-				if (cmp->createdOnThisFrame()) continue;
+				if (cmp->createdOnThisFrame())
+				{
+				    cmp->markNotCreatedOnThisFrame();
+				    continue;
+				}
 				if (!cmp->enabled()) continue;
 
 				fn(cmp.get());

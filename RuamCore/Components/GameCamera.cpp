@@ -17,7 +17,7 @@ namespace RuamEngine
     }
     GameCamera::~GameCamera()
     {
-        if (!SceneManager::ActiveScene()) return;
+        if (!SceneManager::ActiveScene() || !s_mainCamera) return;
         else if (s_mainCamera->id() == id())
         {
             EmptyMainCamera();

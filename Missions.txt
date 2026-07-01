@@ -1,3 +1,5 @@
+Make sure all components get their start called ('cause some might be disabled when tick is called and still get removed from componentsToStart)
+
 Remove checks for SceneManager::SceneChange(). All pieces of code should be called before changing the scene in the next frame
 
 When right clicking on editor camera, mouse can hover over inspector and those ui elements.

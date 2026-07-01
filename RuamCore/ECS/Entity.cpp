@@ -50,18 +50,15 @@ namespace RuamEngine
 		forEachActiveComponent([](Component* cmp)->void {cmp->renderUpdate();});
 	}
 
-	void Entity::forEachActiveComponent(std::function<void(Component*)> fn)
+	void Entity::forEachActiveComponent(std::function<void(Component*)> fn) // Should be used for native functions (such as update and renderUpdate)
 	{
 		for (auto& pair : m_components)
 		{
-			for (auto& cmp : pair.second)
-			{
+    	    int componentsAmount = pair.second.size();
+    		for (int cmpIndex = 0; cmpIndex < componentsAmount; cmpIndex++)
+    		{
+                auto& cmp = pair.second[cmpIndex];
 				if (SceneManager::SceneChange()) return;
-				if (cmp->createdOnThisFrame())
-				{
-				    cmp->markNotCreatedOnThisFrame();
-				    continue;
-				}
 				if (!cmp->enabled()) continue;
 
 				fn(cmp.get());
@@ -112,10 +109,4 @@ namespace RuamEngine
 		}
 		return comps;
 	}
-
-	void Entity::addCompToJustCreatedComponents(std::type_index tidx)
-	{
-		m_parentScene->m_justCreatedComponents[m_id][tidx].push_back(m_components[tidx].back().get());
-	}
-
 }

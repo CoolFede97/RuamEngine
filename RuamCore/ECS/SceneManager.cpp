@@ -122,9 +122,7 @@ namespace RuamEngine
 	{
 		SceneSPtr scene = std::make_shared<Scene>(0, sceneName);
 		Entity* light = scene->createEntity("globalLight");
-		std::cout << "HOLAA 1\n";
 		light->addComponent<GlobalLight>();
-		std::cout << "HOLAA 2\n";
 		light->transform()->setPosition(glm::vec3(0.0f, 100.0f, 0.0f));
 
 		Entity* fede = scene->createEntity("fede");

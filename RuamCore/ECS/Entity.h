@@ -7,8 +7,10 @@
 #include <string>
 #include <algorithm>
 
+#include "RuamUtils.h"
 #include "nlohmann/json.hpp"
 #include "Component.h"
+#include "Scene.h"
 
 namespace RuamEngine
 {
@@ -24,53 +26,51 @@ namespace RuamEngine
 		using ComponentVector = std::vector<std::unique_ptr<Component>>;
 		using ComponentVectorMap = std::map<std::type_index, ComponentVector>;
 
-		void addCompToJustCreatedComponents(std::type_index tidx);
-
-		template<class Comp>
-		Comp* addComponent() {
-		    if constexpr(Comp::s_unique)
+		template<class Cmp>
+		Cmp* addComponent() {
+		    if constexpr(Cmp::s_unique)
 			{
-			    if (auto* c = getComponent<Comp>()) return c;
+			    if (auto* c = getComponent<Cmp>()) return c;
 			}
-			std::unique_ptr<Comp> comp = std::make_unique<Comp>(m_id);
-			const std::type_index tidx = typeid(Comp);
+			std::unique_ptr<Cmp> cmp = std::make_unique<Cmp>(m_id);
+			const std::type_index tidx = typeid(Cmp);
 			if (m_components.count(tidx) <= 0) m_components.insert({tidx, ComponentVector()});
 
-			m_components[tidx].push_back(std::move(comp));
-			addCompToJustCreatedComponents(tidx);
+			m_parentScene->m_componentsToStart.push_back(cmp.get());
+			m_components[tidx].push_back(std::move(cmp));
 
-			return dynamic_cast<Comp*>(m_components[tidx].back().get());
+			return dynamic_cast<Cmp*>(m_components[tidx].back().get());
 		}
 
-		template<class Comp, typename... Args>
-		Comp* addComponent(Args&&... args) {
-            if constexpr(Comp::s_unique)
+		template<class Cmp, typename... Args>
+		Cmp* addComponent(Args&&... args) {
+            if constexpr(Cmp::s_unique)
             {
-                if (auto* c = getComponent<Comp>()) return c;
+                if (auto* c = getComponent<Cmp>()) return c;
             }
-			std::unique_ptr<Comp> comp = std::make_unique<Comp>(m_id, std::forward<Args>(args...)...);
-			const std::type_index tidx = typeid(Comp);
+			std::unique_ptr<Cmp> cmp = std::make_unique<Cmp>(m_id, std::forward<Args>(args...)...);
+			const std::type_index tidx = typeid(Cmp);
 			if (m_components.count(tidx) <= 0) m_components.insert({tidx, ComponentVector()});
 
-			m_components[tidx].push_back(std::move(comp));
-			addCompToJustCreatedComponents(tidx);
+			m_parentScene->m_componentsToStart.push_back(cmp.get());
+			m_components[tidx].push_back(std::move(cmp));
 
-			return dynamic_cast<Comp*>(m_components[tidx].back().get());
+			return dynamic_cast<Cmp*>(m_components[tidx].back().get());
 		}
 
 		// Returns ptr because a ref can't be null
 		// Returned pointer is non-owning
 		// TODO: Find if there's a better way
-		template<class Comp>
-		Comp* getComponent() const {
-			auto pair = m_components.find(typeid(Comp));
+		template<class Cmp>
+		Cmp* getComponent() const {
+			auto pair = m_components.find(typeid(Cmp));
 			if (pair == m_components.end()) {
 				return nullptr;
 			}
 			if (pair->second.size() == 0) {
 				return nullptr;
 			}
-			return dynamic_cast<Comp*>(pair->second.front().get());
+			return dynamic_cast<Cmp*>(pair->second.front().get());
 		}
 
 		std::vector<Component*> getComponents() const;
@@ -78,41 +78,41 @@ namespace RuamEngine
 			return this->m_id == obj.m_id;
 		}
 
-		template<class Comp>
-		std::vector<Comp*> getComponentsOfType() const
+		template<class Cmp>
+		std::vector<Cmp*> getComponentsOfType() const
 		{
-			std::vector<Comp*> comps;
-			auto pair = m_components.find(typeid(Comp));
+			std::vector<Cmp*> comps;
+			auto pair = m_components.find(typeid(Cmp));
 			if (pair != m_components.end())
 			{
     			for (auto& cmp : pair->second)
     			{
-    				comps.push_back(dynamic_cast<Comp*>(cmp.get()));
+    				comps.push_back(dynamic_cast<Cmp*>(cmp.get()));
     			}
 			}
 			return comps;
 		}
 
-		template<class Comp>
+		template<class Cmp>
 		void removeComponent() {
-			auto pair = m_components.find(typeid(Comp));
+			auto pair = m_components.find(typeid(Cmp));
 			if (pair == m_components.end() || pair->second.size() == 0)
 			{
-				std::cerr << "Couldn't find and destroy a component of type " << typeid(Comp).name() <<" with id " << " in the entity called" << m_name << "with id " << m_id << "\n";
+				std::cerr << "Couldn't find and destroy a component of type " << typeid(Cmp).name() <<" with id " << " in the entity called" << m_name << "with id " << m_id << "\n";
 				return;
 			}
 			pair->second.front()->destroy();
 			// removeComponentInJustCreatedComponents<Comp>();
 		}
 
-		template<class Comp>
+		template<class Cmp>
 		void removeComponent(Component& comp) {
-			auto pair = m_components.find(typeid(Comp));
+			auto pair = m_components.find(typeid(Cmp));
 			if (pair == m_components.end()) return;
 			if (pair->second.size() == 0) return;
 			auto cmp = std::find(pair->second.begin(), pair->second.end(), comp);
 			if (cmp != pair->second.end()) cmp->get()->destroy();
-			else std::cerr << "Couldn't find and destroy a component of type " << typeid(Comp).name() <<" with id " << comp.id() << " in the entity called" << m_name << "with id " << m_id << "\n";
+			else std::cerr << "Couldn't find and destroy a component of type " << typeid(Cmp).name() <<" with id " << comp.id() << " in the entity called" << m_name << "with id " << m_id << "\n";
 		}
 
 		unsigned int id() const;

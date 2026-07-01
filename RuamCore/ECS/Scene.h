@@ -53,19 +53,14 @@ namespace RuamEngine
 	private:
 
 		void forEachActiveEntity(std::function<void(Entity*)> fn);
-		void forEachActiveComponentToStart(unsigned int entityId, std::type_index cmpType, std::vector<Component*>& cmpVec, std::function<void(Component*)> fn);
+		void forEachActiveComponentToStart(std::vector<Component*>& cmpVec, std::function<void(Component*)> fn);
 
-		void handlePendingEntities();
 		// Checks all entities and components, and if they have their destroyed flag as true, they are destroyed
 		void flushDestroyedComponents();
 		void flushDestroyedEntities();
 
-		// Entities created in the previous frame and that will be added to the scene in the next one
-		std::vector<std::unique_ptr<Entity>> m_pendingEntities;
-
 		// Key of the object that owns the component, then the type of component and you get a vector of components
-	    std::map<unsigned int, std::map<std::type_index, std::vector<Component*>>> m_componentsToStart;
-	    std::map<unsigned int, std::map<std::type_index, std::vector<Component*>>> m_justCreatedComponents;
+	    std::vector<Component*> m_componentsToStart = {};
 
 	    std::vector<std::unique_ptr<Entity>> m_entities;
 		const std::string m_name;

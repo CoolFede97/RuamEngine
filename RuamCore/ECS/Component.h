@@ -62,10 +62,8 @@ namespace RuamEngine
 
 		bool enabled() const { return m_enabled; }
 		bool destroyFlag() const { return m_destroyFlag; }
-		bool createdOnThisFrame() const { return m_createdOnThisFrame; }
 
 		void destroy() { m_destroyFlag = true; }
-		void markNotCreatedOnThisFrame() { m_createdOnThisFrame = false; }
 		void setEnabled(bool status) { m_enabled = status; };
 
 		virtual std::vector<FieldInfo> fields() { return {}; };
@@ -84,14 +82,14 @@ namespace RuamEngine
 		const unsigned int m_id;
 		static unsigned int s_idCount;
 		bool m_enabled = true;
-		bool m_createdOnThisFrame = true;
-		bool m_startedFlag = false;
+		bool m_started = false;
 		bool m_destroyFlag = false;
 
 	public:
         static void ComponentRegister();
     	virtual std::string name() const { return "Component"; }
     	friend class ComponentsInitializer;
+        friend class Scene;
 	};
 
 	using ComponentUPtr = std::unique_ptr<Component>;

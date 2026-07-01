@@ -28,7 +28,7 @@ namespace RuamEngine
 		entity->m_parentScene = this;
 		entity->m_transform = entity->addComponent<Transform>();
 		Entity* entity_ptr = entity.get();
-	    m_pendingEntities.push_back(std::move(entity));
+	    m_entities.push_back(std::move(entity));
 	    return entity_ptr;
 	}
 
@@ -39,7 +39,7 @@ namespace RuamEngine
 		entity->m_transform = entity->addComponent<Transform>();
 		entity->setName(name);
 		Entity* entity_ptr = entity.get();
-		m_pendingEntities.push_back(std::move(entity));
+		m_entities.push_back(std::move(entity));
 		return entity_ptr;
 	}
 
@@ -53,7 +53,7 @@ namespace RuamEngine
 	    auto index = m_entities.cbegin();
 	    std::advance(index, idx);
 		Entity* entity_ptr = entity.get();
-		m_pendingEntities.push_back(std::move(entity));
+		m_entities.push_back(std::move(entity));
 		return entity_ptr;
 	}
 
@@ -89,18 +89,12 @@ namespace RuamEngine
 	{
 	    // START ----------------------------------------------------------------------------------------------------
 
-		m_componentsToStart = m_justCreatedComponents;
-		m_justCreatedComponents.clear();
-		for (auto& [entityId, map] : m_componentsToStart)
-		{
-			for (auto& [cmpType, cmpVec] : map)
-			{
-				if (Engine::State()==EngineState::GameMode) forEachActiveComponentToStart(entityId, cmpType, cmpVec, [](Component* cmp){cmp->start();});
-				forEachActiveComponentToStart(entityId, cmpType, cmpVec, [](Component* cmp){cmp->renderStart();});
-				for ( auto& cmp : cmpVec) cmp->markNotCreatedOnThisFrame();
-			}
-		}
-		m_componentsToStart.clear();
+		if (Engine::State()==EngineState::GameMode) forEachActiveComponentToStart(m_componentsToStart, [](Component* cmp){cmp->start();});
+		forEachActiveComponentToStart(m_componentsToStart, [](Component* cmp){cmp->renderStart();});
+        m_componentsToStart.erase(
+        std::remove_if(m_componentsToStart.begin(), m_componentsToStart.end(), [](Component* cmp){ return cmp->m_started; }),
+        m_componentsToStart.end()
+        );
 
 		// UPDATE ---------------------------------------------------------------------------------------------------
 
@@ -110,8 +104,10 @@ namespace RuamEngine
 
 	void Scene::forEachActiveEntity(std::function<void(Entity*)> fn)
 	{
-		for (auto& entity : m_entities)
+	    int entityCount = m_entities.size();
+		for (int entityIndex = 0; entityIndex < entityCount; entityIndex++)
 		{
+		    auto& entity = m_entities[entityIndex];
        		if (SceneManager::SceneChange()) return;
 	        if (entity == nullptr)
 	        {
@@ -124,7 +120,7 @@ namespace RuamEngine
     	}
 	}
 
-	void Scene::forEachActiveComponentToStart(unsigned int entityId, std::type_index cmpType, std::vector<Component*>& cmpVec, std::function<void(Component*)> fn)
+	void Scene::forEachActiveComponentToStart(std::vector<Component*>& cmpVec, std::function<void(Component*)> fn)
 	{
 		for (auto& cmp : cmpVec)
 		{
@@ -132,21 +128,14 @@ namespace RuamEngine
 
 			if (cmp == nullptr)
 			{
-				std::cerr << "Error: One component from m_justCreatedComponents is null! (entity id: " << entityId << "), (Component type: " << cmpType.name() << ")\n";
+				std::cerr << "Error: One component from m_componentsToStart is null! (entity id: " << cmp->entity()->id() << ", entidy name: " << cmp->entity()->name() << "), (Component type: " << cmp->name() << ")\n";
 				continue;
 			}
 			if (cmp->destroyFlag()) continue;
 			if (!cmp->enabled()) continue;
 			fn(cmp);
+			cmp->m_started = true;
 		}
-	}
-	void Scene::handlePendingEntities()
-	{
-	    for (auto& entity : m_pendingEntities)
-		{
-		    m_entities.push_back(std::move(entity));
-		}
-		m_pendingEntities.clear();
 	}
 	void Scene::flushDestroyedEntities()
 	{

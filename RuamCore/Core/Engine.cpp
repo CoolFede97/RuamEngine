@@ -83,8 +83,6 @@ namespace RuamEngine
 
             if (scene)
             {
-                scene->handlePendingEntities();
-
                 scene->flushDestroyedEntities(); // This one goes first because it filters more components
                 scene->flushDestroyedComponents();
             }

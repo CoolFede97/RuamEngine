@@ -29,25 +29,26 @@ namespace RuamEngine
 			std::cout << "ERROR::ASSIMP::" << importer.GetErrorString() << "\n";
 			return;
 		}
-		processNode(scene->mRootNode, scene);
+		aiMatrix4x4 identityMatrix;
+		processNode(scene->mRootNode, scene, identityMatrix);
 	}
-	void Model::processNode(aiNode* node, const aiScene* scene)
+	void Model::processNode(aiNode* node, const aiScene* scene, aiMatrix4x4 parentTransform)
 	{
-
+	    aiMatrix4x4 globalPos = parentTransform * node->mTransformation;
 		for (unsigned int i = 0; i < node->mNumMeshes; i++)
 		{
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-			m_meshes.push_back(processMesh(mesh, scene));
+			m_meshes.push_back(processMesh(mesh, scene, globalPos));
 		}
 
 		for (unsigned int i = 0; i < node->mNumChildren; i++)
 		{
-			processNode(node->mChildren[i], scene);
+			processNode(node->mChildren[i], scene, globalPos);
 		}
 	}
 
 
-	MeshSPtr Model::processMesh(aiMesh* mesh, const aiScene* scene)
+	MeshSPtr Model::processMesh(aiMesh* mesh, const aiScene* scene, aiMatrix4x4 globalPos)
 	{
 		std::vector<Vertex> vertices;
 		std::vector<unsigned int> indices;
@@ -57,12 +58,10 @@ namespace RuamEngine
 
 			Vertex vertex;
 
-			glm::vec3 vector;
+			aiVector3D pos = globalPos * mesh->mVertices[i];
+			vertex.m_position = { pos.x, pos.y, pos.z };
 
-			vector.x = mesh->mVertices[i].x;
-			vector.y = mesh->mVertices[i].y;
-			vector.z = mesh->mVertices[i].z;
-			vertex.m_position = vector;
+			glm::vec3 vector;
 
 			if (mesh->mTextureCoords[0])
 			{
@@ -102,20 +101,19 @@ namespace RuamEngine
 		}
 		if (!materialFound)
 		{
-    		std::string relativeDiffusePath = diffuseTexDefaultPath;
-    		std::string relativeSpecularPath = specularTexDefaultPath;
-    		std::string relativeReflectionPath = reflectionTexDefaultPath;
-
+            Texture2DSPtr diffuse;
+            Texture2DSPtr specular;
+            Texture2DSPtr reflection;
     		if (mesh->mMaterialIndex >= 0)
     		{
     			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
     			aiString texAiPath;
 
-                tryGetTexturePath(aiTextureType_DIFFUSE, material, texAiPath, relativeDiffusePath);
-                tryGetTexturePath(aiTextureType_SPECULAR, material, texAiPath, relativeSpecularPath);
-                tryGetTexturePath(aiTextureType_REFLECTION, material, texAiPath, relativeReflectionPath);
+                diffuse = getTexture2D(aiTextureType_DIFFUSE, material, texAiPath, *scene);
+                specular = getTexture2D(aiTextureType_SPECULAR, material, texAiPath, *scene);
+                reflection = getTexture2D(aiTextureType_REFLECTION, material, texAiPath, *scene);
 
-                sharedMeshMaterial = ResourceManager::CreateMaterial(relativeDiffusePath, relativeSpecularPath, relativeReflectionPath);
+                sharedMeshMaterial = ResourceManager::CreateMaterial(diffuse, specular, reflection);
                 m_localToGlobalMaterials.emplace(mesh->mMaterialIndex, sharedMeshMaterial);
     		}
     		else std::cout << "No materials\n";
@@ -124,21 +122,27 @@ namespace RuamEngine
 		return std::make_shared<Mesh>(vertices, indices, sharedMeshMaterial);
 	}
 
-	void Model::tryGetTexturePath(aiTextureType texType, aiMaterial* material, aiString& texAiPath, std::string& outRelativePath)
+	Texture2DSPtr Model::getTexture2D(aiTextureType texType, aiMaterial* material, aiString& texAiPath, const aiScene& scene)
 	{
         if (material->GetTexture(texType, 0, &texAiPath) == AI_SUCCESS)
         {
             std::string assimpPath = texAiPath.C_Str();
-            if (assimpPath.empty() || assimpPath[0] == '*')
+            if (assimpPath.empty())
             {
-          		std::cout << "This kind of texture path is not supported: " << assimpPath << "\n";
+          		std::cout << "Assimp path empty when getting texture from model\n";
           		ASSERT(false);
+            }
+            else if (assimpPath[0] == '*')
+            {
+                const aiTexture* aiTex = scene.GetEmbeddedTexture(texAiPath.C_Str());
+                return ResourceManager::LoadTexture2D(m_relativePath+assimpPath, aiTex);
             }
             else
             {
           		std::string absoluteModelPath = std::filesystem::path(m_globalPath).parent_path().string();
-          		outRelativePath = relativizePath(absoluteModelPath) + "/" + assimpPath;
+                return ResourceManager::LoadTexture2D(relativizePath(absoluteModelPath) + "/" + assimpPath);
             }
         }
+        return ResourceManager::LoadTexture2D(specularTexDefaultPath);
 	}
 }

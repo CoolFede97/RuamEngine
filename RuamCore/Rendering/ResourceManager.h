@@ -33,48 +33,26 @@ namespace RuamEngine
         static void Shutdown();
 
         // Textures handling ---------------------------------------------------------------------------------
-        template <typename T>
-        static TextureSPtr LoadTexture(const std::string& relativePath)
-        {
-            auto it = s_textureCache.find(relativePath);
-            if (it != s_textureCache.end())
-            {
-                if (!it->second.expired()) return it->second.lock();
-                else s_textureCache.erase(it);
-            }
+        static Texture2DSPtr LoadTexture2D(const std::string& relativePath);
 
-            TextureSPtr newTexture = std::make_shared<T>(relativePath);
+        static Texture2DSPtr LoadTexture2D(const std::string& modelTexPath, const aiTexture* tex);
 
-            s_textureCache[relativePath] = newTexture;
-            return newTexture;
-        }
-        template <typename T>
-        static TextureSPtr LoadTexture(const std::vector<std::string>& relativePaths)
-        {
-            std::string unifiedPath = unifyPaths(relativePaths);
-            auto it = s_textureCache.find(unifiedPath);
-            if (it != s_textureCache.end())
-            {
-                if (!it->second.expired()) return it->second.lock();
-                else s_textureCache.erase(it);
-            }
+        static CubemapSPtr LoadCubemap(const std::vector<std::string>& relativePaths);
+        static CubemapSPtr LoadCubemap(const std::string& relativePath);
 
-            TextureSPtr newTexture = std::make_shared<T>(relativePaths);
-            s_textureCache[unifiedPath] = newTexture;
-            return newTexture;
-        }
-
-        static TextureSPtr GetTexture(const std::string& relativePath);
-        static TextureSPtr GetTexture(const std::vector<std::string>& relativePaths);
-        static void RemoveTextureIfExpired(const std::string& relativePath);
-        static void RemoveTextureIfExpired(const std::vector<std::string>& relativePaths);
+        static TextureSPtr GetTexture2D(const std::string& relativePath);
+        static CubemapSPtr GetCubemap(const std::vector<std::string>& relativePaths);
+        static CubemapSPtr GetCubemap(const std::string& relativePath);
+        static void RemoveTexture2DIfExpired(const std::string& relativePath);
+        static void RemoveCubemapIfExpired(const std::vector<std::string>& relativePaths);
+        static void RemoveCubemapIfExpired(const std::string& relativePath);
 
         // Model handling ---------------------------------------------------------------------------------
         static ModelSPtr LoadModel(const std::string& relativePath);
         static ModelSPtr GetModel(const std::string& relativePath);
         static void RemoveModelIfExpired(const std::string& relativePath);
         // Material handling ---------------------------------------------------------------------------------
-        static MaterialSPtr CreateMaterial(const std::string& diffuseTexPath, const std::string& specularTexPath = diffuseTexDefaultPath, const std::string& reflectionTexPath = reflectionTexDefaultPath);
+        static MaterialSPtr CreateMaterial(Texture2DSPtr diffuse, Texture2DSPtr specular, Texture2DSPtr reflection);
         static MaterialSPtr GetMaterial(unsigned int materialId);
         static void RemoveMaterialIfExpired(unsigned int materialId);
 
@@ -87,7 +65,8 @@ namespace RuamEngine
     private:
 
 public:
-        static std::unordered_map<std::string, TextureWPtr> s_textureCache;
+        static std::unordered_map<std::string, Texture2DWPtr> s_texture2DCache;
+        static std::unordered_map<std::string, CubemapWPtr> s_cubemapsCache;
         static std::unordered_map<std::string, ModelWPtr> s_modelCache;
         static std::unordered_map<unsigned int, MaterialWPtr> s_materialCache;
         static std::unordered_map<ShaderProgramName, ShaderProgramWPtr> s_shaderProgramsCache;

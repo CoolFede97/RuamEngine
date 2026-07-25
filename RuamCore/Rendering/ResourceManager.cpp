@@ -8,53 +8,129 @@
 #include <set>
 namespace RuamEngine
 {
-    std::unordered_map<unsigned int, MaterialWPtr> ResourceManager::s_materialCache;
-    std::unordered_map<std::string, TextureWPtr> ResourceManager::s_textureCache;
-    std::unordered_map<std::string, ModelWPtr> ResourceManager::s_modelCache;
-    std::unordered_map<ShaderProgramName, ShaderProgramWPtr> ResourceManager::s_shaderProgramsCache;
+    std::unordered_map<std::string, Texture2DWPtr> ResourceManager::s_texture2DCache = {};
+    std::unordered_map<std::string, CubemapWPtr> ResourceManager::s_cubemapsCache = {};
+    std::unordered_map<std::string, ModelWPtr> ResourceManager::s_modelCache = {};
+    std::unordered_map<unsigned int, MaterialWPtr> ResourceManager::s_materialCache = {};
+    std::unordered_map<ShaderProgramName, ShaderProgramWPtr> ResourceManager::s_shaderProgramsCache = {};
     void ResourceManager::Init()
     {
-        LoadTexture<Texture2D>("RuamCore/Assets/Sprites/DefaultSprite.png");
+        LoadTexture2D("RuamCore/Assets/Sprites/DefaultSprite.png");
     }
 
     // Texture handling ---------------------------------------------------------------------------------
 
-    // Returns nullptr if the texture is not found
-    TextureSPtr ResourceManager::GetTexture(const std::string &relativePath)
+    Texture2DSPtr ResourceManager::LoadTexture2D(const std::string& relativePath)
     {
-        auto it = s_textureCache.find(relativePath);
-        if (it != s_textureCache.end()) return it->second.lock();
-        return nullptr;
+        auto it = s_texture2DCache.find(relativePath);
+        if (it != s_texture2DCache.end())
+        {
+            if (!it->second.expired()) return it->second.lock();
+            else s_texture2DCache.erase(it);
+        }
+
+        Texture2DSPtr newTexture = std::make_shared<Texture2D>(relativePath);
+
+        s_texture2DCache[relativePath] = newTexture;
+        return newTexture;
+    }
+    Texture2DSPtr ResourceManager::LoadTexture2D(const std::string& modelTexPath, const aiTexture* tex)
+    {
+        auto it = s_texture2DCache.find(modelTexPath);
+        if (it != s_texture2DCache.end())
+        {
+            if (!it->second.expired()) return GetShared<Texture2D>(it->second);
+            else s_texture2DCache.erase(it);
+        }
+
+        Texture2DSPtr newTexture = std::make_shared<Texture2D>(modelTexPath, tex);
+
+        s_texture2DCache[modelTexPath] = newTexture;
+        return newTexture;
     }
 
-    // Returns nullptr if the texture is not found
-    TextureSPtr ResourceManager::GetTexture(const std::vector<std::string>& relativePaths)
+    CubemapSPtr ResourceManager::LoadCubemap(const std::string& relativePath)
+    {
+        auto it = s_cubemapsCache.find(relativePath);
+        if (it != s_cubemapsCache.end())
+        {
+            if (!it->second.expired()) return it->second.lock();
+            else s_cubemapsCache.erase(it);
+        }
+
+        CubemapSPtr newCubemap = std::make_shared<Cubemap>(relativePath);
+        s_cubemapsCache[relativePath] = newCubemap;
+        return newCubemap;
+    }
+    CubemapSPtr ResourceManager::LoadCubemap(const std::vector<std::string>& relativePaths)
     {
         std::string unifiedPath = unifyPaths(relativePaths);
-        auto it = s_textureCache.find(unifiedPath);
-        if (it != s_textureCache.end()) return it->second.lock();
+        auto it = s_cubemapsCache.find(unifiedPath);
+        if (it != s_cubemapsCache.end())
+        {
+            if (!it->second.expired()) return it->second.lock();
+            else s_cubemapsCache.erase(it);
+        }
+
+        CubemapSPtr newCubemap = std::make_shared<Cubemap>(relativePaths);
+        s_cubemapsCache[unifiedPath] = newCubemap;
+        return newCubemap;
+    }
+
+    // Returns nullptr if the texture is not found
+    TextureSPtr ResourceManager::GetTexture2D(const std::string &relativePath)
+    {
+        auto it = s_texture2DCache.find(relativePath);
+        if (it != s_texture2DCache.end()) return it->second.lock();
         return nullptr;
     }
 
-    void ResourceManager::RemoveTextureIfExpired(const std::string& relativePath)
+    // Returns nullptr if the texture is not found
+    CubemapSPtr ResourceManager::GetCubemap(const std::vector<std::string>& relativePaths)
     {
-        auto it = s_textureCache.find(relativePath);
+        std::string unifiedPath = unifyPaths(relativePaths);
+        auto it = s_cubemapsCache.find(unifiedPath);
+        if (it != s_cubemapsCache.end()) return it->second.lock();
+        return nullptr;
+    }
 
-        if (it != s_textureCache.end() && it->second.expired())
+    CubemapSPtr ResourceManager::GetCubemap(const std::string& relativePath)
+    {
+        auto it = s_cubemapsCache.find(relativePath);
+        if (it != s_cubemapsCache.end()) return it->second.lock();
+        return nullptr;
+    }
+
+    void ResourceManager::RemoveTexture2DIfExpired(const std::string& relativePath)
+    {
+        auto it = s_texture2DCache.find(relativePath);
+
+        if (it != s_texture2DCache.end() && it->second.expired())
         {
-            s_textureCache.erase(relativePath);
-            std::cout << "Texture of relative path " << relativePath << " destroyed\n";
+            s_texture2DCache.erase(relativePath);
+            std::cout << "Texture2D of relative path " << relativePath << " destroyed\n";
         }
     }
-    void ResourceManager::RemoveTextureIfExpired(const std::vector<std::string>& relativePaths)
+    void ResourceManager::RemoveCubemapIfExpired(const std::vector<std::string>& relativePaths)
     {
         std::string relativePath = unifyPaths(relativePaths);
-        auto it = s_textureCache.find(relativePath);
+        auto it = s_cubemapsCache.find(relativePath);
 
-        if (it != s_textureCache.end() && it->second.expired())
+        if (it != s_cubemapsCache.end() && it->second.expired())
         {
-            s_textureCache.erase(relativePath);
-            std::cout << "Texture of relative path " << relativePath << " destroyed\n";
+            s_cubemapsCache.erase(relativePath);
+            std::cout << "Cubemap of unified path " << relativePath << " destroyed\n";
+        }
+    }
+
+    void ResourceManager::RemoveCubemapIfExpired(const std::string& relativePath)
+    {
+        auto it = s_cubemapsCache.find(relativePath);
+
+        if (it != s_cubemapsCache.end() && it->second.expired())
+        {
+            s_cubemapsCache.erase(relativePath);
+            std::cout << "Cubemap of path " << relativePath << " destroyed\n";
         }
     }
 
@@ -95,12 +171,9 @@ namespace RuamEngine
     }
     // Material handling ---------------------------------------------------------------------------------
 
-    MaterialSPtr ResourceManager::CreateMaterial(const std::string& diffuseTexPath, const std::string& specularTexPath, const std::string& reflectionTexPath)
+    MaterialSPtr ResourceManager::CreateMaterial(Texture2DSPtr diffuse, Texture2DSPtr specular, Texture2DSPtr reflection)
     {
-        MaterialSPtr newMaterial = std::make_shared<Material>();
-        newMaterial->m_diffuseTexture = LoadTexture<Texture2D>(diffuseTexPath);
-        newMaterial->m_specularTexture = LoadTexture<Texture2D>(specularTexPath);
-        newMaterial->m_reflectionTexture = LoadTexture<Texture2D>(reflectionTexPath);
+        MaterialSPtr newMaterial = std::make_shared<Material>(diffuse, specular, reflection);
 
         s_materialCache[newMaterial->id()] = newMaterial;
 		return newMaterial;

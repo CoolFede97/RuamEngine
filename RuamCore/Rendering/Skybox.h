@@ -5,6 +5,7 @@
 #include "Material.h"
 #include "SSBO.h"
 #include "VertexArray.h"
+#include "Cubemap.h"
 namespace RuamEngine
 {
 	class Skybox
@@ -12,7 +13,7 @@ namespace RuamEngine
 	    static ShaderProgramSPtr s_shaderProgram;
 		static VertexArrayUPtr m_vertexArray;
 	    static bool s_initialized;
-		static TextureSPtr s_cubemap;
+		static CubemapSPtr s_cubemap;
 		static SSBOUPtr<Vertex> s_verticesSSBO;
 		static SSBOUPtr<unsigned int> s_indicesSSBO;
 

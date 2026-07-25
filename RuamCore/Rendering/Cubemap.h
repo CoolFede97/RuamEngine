@@ -11,7 +11,7 @@ namespace RuamEngine
 	private:
 		int m_faceLength, m_BPP; //The dimensions of each side are expected to be the same. BPP means bits per pixel
 		// In case the cubemap is created with 6 individual textures, this member will have 6 elements.
-		std::vector<std::string> m_filePaths;
+		std::vector<std::string> m_paths;
 	public:
 		std::vector<unsigned char*> m_localBuffers;
 		Cubemap(const std::vector<std::string>& relativePaths); // Relative paths from the project root directory
@@ -24,7 +24,8 @@ namespace RuamEngine
 		GLenum texType() const override { return GL_TEXTURE_CUBE_MAP; }
 
 		int faceLength() const { return m_faceLength; }
-		std::vector<std::string> paths() const { return m_filePaths; }
+		std::vector<std::string> paths() const { return m_paths; }
 	};
-	using CubemapPtr = std::shared_ptr<Cubemap>;
+	using CubemapSPtr = std::shared_ptr<Cubemap>;
+	using CubemapWPtr = std::weak_ptr<Cubemap>;
 }

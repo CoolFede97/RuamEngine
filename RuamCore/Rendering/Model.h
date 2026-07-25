@@ -32,10 +32,10 @@ namespace RuamEngine
 		unsigned int m_instanceId;
 		static unsigned int s_idCount;
 		void loadModel(const std::string& path);
-		void processNode(aiNode* node, const aiScene* scene);
-		MeshSPtr processMesh(aiMesh* mesh, const aiScene* scene);
+		void processNode(aiNode* node, const aiScene* scene, aiMatrix4x4 parentTransform);
+		MeshSPtr processMesh(aiMesh* mesh, const aiScene* scene, aiMatrix4x4 globalPos);
 
-		void tryGetTexturePath(aiTextureType texType, aiMaterial* material, aiString& texAiPath, std::string& outRelativePath);
+		Texture2DSPtr getTexture2D(aiTextureType texType, aiMaterial* material, aiString& texAiPath, const aiScene& scene);
 	};
 	using ModelSPtr = std::shared_ptr<Model>;
 	using ModelWPtr = std::weak_ptr<Model>;

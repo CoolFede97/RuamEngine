@@ -23,6 +23,7 @@ uniform float u_lightOffset;
 void main()
 {
     vec4 diffuse = texture(u_diffuse, frag_uv);
+    if (diffuse.a < 0.5) discard;
     vec4 specular = texture(u_specular, frag_uv);
     vec4 reflection = texture(u_reflection, frag_uv);
 

@@ -5,6 +5,6 @@ namespace RuamEngine
 {
     Texture::~Texture()
     {
-        ResourceManager::RemoveTextureIfExpired(m_filePath);
+        std::cout << "This destructor should never be called\n";
     }
 }

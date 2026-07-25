@@ -2,6 +2,7 @@
 
 #include "RenderingCore.h"
 #include "Texture.h"
+#include "assimp/texture.h"
 
 namespace RuamEngine
 {
@@ -13,6 +14,7 @@ namespace RuamEngine
 	public:
 		unsigned char* m_localBuffer;
 		Texture2D(const std::string& relativePath); // Relative path from the project root directory
+		Texture2D(const std::string& modelTexPath, const aiTexture* aiTex);
 		~Texture2D();
 
 		void bind(unsigned int slot = 0) const override;
@@ -23,5 +25,6 @@ namespace RuamEngine
 		int GetWidth() const { return m_width; }
 		int GetHeight() const { return m_height; }
 	};
-	using Texture2DPtr = std::shared_ptr<Texture2D>;
+	using Texture2DSPtr = std::shared_ptr<Texture2D>;
+	using Texture2DWPtr = std::weak_ptr<Texture2D>;
 }

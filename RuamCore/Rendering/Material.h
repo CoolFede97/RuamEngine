@@ -9,7 +9,7 @@ namespace RuamEngine
     {
     public:
 
-        Material();
+        Material(Texture2DSPtr diffuse, Texture2DSPtr specular, Texture2DSPtr reflection);
         ~Material();
         Vec4 baseColor = Vec4(1.0f, 1.0f, 1.0f, 1.0f); // blanco por defecto
 

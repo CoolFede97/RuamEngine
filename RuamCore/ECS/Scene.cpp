@@ -89,7 +89,10 @@ namespace RuamEngine
 	{
 	    // START ----------------------------------------------------------------------------------------------------
 
-		if (Engine::State()==EngineState::GameMode) forEachActiveComponentToStart(m_componentsToStart, [](Component* cmp){cmp->start();});
+		if (Engine::State()==EngineState::GameMode)
+		{
+		    forEachActiveComponentToStart(m_componentsToStart, [](Component* cmp){cmp->start();});
+		}
 		forEachActiveComponentToStart(m_componentsToStart, [](Component* cmp){cmp->renderStart();});
         m_componentsToStart.erase(
         std::remove_if(m_componentsToStart.begin(), m_componentsToStart.end(), [](Component* cmp){ return cmp->m_started; }),

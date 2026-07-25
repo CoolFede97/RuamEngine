@@ -9,7 +9,7 @@ namespace RuamEngine
     class Texture
     {
     protected:
-        std::string m_filePath;
+        std::string m_path;
         GLuint m_glName = 0;
         unsigned int m_rendererIndex = 0; // Index in the handle vector
         GLuint64 m_handle = 0;
@@ -23,7 +23,7 @@ namespace RuamEngine
         virtual GLuint glName() const { return m_glName; }
         virtual GLenum texType() const = 0;
 
-        virtual std::string path() const { return m_filePath; }
+        virtual std::string path() const { return m_path; }
 
     };
 

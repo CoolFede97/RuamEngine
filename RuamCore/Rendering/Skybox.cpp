@@ -1,5 +1,4 @@
 #include "Skybox.h"
-#include "Cubemap.h"
 #include "Renderer.h"
 #include "RenderingConstants.h"
 #include "RenderingCore.h"
@@ -15,7 +14,7 @@ namespace RuamEngine
     VertexArrayUPtr Skybox::m_vertexArray;
     SSBOUPtr<Vertex> Skybox::s_verticesSSBO;
     SSBOUPtr<unsigned int> Skybox::s_indicesSSBO;
-    TextureSPtr Skybox::s_cubemap = nullptr;
+    CubemapSPtr Skybox::s_cubemap = nullptr;
 
     std::vector<Vertex> Skybox::s_vertices = Vertex::createCube();
 
@@ -47,11 +46,11 @@ namespace RuamEngine
 
     void Skybox::ChangeCubemap(const std::string& cubemapPath)
     {
-        s_cubemap = ResourceManager::LoadTexture<Cubemap>(cubemapPath);
+        s_cubemap = ResourceManager::LoadCubemap(cubemapPath);
     }
     void Skybox::ChangeCubemap(const std::vector<std::string>& cubemapPaths)
     {
-        s_cubemap = ResourceManager::LoadTexture<Cubemap>(cubemapPaths);
+        s_cubemap = ResourceManager::LoadCubemap(cubemapPaths);
     }
 
     void Skybox::Init()
@@ -65,7 +64,7 @@ namespace RuamEngine
         s_verticesSSBO->submitData();
         s_indicesSSBO->pushData(s_indices);
         s_indicesSSBO->submitData();
-        s_cubemap = ResourceManager::LoadTexture<Cubemap>({
+        s_cubemap = ResourceManager::LoadCubemap({
 			skyboxDefaultPath,skyboxDefaultPath,skyboxDefaultPath,skyboxDefaultPath,skyboxDefaultPath,skyboxDefaultPath
 			});
     }

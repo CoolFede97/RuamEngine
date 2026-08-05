@@ -1,3 +1,4 @@
+#include "AABB.h"
 #include "Engine.h"
 #include "Renderer.h"
 #include "FrameBuffer.h"
@@ -120,14 +121,14 @@ namespace RuamEngine
             GLCall(glDisable(GL_BLEND));
         }
     }
-    void Renderer::Draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
+    void Renderer::Draw(Camera& camera)
     {
-        Skybox::Draw(viewMatrix, projectionMatrix);
+        Skybox::Draw(camera.viewMatrix(), camera.projectionMatrix());
         std::vector<ShaderProgramName> shaderProgramsToErase = {};
         for (auto& [shaderName, map] : s_modelRUsMap)
         {
             ShaderProgramSPtr shaderProgram = ResourceManager::GetShaderProgram(shaderName);
-            if (shaderProgram) shaderProgram->updateCameraMatrices(viewMatrix, projectionMatrix);
+            if (shaderProgram) shaderProgram->updateCameraMatrices(camera.viewMatrix(), camera.projectionMatrix());
             else
             {
                 shaderProgramsToErase.push_back(shaderName);
@@ -136,22 +137,26 @@ namespace RuamEngine
             for (auto& [modelPath, matricesSSBO] : map)
             {
                 ModelSPtr model = ResourceManager::GetModel(modelPath);
-                if (matricesSSBO)
+                if (!model || !matricesSSBO) continue;
+                std::vector<glm::mat4> seenInstances = {};
+                for (auto& matrix : matricesSSBO->data())
                 {
-                    matricesSSBO->submitData();
-                    matricesSSBO->bindBufferBase(SSBOType::modelMatrices);
-                }
-                if (model)
-                {
-                    for (MeshSPtr mesh : model->m_meshes)
+                    if (camera.canSeeBox(TransformAABB(model->aabb(), matrix)))
                     {
-                        mesh->m_vertexArray->bind();
-                        GlobalLight::LoadLightSettings(shaderProgram);
-                        shaderProgram->loadMaterial(mesh->m_material.get());
-                        mesh->submitData();
-                        mesh->bindBuffersBase();
-                        GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, mesh->m_indices->currentSize()/sizeof(unsigned int), matricesSSBO->m_data.size()));
+                        seenInstances.push_back(matrix);
                     }
+                }
+                if (seenInstances.empty()) continue;
+                matricesSSBO->submitExternalData(seenInstances);
+                matricesSSBO->bindBufferBase(SSBOType::modelMatrices);
+                for (MeshSPtr mesh : model->m_meshes)
+                {
+                    mesh->m_vertexArray->bind();
+                    GlobalLight::LoadLightSettings(shaderProgram);
+                    shaderProgram->loadMaterial(mesh->m_material.get());
+                    mesh->submitData();
+                    mesh->bindBuffersBase();
+                    GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, mesh->m_indices->currentSize()/sizeof(unsigned int), seenInstances.size()));
                 }
             }
         }

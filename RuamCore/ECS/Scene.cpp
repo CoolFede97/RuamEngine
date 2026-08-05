@@ -111,14 +111,12 @@ namespace RuamEngine
 		for (int entityIndex = 0; entityIndex < entityCount; entityIndex++)
 		{
 		    auto& entity = m_entities[entityIndex];
-       		if (SceneManager::SceneChange()) return;
 	        if (entity == nullptr)
 	        {
 	            std::cerr << "Error: One entity from m_entities is null!\n";
 	            continue;
 	        }
-	        if (entity->destroyFlag()) continue;
-	        if (!entity->isEnabled()) continue;
+	        if (!entity->enabled()) continue;
 			fn(entity.get());
     	}
 	}
@@ -127,14 +125,11 @@ namespace RuamEngine
 	{
 		for (auto& cmp : cmpVec)
 		{
-			if (SceneManager::SceneChange()) return;
-
 			if (cmp == nullptr)
 			{
 				std::cerr << "Error: One component from m_componentsToStart is null! (entity id: " << cmp->entity()->id() << ", entidy name: " << cmp->entity()->name() << "), (Component type: " << cmp->name() << ")\n";
 				continue;
 			}
-			if (cmp->destroyFlag()) continue;
 			if (!cmp->enabled()) continue;
 			fn(cmp);
 			cmp->m_started = true;

@@ -3,6 +3,7 @@
 
 #include "Mesh.h"
 #include "Material.h"
+#include "AABB.h"
 #include "FileFunctions.h"
 #include "assimp/material.h"
 
@@ -10,10 +11,12 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include <climits>
 #include <memory>
 #include <vector>
 #include <string>
 #include <unordered_map>
+#include <limits>
 namespace RuamEngine
 {
 	class Model
@@ -21,12 +24,14 @@ namespace RuamEngine
 	public:
 	    ~Model();
 		Model(const std::string& path);
+		const inline AABB& aabb() const { return m_aabb; };
 		const inline std::string relativePath() const { return m_relativePath; }
 		const inline std::string globalPath() const { return m_globalPath; }
 		std::vector<MeshSPtr> m_meshes;
 		std::unordered_map<unsigned int, MaterialWPtr> m_localToGlobalMaterials = {};
 		inline const unsigned int instanceId() const { return m_instanceId; }
 	private:
+	    AABB m_aabb;
 		std::string m_relativePath;
 		std::string m_globalPath;
 		unsigned int m_instanceId;

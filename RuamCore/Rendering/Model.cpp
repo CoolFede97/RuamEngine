@@ -57,11 +57,17 @@ namespace RuamEngine
 		{
 
 			Vertex vertex;
+			glm::vec3 vector;
 
 			aiVector3D pos = globalPos * mesh->mVertices[i];
 			vertex.m_position = { pos.x, pos.y, pos.z };
+			m_aabb.max.x = std::max(m_aabb.max.x, pos.x);
+			m_aabb.max.y = std::max(m_aabb.max.y, pos.y);
+			m_aabb.max.z = std::max(m_aabb.max.z, pos.z);
 
-			glm::vec3 vector;
+			m_aabb.min.x = std::min(m_aabb.min.x, pos.x);
+			m_aabb.min.y = std::min(m_aabb.min.y, pos.y);
+			m_aabb.min.z = std::min(m_aabb.min.z, pos.z);
 
 			if (mesh->mTextureCoords[0])
 			{

@@ -45,15 +45,13 @@ namespace RuamEngine
 		}
 	}
 
-	// void SceneManager::SetActiveScene(Scene* scene)
-	// {
-	// 	Editor::selectedEntity = nullptr;
-	// 	s_activeScene.reset(scene);
-	// }
-
 	void SceneManager::EnqueueSceneChange(const std::string& sceneName, bool loadCameraPos)
 	{
-		if (s_pendingSceneChange) return;
+		if (s_pendingSceneChange)
+		{
+		    std::cout << "Warning: Trying to enqueue another scene! (" << sceneName << ")\n";
+		    return;
+		}
 		s_pendingSceneChangeName = sceneName;
 		s_pendingLoadCameraPos = loadCameraPos;
 		s_pendingSceneChange = true;

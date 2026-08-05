@@ -128,14 +128,14 @@ namespace RuamEngine
  			{
                 Renderer::s_editorFrameBuffer->bind();
      			Renderer::ClearScreen();
-          		Renderer::Draw(Editor::Camera().viewMatrix(), Editor::Camera().projectionMatrix());
+          		Renderer::Draw(Editor::Camera());
                 Renderer::s_editorFrameBuffer->unbind();
 
                 if (GameCamera::GetMainCamera())
                 {
                     Renderer::s_gameFrameBuffer->bind();
                     Renderer::ClearScreen();
-                   	Renderer::Draw(GameCamera::GetMainCamera()->viewMatrix(), GameCamera::GetMainCamera()->projectionMatrix());
+                   	Renderer::Draw(*GameCamera::GetMainCamera());
                     Renderer::s_gameFrameBuffer->unbind();
                 }
             }

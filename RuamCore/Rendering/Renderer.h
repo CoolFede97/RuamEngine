@@ -73,7 +73,7 @@ namespace RuamEngine
         static void EndDraw();
         static void ClearScreen();
 
-        static void Draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
+        static void Draw(Camera& camera);
 
         static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 

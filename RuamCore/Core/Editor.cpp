@@ -195,6 +195,12 @@ namespace RuamEngine
 		ImGui::Begin("Inspector");
 
 		ImGui::SetWindowFontScale(1.5f);
+		bool entityEnabled = s_selectedEntity->enabled();
+        if (ImGui::Checkbox("##EntityEnabled", &entityEnabled))
+        {
+            s_selectedEntity->setEnabled(entityEnabled);
+        }
+        ImGui::SameLine();
 		ImGui::Text(s_selectedEntity->name().c_str());
 		ImGui::SetWindowFontScale(1.0f);
 		ImGui::SameLine();
@@ -207,6 +213,10 @@ namespace RuamEngine
 			for (Component* com : s_selectedEntity->getComponents())
 			{
 				ImGui::PushID(com->id());
+				bool comEnabled = com->enabled();
+                if (ImGui::Checkbox("##ComponentEnabled", &comEnabled))
+                    com->setEnabled(comEnabled);
+                ImGui::SameLine();
 				bool opened = ImGui::CollapsingHeader(com->name().c_str(), ImGuiTreeNodeFlags_AllowItemOverlap);
 				ImGui::SameLine();
 				if (ImGui::Button("-"))	com->destroy();
@@ -333,7 +343,7 @@ namespace RuamEngine
                 {
                     for (GameCamera* cameraCmp : entity->getComponentsOfType<GameCamera>())
                     {
-                    cameraCmp->setAspectRatio(aspectRatio);
+                        cameraCmp->setAspectRatio(aspectRatio);
                     }
                 }
             }

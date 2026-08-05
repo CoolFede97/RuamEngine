@@ -86,6 +86,12 @@ namespace RuamEngine
 			GLCall(glNamedBufferSubData(m_glName, 0, m_data.size()*sizeof(T), m_data.data()));
 		}
 
+		void submitExternalData(const std::vector<T>& externalData)
+		{
+			ASSERT(externalData.size() * sizeof(T) <= m_maxBytes);
+			GLCall(glNamedBufferSubData(m_glName, 0, externalData.size()*sizeof(T), externalData.data()));
+		}
+
 		// Puts the data from m_data into the actual SSBO
 		void bindBufferBase(const int& binding)
 		{

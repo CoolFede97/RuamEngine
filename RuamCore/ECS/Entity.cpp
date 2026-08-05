@@ -58,7 +58,6 @@ namespace RuamEngine
     		for (int cmpIndex = 0; cmpIndex < componentsAmount; cmpIndex++)
     		{
                 auto& cmp = pair.second[cmpIndex];
-				if (SceneManager::SceneChange()) return;
 				if (!cmp->enabled()) continue;
 
 				fn(cmp.get());
@@ -92,7 +91,7 @@ namespace RuamEngine
 		m_enabled = status;
 	}
 
-	bool Entity::isEnabled() const
+	bool Entity::enabled() const
 	{
 		return m_enabled;
 	}

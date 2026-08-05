@@ -127,7 +127,7 @@ namespace RuamEngine
 
 		void setEnabled(bool status);
 
-		bool isEnabled() const;
+		bool enabled() const;
 
 		bool destroyFlag() const;
 

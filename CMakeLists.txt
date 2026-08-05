@@ -264,8 +264,17 @@ target_link_libraries(Vec PUBLIC Vendor)
 
 # -----------------------------------------------------------------------------------------------------
 
+# Geometry
+
+file (GLOB GEOMETRY_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Maths/Geometry/*.cpp")
+add_library(Geometry STATIC ${GEOMETRY_SRC})
+target_include_directories(Geometry PUBLIC ${CMAKE_SOURCE_DIR}/RuamCore/Maths/Geometry)
+target_link_libraries(Geometry PUBLIC Vendor)
+
+# -----------------------------------------------------------------------------------------------------
+
 add_library(Maths INTERFACE)
-target_link_libraries(Maths INTERFACE Vec)
+target_link_libraries(Maths INTERFACE Vec Geometry)
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
 

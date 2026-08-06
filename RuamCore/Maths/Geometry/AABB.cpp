@@ -4,24 +4,27 @@ namespace RuamEngine
 {
     AABB TransformAABB(const AABB& aabb, const glm::mat4& transform)
     {
-        AABB transformedAABB;
+        glm::vec3 translation = glm::vec3(transform[3]);
+        AABB transformedAABB = {{translation}, { translation}};
 
-        glm::vec3 corners[8] =
+        for (int i = 0; i < 3; i++)
         {
-            {aabb.min.x, aabb.min.y, aabb.min.z}, {aabb.max.x, aabb.min.y, aabb.min.z},
-            {aabb.min.x, aabb.max.y, aabb.min.z}, {aabb.max.x, aabb.max.y, aabb.min.z},
-            {aabb.min.x, aabb.min.y, aabb.max.z}, {aabb.max.x, aabb.min.y, aabb.max.z},
-            {aabb.min.x, aabb.max.y, aabb.max.z}, {aabb.max.x, aabb.max.y, aabb.max.z}
-        };
+            for (int j = 0; j < 3; j++)
+            {
+                float e = transform[j][i] * aabb.min[j];
+                float f = transform[j][i] * aabb.max[j];
 
-        transformedAABB.min = glm::vec3(FLT_MAX);
-        transformedAABB.max = glm::vec3(FLT_MIN);
-
-        for (int i = 0; i < 8; i++)
-        {
-            glm::vec3 transformedVertex = glm::vec3(transform * glm::vec4(corners[i], 1.0f));
-            transformedAABB.min = glm::min(transformedAABB.min, transformedVertex);
-            transformedAABB.max = glm::max(transformedAABB.max, transformedVertex);
+                if (e < f)
+                {
+                    transformedAABB.min[i] += e;
+                    transformedAABB.max[i] += f;
+                }
+                else
+                {
+                    transformedAABB.min[i] += f;
+                    transformedAABB.max[i] += e;
+                }
+            }
         }
         return transformedAABB;
     }

@@ -1,8 +1,6 @@
 TEST: Make sure all components get their start called ('cause some might be disabled when tick is called and still get removed from componentsToStart)
 
-Ask cloude what other way there was for a more efficient AABB with rotations
-
-Program should crash when removing GameCamera component is removed (0 game cameras)
+Program shouldn't crash when removing GameCamera component is removed (0 game cameras)
 
 When right clicking on editor camera, mouse can hover over inspector and those ui elements.
 

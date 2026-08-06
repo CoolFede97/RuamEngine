@@ -17,14 +17,16 @@ namespace RuamEngine
     }
     GameCamera::~GameCamera()
     {
-        if (!SceneManager::ActiveScene() || !s_mainCamera) return;
-        else if (s_mainCamera->id() == id())
+        if (s_mainCamera)
         {
-            EmptyMainCamera();
-            for (Entity* entity : SceneManager::ActiveScene()->getEntities())
+            if (s_mainCamera->id() == id())
             {
-                GameCamera* gameCamera = entity->getComponent<GameCamera>();
-                if (gameCamera) gameCamera->setAsMainCamera();
+                EmptyMainCamera();
+                for (Entity* entity : SceneManager::ActiveScene()->getEntities())
+                {
+                    GameCamera* gameCamera = entity->getComponent<GameCamera>();
+                    if (gameCamera && gameCamera != this) gameCamera->setAsMainCamera();
+                }
             }
         }
     }

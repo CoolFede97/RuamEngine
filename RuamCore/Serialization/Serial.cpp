@@ -17,7 +17,7 @@ namespace RuamEngine
 	    nlohmann::json json;
 		json["TYPE"] = cmp->name();
 		json["m_id"] = cmp->id();
-
+		json["m_enabled"] = cmp->enabled();
 		for (FieldInfo fieldInfo : cmp->fields())
 		{
 		    json[fieldInfo.name] = fieldInfo.serialize();
@@ -30,6 +30,7 @@ namespace RuamEngine
 		{
 			{"m_name", entity->name()},
 			{"m_id", entity->id()},
+			{"m_enabled", entity->enabled()},
 			{"m_components", nlohmann::json::array()}
 		};
 		for (Component* cmp : entity->getComponents())
@@ -70,6 +71,8 @@ namespace RuamEngine
 			{
 				std::string entityName = jsonEntity["m_name"];
 				Entity* entity = scene->createEntity(entityName);
+				bool entityEnabled = jsonEntity["m_enabled"];
+				entity->setEnabled(entityEnabled);
 				if (jsonEntity["m_components"].size()<=1) continue;
 
 				for (const nlohmann::json& jsonCmp : jsonEntity["m_components"])
@@ -85,6 +88,7 @@ namespace RuamEngine
 
 					// Uses the constructor defined by the user that takes the Json Component as parameter to add the component to the entity
 					Component* cmp = constructor(entity);
+					cmp->setEnabled(jsonCmp["m_enabled"]);
 					DeserializeJsonComponent(jsonCmp, cmp);
 				}
 			}

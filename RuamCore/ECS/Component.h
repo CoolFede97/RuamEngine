@@ -71,6 +71,7 @@ namespace RuamEngine
 		virtual operator nlohmann::json() const {
             return nlohmann::json{
                 {"m_id", m_id},
+                {"m_enabled", m_enabled},
                 {"TYPE", "Component"}
             };
         }

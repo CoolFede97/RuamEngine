@@ -111,7 +111,7 @@ FetchContent_Declare(
   GIT_TAG 3.3.8)
 FetchContent_MakeAvailable(glfw)
 
-set(BUILD_SHARED_LIBS ON)
+# set(BUILD_SHARED_LIBS ON)
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -282,7 +282,7 @@ target_link_libraries(Maths INTERFACE Vec Geometry)
 
 file (GLOB TIME_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Time/*.cpp")
 add_library(Time STATIC ${TIME_SRC})
-target_link_libraries(Time PUBLIC glfw)
+target_link_libraries(Time PUBLIC glfw glew_s)
 target_include_directories(Time INTERFACE ${CMAKE_SOURCE_DIR}/RuamCore/Time)
 
 

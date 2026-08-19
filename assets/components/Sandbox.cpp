@@ -1,4 +1,5 @@
 #include "Sandbox.h"
+#include "Cursor.h"
 #include "Scene.h"
 namespace RuamEngine
 {
@@ -6,6 +7,7 @@ namespace RuamEngine
     {
 		if (Input::GetKeyDown(KeyCode::SpaceBar_Key))
 		{
+		    return;
             Entity* newEntity = SceneManager::ActiveScene()->createEntity("fede"+std::to_string(entityCount));
             entityCount++;
             newEntity->addComponent<ModelRenderer>()->setModel("RuamCore/Assets/Models/tree.glb");

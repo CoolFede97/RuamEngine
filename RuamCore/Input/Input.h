@@ -33,6 +33,7 @@ namespace RuamEngine
         static CursorMode GetCursorMode();
         static bool IsCursorInWindow() { return glfwGetWindowAttrib(s_window, GLFW_HOVERED); }
 
+        static bool GetMouseButton(MouseCode button);
         static bool GetMouseButtonDown(MouseCode button);
         static bool GetMouseButtonUp(MouseCode button);
 
@@ -52,7 +53,9 @@ namespace RuamEngine
 
 
         static const KeyCode s_supportedKeys[];
+        static const MouseCode s_supportedMouses[];
         static std::map<KeyCode, bool> s_previousKeys;
+        static std::map<MouseCode, bool> s_previousMouses;
 
         static void KeyEvent(GLFWwindow* window, int key, int scancode, int action, int mods);
         static void CharEvent(GLFWwindow* window, unsigned int codepoint);

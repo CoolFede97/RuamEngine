@@ -1,5 +1,3 @@
-When right clicking on editor camera, mouse can hover over inspector and those ui elements.
-
 Make an actual GetMouseDown, GetMouseUp and a GetMouse
 
 Make sure I save which scene the game started with when entering play mode (because the scene might change during game mode, but when coming back to editor it should start at the original scene)

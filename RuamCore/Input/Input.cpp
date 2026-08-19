@@ -1,5 +1,6 @@
 #include "Input.h"
 
+#include "Cursor.h"
 #include "EventManager.h"
 #include "GLFW/glfw3.h"
 #include "KeyCode.h"
@@ -13,6 +14,8 @@ namespace RuamEngine
     Vec2 Input::s_mouseDeltaNorm = Vec2(0.0f, 0.0f);
 
     std::map<KeyCode, bool> Input::s_previousKeys;
+    std::map<MouseCode, bool> Input::s_previousMouses;
+
     const KeyCode Input::s_supportedKeys[] =
     {
    		SpaceBar_Key,
@@ -89,7 +92,13 @@ namespace RuamEngine
 
         Menu_Key
     };
-
+    const MouseCode Input::s_supportedMouses[] =
+    {
+        Mouse_Left,
+        Mouse_Right,
+        Mouse_Middle,
+        Mouse_Last
+    };
     bool Input::NullWindow()
     {
         if (s_window == nullptr) return true;
@@ -120,7 +129,7 @@ namespace RuamEngine
 
     bool Input::GetKeyUp(KeyCode key)
     {
-    	return glfwGetKey(s_window, key) == GLFW_RELEASE && s_previousKeys[key];
+    	return !GetKey(key) && s_previousKeys[key];
     }
 
     void Input::KeyEvent(GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -147,16 +156,17 @@ namespace RuamEngine
         return static_cast<CursorMode>(glfwGetInputMode(s_window, GLFW_CURSOR));
     }
 
-    bool Input::GetMouseButtonDown(MouseCode button) {
-        // Return True if the mouse button is down
-
+    bool Input::GetMouseButton(MouseCode button)
+    {
         return glfwGetMouseButton(s_window, button) == GLFW_PRESS;
     }
 
-    bool Input::GetMouseButtonUp(const MouseCode button) {
-        // Return True if the key is up
+    bool Input::GetMouseButtonDown(MouseCode button) {
+        return GetMouseButton(button) && !s_previousMouses[button];
+    }
 
-        return glfwGetMouseButton(s_window, button) == GLFW_RELEASE;
+    bool Input::GetMouseButtonUp(const MouseCode button) {
+       	return !GetMouseButton(button) && s_previousMouses[button];
     }
 
     Vec2 Input::GetMouseDeltaPix() {
@@ -245,7 +255,10 @@ namespace RuamEngine
         {
        		s_previousKeys[keyCode] = GetKey(keyCode);
         }
-
+        for (MouseCode mouseCode : s_supportedMouses)
+        {
+       		s_previousMouses[mouseCode] = GetMouseButton(mouseCode);
+        }
         // Update mouse position
         Vec2 currentPix = GetCursorPosPix();
         Vec2 currentNorm = GetCursorPosNorm();

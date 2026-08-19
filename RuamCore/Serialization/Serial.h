@@ -23,8 +23,9 @@ namespace RuamEngine
 		static nlohmann::json Serialize(const Entity* entity);
 
 		static nlohmann::json Serialize(const Scene* scene);
-		static Scene* DeserializeJsonScene(nlohmann::json jsonScene);
-		static void DeserializeJsonComponent(nlohmann::json jsonCmp, Component* cmp);
+		static Scene* DeserializeJsonScene(const nlohmann::json& jsonScene);
+		static void DeserializeJsonEntity(const nlohmann::json& jsonEntity, Scene* scene);
+		static void DeserializeJsonComponent(const nlohmann::json& jsonCmp, Entity* entity);
 
 		static nlohmann::json Serialize(const RuamConfig& config);
 		static RuamConfig DeserializeRuamConfig(const nlohmann::json& jsonConfig);

@@ -1,9 +1,5 @@
 TEST: Make sure all components get their start called ('cause some might be disabled when tick is called and still get removed from componentsToStart)
 
-On windows deleting a scene crashes the program
-
-Might be able to divide scene deserialization into smaller functions
-
 When right clicking on editor camera, mouse can hover over inspector and those ui elements.
 
 Make an actual GetMouseDown, GetMouseUp and a GetMouse

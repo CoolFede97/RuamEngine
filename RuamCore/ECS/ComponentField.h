@@ -11,7 +11,7 @@ namespace RuamEngine
         void* value;
         std::function<void()> callbackOnChange;
         std::function<nlohmann::json()> serialize;
-        std::function<void(nlohmann::json&)> deserialize;
+        std::function<void(const nlohmann::json&)> deserialize;
    	};
     template<typename T>
     FieldInfo makeFieldInfo(const char* name, T& value, std::function<void()> callback = {})

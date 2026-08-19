@@ -57,7 +57,7 @@ namespace RuamEngine
 	}
 
 
-	Scene* Serial::DeserializeJsonScene(nlohmann::json jsonScene)
+	Scene* Serial::DeserializeJsonScene(const nlohmann::json& jsonScene)
 	{
 		const unsigned int sceneId = jsonScene["m_id"];
 
@@ -67,40 +67,51 @@ namespace RuamEngine
 
 		for (const nlohmann::json& jsonEntity : jsonScene["m_entities"])
 		{
-			try
-			{
-				std::string entityName = jsonEntity["m_name"];
-				Entity* entity = scene->createEntity(entityName);
-				bool entityEnabled = jsonEntity["m_enabled"];
-				entity->setEnabled(entityEnabled);
-				if (jsonEntity["m_components"].size()<=1) continue;
-
-				for (const nlohmann::json& jsonCmp : jsonEntity["m_components"])
-				{
-					std::string cmpType = jsonCmp["TYPE"];
-
-					if (!Component::componentRegistry.contains(cmpType))
-					{
-						std::cerr << "Failed to find the component type " << cmpType << " in the component registry!\n";
-						continue;
-					}
-					auto constructor = Component::componentRegistry[cmpType].addComponent;
-
-					// Uses the constructor defined by the user that takes the Json Component as parameter to add the component to the entity
-					Component* cmp = constructor(entity);
-					cmp->setEnabled(jsonCmp["m_enabled"]);
-					DeserializeJsonComponent(jsonCmp, cmp);
-				}
-			}
-			catch (const std::exception& exception)
-			{
-				std::cerr << "Error loading component: " << exception.what() << "\n";
-				continue;
-			}
+		    DeserializeJsonEntity(jsonEntity, scene);
 		}
 		return scene;
 	}
+	void Serial::DeserializeJsonEntity(const nlohmann::json& jsonEntity, Scene* jsonScene)
+	{
+        try
+        {
+    		std::string entityName = jsonEntity["m_name"];
+    		Entity* entity = jsonScene->createEntity(entityName);
+    		bool entityEnabled = jsonEntity["m_enabled"];
+    		entity->setEnabled(entityEnabled);
+    		if (jsonEntity["m_components"].size()<=1) return;
 
+    		for (const nlohmann::json& jsonCmp : jsonEntity["m_components"])
+    		{
+                DeserializeJsonComponent(jsonCmp, entity);
+    		}
+    	}
+    	catch (const std::exception& exception)
+    	{
+    		std::cerr << "Error loading component: " << exception.what() << "\n";
+    		return;
+    	}
+	}
+	void Serial::DeserializeJsonComponent(const nlohmann::json& jsonCmp, Entity* entity)
+	{
+        std::string cmpType = jsonCmp["TYPE"];
+
+        if (!Component::componentRegistry.contains(cmpType))
+        {
+           	std::cerr << "Failed to find the component type " << cmpType << " in the component registry!\n";
+           	return;
+        }
+        auto constructor = Component::componentRegistry[cmpType].addComponent;
+
+        // Uses the constructor defined by the user that takes the Json Component as parameter to add the component to the entity
+        Component* cmp = constructor(entity);
+        cmp->setEnabled(jsonCmp["m_enabled"]);
+
+        for (FieldInfo& fieldInfo : cmp->fields())
+		{
+		    fieldInfo.deserialize(jsonCmp);
+		}
+	}
 	nlohmann::json Serial::Serialize(const RuamConfig& config)
 	{
 		nlohmann::json jsonConfig =
@@ -113,14 +124,6 @@ namespace RuamEngine
 		}
 		return jsonConfig;
 	};
-
-	void Serial::DeserializeJsonComponent(nlohmann::json jsonCmp, Component* cmp)
-	{
-	    for (FieldInfo& fieldInfo : cmp->fields())
-		{
-		    fieldInfo.deserialize(jsonCmp);
-		}
-	}
 
 	// Make sure everything is okay with the jsonConfig you are passsing as argument (e.g. it has at least one scene)
 	RuamConfig Serial::DeserializeRuamConfig(const nlohmann::json& jsonConfig)

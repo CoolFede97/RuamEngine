@@ -19,7 +19,7 @@ namespace RuamEngine
     {
         if (s_mainCamera)
         {
-            if (s_mainCamera->id() == id())
+            if (s_mainCamera->id() == id() && SceneManager::ActiveScene())
             {
                 EmptyMainCamera();
                 for (Entity* entity : SceneManager::ActiveScene()->getEntities())

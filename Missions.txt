@@ -1,5 +1,3 @@
-TEST: Make sure all components get their start called ('cause some might be disabled when tick is called and still get removed from componentsToStart)
-
 When right clicking on editor camera, mouse can hover over inspector and those ui elements.
 
 Make an actual GetMouseDown, GetMouseUp and a GetMouse
@@ -10,8 +8,6 @@ Create component button (creates a default component in a new file in assets)
 - Next step: Check how to create the actual file. It's not as trivial as thought. I need to create a file with the component name. How can I update the code? I mean, it needs to be compiled and that shit during runtime.
 
 Can't change entities name
-
-Lighting doesn't seem to update when moving entities (despite updating when moving the light)
 
 Make user be able to click an entity on the editor so as to select it
 

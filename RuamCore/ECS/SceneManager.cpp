@@ -110,7 +110,10 @@ namespace RuamEngine
 	Scene* SceneManager::ActiveScene() {
 		return s_activeScene.get();
 	}
-
+	void SceneManager::EmptyActiveScene()
+	{
+	    s_activeScene = nullptr;
+	}
 	void SceneManager::ResetActiveScene()
 	{
 	    s_activeScene = nullptr;

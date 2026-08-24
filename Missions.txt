@@ -1,5 +1,3 @@
-Make an actual GetMouseDown, GetMouseUp and a GetMouse
-
 Make sure I save which scene the game started with when entering play mode (because the scene might change during game mode, but when coming back to editor it should start at the original scene)
 
 Create component button (creates a default component in a new file in assets)

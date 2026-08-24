@@ -29,6 +29,7 @@ namespace RuamEngine
 		static bool CheckIfSceneAlreadyExists(std::string sceneName);
 
 		static Scene* ActiveScene();
+		static void EmptyActiveScene();
 
 		static void AddScene(unsigned int id, const std::string& scene);
 

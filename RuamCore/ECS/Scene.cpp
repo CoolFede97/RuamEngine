@@ -19,6 +19,7 @@ namespace RuamEngine
 
 	Scene::~Scene()
 	{
+	    if (SceneManager::ActiveScene() == this) SceneManager::EmptyActiveScene();
 	    std::cout << "SCENE " << m_name << " WITH ID " << id() << " DESTROYED\n";
 	}
 

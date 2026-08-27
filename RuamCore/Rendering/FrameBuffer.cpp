@@ -19,10 +19,10 @@ namespace RuamEngine
         m_width = width;
         m_height = height;
 
-        glGenFramebuffers(1, &m_glName);
+        glCreateFramebuffers(1, &m_glName);
         glBindFramebuffer(GL_FRAMEBUFFER, m_glName);
 
-        glGenTextures(1, &m_texture);
+        glCreateTextures(GL_TEXTURE_2D, 1, &m_texture);
         glBindTexture(GL_TEXTURE_2D, m_texture);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

@@ -1,4 +1,4 @@
-#version 440 core
+#version 450 core
 
 const int SSBOType_vertices = 0;
 const int SSBOType_indices = 1;

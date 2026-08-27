@@ -10,8 +10,7 @@ namespace RuamEngine
 		: m_localBuffer(nullptr)
 	{
 	    m_path = relativePath;
-		GLCall(glGenTextures(1, &m_glName));
-		GLCall(glBindTexture(GL_TEXTURE_2D, m_glName));
+		GLCall(glCreateTextures(GL_TEXTURE_2D, 1, &m_glName));
 
 		stbi_set_flip_vertically_on_load(1);
 
@@ -31,17 +30,17 @@ namespace RuamEngine
 			std::cout << "Texture2D at path: " << m_path << " was loaded succesfully" << "\n";
 		}
 
-		GLCall(glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, m_width, m_height));
-		GLCall(glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height, GL_RGBA, GL_UNSIGNED_BYTE, m_localBuffer));
+		GLCall(glTextureStorage2D(m_glName, 1, GL_RGBA8, m_width, m_height));
+		GLCall(glTextureSubImage2D(m_glName, 0, 0, 0, m_width, m_height, GL_RGBA, GL_UNSIGNED_BYTE, m_localBuffer));
 		// Turns around the texture, so that it is up-side down
 		// We do this because OpenGL expects textures (0,0) position to be at the bottom-left corner,
 		// not at the top-left corner.
 		// The last variable are the desired channels we want. We put 4 because of the RGBA channels
 
-		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT));
-		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT));
+		GLCall(glTextureParameteri(m_glName, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+		GLCall(glTextureParameteri(m_glName, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+		GLCall(glTextureParameteri(m_glName, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT));
+		GLCall(glTextureParameteri(m_glName, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT));
 
 
 		if (!m_localBuffer) std::cout << "Error: image not found at relative path: " << relativePath  << "\n";

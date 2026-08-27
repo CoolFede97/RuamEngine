@@ -28,18 +28,22 @@ namespace RuamEngine
 		{
 		    ASSERT(elementsToSupport >= currentElements());
             unsigned int newSSBO;
-            GLCall(glGenBuffers(1, &newSSBO));
-            GLCall(glBindBuffer(GL_SHADER_STORAGE_BUFFER, newSSBO));
-            GLCall(glBufferStorage(GL_SHADER_STORAGE_BUFFER, sizeof(T) * elementsToSupport, 0, m_usage));
-            GLCall(glBindBuffer(GL_COPY_READ_BUFFER, m_glName));
-            GLCall(glBindBuffer(GL_COPY_WRITE_BUFFER, newSSBO));
-            GLCall(glCopyBufferSubData(
-                GL_COPY_READ_BUFFER,
-                GL_COPY_WRITE_BUFFER,
+            GLCall(glCreateBuffers(1, &newSSBO));
+      		GLCall(
+     			glNamedBufferStorage
+     			(
+    				newSSBO,
+    				sizeof(T) * elementsToSupport,
+    				0,
+    				m_usage
+     			));
+                glCopyNamedBufferSubData(
+                m_glName,
+                newSSBO,
                 0,
                 0,
                 m_currentBytes
-            ));
+            );
             m_maxBytes = elementsToSupport * sizeof(T);
             GLCall(glDeleteBuffers(1, &m_glName));
             m_glName = newSSBO;
@@ -50,9 +54,15 @@ namespace RuamEngine
 
 		SSBO(unsigned int maxCount, unsigned int usage)
 		{
-			GLCall(glGenBuffers(1, &m_glName));
-			GLCall(glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_glName));
-			GLCall(glBufferStorage(GL_SHADER_STORAGE_BUFFER, sizeof(T) * maxCount, 0, usage));
+			GLCall(glCreateBuffers(1, &m_glName));
+			GLCall(
+				glNamedBufferStorage
+				(
+					m_glName,
+					sizeof(T) * maxCount,
+					0,
+					usage
+				));
 			m_maxBytes = maxCount * sizeof(T);
 			m_usage = usage;
 		}
@@ -73,15 +83,13 @@ namespace RuamEngine
 		void submitData()
 		{
 			ASSERT(m_data.size() * sizeof(T) <= m_maxBytes);
-			GLCall(glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_glName));
-			GLCall(glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, m_data.size()*sizeof(T), m_data.data()));
+			GLCall(glNamedBufferSubData(m_glName, 0, m_data.size()*sizeof(T), m_data.data()));
 		}
 
 		void submitExternalData(const std::vector<T>& externalData)
 		{
 			ASSERT(externalData.size() * sizeof(T) <= m_maxBytes);
-			GLCall(glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_glName));
-			GLCall(glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, externalData.size()*sizeof(T), externalData.data()));
+			GLCall(glNamedBufferSubData(m_glName, 0, externalData.size()*sizeof(T), externalData.data()));
 		}
 
 		// Puts the data from m_data into the actual SSBO

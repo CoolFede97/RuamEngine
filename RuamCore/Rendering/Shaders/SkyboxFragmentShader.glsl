@@ -1,4 +1,4 @@
-#version 450 core
+#version 440 core
 
 layout(binding = 3) uniform samplerCube u_cubemap;
 

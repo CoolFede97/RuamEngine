@@ -25,7 +25,7 @@ namespace RuamEngine
     {
         ASSERT(glfwInit());
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 
@@ -38,7 +38,26 @@ namespace RuamEngine
 
         glfwSwapInterval(1);
 
-        ASSERT(glewInit() == GLEW_OK);
+        const GLubyte* glVersion = glGetString(GL_VERSION);
+        const GLubyte* glRenderer = glGetString(GL_RENDERER);
+        if (glVersion == nullptr || glRenderer == nullptr)
+        {
+            std::cerr << "OpenGL context is unavailable after GLFW creation. GLFW error: "
+                      << glfwGetError(nullptr) << "\n";
+        }
+        else
+        {
+            std::cout << "OpenGL version: " << glVersion << "\n"
+                      << "OpenGL renderer: " << glRenderer << "\n";
+        }
+
+        glewExperimental = GL_TRUE;
+        GLenum glewStatus = glewInit();
+        if (glewStatus != GLEW_OK)
+        {
+            std::cerr << "GLEW initialization failed: " << glewGetErrorString(glewStatus) << "\n";
+        }
+        ASSERT(glewStatus == GLEW_OK);
 
         if (s_config.depthTest)
         {

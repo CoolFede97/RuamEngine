@@ -1,4 +1,4 @@
-#version 450 core
+#version 440 core
 
 layout(binding = 0) uniform sampler2D u_diffuse;
 layout(binding = 1) uniform sampler2D u_specular;

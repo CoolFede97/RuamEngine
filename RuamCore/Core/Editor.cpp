@@ -16,6 +16,7 @@
 #include <typeindex>
 #include <utility>
 #include <cstring>
+#include <cmath>
 
 namespace RuamEngine
 {
@@ -349,14 +350,18 @@ namespace RuamEngine
             }
         }
 
-        if (fb->width() != viewportPanelSize.x || fb->height() != viewportPanelSize.y)
+        ImGuiIO& io = ImGui::GetIO();
+        int framebufferWidth = std::max(1, static_cast<int>(std::ceil(viewportPanelSize.x * io.DisplayFramebufferScale.x)));
+        int framebufferHeight = std::max(1, static_cast<int>(std::ceil(viewportPanelSize.y * io.DisplayFramebufferScale.y)));
+
+        if (fb->width() != framebufferWidth || fb->height() != framebufferHeight)
         {
-            fb->rescale(viewportPanelSize.x, viewportPanelSize.y);
+            fb->rescale(framebufferWidth, framebufferHeight);
         }
 
         unsigned int textureID = fb->texture();
         ImGui::Image(reinterpret_cast<void*>(static_cast<intptr_t>(textureID)),
-                    ImVec2{ (float)fb->width(), (float)fb->height() },
+                    viewportPanelSize,
                     ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
         ImGui::End();

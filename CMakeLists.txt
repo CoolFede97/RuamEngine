@@ -86,8 +86,8 @@ target_include_directories(glew_s PUBLIC ${glew_SOURCE_DIR}/include)
 target_compile_definitions(
   glew_s
   PRIVATE GLEW_BUILD
-  PUBLIC GLEW_STATIC)
-target_link_libraries(glew_s PUBLIC OpenGL::GL)
+  PUBLIC GLEW_STATIC GLEW_EGL)
+target_link_libraries(glew_s PUBLIC OpenGL::GL OpenGL::EGL)
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -108,8 +108,9 @@ set(GLFW_BUILD_DOCS OFF)
 FetchContent_Declare(
   glfw
   GIT_REPOSITORY https://github.com/glfw/glfw.git
-  GIT_TAG 3.3.8)
+  GIT_TAG 3.4)
 FetchContent_MakeAvailable(glfw)
+find_package(X11 REQUIRED)
 
 # set(BUILD_SHARED_LIBS ON)
 
@@ -221,7 +222,7 @@ endif()
 target_compile_definitions(Vendor INTERFACE STB_IMAGE_IMPLEMENTATION)
 
 target_link_libraries(Vendor INTERFACE
-        glfw glew_s glm ImGui OpenGL::GL nlohmann_json::nlohmann_json dr_libs assimp
+        glfw glew_s glm ImGui OpenGL::GL OpenGL::EGL X11::X11 nlohmann_json::nlohmann_json dr_libs assimp
 )
 target_link_libraries(Vendor INTERFACE OpenAL::OpenAL)
 

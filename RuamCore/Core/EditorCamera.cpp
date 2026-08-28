@@ -14,7 +14,7 @@ namespace RuamEngine
 	{
 	    static bool firstClick = true;
 
-	    if (!Input::GetMouseButtonDown(MouseCode::Mouse_Right))
+	    if (!Input::GetMouseButton(MouseCode::Mouse_Right))
         {
             if (Input::GetCursorMode()==CursorMode::MouseDisabled)
             {

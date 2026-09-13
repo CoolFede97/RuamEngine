@@ -1,6 +1,5 @@
 #include "Engine.h"
 #include "GameCamera.h"
-#include "GizmosManager.h"
 #include "KeyCode.h"
 #include "PhysicsManager.h"
 #include "Renderer.h"
@@ -13,11 +12,8 @@
 #include "Scene.h"
 #include "SceneManager.h"
 #include "Serial.h"
-#include "ResourceManager.h"
 #include "ComponentsInitializer.h"
-#include "EditorCamera.h"
 
-#include "ShaderProgram.h"
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
@@ -26,6 +22,8 @@ namespace RuamEngine
 {
     bool Engine::s_initialized = false;
     bool Engine::s_started = false;
+    bool Engine::s_shuttingDown = false;
+
     RuamConfig Engine::s_config;
     EngineState Engine::s_state = EngineState::EditorMode;
 
@@ -38,7 +36,6 @@ namespace RuamEngine
         }
         Renderer::Init();
         ComponentsInitializer::InitComponents();
-        GizmosManager::Init();
 
   		Input::SetWindow(Renderer::GetWindow());
   		Input::SetUp(Renderer::GetWindow());
@@ -73,7 +70,7 @@ namespace RuamEngine
 
   		while (!Renderer::WindowShouldClose())
   		{
-  		    std::cout << "Frame count: " << frameCount++ << "----------------\n";
+  		    // std::cout << "Frame count: " << frameCount++ << "----------------\n";
     		CheckIfWantToSaveChanges();
  			SceneManager::CheckForSceneChange();
 
@@ -133,13 +130,11 @@ namespace RuamEngine
 
             SceneManager::CheckForSceneDeletion();
     	}
+        s_shuttingDown = true;
     	// Cleanup
         SceneManager::s_activeScene = nullptr;
-    	ImGui_ImplOpenGL3_Shutdown();
-    	ImGui_ImplGlfw_Shutdown();
-    	ImGui::DestroyContext();
+        ImGuiShutdown();
     	Renderer::Shutdown();
-    	// AudioSystem::shutdown();
     }
 
     void Engine::UpdateEngineState(Scene* scene)
@@ -184,6 +179,13 @@ namespace RuamEngine
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+    }
+
+    void Engine::ImGuiShutdown()
+    {
+        ImGui_ImplOpenGL3_Shutdown();
+       	ImGui_ImplGlfw_Shutdown();
+       	ImGui::DestroyContext();
     }
 
     void Engine::LoadRuamConfig()

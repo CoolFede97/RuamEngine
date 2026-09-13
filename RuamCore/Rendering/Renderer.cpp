@@ -12,6 +12,7 @@
 #include "ShaderProgram.h"
 #include "Skybox.h"
 #include "Editor.h"
+
 #include <cstddef>
 #include <memory>
 namespace RuamEngine
@@ -77,6 +78,7 @@ namespace RuamEngine
 
             ResourceManager::Init();
             Skybox::Init();
+            GizmosManager::Init();
         }
 
     }
@@ -208,6 +210,7 @@ namespace RuamEngine
 
     void Renderer::DrawGizmos(Camera& camera)
     {
+        if (GizmosManager::s_colliderVertices->data().size() == 0) return;
         ShaderProgramSPtr shaderProgram = GizmosManager::s_shaderProgram;
         shaderProgram->bind();
         shaderProgram->updateCameraMatrices(camera.viewMatrix(), camera.projectionMatrix());
@@ -218,10 +221,7 @@ namespace RuamEngine
         GizmosManager::s_colliderIndices->submitData();
         GizmosManager::s_colliderIndices->bindBufferBase(SSBOType::indices);
 
-        std::cout << "Middle: " << GizmosManager::s_colliderIndices->data()[23] << "\n";
-        std::cout << "Last: " << GizmosManager::s_colliderIndices->data()[47] << "\n";
-
-        glDrawArrays(GL_LINES, 0, GizmosManager::s_indexCount);
+        GLCall(glDrawArrays(GL_LINES, 0, GizmosManager::s_indexCount));
     }
 
     void Renderer::Draw(Camera& camera)

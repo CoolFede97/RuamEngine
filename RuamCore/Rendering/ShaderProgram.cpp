@@ -4,6 +4,7 @@
 #include "EditorCamera.h"
 #include "RenderingCore.h"
 #include "ResourceManager.h"
+#include "Engine.h"
 namespace RuamEngine
 {
 
@@ -21,6 +22,7 @@ namespace RuamEngine
 
 	ShaderProgram::~ShaderProgram()
 	{
+	    if (Engine::ShuttingDown()) return;
 	    ResourceManager::RemoveShaderProgramIfExpired(m_vertexShaderPath, m_fragmentShaderPath);
 	}
 

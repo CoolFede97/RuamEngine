@@ -36,6 +36,8 @@ namespace RuamEngine
         s_vertexArray = std::make_unique<VertexArray>();
         s_colliderVertices = std::make_unique<SSBO<GizmoVertex>>(baseVertexCount, GL_DYNAMIC_STORAGE_BIT);
         s_colliderIndices = std::make_unique<SSBO<unsigned int>>(baseIndexCount, GL_DYNAMIC_STORAGE_BIT);
+        s_colliderVertices->submitData();
+        s_colliderIndices->submitData();
         s_inited = true;
     }
 }

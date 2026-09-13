@@ -26,11 +26,15 @@ namespace RuamEngine
         static void ImGuiStartNewFrame();
 
         static void LoadRuamConfig();
-        inline static RuamConfig Config() {return s_config;};
-        inline static EngineState State() {return s_state;};
+        inline static RuamConfig Config() {return s_config;}
+        inline static EngineState State() {return s_state;}
+        inline static bool ShuttingDown() { return s_shuttingDown; }
     private:
-        static bool s_initialized;
-        static bool s_started;
+        static void ImGuiShutdown();
+
+        static bool s_initialized; // set up
+        static bool s_started; // running
+        static bool s_shuttingDown;
         static RuamConfig s_config;
         static EngineState s_state;
     };

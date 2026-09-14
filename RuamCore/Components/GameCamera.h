@@ -11,7 +11,6 @@ namespace RuamEngine
 	    static GameCamera* s_mainCamera;
 
 	public:
-	    GameCamera(nlohmann::json transformData, const unsigned int entityId);
 		~GameCamera();
 		void setAsMainCamera();
 		static void EmptyMainCamera();

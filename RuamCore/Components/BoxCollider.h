@@ -14,7 +14,6 @@ namespace RuamEngine
 
     public:
         BoxCollider(unsigned int entityId);
-        BoxCollider(nlohmann::json boxColliderData, const unsigned int entityId);
         ~BoxCollider();
 
         glm::vec3 m_center;

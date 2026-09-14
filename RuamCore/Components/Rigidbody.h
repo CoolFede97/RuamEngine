@@ -28,7 +28,6 @@ namespace RuamEngine
       		};
 		}
         Rigidbody(unsigned int entityId);
-        Rigidbody(nlohmann::json rigidbodyData, const unsigned int entityId);
         ~Rigidbody();
 
         BoxCollider* GetBoxCollider();

@@ -45,8 +45,6 @@ namespace RuamEngine
 		virtual ~Component() = default;
 		explicit Component(const unsigned int entityId) : m_entityId(entityId), m_id(s_idCount++) {
 		}
-		explicit Component(nlohmann::json componentData, const unsigned int entityId) : m_entityId(entityId), m_id(s_idCount++) {
-		}
 		virtual void start() {};  // This is called only in playmode
 		virtual void update() {}; // This is called only in playmode
 		virtual void renderStart() {};

@@ -1,9 +1,3 @@
-Box collider gizmos indices seem to be bad
-
-Check why half size (box collider) works fine in 1 and now in 0.5
-
-Check if can automate box collider size so it matches what we see in the model renderer
-
 May be add getComponent in Component class so there is no need to do entity()->getComponent()...
 
 Check where positive Z points to (tested it and the X axis is wrong)

@@ -128,7 +128,7 @@ namespace RuamEngine
 
 		Entity* fede = scene->createEntity("fede");
 		fede->addComponent<Sandbox>();
-		fede->addComponent<ModelRenderer>()->setModel("RuamCore/Assets/Models/Fede.obj");
+		fede->addComponent<ModelRenderer>()->setModel("RuamCore/Assets/Models/zyzz.glb");
 
 		Entity* camera = scene->createEntity("camera");
 		camera->addComponent<GameCamera>();

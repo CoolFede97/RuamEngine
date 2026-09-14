@@ -47,13 +47,13 @@
       1.0,
       1.0
      ],
-     "m_id": 15
+     "m_id": 3
     },
     {
      "TYPE": "ModelRenderer",
      "m_enabled": true,
      "m_id": 4,
-     "m_modelPath": "RuamCore/Assets/Models/Fede.obj"
+     "m_modelPath": "RuamCore/Assets/Models/zyzz.glb"
     },
     {
      "TYPE": "Sandbox",
@@ -84,7 +84,7 @@
      "m_enabled": true,
      "m_id": 2,
      "m_position": [
-      3.200000047683716,
+      3.5,
       0.0,
       0.0
      ],
@@ -94,7 +94,7 @@
       0.0
      ],
      "m_scale": [
-      0.30000001192092896,
+      1.0,
       1.0,
       1.0
      ]
@@ -108,7 +108,7 @@
    "m_components": [
     {
      "TYPE": "GameCamera",
-     "m_aspectRatio": 1.3600000143051147,
+     "m_aspectRatio": 0.8660287261009216,
      "m_enabled": true,
      "m_farPlane": 3000.0,
      "m_fov": 45.0,
@@ -210,13 +210,13 @@
  "m_id": 0,
  "m_lastSavedCameraTransform": [
   [
-   5.3486328125,
-   4.332759857177734,
-   -9.956277847290039
+   6.218930244445801,
+   2.5071704387664795,
+   -9.7786283493042
   ],
   [
-   -25.59996795654297,
-   -378.28814697265625,
+   -15.999959945678711,
+   -387.38787841796875,
    0.0
   ]
  ],

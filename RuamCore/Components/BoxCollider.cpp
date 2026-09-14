@@ -29,13 +29,13 @@ namespace RuamEngine
         glm::vec3 halfY = glm::vec3(0, m_halfSize.y * boxScale.y, 0);
         glm::vec3 halfZ = glm::vec3(0, 0, m_halfSize.z * boxScale.z);
 
-        m_vertices.push_back({boxCenter - m_halfSize});
+        m_vertices.push_back({boxCenter - halfX - halfY - halfZ});
         m_vertices.push_back({boxCenter + halfX - halfY - halfZ});
         m_vertices.push_back({boxCenter + halfX - halfY + halfZ});
         m_vertices.push_back({boxCenter - halfX - halfY + halfZ});
         m_vertices.push_back({boxCenter - halfX + halfY - halfZ});
         m_vertices.push_back({boxCenter + halfX + halfY - halfZ});
-        m_vertices.push_back({boxCenter + m_halfSize});
+        m_vertices.push_back({boxCenter + halfX + halfY + halfZ});
         m_vertices.push_back({boxCenter - halfX + halfY + halfZ});
 
         GizmosManager::PushColliderGizmo(m_vertices, m_indices);

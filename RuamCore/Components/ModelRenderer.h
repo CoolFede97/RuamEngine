@@ -19,13 +19,13 @@ namespace RuamEngine
     	float m_vertices = 0;
     	float m_indices = 0;
         std::string m_modelPath = "";
-        ModelSPtr m_model = nullptr;
         SSBOWPtr<glm::mat4> m_matricesSSBO = {};
         ShaderProgramSPtr m_shaderProgram = nullptr;
 
      	void renderUpdate() override;
 
     public:
+        ModelSPtr m_model = nullptr;
    		std::vector<FieldInfo> fields() override
 		{
 		    return

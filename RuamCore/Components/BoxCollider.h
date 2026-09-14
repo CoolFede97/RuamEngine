@@ -32,6 +32,8 @@ namespace RuamEngine
        	void renderUpdate() override;
 
     private:
+        void GetAndSetWithModelRenderer();
+
         std::vector<GizmoVertex> m_vertices = {};
         std::vector<unsigned int> m_indices =
         {

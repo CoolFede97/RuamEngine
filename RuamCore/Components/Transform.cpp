@@ -8,13 +8,6 @@
 namespace RuamEngine
 {
 	Transform::Transform(const unsigned int entityId) : Component(entityId), m_position(0, 0, 0) {}
-	Transform::Transform(nlohmann::json transformData, const unsigned int entityId) : Component(entityId)
-	{
-		if (transformData.contains("m_position")) m_position = transformData["m_position"].get<glm::vec3>();
-		if (transformData.contains("m_rotation")) m_rotation = transformData["m_rotation"].get<glm::vec3>();
-		if (transformData.contains("m_scale")) m_scale = transformData["m_scale"].get<glm::vec3>();
-		if (transformData.contains("m_parentId")) m_parentId = transformData["m_parentId"].get<unsigned int>();
-	}
 	Transform::~Transform()
 	{
 		if (m_parent!=nullptr) m_parent->m_children.remove(this);

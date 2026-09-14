@@ -35,7 +35,6 @@ namespace RuamEngine
 	struct ComponentFactory
 	{
 		std::function<Component*(Entity*)> addComponent;
-		std::function<Component*(const nlohmann::json&, Entity*)> addComponentWithJson;
 	};
 
 	class Component {

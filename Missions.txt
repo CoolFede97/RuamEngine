@@ -1,6 +1,6 @@
-May be add getComponent in Component class so there is no need to do entity()->getComponent()...
-
 Check where positive Z points to (tested it and the X axis is wrong)
+
+May be add getComponent in Component class so there is no need to do entity()->getComponent()...
 
 Move rendering assets constanst from ResourceManager.h into some sort of RenderingAssets.h
 

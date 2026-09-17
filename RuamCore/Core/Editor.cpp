@@ -148,6 +148,16 @@ namespace RuamEngine
 			}
 		},
 		{
+			std::type_index(typeid(bool)), [](const std::string& name, void* value, std::function<void()> callbackOnChange)
+			{
+			    DRAW_MEMBER_NAME(name);
+				if (ImGui::Checkbox(labelCopy.c_str(), static_cast<bool*>(value)))
+				{
+				    if (callbackOnChange != nullptr) callbackOnChange();
+				}
+			}
+		},
+		{
 			std::type_index(typeid(glm::vec3)), [](const std::string& name, void* value, std::function<void()> callbackOnChange)
 			{
 				DRAW_MEMBER_NAME(name);

@@ -11,11 +11,11 @@ namespace RuamEngine
     {
 
     public:
-        glm::vec3 m_velocity;
-        float m_mass;
-        bool m_useGravity;
-        bool m_isKinematic;
-        glm::vec3 m_gravity;
+        glm::vec3 m_velocity = {0,0,0};
+        float m_mass = 1;
+        bool m_useGravity = true;
+        bool m_isKinematic = false;
+        glm::vec3 m_gravity = {0, -9.8f, 0};
         std::vector<FieldInfo> fields() override
 		{
 		    return

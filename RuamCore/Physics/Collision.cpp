@@ -17,9 +17,9 @@ namespace RuamEngine
         glm::vec3 scaleB = boxB->transform()->scale();
         glm::vec3 halfSizeB = boxB->m_halfSize * scaleB;
 
-        float overlapX = (halfSizeA.x + halfSizeB.x) - abs(delta.x);
-        float overlapY = (halfSizeA.y + halfSizeB.y) - abs(delta.y);
-        float overlapZ = (halfSizeA.z + halfSizeB.z) - abs(delta.z);
+        float overlapX = (halfSizeA.x + halfSizeB.x) - std::abs(delta.x);
+        float overlapY = (halfSizeA.y + halfSizeB.y) - std::abs(delta.y);
+        float overlapZ = (halfSizeA.z + halfSizeB.z) - std::abs(delta.z);
 
         if (overlapX<=0 || overlapY<=0 || overlapZ <= 0) return false;
 
@@ -40,5 +40,37 @@ namespace RuamEngine
         }
 
         return true;
+    }
+
+    void ResolveCollision(Collision& col)
+    {
+        Rigidbody* a = col.a;
+        Rigidbody* b = col.b;
+
+        float invMassA = a->m_isKinematic ? 0 : 1 / a->m_mass;
+        float invMassB = b->m_isKinematic ? 0 : 1 / b->m_mass;
+        float invMassSum = invMassA + invMassB;
+
+        if (invMassSum<=0) return;
+
+        // std::cout << "Penetration: " << col.penetration << "\n";
+        glm::vec3 correction = col.normal * col.penetration;
+
+        float aInfluence= invMassA / invMassSum;
+        float bInfluence = invMassB / invMassSum;
+
+        if (!a->m_isKinematic) a->transform()->translate(-correction * aInfluence);
+        if (!b->m_isKinematic) b->transform()->translate(correction * bInfluence);
+
+        glm::vec3 deltaVelocity = b->m_velocity - a->m_velocity;
+        float velAlongNormal = glm::dot(deltaVelocity, col.normal);
+
+        if (velAlongNormal>0) return;
+
+        float restitution = 1.0f;
+        float force = (1 + restitution) * velAlongNormal;
+
+        a->m_velocity += force * col.normal * aInfluence;
+        b->m_velocity -= force * col.normal * bInfluence;
     }
 }

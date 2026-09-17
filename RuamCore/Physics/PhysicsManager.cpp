@@ -36,7 +36,7 @@ namespace RuamEngine
             }
         }
 
-        std::cout << "Collisions: " << collisions.size() << "\n";
+        for (Collision& col : collisions) ResolveCollision(col);
     }
 
     void PhysicsManager::AddRigidbody(Rigidbody* rb)

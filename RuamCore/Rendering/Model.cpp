@@ -1,6 +1,6 @@
 #include "Model.h"
 #include "ResourceManager.h"
-#include "RuamUtils.h"
+#include "RenderingAssets.h"
 #include "Vec3.h"
 #include "FileFunctions.h"
 #include "assimp/material.h"

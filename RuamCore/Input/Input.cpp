@@ -18,86 +18,86 @@ namespace RuamEngine
 
     const KeyCode Input::s_supportedKeys[] =
     {
-   		SpaceBar_Key,
-        Quote_Key,
-        Comma_Key,
-        Minus_Key,
-        Period_Key,
-        Slash_Key,
+        KeyCode::SpaceBar_Key,
+        KeyCode::Quote_Key,
+        KeyCode::Comma_Key,
+        KeyCode::Minus_Key,
+        KeyCode::Period_Key,
+        KeyCode::Slash_Key,
 
         // Upper numbers
-        Key_0, Key_1, Key_2, Key_3, Key_4,
-        Key_5, Key_6, Key_7, Key_8, Key_9,
+        KeyCode::Key_0, KeyCode::Key_1, KeyCode::Key_2, KeyCode::Key_3, KeyCode::Key_4,
+        KeyCode::Key_5, KeyCode::Key_6, KeyCode::Key_7, KeyCode::Key_8, KeyCode::Key_9,
 
-        Semicolon_Key,
-        Equals_Key,
+        KeyCode::Semicolon_Key,
+        KeyCode::Equals_Key,
 
         // Letters
-        A_Key, B_Key, C_Key, D_Key, E_Key,
-        F_Key, G_Key, H_Key, I_Key, J_Key,
-        K_Key, L_Key, M_Key, N_Key, O_Key,
-        P_Key, Q_Key, R_Key, S_Key, T_Key,
-        U_Key, V_Key, W_Key, X_Key, Y_Key, Z_Key,
+        KeyCode::A_Key, KeyCode::B_Key, KeyCode::C_Key, KeyCode::D_Key, KeyCode::E_Key,
+        KeyCode::F_Key, KeyCode::G_Key, KeyCode::H_Key, KeyCode::I_Key, KeyCode::J_Key,
+        KeyCode::K_Key, KeyCode::L_Key, KeyCode::M_Key, KeyCode::N_Key, KeyCode::O_Key,
+        KeyCode::P_Key, KeyCode::Q_Key, KeyCode::R_Key, KeyCode::S_Key, KeyCode::T_Key,
+        KeyCode::U_Key, KeyCode::V_Key, KeyCode::W_Key, KeyCode::X_Key, KeyCode::Y_Key, KeyCode::Z_Key,
 
-        LeftBracket_Key,
-        Backslash_Key,
-        RightBracket_Key,
-        BackQuote_Key,
+        KeyCode::LeftBracket_Key,
+        KeyCode::Backslash_Key,
+        KeyCode::RightBracket_Key,
+        KeyCode::BackQuote_Key,
 
         // Function keys
-        Escape_Key,
-        Enter_Key,
-        Tab_Key,
-        Backspace_Key,
-        Insert_Key,
-        Delete_Key,
-        Right_Arrow,
-        Left_Arrow,
-        Down_Arrow,
-        Up_Arrow,
-        PageUp_Key,
-        PageDown_Key,
-        Home_Key,
-        End_Key,
+        KeyCode::Escape_Key,
+        KeyCode::Enter_Key,
+        KeyCode::Tab_Key,
+        KeyCode::Backspace_Key,
+        KeyCode::Insert_Key,
+        KeyCode::Delete_Key,
+        KeyCode::Right_Arrow,
+        KeyCode::Left_Arrow,
+        KeyCode::Down_Arrow,
+        KeyCode::Up_Arrow,
+        KeyCode::PageUp_Key,
+        KeyCode::PageDown_Key,
+        KeyCode::Home_Key,
+        KeyCode::End_Key,
 
-        CapsLock_Key,
-        ScrollLock_Key,
-        NumLock_Key,
-        PrintScreen_Key,
-        PauseBreak_Key,
+        KeyCode::CapsLock_Key,
+        KeyCode::ScrollLock_Key,
+        KeyCode::NumLock_Key,
+        KeyCode::PrintScreen_Key,
+        KeyCode::PauseBreak_Key,
 
-        F1_Key, F2_Key, F3_Key, F4_Key, F5_Key, F6_Key,
-        F7_Key, F8_Key, F9_Key, F10_Key, F11_Key, F12_Key,
+        KeyCode::F1_Key, KeyCode::F2_Key, KeyCode::F3_Key, KeyCode::F4_Key, KeyCode::F5_Key, KeyCode::F6_Key,
+        KeyCode::F7_Key, KeyCode::F8_Key, KeyCode::F9_Key, KeyCode::F10_Key, KeyCode::F11_Key, KeyCode::F12_Key,
 
         // Numpad
-        Keypad_0, Keypad_1, Keypad_2, Keypad_3, Keypad_4,
-        Keypad_5, Keypad_6, Keypad_7, Keypad_8, Keypad_9,
-        Keypad_Period,
-        Keypad_Divide,
-        Keypad_Multiply,
-        Keypad_Minus,
-        Keypad_Plus,
-        Keypad_Enter,
-        Keypad_Equals,
+        KeyCode::Keypad_0, KeyCode::Keypad_1, KeyCode::Keypad_2, KeyCode::Keypad_3, KeyCode::Keypad_4,
+        KeyCode::Keypad_5, KeyCode::Keypad_6, KeyCode::Keypad_7, KeyCode::Keypad_8, KeyCode::Keypad_9,
+        KeyCode::Keypad_Period,
+        KeyCode::Keypad_Divide,
+        KeyCode::Keypad_Multiply,
+        KeyCode::Keypad_Minus,
+        KeyCode::Keypad_Plus,
+        KeyCode::Keypad_Enter,
+        KeyCode::Keypad_Equals,
 
         // Modifiers
-        LeftShift_Key,
-        LeftControl_Key,
-        LeftAlt_Key,
-        LeftCommand_Key,
-        RightShift_Key,
-        RightControl_Key,
-        RightAlt_Key,
-        RightCommand_Key,
+        KeyCode::LeftShift_Key,
+        KeyCode::LeftControl_Key,
+        KeyCode::LeftAlt_Key,
+        KeyCode::LeftCommand_Key,
+        KeyCode::RightShift_Key,
+        KeyCode::RightControl_Key,
+        KeyCode::RightAlt_Key,
+        KeyCode::RightCommand_Key,
 
-        Menu_Key
+        KeyCode::Menu_Key
     };
     const MouseCode Input::s_supportedMouses[] =
     {
-        Mouse_Left,
-        Mouse_Right,
-        Mouse_Middle,
-        Mouse_Last
+        MouseCode::Mouse_Left,
+        MouseCode::Mouse_Right,
+        MouseCode::Mouse_Middle,
+        MouseCode::Mouse_Last
     };
     bool Input::NullWindow()
     {
@@ -119,7 +119,7 @@ namespace RuamEngine
 
     bool Input::GetKey(KeyCode key)
     {
-        return glfwGetKey(s_window, key) == GLFW_PRESS;
+        return glfwGetKey(s_window, static_cast<int>(key)) == GLFW_PRESS;
     }
 
     bool Input::GetKeyDown(KeyCode key)
@@ -149,7 +149,7 @@ namespace RuamEngine
 
     void Input::SetCursorMode(const CursorMode mode)
     {
-        glfwSetInputMode(s_window, GLFW_CURSOR, mode);
+        glfwSetInputMode(s_window, GLFW_CURSOR, static_cast<int>(mode));
     }
 
     CursorMode Input::GetCursorMode() {
@@ -158,7 +158,7 @@ namespace RuamEngine
 
     bool Input::GetMouseButton(MouseCode button)
     {
-        return glfwGetMouseButton(s_window, button) == GLFW_PRESS;
+        return glfwGetMouseButton(s_window, static_cast<int>(button)) == GLFW_PRESS;
     }
 
     bool Input::GetMouseButtonDown(MouseCode button) {

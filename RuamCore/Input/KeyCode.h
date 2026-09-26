@@ -1,6 +1,6 @@
 #pragma once
 
-enum KeyCode {
+enum class KeyCode {
     // These values come from the ones of "glfw3.h"
     SpaceBar_Key = 32,
     Quote_Key = 39,

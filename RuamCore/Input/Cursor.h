@@ -1,13 +1,13 @@
 #pragma once
 
-enum MouseCode {
+enum class MouseCode {
     Mouse_Left,
     Mouse_Right,
     Mouse_Middle,
     Mouse_Last = 7
 };
 
-enum CursorMode
+enum class CursorMode
 {
     // These values come from the ones of "glfw3.h"
     MouseNormal = 0x00034001,

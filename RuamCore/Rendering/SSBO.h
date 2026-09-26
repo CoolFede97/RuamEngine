@@ -6,7 +6,7 @@
 
 namespace RuamEngine
 {
-	enum SSBOType
+	enum class SSBOType
     {
         vertices = 0,
         indices = 1,
@@ -93,9 +93,9 @@ namespace RuamEngine
 		}
 
 		// Puts the data from m_data into the actual SSBO
-		void bindBufferBase(const int& binding)
+		void bindBufferBase(const SSBOType& binding)
 		{
-			GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, binding, m_glName));
+			GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, static_cast<int>(binding), m_glName));
 		}
 
 		void flush()

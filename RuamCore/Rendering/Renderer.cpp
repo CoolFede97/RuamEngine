@@ -21,10 +21,16 @@ namespace RuamEngine
     GLFWwindow* Renderer::s_window = nullptr;
     FrameBufferSPtr Renderer::s_editorFrameBuffer = nullptr;
     FrameBufferSPtr Renderer::s_gameFrameBuffer = nullptr;
+    bool Renderer::s_inited = false;
 	std::unordered_map<ShaderProgramName, std::unordered_map<ModelPath, MatricesSSBO>> Renderer::s_modelRUsMap = {};
 
     void Renderer::Init()
     {
+        if (s_inited)
+        {
+            std::cerr << "Error: Trying to init Renderer when it was already initialized!\n";
+            return;
+        }
 #if defined(__linux__)
         glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_WAYLAND);
 #endif
@@ -76,7 +82,6 @@ namespace RuamEngine
             s_editorFrameBuffer = std::make_shared<FrameBuffer>(framebufferWidth, framebufferHeight);
             s_gameFrameBuffer = std::make_shared<FrameBuffer>(framebufferWidth, framebufferHeight);
 
-            ResourceManager::Init();
             Skybox::Init();
             GizmosManager::Init();
         }

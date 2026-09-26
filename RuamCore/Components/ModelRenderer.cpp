@@ -1,10 +1,12 @@
 #include "ModelRenderer.h"
+#include "RenderingAssets.h"
 #include "Model.h"
 #include "RenderingConstants.h"
 #include "RenderingCore.h"
 #include "ResourceManager.h"
 #include "RuamUtils.h"
-#include "RuamEngine.h"
+#include "Transform.h"
+#include "Entity.h"
 #include <memory>
 
 namespace RuamEngine

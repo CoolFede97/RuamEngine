@@ -1,4 +1,5 @@
 #include "Skybox.h"
+#include "RenderingAssets.h"
 #include "Renderer.h"
 #include "RenderingConstants.h"
 #include "RenderingCore.h"

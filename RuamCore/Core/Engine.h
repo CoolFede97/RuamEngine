@@ -4,7 +4,7 @@
 
 namespace RuamEngine
 {
-    enum EngineState
+    enum class EngineState
     {
         GameMode,
         EditorMode

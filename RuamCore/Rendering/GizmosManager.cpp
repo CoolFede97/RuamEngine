@@ -3,6 +3,7 @@
 #include "ResourceManager.h"
 #include "Vertex.h"
 #include "VertexArray.h"
+#include "RenderingAssets.h"
 
 namespace RuamEngine
 {

@@ -84,6 +84,7 @@ namespace RuamEngine
     public:
 		static std::unordered_map<ShaderProgramName, std::unordered_map<ModelPath, MatricesSSBO>> s_modelRUsMap;
     private:
+        static bool s_inited;
         static RendererConfig s_config;
         static GLFWwindow* s_window;
 

@@ -13,10 +13,6 @@ namespace RuamEngine
     std::unordered_map<std::string, ModelWPtr> ResourceManager::s_modelCache = {};
     std::unordered_map<unsigned int, MaterialWPtr> ResourceManager::s_materialCache = {};
     std::unordered_map<ShaderProgramName, ShaderProgramWPtr> ResourceManager::s_shaderProgramsCache = {};
-    void ResourceManager::Init()
-    {
-        LoadTexture2D("RuamCore/Assets/Sprites/DefaultSprite.png");
-    }
 
     // Texture handling ---------------------------------------------------------------------------------
 

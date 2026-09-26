@@ -24,6 +24,7 @@ namespace RuamEngine
 	{
 	    if (Engine::ShuttingDown()) return;
 	    ResourceManager::RemoveShaderProgramIfExpired(m_vertexShaderPath, m_fragmentShaderPath);
+		GLCall(glDeleteProgram(m_glName));
 	}
 
 	unsigned int ShaderProgram::compileShader(unsigned int type, const std::string& source)

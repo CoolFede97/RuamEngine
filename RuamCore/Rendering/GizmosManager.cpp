@@ -32,7 +32,7 @@ namespace RuamEngine
             return;
         }
 
-        s_shaderProgram = ResourceManager::LoadShaderProgram(gizmosVertexShaderDefaultPath, gizmosFragmentShaderDefaultPath);
+        s_shaderProgram = ResourceManager::LoadShaderProgram(gizmosVertexShaderPath, gizmosFragmentShaderPath);
         s_vertexArray = std::make_unique<VertexArray>();
         s_colliderVertices = std::make_unique<SSBO<GizmoVertex>>(baseVertexCount, GL_DYNAMIC_STORAGE_BIT);
         s_colliderIndices = std::make_unique<SSBO<unsigned int>>(baseIndexCount, GL_DYNAMIC_STORAGE_BIT);

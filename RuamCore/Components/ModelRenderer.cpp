@@ -36,7 +36,7 @@ namespace RuamEngine
     void ModelRenderer::loadModel()
    	{
         m_model = ResourceManager::LoadModel(m_modelPath);
-        m_shaderProgram = ResourceManager::LoadShaderProgram(generalVertexShaderDefaultPath, generalFragmentShaderDefaultPath);
+        m_shaderProgram = ResourceManager::LoadShaderProgram(generalVertexShaderPath, generalFragmentShaderPath);
         auto& ssbo = Renderer::s_modelRUsMap[m_shaderProgram->name()][m_model->relativePath()];
         if (!ssbo)
         {

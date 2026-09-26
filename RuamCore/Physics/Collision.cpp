@@ -53,7 +53,6 @@ namespace RuamEngine
 
         if (invMassSum<=0) return;
 
-        // std::cout << "Penetration: " << col.penetration << "\n";
         glm::vec3 correction = col.normal * col.penetration;
 
         float aInfluence= invMassA / invMassSum;

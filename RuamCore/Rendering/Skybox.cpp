@@ -16,7 +16,7 @@ namespace RuamEngine
     SSBOUPtr<unsigned int> Skybox::s_indicesSSBO = nullptr;
     CubemapSPtr Skybox::s_cubemap = nullptr;
 
-    std::vector<MeshVertex> Skybox::s_vertices = MeshVertex::createCube();
+    std::vector<MeshVertex> Skybox::s_vertices = MeshVertex::CreateCube();
 
     std::vector<unsigned int> Skybox::s_indices = {
         // Back (+Z)
@@ -60,7 +60,7 @@ namespace RuamEngine
             std::cerr << "Error: Trying to init Skybox when it was already initialized!\n";
             return;
         }
-        s_shaderProgram = ResourceManager::LoadShaderProgram(skyboxVertexShaderDefaultPath, skyboxFragmentShaderDefaultPath);
+        s_shaderProgram = ResourceManager::LoadShaderProgram(skyboxVertexShaderPath, skyboxFragmentShaderPath);
         s_vertexArray = std::make_unique<VertexArray>();
         s_verticesSSBO = std::make_unique<SSBO<MeshVertex>>(baseVertexCount, GL_DYNAMIC_STORAGE_BIT);
         s_indicesSSBO = std::make_unique<SSBO<unsigned int>>(baseIndexCount, GL_DYNAMIC_STORAGE_BIT);

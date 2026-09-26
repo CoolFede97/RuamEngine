@@ -21,12 +21,12 @@ namespace RuamEngine
     inline std::string reflectionTexDefaultPath = "RuamCore/Assets/Sprites/DefaultSprite.png";
     inline std::string skyboxDefaultPath = "RuamCore/Assets/Sprites/Skybox.png";
 
-    inline std::string generalVertexShaderDefaultPath = "RuamCore/Rendering/Shaders/GeneralVertexShader.glsl";
-    inline std::string generalFragmentShaderDefaultPath = "RuamCore/Rendering/Shaders/GeneralFragmentShader.glsl";
-    inline std::string skyboxVertexShaderDefaultPath = "RuamCore/Rendering/Shaders/SkyboxVertexShader.glsl";
-    inline std::string skyboxFragmentShaderDefaultPath = "RuamCore/Rendering/Shaders/SkyboxFragmentShader.glsl";
-    inline std::string gizmosVertexShaderDefaultPath = "RuamCore/Rendering/Shaders/GizmosVertexShader.glsl";
-    inline std::string gizmosFragmentShaderDefaultPath = "RuamCore/Rendering/Shaders/GizmosFragmentShader.glsl";
+    inline std::string generalVertexShaderPath = "RuamCore/Rendering/Shaders/GeneralVertexShader.glsl";
+    inline std::string generalFragmentShaderPath = "RuamCore/Rendering/Shaders/GeneralFragmentShader.glsl";
+    inline std::string skyboxVertexShaderPath = "RuamCore/Rendering/Shaders/SkyboxVertexShader.glsl";
+    inline std::string skyboxFragmentShaderPath = "RuamCore/Rendering/Shaders/SkyboxFragmentShader.glsl";
+    inline std::string gizmosVertexShaderPath = "RuamCore/Rendering/Shaders/GizmosVertexShader.glsl";
+    inline std::string gizmosFragmentShaderPath = "RuamCore/Rendering/Shaders/GizmosFragmentShader.glsl";
 
     class ResourceManager
     {

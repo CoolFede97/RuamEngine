@@ -14,8 +14,8 @@ namespace RuamEngine
 		Vec2 m_uv;
 		Vec3 m_normal;
 
-		static std::vector<MeshVertex> createQuad(float size, float x, float y, float texId=0);
-		static std::vector<MeshVertex> createCube();
+		static std::vector<MeshVertex> CreateQuad(float size, float x, float y, float texId=0);
+		static std::vector<MeshVertex> CreateCube();
 		operator std::vector<float>() const
 		{
 			return
@@ -25,7 +25,7 @@ namespace RuamEngine
 				m_normal.x, m_normal.y, m_normal.z,
 			};
 		}
-		static std::vector<float> flattenVertices(const std::vector<MeshVertex>& vertices);
+		static std::vector<float> FlattenVertices(const std::vector<MeshVertex>& vertices);
 	};
 
 

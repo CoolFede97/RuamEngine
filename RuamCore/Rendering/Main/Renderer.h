@@ -2,7 +2,6 @@
 
 #include "Model.h"
 #include "RenderingCore.h"
-#include "RenderingElements.h"
 
 #include "Material.h"
 #include "ShaderProgram.h"

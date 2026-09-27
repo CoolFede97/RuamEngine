@@ -247,12 +247,49 @@ add_library(RuamCore INTERFACE)
 
 # -----------------------------------------------------------------------------------------------------
 
+# Rendering Elements
+
+file (GLOB RENDERING_ELEMENTS_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Rendering/Elements/*.cpp")
+add_library(RenderingElements STATIC ${RENDERING_ELEMENTS_SRC})
+target_link_libraries(RenderingElements PUBLIC Vendor glm Maths glfw glew_s Input Time assimp RenderingUtils Core)
+target_include_directories(RenderingElements PUBLIC ${CMAKE_SOURCE_DIR}/RuamCore/Rendering/Elements)
+
+# Rendering Structures
+
+file (GLOB RENDERING_STRUCTURES_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Rendering/Structures/*.cpp")
+add_library(RenderingStructures STATIC ${RENDERING_STRUCTURES_SRC})
+target_link_libraries(RenderingStructures PUBLIC RenderingElements RenderingManagers Maths Files)
+target_include_directories(RenderingStructures PUBLIC ${CMAKE_SOURCE_DIR}/RuamCore/Rendering/Structures)
+
+# Rendering Managers
+
+file (GLOB RENDERING_MANAGERS_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Rendering/Managers/*.cpp")
+add_library(RenderingManagers STATIC ${RENDERING_MANAGERS_SRC})
+target_link_libraries(RenderingManagers PUBLIC RenderingElements RenderingStructures)
+target_include_directories(RenderingManagers PUBLIC ${CMAKE_SOURCE_DIR}/RuamCore/Rendering/Managers)
+
+# Rendering Utils
+
+add_library(RenderingUtils INTERFACE)
+target_include_directories(RenderingUtils INTERFACE ${CMAKE_SOURCE_DIR}/RuamCore/Rendering/Utils)
+target_link_libraries(RenderingUtils INTERFACE RuamUtils)
+
+# Rendering Constants
+
+add_library(RenderingConstants INTERFACE)
+target_include_directories(RenderingConstants INTERFACE ${CMAKE_SOURCE_DIR}/RuamCore/Rendering/Constants)
+
+# Rendering Main
+
+file (GLOB RENDERING_MAIN_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Rendering/Main/*.cpp")
+add_library(RenderingMain STATIC ${RENDERING_MAIN_SRC})
+target_link_libraries(RenderingMain PUBLIC RenderingElements RenderingStructures RenderingManagers RenderingUtils RenderingConstants)
+target_include_directories(RenderingMain PUBLIC ${CMAKE_SOURCE_DIR}/RuamCore/Rendering/Main)
+
 # Rendering
 
-file (GLOB RENDERING_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Rendering/*.cpp")
-add_library(Rendering STATIC ${RENDERING_SRC})
-target_link_libraries(Rendering PUBLIC Vendor Files Maths RuamUtils ECS Core assimp)
-target_include_directories(Rendering PUBLIC ${CMAKE_SOURCE_DIR}/RuamCore/Rendering)
+add_library(Rendering INTERFACE)
+target_link_libraries(Rendering INTERFACE RenderingElements RenderingStructures RenderingManagers RenderingUtils RenderingConstants)
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -276,7 +313,7 @@ add_library(Geometry STATIC ${GEOMETRY_SRC})
 target_include_directories(Geometry PUBLIC ${CMAKE_SOURCE_DIR}/RuamCore/Maths/Geometry)
 target_link_libraries(Geometry PUBLIC Vendor)
 
-# -----------------------------------------------------------------------------------------------------
+# Maths
 
 add_library(Maths INTERFACE)
 target_link_libraries(Maths INTERFACE Vec Geometry)
@@ -313,7 +350,7 @@ target_include_directories(Input INTERFACE ${CMAKE_SOURCE_DIR}/RuamCore/Input)
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////
 
-# Utils
+# Ruam Utils
 
 add_library(RuamUtils INTERFACE)
 target_include_directories(RuamUtils INTERFACE ${CMAKE_SOURCE_DIR}/RuamCore/RuamUtils)
@@ -382,7 +419,7 @@ target_include_directories(SaveSystem INTERFACE ${CMAKE_SOURCE_DIR}/RuamCore/Sav
 
 file (GLOB CORE_SRC "${CMAKE_SOURCE_DIR}/RuamCore/Core/*.cpp")
 add_library(Core STATIC ${CORE_SRC})
-target_link_libraries(Core PUBLIC Rendering ECS AssetsComponents Input Time SaveSystem Maths Files RuamUtils EventSystem Serialization Physics)
+target_link_libraries(Core PUBLIC RenderingMain ECS AssetsComponents Input Time SaveSystem Maths Files RuamUtils EventSystem Serialization Physics)
 target_include_directories(Core INTERFACE ${CMAKE_SOURCE_DIR}/RuamCore/Core)
 
 

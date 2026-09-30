@@ -12,22 +12,16 @@ namespace RuamEngine
 {
     glm::mat4 Camera::projectionMatrix() const
 	{
-		return glm::perspective(glm::radians(m_fov), m_aspectRatio, m_nearPlane, m_farPlane);
+		return glm::perspectiveLH(glm::radians(m_fov), m_aspectRatio, m_nearPlane, m_farPlane);
 	}
 	glm::mat4 Camera::viewMatrix() const
 	{
-	    return glm::lookAt(position(), position() + front(), m_up);
+	    std::cout << "Front: " << Vec3(front()) << "\n";
+	    return glm::lookAtLH(position(), position() + front(), m_up);
 	};
 	glm::vec3 Camera::front() const
 	{
-        float pitch = glm::radians(rotation().x);
-        float yaw   = glm::radians(rotation().y);
-
-        glm::vec3 front;
-        front.x = cos(pitch) * sin(yaw);
-        front.y = sin(pitch);
-        front.z = cos(pitch) * cos(yaw);
-
+        glm::vec3 front = Vec3::GetDirectionFromEuler({rotation().x, rotation().y, 0.0});
         return glm::normalize(front);
 	}
 	glm::vec3 Camera::back() const

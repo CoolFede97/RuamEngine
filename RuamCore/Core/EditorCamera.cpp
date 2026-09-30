@@ -47,9 +47,7 @@ namespace RuamEngine
     	if (Input::GetKey(KeyCode::A_Key)) horizontalDirection.x -= 1;
     	if (Input::GetKey(KeyCode::D_Key)) horizontalDirection.x += 1;
 
-    	Vec3 direction = Vec3::GetDirectionFromEuler(m_transform.rot);
-    	Vec3 left = Vec3::Up().CrossProduct(direction).Normalized();
-    	m_transform.pos += static_cast<glm::vec3>(direction * horizontalDirection.z * RuamTime::DeltaTime() * m_speed);
-    	m_transform.pos += static_cast<glm::vec3>(left * -horizontalDirection.x * RuamTime::DeltaTime() * m_speed);
+    	m_transform.pos += static_cast<glm::vec3>(front() * horizontalDirection.z * RuamTime::DeltaTime() * m_speed);
+    	m_transform.pos += static_cast<glm::vec3>(right() * horizontalDirection.x * RuamTime::DeltaTime() * m_speed);
 	}
 }

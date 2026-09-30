@@ -5,12 +5,12 @@
     {
      "TYPE": "GlobalLight",
      "m_enabled": true,
-     "m_id": 14
+     "m_id": 1
     },
     {
      "TYPE": "Transform",
      "m_enabled": true,
-     "m_id": 13,
+     "m_id": 0,
      "m_position": [
       0.0,
       100.0,
@@ -29,7 +29,7 @@
     }
    ],
    "m_enabled": true,
-   "m_id": 5,
+   "m_id": 1,
    "m_name": "globalLight"
   },
   {
@@ -47,19 +47,19 @@
       1.0,
       1.0
      ],
-     "m_id": 16
+     "m_id": 3
     },
     {
      "TYPE": "ModelRenderer",
      "m_enabled": true,
-     "m_id": 17,
+     "m_id": 4,
      "m_modelPath": "RuamCore/Assets/Models/Fede.obj"
     },
     {
      "TYPE": "Sandbox",
      "entityCount": 0,
      "m_enabled": true,
-     "m_id": 18
+     "m_id": 5
     },
     {
      "TYPE": "Rigidbody",
@@ -69,7 +69,7 @@
       0.0,
       0.0
      ],
-     "m_id": 19,
+     "m_id": 6,
      "m_isKinematic": false,
      "m_mass": 1.0,
      "m_useGravity": true,
@@ -82,11 +82,11 @@
     {
      "TYPE": "Transform",
      "m_enabled": true,
-     "m_id": 15,
+     "m_id": 2,
      "m_position": [
-      4.0,
+      5.099999904632568,
       0.0,
-      0.0
+      -0.10000000149011612
      ],
      "m_rotation": [
       0.0,
@@ -101,7 +101,7 @@
     }
    ],
    "m_enabled": true,
-   "m_id": 6,
+   "m_id": 2,
    "m_name": "fede"
   },
   {
@@ -112,13 +112,13 @@
      "m_enabled": true,
      "m_farPlane": 3000.0,
      "m_fov": 45.0,
-     "m_id": 21,
+     "m_id": 8,
      "m_nearPlane": 0.10000000149011612
     },
     {
      "TYPE": "Transform",
      "m_enabled": true,
-     "m_id": 20,
+     "m_id": 7,
      "m_position": [
       0.0,
       0.0,
@@ -137,7 +137,7 @@
     }
    ],
    "m_enabled": true,
-   "m_id": 7,
+   "m_id": 3,
    "m_name": "camera"
   },
   {
@@ -155,12 +155,12 @@
       1.0,
       1.0
      ],
-     "m_id": 23
+     "m_id": 10
     },
     {
      "TYPE": "ModelRenderer",
      "m_enabled": true,
-     "m_id": 24,
+     "m_id": 11,
      "m_modelPath": "RuamCore/Assets/Models/zyzz.glb"
     },
     {
@@ -171,7 +171,7 @@
       0.0,
       0.0
      ],
-     "m_id": 25,
+     "m_id": 12,
      "m_isKinematic": false,
      "m_mass": 4.0,
      "m_useGravity": true,
@@ -184,7 +184,7 @@
     {
      "TYPE": "Transform",
      "m_enabled": true,
-     "m_id": 22,
+     "m_id": 9,
      "m_position": [
       0.6000000238418579,
       0.0,
@@ -203,20 +203,20 @@
     }
    ],
    "m_enabled": true,
-   "m_id": 8,
+   "m_id": 4,
    "m_name": "fede2"
   }
  ],
  "m_id": 0,
  "m_lastSavedCameraTransform": [
   [
-   2.314192771911621,
-   10.960015296936035,
-   31.751211166381836
+   8.398837089538574,
+   13.424222946166992,
+   -44.9498405456543
   ],
   [
-   -19.299949645996094,
-   -538.887451171875,
+   -14.799942970275879,
+   -627.5870361328125,
    0.0
   ]
  ],

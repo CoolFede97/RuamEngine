@@ -62,15 +62,16 @@ Vec3 Vec3::CrossProduct(Vec3 other) const
     return cross;
 }
 
+// Doesn't take the Z axis into account
 Vec3 Vec3::GetDirectionFromEuler(Vec3 eulerAngles)
 {
     float pitch = glm::radians(eulerAngles.x);
     float yaw = glm::radians(eulerAngles.y);
 
     Vec3 direction;
-    direction.x = cos(pitch) * sin(yaw);
+    direction.x = cos(pitch) * cos(yaw);
     direction.y = sin(pitch);
-    direction.z = cos(pitch) * cos(yaw);
+    direction.z = cos(pitch) * sin(yaw);
 
     return direction;
 }

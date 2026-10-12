@@ -19,7 +19,7 @@ namespace RuamEngine
 
     BoxCollider* Rigidbody::GetBoxCollider()
     {
-        BoxCollider* box = entity()->getComponent<BoxCollider>();
+        BoxCollider* box = getComponent<BoxCollider>();
         if (box) return box;
         else return nullptr;
     }

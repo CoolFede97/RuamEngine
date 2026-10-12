@@ -7,8 +7,6 @@
 #include <string>
 #include <algorithm>
 
-#include "RuamUtils.h"
-#include "nlohmann/json.hpp"
 #include "Component.h"
 #include "Scene.h"
 
@@ -26,13 +24,14 @@ namespace RuamEngine
 		using ComponentVector = std::vector<std::unique_ptr<Component>>;
 		using ComponentVectorMap = std::map<std::type_index, ComponentVector>;
 
-		template<class Cmp>
+		template<std::derived_from<Component> Cmp>
 		Cmp* addComponent() {
 		    if constexpr(Cmp::s_unique)
 			{
 			    if (auto* c = getComponent<Cmp>()) return c;
 			}
 			std::unique_ptr<Cmp> cmp = std::make_unique<Cmp>(m_id);
+			cmp->m_entity = this;
 			const std::type_index tidx = typeid(Cmp);
 			if (m_components.count(tidx) <= 0) m_components.insert({tidx, ComponentVector()});
 
@@ -42,13 +41,14 @@ namespace RuamEngine
 			return dynamic_cast<Cmp*>(m_components[tidx].back().get());
 		}
 
-		template<class Cmp, typename... Args>
+		template<std::derived_from<Component> Cmp, typename... Args>
 		Cmp* addComponent(Args&&... args) {
             if constexpr(Cmp::s_unique)
             {
                 if (auto* c = getComponent<Cmp>()) return c;
             }
 			std::unique_ptr<Cmp> cmp = std::make_unique<Cmp>(m_id, std::forward<Args>(args...)...);
+			cmp->m_entity = this;
 			const std::type_index tidx = typeid(Cmp);
 			if (m_components.count(tidx) <= 0) m_components.insert({tidx, ComponentVector()});
 
@@ -98,11 +98,10 @@ namespace RuamEngine
 			auto pair = m_components.find(typeid(Cmp));
 			if (pair == m_components.end() || pair->second.size() == 0)
 			{
-				std::cerr << "Couldn't find and destroy a component of type " << typeid(Cmp).name() <<" with id " << " in the entity called" << m_name << "with id " << m_id << "\n";
+				std::cerr << "Couldn't find and remove a component of type " << typeid(Cmp).name() <<" with id " << " in the entity called" << m_name << "with id " << m_id << "\n";
 				return;
 			}
 			pair->second.front()->destroy();
-			// removeComponentInJustCreatedComponents<Comp>();
 		}
 
 		template<class Cmp>
@@ -112,7 +111,7 @@ namespace RuamEngine
 			if (pair->second.size() == 0) return;
 			auto cmp = std::find(pair->second.begin(), pair->second.end(), comp);
 			if (cmp != pair->second.end()) cmp->get()->destroy();
-			else std::cerr << "Couldn't find and destroy a component of type " << typeid(Cmp).name() <<" with id " << comp.id() << " in the entity called" << m_name << "with id " << m_id << "\n";
+			else std::cerr << "Couldn't find and remove a component of type " << typeid(Cmp).name() <<" with id " << comp.id() << " in the entity called" << m_name << "with id " << m_id << "\n";
 		}
 
 		unsigned int id() const;
@@ -122,10 +121,9 @@ namespace RuamEngine
 		void update();
 		void renderUpdate();
 
-
 		void destroy();
 
-		void setEnabled(bool status);
+		void setEnabled(bool state);
 
 		bool enabled() const;
 
@@ -134,9 +132,9 @@ namespace RuamEngine
 		inline Transform* transform() const { return m_transform; };
 
 	private:
-
 		void forEachActiveComponent(std::function<void(Component*)> fn);
-
+		void setEnabledRecursive(Transform* childTransform, bool parentEnabled); // Used internally. Shouldn't be used by the user
+		void setComponentsEnabled(bool state);
 		unsigned int m_id;
 		static unsigned int s_idCount;
 	    std::string m_name;
@@ -146,11 +144,16 @@ namespace RuamEngine
 
 		bool m_enabled = true;
 		bool m_destroyFlag = false;
+		bool m_disabledManually = false;
 
 		static const std::string s_defaultName;
 
 		friend class Scene;
+		friend class Component;
+		friend class Serial;
 	};
 
 	using EntityUPtr = std::unique_ptr<Entity>;
 }
+
+#include "Component.inl"

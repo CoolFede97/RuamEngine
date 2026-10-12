@@ -43,7 +43,7 @@ namespace RuamEngine
 
     void BoxCollider::GetAndSetWithModelRenderer()
     {
-        ModelRenderer* mr = entity()->getComponent<ModelRenderer>();
+        ModelRenderer* mr = getComponent<ModelRenderer>();
         if (mr && mr->m_model)
         {
             const AABB& aabb = mr->m_model->aabb();

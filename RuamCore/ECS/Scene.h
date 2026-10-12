@@ -37,7 +37,6 @@ namespace RuamEngine
 
 	    Entity* createEntity();
 	    Entity* createEntity(const std::string& name);
-	    Entity* createEntity(unsigned int idx);
 
 	    Entity* getEntityByIdx(unsigned int idx) const;
 	    Entity* getEntityById(unsigned int id) const;
@@ -63,8 +62,8 @@ namespace RuamEngine
 	    std::vector<Component*> m_componentsToStart = {};
 
 	    std::vector<std::unique_ptr<Entity>> m_entities;
-		const std::string m_name;
-	    const unsigned int m_id;
+		const std::string m_name = "";
+	    const unsigned int m_id = 0;
 
 	    static unsigned int s_idCount;
 		static const std::string s_defaultName;

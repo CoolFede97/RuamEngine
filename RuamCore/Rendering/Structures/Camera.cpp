@@ -16,7 +16,6 @@ namespace RuamEngine
 	}
 	glm::mat4 Camera::viewMatrix() const
 	{
-	    std::cout << "Front: " << Vec3(front()) << "\n";
 	    return glm::lookAtLH(position(), position() + front(), m_up);
 	};
 	glm::vec3 Camera::front() const

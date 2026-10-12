@@ -1,11 +1,9 @@
 #pragma once
 #include "ComponentField.h"
 #include "ComponentsInitializer.h"
-#include "nlohmann/json.hpp"
 #include <map>
 #include <memory>
 #include <string>
-
 #include "Editor.h"
 
 #define DECL_REGISTER_COMPONENT(ComponentName) \
@@ -28,9 +26,9 @@
 
 namespace RuamEngine
 {
-	class Entity;
 	class Transform;
 	class Component;
+	class Entity;
 
 	struct ComponentFactory
 	{
@@ -43,7 +41,7 @@ namespace RuamEngine
 		inline static std::map<std::string, ComponentFactory> componentRegistry;
 		static constexpr bool s_unique = false;
 		virtual ~Component() = default;
-		explicit Component(const unsigned int entityId) : m_entityId(entityId), m_id(s_idCount++) {
+		explicit Component(const unsigned int entityId) : m_entity(nullptr), m_id(s_idCount++) {
 		}
 		virtual void start() {};  // This is called only in playmode
 		virtual void update() {}; // This is called only in playmode
@@ -56,12 +54,27 @@ namespace RuamEngine
 		unsigned int id() const;
 		Entity* entity() const;
 		Transform* transform() const; // returns the entity's transform
+		bool disabledManually() const;
+
+		template<class Cmp>
+		Cmp* getComponent() const;
+
+		std::vector<Component*> getComponents() const;
+
+		template<class Cmp>
+		std::vector<Cmp*> getComponentsOfType() const;
+
+		template<class Cmp>
+		void removeComponent();
+
+		template<class Cmp>
+		void removeComponent(Component& comp);
 
 		bool enabled() const { return m_enabled; }
 		bool destroyFlag() const { return m_destroyFlag; }
 
 		void destroy() { m_destroyFlag = true; }
-		void setEnabled(bool status) { m_enabled = status; };
+		void setEnabled(bool state);
 
 		virtual std::vector<FieldInfo> fields() { return {}; };
 
@@ -75,19 +88,25 @@ namespace RuamEngine
 
         // Doesn't use the macro IMPL_DRAW_SERIALIZED_MEMBERS since this is the virtual one.
         virtual void drawSerializedMembers();
+
+        static void ComponentRegister();
+    	virtual std::string name() const { return "Component"; }
+    	friend class ComponentsInitializer;
+        friend class Scene;
+        friend class Entity;
 	protected:
-		const unsigned int m_entityId;
+		Entity* m_entity;
 		const unsigned int m_id;
 		static unsigned int s_idCount;
 		bool m_enabled = true;
 		bool m_started = false;
 		bool m_destroyFlag = false;
+		bool m_disabledManually = false;
+	private:
+	    // Internal API: called only when the owning entity changes state
+	    void setEnabledByEntity(bool entityEnabled);
 
-	public:
-        static void ComponentRegister();
-    	virtual std::string name() const { return "Component"; }
-    	friend class ComponentsInitializer;
-        friend class Scene;
+		friend class Entity;
 	};
 
 	using ComponentUPtr = std::unique_ptr<Component>;

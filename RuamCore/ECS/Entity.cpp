@@ -86,9 +86,29 @@ namespace RuamEngine
 		return m_destroyFlag;
 	}
 
-	void Entity::setEnabled(bool status)
+	void Entity::setEnabled(bool state)
 	{
-		m_enabled = status;
+	    if (state && transform()->parent() && !transform()->parent()->entity()->enabled())
+		{
+  		    std::cout << "Error: Trying to enable entity of name " << m_name << " with id " << id() << ", but its parent is disabled!\n";
+ 			return;
+		}
+		m_disabledManually = !state;
+		setEnabledRecursive(transform(), state);
+	}
+
+	void Entity::setEnabledRecursive(Transform* childTransform, bool parentEnabled) // Used internally. Shouldn't be used by the user
+	{
+	    Entity* entity = childTransform->entity();
+	    bool effectiveEnabled = parentEnabled && !entity->m_disabledManually;
+
+	    entity->m_enabled = effectiveEnabled;
+	    entity->setComponentsEnabled(effectiveEnabled);
+
+	    for (Transform* transform : childTransform->children())
+		{
+		    setEnabledRecursive(transform, effectiveEnabled);
+		}
 	}
 
 	bool Entity::enabled() const
@@ -107,5 +127,15 @@ namespace RuamEngine
 			}
 		}
 		return comps;
+	}
+	void Entity::setComponentsEnabled(bool state)
+	{
+	    for (auto& cmpPair : m_components)
+		{
+		    for (auto& cmp : cmpPair.second)
+			{
+				cmp->setEnabledByEntity(state);
+			}
+		}
 	}
 }

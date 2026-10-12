@@ -44,20 +44,6 @@ namespace RuamEngine
 		return entity_ptr;
 	}
 
-	Entity* Scene::createEntity(unsigned int idx)
-	{
-	    // Going to have to check this
-	    //assert(idx < m_entities.size());
-		std::unique_ptr<Entity> entity = std::make_unique<Entity>();
-		entity->m_parentScene = this;
-		entity->m_transform = entity->addComponent<Transform>();
-	    auto index = m_entities.cbegin();
-	    std::advance(index, idx);
-		Entity* entity_ptr = entity.get();
-		m_entities.push_back(std::move(entity));
-		return entity_ptr;
-	}
-
 	Entity* Scene::getEntityByIdx(const unsigned int idx) const
 	{
 	    auto iter = m_entities.begin();

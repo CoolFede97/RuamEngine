@@ -78,13 +78,13 @@ namespace RuamEngine
     		std::string entityName = jsonEntity["m_name"];
     		Entity* entity = jsonScene->createEntity(entityName);
     		bool entityEnabled = jsonEntity["m_enabled"];
-    		entity->setEnabled(entityEnabled);
     		if (jsonEntity["m_components"].size()<=1) return;
 
     		for (const nlohmann::json& jsonCmp : jsonEntity["m_components"])
     		{
                 DeserializeJsonComponent(jsonCmp, entity);
     		}
+    		entity->m_enabled = entityEnabled;
     	}
     	catch (const std::exception& exception)
     	{

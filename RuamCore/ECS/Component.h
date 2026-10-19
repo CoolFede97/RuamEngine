@@ -29,6 +29,7 @@ namespace RuamEngine
 	class Transform;
 	class Component;
 	class Entity;
+	class Collision;
 
 	struct ComponentFactory
 	{
@@ -47,7 +48,6 @@ namespace RuamEngine
 		virtual void update() {}; // This is called only in playmode
 		virtual void renderStart() {};
 		virtual void renderUpdate() {}; // This is called regardless of the state of the engine (this means it's called even in edit mode)
-
 		bool operator==(const Component& other) const;
 		bool operator==(const std::unique_ptr<Component>& other) const;
 
@@ -103,6 +103,10 @@ namespace RuamEngine
 		bool m_destroyFlag = false;
 		bool m_disabledManually = false;
 	private:
+		virtual void onCollisionEnter(const Collision& col) {};
+		virtual void onCollisionStay(const Collision& col) {};
+		virtual void onCollisionExit(const Collision& col) {};
+
 	    // Internal API: called only when the owning entity changes state
 	    void setEnabledByEntity(bool entityEnabled);
 

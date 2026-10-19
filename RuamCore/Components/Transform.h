@@ -41,7 +41,7 @@ namespace RuamEngine
 
 		void setParent(Transform* parent);
 		void addChild(Transform* child);
-		void removeChild(unsigned int idx);
+		void removeChild(unsigned int id);
 		const std::list<Transform*>& children() const;
 		inline Transform* parent() const { return m_parent; };
 

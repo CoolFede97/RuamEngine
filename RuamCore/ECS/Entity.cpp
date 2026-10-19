@@ -16,6 +16,7 @@ namespace RuamEngine
 
 	Entity::~Entity()
 	{
+	    if (transform()->parent() && !transform()->parent()->destroyFlag()) transform()->parent()->removeChild(id());
 	    for (auto &comp_v: m_components)
 	    {
 	        for (auto &&comp: comp_v.second)
@@ -134,8 +135,39 @@ namespace RuamEngine
 		{
 		    for (auto& cmp : cmpPair.second)
 			{
+			    if (!cmp->enabled()) continue;
 				cmp->setEnabledByEntity(state);
 			}
 		}
+	}
+	void Entity::onCollisionEnter(const Collision& col)
+	{
+	    for (auto& cmpPair : m_components)
+		{
+            for (auto& cmp : cmpPair.second)
+            {
+                cmp->onCollisionEnter(col);
+            }
+		}
+	}
+	void Entity::onCollisionExit(const Collision& col)
+	{
+        for (auto& cmpPair : m_components)
+        {
+            for (auto& cmp : cmpPair.second)
+            {
+                cmp->onCollisionExit(col);
+            }
+        }
+	}
+	void Entity::onCollisionStay(const Collision& col)
+	{
+        for (auto& cmpPair : m_components)
+        {
+            for (auto& cmp : cmpPair.second)
+            {
+                cmp->onCollisionStay(col);
+            }
+        }
 	}
 }

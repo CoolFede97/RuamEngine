@@ -8,7 +8,9 @@
 #include <algorithm>
 
 #include "Component.h"
+#include "PhysicsManager.h"
 #include "Scene.h"
+#include "Collision.h"
 
 namespace RuamEngine
 {
@@ -135,6 +137,10 @@ namespace RuamEngine
 		void forEachActiveComponent(std::function<void(Component*)> fn);
 		void setEnabledRecursive(Transform* childTransform, bool parentEnabled); // Used internally. Shouldn't be used by the user
 		void setComponentsEnabled(bool state);
+		void onCollisionEnter(const Collision& col);
+		void onCollisionExit(const Collision& col);
+		void onCollisionStay(const Collision& col);
+
 		unsigned int m_id;
 		static unsigned int s_idCount;
 	    std::string m_name;
@@ -151,6 +157,7 @@ namespace RuamEngine
 		friend class Scene;
 		friend class Component;
 		friend class Serial;
+		friend class PhysicsManager;
 	};
 
 	using EntityUPtr = std::unique_ptr<Entity>;

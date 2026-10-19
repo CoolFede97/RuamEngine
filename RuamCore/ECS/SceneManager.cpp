@@ -34,10 +34,16 @@ namespace RuamEngine
 
 	void SceneManager::ChangeActiveScene(const std::string &sceneName)
 	{
+	    unsigned int selectedEntityId = Editor::s_selectedEntity ? Editor::s_selectedEntity->id() : -1;
 		Editor::s_selectedEntity = nullptr;
 		GameCamera::EmptyMainCamera();
 		s_activeScene = nullptr;
 		s_activeScene.reset(Serial::DeserializeJsonScene(SaveSystem::LoadJsonScene(sceneName)));
+		if (selectedEntityId != -1)
+		{
+		    Editor::s_selectedEntity = s_activeScene->getEntityById(selectedEntityId);
+			std::cout << "Found: " << Editor::s_selectedEntity << "\n";
+		}
 		if (s_pendingLoadCameraPos)
 		{
 		    Editor::SetCameraTransform(s_activeScene->m_lastSavedCameraTransform);

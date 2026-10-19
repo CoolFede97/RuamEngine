@@ -4,10 +4,13 @@
 #include "Rigidbody.h"
 #include "RuamTime.h"
 #include "Transform.h"
+#include "Entity.h"
+
 namespace RuamEngine
 {
     std::vector<Rigidbody*> PhysicsManager::s_rigidbodies = {};
     std::vector<BoxCollider*> PhysicsManager::s_boxColliders = {};
+    std::map<rbPairKey, Collision> PhysicsManager::s_previousCollisions = {};
 
     void PhysicsManager::Update()
     {
@@ -38,6 +41,20 @@ namespace RuamEngine
         }
 
         for (Collision& col : collisions) ResolveCollision(col);
+
+        std::map<rbPairKey, Collision> currentCollisions;
+        for (Collision& col : collisions)
+        {
+            rbPairKey pair = std::minmax(col.a, col.b);
+            currentCollisions[pair] = col;
+            if (!s_previousCollisions.count(pair)) { pair.first->entity()->onCollisionEnter(col); pair.second->entity()->onCollisionEnter(col);}
+            else { pair.first->entity()->onCollisionStay(col); pair.second->entity()->onCollisionStay(col);}
+        }
+        for (auto& [key, oldCollision] : s_previousCollisions)
+        {
+            if (!currentCollisions.count(key)) { key.first->entity()->onCollisionExit(oldCollision); key.second->entity()->onCollisionExit(oldCollision); }
+        }
+        s_previousCollisions = currentCollisions;
     }
 
     void PhysicsManager::AddRigidbody(Rigidbody* rb)

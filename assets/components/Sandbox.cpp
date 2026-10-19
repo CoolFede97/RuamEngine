@@ -16,5 +16,18 @@ namespace RuamEngine
 		}
     // transform()->translate(-10*RuamTime::DeltaTime(),0,0);
 	};
+
+	void Sandbox::onCollisionEnter(const Collision& col)
+	{
+	    std::cout << "collision detected!\n";
+	}
+	void Sandbox::onCollisionExit(const Collision& col)
+	{
+	    std::cout << "collision exit detected!\n";
+	}
+	void Sandbox::onCollisionStay(const Collision& col)
+	{
+	    std::cout << "This shouldn't be called!\n";
+	}
     DEF_REGISTER_COMPONENT(Sandbox);
 }

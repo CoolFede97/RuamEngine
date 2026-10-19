@@ -142,10 +142,11 @@ namespace RuamEngine
 		child->setParent(this);
 	}
 
-	void Transform::removeChild(unsigned int idx) {
-		auto iter = m_children.begin();
-		std::advance(iter, idx);
-		m_children.erase(iter);
+	void Transform::removeChild(unsigned int id) {
+        auto it = std::find_if(children().begin(), children().end(),
+        [id](const Transform* transform) { return transform->entity()->id() == id; });
+
+        if (it != children().end())m_children.erase(it);
 	}
 
 	const std::list<Transform*>& Transform::children() const {

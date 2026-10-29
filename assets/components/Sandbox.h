@@ -24,9 +24,9 @@ namespace RuamEngine
 	    unsigned int entityCount = 0;
 	    Vec3 lastEntityPos = {0,0,0};
 		void update() override;
-		void onCollisionEnter(const Collision& col) override;
-		void onCollisionExit(const Collision& col) override;
-		void onCollisionStay(const Collision& col) override;
+		void onCollisionEnter(const CollisionInfo& col) override;
+		void onCollisionExit(const CollisionInfo& col) override;
+		void onCollisionStay(const CollisionInfo& col) override;
 		std::vector<FieldInfo> fields() override
 		{
             return {makeFieldInfo<unsigned int>("entityCount", entityCount)};

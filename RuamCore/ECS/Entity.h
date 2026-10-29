@@ -137,9 +137,9 @@ namespace RuamEngine
 		void forEachActiveComponent(std::function<void(Component*)> fn);
 		void setEnabledRecursive(Transform* childTransform, bool parentEnabled); // Used internally. Shouldn't be used by the user
 		void setComponentsEnabled(bool state);
-		void onCollisionEnter(const Collision& col);
-		void onCollisionExit(const Collision& col);
-		void onCollisionStay(const Collision& col);
+		void onCollisionEnter(const CollisionInfo& col);
+		void onCollisionExit(const CollisionInfo& col);
+		void onCollisionStay(const CollisionInfo& col);
 
 		unsigned int m_id;
 		static unsigned int s_idCount;

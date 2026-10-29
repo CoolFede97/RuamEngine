@@ -9,7 +9,7 @@
 
 namespace RuamEngine
 {
-    BoxCollider::BoxCollider(unsigned int entityId) : Component(entityId), m_center(0,0,0), m_halfSize(0.5, 0.5, 0.5)
+    BoxCollider::BoxCollider(unsigned int entityId) : Collider(entityId), m_center(0,0,0), m_halfSize(0.5, 0.5, 0.5)
     {
         PhysicsManager::AddBoxCollider(this);
         if (SceneManager::ActiveScene()) GetAndSetWithModelRenderer();

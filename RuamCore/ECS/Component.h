@@ -29,7 +29,7 @@ namespace RuamEngine
 	class Transform;
 	class Component;
 	class Entity;
-	class Collision;
+	class CollisionInfo;
 
 	struct ComponentFactory
 	{
@@ -103,9 +103,9 @@ namespace RuamEngine
 		bool m_destroyFlag = false;
 		bool m_disabledManually = false;
 	private:
-		virtual void onCollisionEnter(const Collision& col) {};
-		virtual void onCollisionStay(const Collision& col) {};
-		virtual void onCollisionExit(const Collision& col) {};
+		virtual void onCollisionEnter(const CollisionInfo& col) {};
+		virtual void onCollisionStay(const CollisionInfo& col) {};
+		virtual void onCollisionExit(const CollisionInfo& col) {};
 
 	    // Internal API: called only when the owning entity changes state
 	    void setEnabledByEntity(bool entityEnabled);

@@ -140,7 +140,7 @@ namespace RuamEngine
 			}
 		}
 	}
-	void Entity::onCollisionEnter(const Collision& col)
+	void Entity::onCollisionEnter(const CollisionInfo& col)
 	{
 	    for (auto& cmpPair : m_components)
 		{
@@ -150,7 +150,7 @@ namespace RuamEngine
             }
 		}
 	}
-	void Entity::onCollisionExit(const Collision& col)
+	void Entity::onCollisionExit(const CollisionInfo& col)
 	{
         for (auto& cmpPair : m_components)
         {
@@ -160,7 +160,7 @@ namespace RuamEngine
             }
         }
 	}
-	void Entity::onCollisionStay(const Collision& col)
+	void Entity::onCollisionStay(const CollisionInfo& col)
 	{
         for (auto& cmpPair : m_components)
         {

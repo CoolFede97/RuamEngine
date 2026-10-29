@@ -17,15 +17,15 @@ namespace RuamEngine
     // transform()->translate(-10*RuamTime::DeltaTime(),0,0);
 	};
 
-	void Sandbox::onCollisionEnter(const Collision& col)
+	void Sandbox::onCollisionEnter(const CollisionInfo& col)
 	{
-	    std::cout << "collision detected!\n";
+	    std::cout << "Hello, I am " << entity()->name() << " and I collided with " << col.other->name() << "!\n";
 	}
-	void Sandbox::onCollisionExit(const Collision& col)
+	void Sandbox::onCollisionExit(const CollisionInfo& col)
 	{
-	    std::cout << "collision exit detected!\n";
+	    std::cout << "Hello, I am " << entity()->name() << " and I stopped colliding with " << col.other->name() << "!\n";
 	}
-	void Sandbox::onCollisionStay(const Collision& col)
+	void Sandbox::onCollisionStay(const CollisionInfo& col)
 	{
 	    std::cout << "This shouldn't be called!\n";
 	}

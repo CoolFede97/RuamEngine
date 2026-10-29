@@ -45,14 +45,18 @@ namespace RuamEngine
         std::map<rbPairKey, Collision> currentCollisions;
         for (Collision& col : collisions)
         {
-            rbPairKey pair = std::minmax(col.a, col.b);
+            rbPairKey pair = {col.a, col.b};
             currentCollisions[pair] = col;
-            if (!s_previousCollisions.count(pair)) { pair.first->entity()->onCollisionEnter(col); pair.second->entity()->onCollisionEnter(col);}
-            else { pair.first->entity()->onCollisionStay(col); pair.second->entity()->onCollisionStay(col);}
+            CollisionInfo colInfoA {col.b->entity(), col.normal, col.penetration};
+            CollisionInfo colInfoB {col.a->entity(), -col.normal, col.penetration};
+            if (!s_previousCollisions.count(pair)) { pair.first->entity()->onCollisionEnter(colInfoA); pair.second->entity()->onCollisionEnter(colInfoB);}
+            else { pair.first->entity()->onCollisionStay(colInfoA); pair.second->entity()->onCollisionStay(colInfoB);}
         }
         for (auto& [key, oldCollision] : s_previousCollisions)
         {
-            if (!currentCollisions.count(key)) { key.first->entity()->onCollisionExit(oldCollision); key.second->entity()->onCollisionExit(oldCollision); }
+            CollisionInfo colInfoA { oldCollision.b->entity(), oldCollision.normal, oldCollision.penetration };
+            CollisionInfo colInfoB { oldCollision.a->entity(), -oldCollision.normal, oldCollision.penetration };
+            if (!currentCollisions.count(key)) { key.first->entity()->onCollisionExit(colInfoA); key.second->entity()->onCollisionExit(colInfoB); }
         }
         s_previousCollisions = currentCollisions;
     }

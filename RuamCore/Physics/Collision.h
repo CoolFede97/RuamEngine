@@ -14,6 +14,13 @@ namespace RuamEngine
         float penetration;
     };
 
+    struct CollisionInfo // Used as parameter for OnCollisionX functions
+    {
+        Entity* other;
+        glm::vec3 normal;
+        float penetration;
+    };
+
     bool CheckAABBOverlap(BoxCollider* boxA, BoxCollider* boxB, glm::vec3& outNormal, float& outPenetration);
     void ResolveCollision(Collision& col);
 }

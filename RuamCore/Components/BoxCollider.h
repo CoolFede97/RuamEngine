@@ -5,12 +5,12 @@
 #include "Vec3.h"
 #include "Vertex.h"
 #include "RenderingConstants.h"
-
+#include "Collider.h"
 namespace RuamEngine
 {
-    class BoxCollider : public Component
+    class BoxCollider : public Collider
     {
-        using Component::Component;
+        using Collider::Collider;
 
     public:
         BoxCollider(unsigned int entityId);

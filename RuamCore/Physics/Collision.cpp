@@ -1,4 +1,6 @@
 #include "Collision.h"
+#include "Collider.h"
+#include "Rigidbody.h"
 #include "Transform.h"
 
 namespace RuamEngine
@@ -44,11 +46,16 @@ namespace RuamEngine
 
     void ResolveCollision(Collision& col)
     {
-        Rigidbody* a = col.a;
-        Rigidbody* b = col.b;
+        Collider* a = col.a;
+        Collider* b = col.b;
 
-        float invMassA = a->m_isKinematic ? 0 : 1 / a->m_mass;
-        float invMassB = b->m_isKinematic ? 0 : 1 / b->m_mass;
+        if (a->m_trigger || b->m_trigger) return;
+
+        Rigidbody* rbA = a->getComponent<Rigidbody>();
+        Rigidbody* rbB = b->getComponent<Rigidbody>();
+
+        float invMassA = rbA ? 1 / rbA->m_mass : 0;
+        float invMassB = rbB ? 1 / rbB->m_mass : 0;
         float invMassSum = invMassA + invMassB;
 
         if (invMassSum<=0) return;
@@ -58,18 +65,18 @@ namespace RuamEngine
         float aInfluence= invMassA / invMassSum;
         float bInfluence = invMassB / invMassSum;
 
-        if (!a->m_isKinematic) a->transform()->translate(-correction * aInfluence);
-        if (!b->m_isKinematic) b->transform()->translate(correction * bInfluence);
+        a->transform()->translate(-correction * aInfluence);
+        b->transform()->translate(correction * bInfluence);
 
-        glm::vec3 deltaVelocity = b->m_velocity - a->m_velocity;
+        glm::vec3 deltaVelocity = (rbB ? rbB->m_velocity : glm::vec3(0,0,0)) - (rbA ? rbA->m_velocity : glm::vec3(0,0,0));
         float velAlongNormal = glm::dot(deltaVelocity, col.normal);
 
         if (velAlongNormal>0) return;
 
-        float restitution = 1.0f;
-        float force = (1 + restitution) * velAlongNormal;
+        float bounciness = ((rbA ? rbA->m_bounciness : 0) + (rbB ? rbB->m_bounciness : 0)) / 2;
+        float force = (1 + bounciness) * velAlongNormal;
 
-        a->m_velocity += force * col.normal * aInfluence;
-        b->m_velocity -= force * col.normal * bInfluence;
+        if (rbA) rbA->m_velocity += force * col.normal * aInfluence;
+        if (rbB) rbB->m_velocity -= force * col.normal * bInfluence;
     }
 }

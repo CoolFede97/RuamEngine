@@ -19,15 +19,13 @@ namespace RuamEngine
 
 	void Sandbox::onCollisionEnter(const CollisionInfo& col)
 	{
-	    std::cout << "Hello, I am " << entity()->name() << " and I collided with " << col.other->name() << "!\n";
+	    std::cout << "On Collision Enter called\n";
 	}
 	void Sandbox::onCollisionExit(const CollisionInfo& col)
 	{
-	    std::cout << "Hello, I am " << entity()->name() << " and I stopped colliding with " << col.other->name() << "!\n";
 	}
 	void Sandbox::onCollisionStay(const CollisionInfo& col)
 	{
-	    std::cout << "This shouldn't be called!\n";
 	}
     DEF_REGISTER_COMPONENT(Sandbox);
 }

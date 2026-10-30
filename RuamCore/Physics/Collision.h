@@ -8,15 +8,15 @@ namespace RuamEngine
 {
     struct Collision
     {
-        Rigidbody* a;
-        Rigidbody* b;
+        Collider* a;
+        Collider* b;
         glm::vec3 normal;
         float penetration;
     };
 
     struct CollisionInfo // Used as parameter for OnCollisionX functions
     {
-        Entity* other;
+        Collider* other;
         glm::vec3 normal;
         float penetration;
     };

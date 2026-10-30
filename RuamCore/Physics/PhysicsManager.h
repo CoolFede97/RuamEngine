@@ -9,12 +9,11 @@
 
 namespace RuamEngine
 {
-    using rbPairKey = std::pair<Rigidbody*, Rigidbody*>;
+    using colliderPairKey = std::pair<Collider*, Collider*>;
     class PhysicsManager
     {
-        static std::vector<Rigidbody*> s_rigidbodies;
         static std::vector<BoxCollider*> s_boxColliders;
-        static std::map<rbPairKey, Collision> s_previousCollisions;
+        static std::map<colliderPairKey, Collision> s_previousCollisions;
     public:
         static void AddRigidbody(Rigidbody* rb);
         static void AddBoxCollider(BoxCollider* box);

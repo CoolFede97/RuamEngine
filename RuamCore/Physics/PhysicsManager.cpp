@@ -8,71 +8,64 @@
 
 namespace RuamEngine
 {
-    std::vector<Rigidbody*> PhysicsManager::s_rigidbodies = {};
     std::vector<BoxCollider*> PhysicsManager::s_boxColliders = {};
-    std::map<rbPairKey, Collision> PhysicsManager::s_previousCollisions = {};
+    std::map<colliderPairKey, Collision> PhysicsManager::s_previousCollisions = {};
 
     void PhysicsManager::Update()
     {
-        for (Rigidbody* rb : s_rigidbodies)
+        std::set<unsigned int> rbIdsUpdated = {};
+        for (Collider* col : s_boxColliders)
         {
-            if (!rb->enabled()) return;
-            if (!rb->m_isKinematic && rb->m_useGravity) rb->m_velocity += rb->m_gravity*RuamTime::DeltaTime();
+            Rigidbody* rb = col->getComponent<Rigidbody>();
+            if (!col->enabled() || !rb || rbIdsUpdated.count(rb->id())) continue;
+            if (rb->m_useGravity) rb->m_velocity += rb->m_gravity*RuamTime::DeltaTime();
             rb->transform()->translate(rb->m_velocity*RuamTime::DeltaTime());
+            rbIdsUpdated.insert(rb->id());
         }
         std::vector<Collision> collisions = {};
 
-        for (int i = 0; i < s_rigidbodies.size(); i++)
+        for (int i = 0; i < s_boxColliders.size(); i++)
         {
-            for (int j = i + 1; j < s_rigidbodies.size(); j++)
+            for (int j = i + 1; j < s_boxColliders.size(); j++)
             {
                 glm::vec3 normal = glm::vec3(0,0,0);
                 float penetration = 0;
 
-                BoxCollider* boxA = s_rigidbodies[i]->GetBoxCollider();
-                BoxCollider* boxB = s_rigidbodies[j]->GetBoxCollider();
+                BoxCollider* boxA = s_boxColliders[i];
+                BoxCollider* boxB = s_boxColliders[j];
                 if (!boxA || !boxB) continue;
 
                 if (CheckAABBOverlap(boxA, boxB, normal, penetration))
                 {
-                    collisions.push_back({s_rigidbodies[i], s_rigidbodies[j], normal, penetration});
+                    collisions.push_back({s_boxColliders[i], s_boxColliders[j], normal, penetration});
                 }
             }
         }
 
         for (Collision& col : collisions) ResolveCollision(col);
 
-        std::map<rbPairKey, Collision> currentCollisions;
+        std::map<colliderPairKey, Collision> currentCollisions;
         for (Collision& col : collisions)
         {
-            rbPairKey pair = {col.a, col.b};
+            colliderPairKey pair = {col.a, col.b};
             currentCollisions[pair] = col;
-            CollisionInfo colInfoA {col.b->entity(), col.normal, col.penetration};
-            CollisionInfo colInfoB {col.a->entity(), -col.normal, col.penetration};
+            CollisionInfo colInfoA {col.b, col.normal, col.penetration};
+            CollisionInfo colInfoB {col.a, -col.normal, col.penetration};
             if (!s_previousCollisions.count(pair)) { pair.first->entity()->onCollisionEnter(colInfoA); pair.second->entity()->onCollisionEnter(colInfoB);}
             else { pair.first->entity()->onCollisionStay(colInfoA); pair.second->entity()->onCollisionStay(colInfoB);}
         }
         for (auto& [key, oldCollision] : s_previousCollisions)
         {
-            CollisionInfo colInfoA { oldCollision.b->entity(), oldCollision.normal, oldCollision.penetration };
-            CollisionInfo colInfoB { oldCollision.a->entity(), -oldCollision.normal, oldCollision.penetration };
+            CollisionInfo colInfoA { oldCollision.b, oldCollision.normal, oldCollision.penetration };
+            CollisionInfo colInfoB { oldCollision.a, -oldCollision.normal, oldCollision.penetration };
             if (!currentCollisions.count(key)) { key.first->entity()->onCollisionExit(colInfoA); key.second->entity()->onCollisionExit(colInfoB); }
         }
         s_previousCollisions = currentCollisions;
     }
 
-    void PhysicsManager::AddRigidbody(Rigidbody* rb)
-    {
-        s_rigidbodies.push_back(rb);
-    }
     void PhysicsManager::AddBoxCollider(BoxCollider* box)
     {
         s_boxColliders.push_back(box);
-    }
-    void PhysicsManager::RemoveRigidbody(Rigidbody* rb)
-    {
-        auto it = std::find(s_rigidbodies.begin(), s_rigidbodies.end(), rb);
-        if (it != s_rigidbodies.end()) s_rigidbodies.erase(it);
     }
     void PhysicsManager::RemoveBoxCollider(BoxCollider* box)
     {

@@ -1,8 +1,6 @@
-Make sure collision parameter in onCollisionEnter (and variants) shows what the OTHER collider was
+Make drag
 
 Check restitution/bounciness of collision solving -> make it be part of the rigidbody variables
-
-Triggers
 
 Check how can I make sure that none of the onCollisionEnter (and variants) calls deletes a component that was of the same entity and whose onCollisionEnter was about to be called to (seg fault)
 

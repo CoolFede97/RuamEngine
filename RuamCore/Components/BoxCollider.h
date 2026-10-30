@@ -21,11 +21,10 @@ namespace RuamEngine
 
         std::vector<FieldInfo> fields() override
         {
-            return
-            {
-                makeFieldInfo<glm::vec3>("m_center", m_center),
-                makeFieldInfo<glm::vec3>("m_halfSize", m_halfSize)
-            };
+            auto f = Collider::fields();
+            f.push_back(makeFieldInfo<glm::vec3>("m_center", m_center));
+            f.push_back(makeFieldInfo<glm::vec3>("m_halfSize", m_halfSize));
+            return f;
         }
 
        	void renderUpdate() override;

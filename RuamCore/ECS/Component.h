@@ -82,11 +82,12 @@ namespace RuamEngine
             return nlohmann::json{
                 {"m_id", m_id},
                 {"m_enabled", m_enabled},
+                {"m_disabledManually", m_disabledManually},
+                {"m_openedInInspector", m_openedInInspector},
                 {"TYPE", "Component"}
             };
         }
 
-        // Doesn't use the macro IMPL_DRAW_SERIALIZED_MEMBERS since this is the virtual one.
         virtual void drawSerializedMembers();
 
         static void ComponentRegister();
@@ -102,6 +103,8 @@ namespace RuamEngine
 		bool m_started = false;
 		bool m_destroyFlag = false;
 		bool m_disabledManually = false;
+		bool m_openedInInspector = false;
+		bool m_inspectorStateApplied = false;
 	private:
 		virtual void onCollisionEnter(const CollisionInfo& col) {};
 		virtual void onCollisionStay(const CollisionInfo& col) {};
@@ -111,6 +114,8 @@ namespace RuamEngine
 	    void setEnabledByEntity(bool entityEnabled);
 
 		friend class Entity;
+		friend class Editor;
+		friend class Serial;
 	};
 
 	using ComponentUPtr = std::unique_ptr<Component>;

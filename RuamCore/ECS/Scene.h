@@ -37,6 +37,7 @@ namespace RuamEngine
 
 	    Entity* createEntity();
 	    Entity* createEntity(const std::string& name);
+		Entity* createEntity(const std::string& name, unsigned int id); // Intended for deserialization. Not recommended for user usage
 
 	    Entity* getEntityByIdx(unsigned int idx) const;
 	    Entity* getEntityById(unsigned int id) const;
@@ -54,7 +55,7 @@ namespace RuamEngine
 		void forEachActiveEntity(std::function<void(Entity*)> fn);
 		void forEachActiveComponentToStart(std::vector<Component*>& cmpVec, std::function<void(Component*)> fn);
 
-		// Checks all entities and components, and if they have their destroyed flag as true, they are destroyed
+		// Checks all entities and components, and if their destroy flag is true, they are destroyed
 		void flushDestroyedComponents();
 		void flushDestroyedEntities();
 

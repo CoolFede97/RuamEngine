@@ -229,10 +229,16 @@ namespace RuamEngine
                 if (ImGui::Checkbox("##ComponentEnabled", &comEnabled))
                     com->setEnabled(comEnabled);
                 ImGui::SameLine();
-				bool opened = ImGui::CollapsingHeader(com->name().c_str(), ImGuiTreeNodeFlags_AllowItemOverlap);
+                if (!com->m_inspectorStateApplied)
+                {
+                    if (com->m_openedInInspector) std::cout << "This one was opened!\n";
+                    ImGui::SetNextItemOpen(com->m_openedInInspector, ImGuiCond_Always);
+                    com->m_inspectorStateApplied = true;
+                }
+				com->m_openedInInspector = ImGui::CollapsingHeader(com->name().c_str(), ImGuiTreeNodeFlags_AllowItemOverlap);
 				ImGui::SameLine();
 				if (ImGui::Button("-"))	com->destroy();
-				if (opened)
+				if (com->m_openedInInspector)
 				{
 					com->drawSerializedMembers();
 				}

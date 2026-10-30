@@ -18,6 +18,8 @@ namespace RuamEngine
 		json["TYPE"] = cmp->name();
 		json["m_id"] = cmp->id();
 		json["m_enabled"] = cmp->enabled();
+		json["m_openedInInspector"] = cmp->m_openedInInspector;
+		json["m_disabledManually"] = cmp->m_disabledManually;
 		for (FieldInfo fieldInfo : cmp->fields())
 		{
 		    json[fieldInfo.name] = fieldInfo.serialize();
@@ -76,7 +78,8 @@ namespace RuamEngine
         try
         {
     		std::string entityName = jsonEntity["m_name"];
-    		Entity* entity = jsonScene->createEntity(entityName);
+    		unsigned int entityId = jsonEntity["m_id"];
+    		Entity* entity = jsonScene->createEntity(entityName, entityId);
     		bool entityEnabled = jsonEntity["m_enabled"];
     		if (jsonEntity["m_components"].size()<=1) return;
 
@@ -106,6 +109,8 @@ namespace RuamEngine
         // Uses the constructor defined by the user that takes the Json Component as parameter to add the component to the entity
         Component* cmp = constructor(entity);
         cmp->setEnabled(jsonCmp["m_enabled"]);
+        cmp->m_openedInInspector = jsonCmp["m_openedInInspector"];
+        cmp->m_disabledManually = jsonCmp["m_disabledManually"];
 
         for (FieldInfo& fieldInfo : cmp->fields())
 		{

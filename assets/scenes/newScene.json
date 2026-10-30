@@ -4,13 +4,17 @@
    "m_components": [
     {
      "TYPE": "GlobalLight",
+     "m_disabledManually": false,
      "m_enabled": true,
-     "m_id": 1
+     "m_id": 53,
+     "m_openedInInspector": false
     },
     {
      "TYPE": "Transform",
+     "m_disabledManually": false,
      "m_enabled": true,
-     "m_id": 0,
+     "m_id": 52,
+     "m_openedInInspector": false,
      "m_position": [
       0.0,
       100.0,
@@ -29,7 +33,7 @@
     }
    ],
    "m_enabled": true,
-   "m_id": 1,
+   "m_id": 25,
    "m_name": "globalLight"
   },
   {
@@ -42,37 +46,47 @@
       0.0
      ],
      "m_colliderName": "",
+     "m_disabledManually": false,
      "m_enabled": true,
      "m_halfSize": [
       1.0,
       1.0,
       1.0
      ],
-     "m_id": 3,
+     "m_id": 55,
+     "m_openedInInspector": false,
      "m_trigger": false
     },
     {
      "TYPE": "ModelRenderer",
+     "m_disabledManually": false,
      "m_enabled": true,
-     "m_id": 4,
-     "m_modelPath": "RuamCore/Assets/Models/Fede.obj"
+     "m_id": 56,
+     "m_modelPath": "RuamCore/Assets/Models/Fede.obj",
+     "m_openedInInspector": true
     },
     {
      "TYPE": "Sandbox",
      "entityCount": 0,
+     "m_disabledManually": false,
      "m_enabled": true,
-     "m_id": 5
+     "m_id": 57,
+     "m_openedInInspector": true
     },
     {
      "TYPE": "Rigidbody",
+     "m_bounciness": 1.0,
+     "m_disabledManually": false,
+     "m_drag": 1.0,
      "m_enabled": true,
      "m_gravity": [
       0.0,
       0.0,
       0.0
      ],
-     "m_id": 6,
+     "m_id": 58,
      "m_mass": 1.0,
+     "m_openedInInspector": false,
      "m_useGravity": true,
      "m_velocity": [
       -3.0,
@@ -82,8 +96,10 @@
     },
     {
      "TYPE": "Transform",
+     "m_disabledManually": false,
      "m_enabled": true,
-     "m_id": 2,
+     "m_id": 54,
+     "m_openedInInspector": true,
      "m_position": [
       5.099999904632568,
       0.0,
@@ -102,7 +118,7 @@
     }
    ],
    "m_enabled": true,
-   "m_id": 2,
+   "m_id": 26,
    "m_name": "fede"
   },
   {
@@ -110,16 +126,20 @@
     {
      "TYPE": "GameCamera",
      "m_aspectRatio": 0.5798192620277405,
+     "m_disabledManually": false,
      "m_enabled": true,
      "m_farPlane": 3000.0,
      "m_fov": 90.0,
-     "m_id": 8,
-     "m_nearPlane": 0.10000000149011612
+     "m_id": 60,
+     "m_nearPlane": 0.10000000149011612,
+     "m_openedInInspector": false
     },
     {
      "TYPE": "Transform",
+     "m_disabledManually": false,
      "m_enabled": true,
-     "m_id": 7,
+     "m_id": 59,
+     "m_openedInInspector": false,
      "m_position": [
       0.800000011920929,
       -0.30000001192092896,
@@ -138,7 +158,7 @@
     }
    ],
    "m_enabled": true,
-   "m_id": 3,
+   "m_id": 27,
    "m_name": "camera"
   },
   {
@@ -151,31 +171,39 @@
       0.0
      ],
      "m_colliderName": "A",
+     "m_disabledManually": false,
      "m_enabled": true,
      "m_halfSize": [
       1.0,
       1.0,
       1.0
      ],
-     "m_id": 10,
+     "m_id": 62,
+     "m_openedInInspector": false,
      "m_trigger": false
     },
     {
      "TYPE": "ModelRenderer",
+     "m_disabledManually": false,
      "m_enabled": true,
-     "m_id": 11,
-     "m_modelPath": "RuamCore/Assets/Models/zyzz.glb"
+     "m_id": 63,
+     "m_modelPath": "RuamCore/Assets/Models/zyzz.glb",
+     "m_openedInInspector": false
     },
     {
      "TYPE": "Rigidbody",
+     "m_bounciness": 1.0,
+     "m_disabledManually": false,
+     "m_drag": 1.0,
      "m_enabled": true,
      "m_gravity": [
       0.0,
       0.0,
       0.0
      ],
-     "m_id": 12,
+     "m_id": 64,
      "m_mass": 4.0,
+     "m_openedInInspector": false,
      "m_useGravity": true,
      "m_velocity": [
       3.0,
@@ -185,8 +213,10 @@
     },
     {
      "TYPE": "Transform",
+     "m_disabledManually": false,
      "m_enabled": true,
-     "m_id": 9,
+     "m_id": 61,
+     "m_openedInInspector": false,
      "m_position": [
       0.6000000238418579,
       0.0,
@@ -205,7 +235,7 @@
     }
    ],
    "m_enabled": true,
-   "m_id": 4,
+   "m_id": 28,
    "m_name": "fede2"
   }
  ],

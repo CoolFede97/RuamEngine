@@ -44,6 +44,18 @@ namespace RuamEngine
 		return entity_ptr;
 	}
 
+	Entity* Scene::createEntity(const std::string& name, unsigned int id)
+	{
+        std::unique_ptr<Entity> entity = std::make_unique<Entity>();
+        entity->m_parentScene = this;
+        entity->m_transform = entity->addComponent<Transform>();
+        entity->setName(name);
+        entity->m_id = id;
+        Entity* entity_ptr = entity.get();
+        m_entities.push_back(std::move(entity));
+        return entity_ptr;
+	}
+
 	Entity* Scene::getEntityByIdx(const unsigned int idx) const
 	{
 	    auto iter = m_entities.begin();

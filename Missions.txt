@@ -1,9 +1,6 @@
 Make drag
 
-Check restitution/bounciness of collision solving -> make it be part of the rigidbody variables
-
 Check how can I make sure that none of the onCollisionEnter (and variants) calls deletes a component that was of the same entity and whose onCollisionEnter was about to be called to (seg fault)
-
 
 Make sure I save which scene the game started with when entering play mode (because the scene might change during game mode, but when coming back to editor it should start at the original scene)
 
